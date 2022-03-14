@@ -12,14 +12,13 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using EasyLearn.Data.Enums;
 using EasyLearn.VM.ViewModels.Pages;
 
 namespace EasyLearn.UI.Pages
 {
-    public partial class ListsPage : Page
+    public partial class EditListsPage : Page
     {
-        public ListsPage(ListsPageVM viewModel)
+        public EditListsPage(EditListPageVM viewModel)
         {
             this.DataContext = viewModel;
             InitializeComponent();

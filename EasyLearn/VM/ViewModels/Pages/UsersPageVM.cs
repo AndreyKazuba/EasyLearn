@@ -46,6 +46,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             {
                 await usersRerository.AddUser(NewUserNickName);
                 RefreshUsers();
+                App.ServiceProvider.GetService<ListsPageVM>().UpdateView();
             });
             this.ClearNewUserNickName = new DelegateCommand(arg => this.NewUserNickName = string.Empty);
         }
@@ -66,6 +67,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             }
 
             await usersRerository.SetCurrentUser(userId);
+            App.ServiceProvider.GetService<ListsPageVM>().UpdateView();
         }
 
         public async Task RemoveUser(int userId)

@@ -27,7 +27,7 @@ namespace EasyLearn.Data.Models
         public List<CommonRelation> Relations { get; set; } = new List<CommonRelation>();
 
         [Required]
-        public WordListType Type { get; set; }
+        public CommonWordListType Type { get; set; }
 
         [Required]
         public DateTime CreationDateUtc { get; set; }

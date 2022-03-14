@@ -22,12 +22,14 @@ namespace EasyLearn.VM.Windows
         public DelegateCommand OpenDictationPage { get; set; }
         public DelegateCommand OpenUsersPage { get; set; }
         public DelegateCommand OpenListsPage { get; set; }
+        public DelegateCommand OpenEditListPage { get; set; }
 
         protected override void InitCommands()
         {
             this.OpenDictationPage = new DelegateCommand(arg => this.CurrentPage = Page.Dictation);
             this.OpenUsersPage = new DelegateCommand(arg => this.CurrentPage = Page.Users);
             this.OpenListsPage = new DelegateCommand(arg => this.CurrentPage = Page.Lists);
+            this.OpenEditListPage = new DelegateCommand(arg => this.CurrentPage = Page.EditPage);
         }
 
         #endregion

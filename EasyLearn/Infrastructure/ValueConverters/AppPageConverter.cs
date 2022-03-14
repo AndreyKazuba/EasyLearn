@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EasyLearn.Infrastructure.Enums;
 using EasyLearn.UI.Pages;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +22,8 @@ namespace EasyLearn.Infrastructure.ValueConverters
                     return App.ServiceProvider.GetService<UsersPage>();
                 case Page.Lists:
                     return App.ServiceProvider.GetService<ListsPage>();
+                case Page.EditPage:
+                    return App.ServiceProvider.GetService<EditListsPage>();
                 default: 
                     throw new Exception();
             }

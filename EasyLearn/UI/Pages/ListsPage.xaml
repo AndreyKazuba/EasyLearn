@@ -4,11 +4,162 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:EasyLearn.UI.Pages"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ListsPage">
 
-    <Grid>
-        
-    </Grid>
+    <materialDesign:DialogHost>
+
+        <Grid>
+
+            <ItemsControl Background="Red" ItemsSource="{Binding Lists}" 
+                  VerticalContentAlignment="Top"
+                  HorizontalContentAlignment="Left">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Background="Bisque" Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <Button Height="50"
+                Width="50"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Margin="30"
+                Style="{DynamicResource MaterialDesignFloatingActionButton}"
+                Background="ForestGreen"
+                BorderBrush="ForestGreen"
+                Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
+
+                <materialDesign:PackIcon Kind="AccountPlus"
+                                         Height="30"
+                                         Width="30"
+                                         Margin="0 0 6 2"/>
+
+
+                <Button.CommandParameter>
+                    <StackPanel Margin="10 10 10 0">
+
+                        <!--Имя списка слов-->
+                        <TextBox Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                                 Width="200" 
+                                 materialDesign:HintAssist.Hint="Название">
+
+                            <TextBox.Text>
+                                <Binding Path="NewListName" UpdateSourceTrigger="PropertyChanged">
+                                    <!--<Binding.ValidationRules>
+                                        <local:NotEmptyValidationRuleForAddAccountWindow ValidatesOnTargetUpdated="True" />
+                                        <local:MaxSymbolValidationRuleForAddAccountWindow ValidatesOnTargetUpdated="True"/>
+                                    </Binding.ValidationRules>-->
+                                </Binding>
+                            </TextBox.Text>
+
+                            <!--<i:Interaction.Triggers>
+                                <i:EventTrigger EventName="TextChanged">
+                                    <i:InvokeCommandAction Command="{Binding UpdateConfirmButtonIsEnabledCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>-->
+
+                        </TextBox>
+
+                        <!--Описание списка слов-->
+                        <TextBox TextWrapping="Wrap"
+                                 VerticalAlignment="Stretch"
+                                 Width="200"
+                                 VerticalScrollBarVisibility="Auto"
+                                 materialDesign:HintAssist.Hint="Описание"
+                                 materialDesign:HintAssist.IsFloating="True"
+                                 Text="{Binding NewListDescription}"/>
+
+                        <!--Выбор "обычный список/список с предлогами"-->
+                        <ComboBox Grid.Row="0" 
+                                  materialDesign:HintAssist.Hint="Тип списка" 
+                                  materialDesign:HintAssist.IsFloating="True"
+                                  MaxDropDownHeight="200"
+                                  Margin="4 4 4 0">
+
+                            <ComboBoxItem Content="Обычный список" IsSelected="{Binding NewListIsCommon, Mode=TwoWay}"/>
+                            <ComboBoxItem Content="Предлоги" IsSelected="{Binding NewListIsPrepositionsList, Mode=TwoWay}"/>
+
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding SortCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+
+                        </ComboBox>
+
+                        <ComboBox Grid.Row="0" 
+                                  materialDesign:HintAssist.Hint="Тип содержимого списка" 
+                                  materialDesign:HintAssist.IsFloating="True"
+                                  MaxDropDownHeight="200"
+                                  Margin="4 4 4 0"
+                                  Visibility="{Binding CommonWordListTypeComboBoxIsCollapsed, Converter={converters:ForwardCollapseConverter}}">
+
+                            <ComboBoxItem Content="Все типы" IsSelected="{Binding NewListHasNoType, Mode=TwoWay}"/>
+                            <ComboBoxItem Content="Местоимения" IsSelected="{Binding NewListWithPronouns, Mode=TwoWay}"/>
+                            <ComboBoxItem Content="Глаголы" IsSelected="{Binding NewListWithVerbs, Mode=TwoWay}"/>
+                            <ComboBoxItem Content="Существительные" IsSelected="{Binding NewListWithNouns, Mode=TwoWay}"/>
+                            <ComboBoxItem Content="Прилагательные" IsSelected="{Binding NewListWithAdjectives, Mode=TwoWay}"/>
+                            <ComboBoxItem Content="Слоосочетания" IsSelected="{Binding NewListWithConbinationsOfWords, Mode=TwoWay}"/>
+                            <ComboBoxItem Content="Предложения" IsSelected="{Binding NewListWithSentences, Mode=TwoWay}"/>
+                            <ComboBoxItem Content="Числительные" IsSelected="{Binding NewListWithNumerals, Mode=TwoWay}"/>
+                            <ComboBoxItem Content="Наречия" IsSelected="{Binding NewListWithAdverbs, Mode=TwoWay}"/>
+
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding SortCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+
+                        </ComboBox>
+
+                        <!--Кнопки отмены и подтверждения добавления-->
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0 10 0 0">
+
+                            <!--Кнопка отмены добавления нового списка-->
+                            <Button Style="{DynamicResource MaterialDesignFlatButton}" 
+                                    Content="Отмена"
+                                    Margin="6">
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding ClearNewListWindow}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
+                            </Button>
+
+                            <!--Кнопка подтверждения добавления нового аккаунта-->
+                            <Button Style="{DynamicResource MaterialDesignFlatButton}"  
+                                    HorizontalAlignment="Center"
+                                    Content="Добавить"
+                                    Margin="10">
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding CreateNewList}"/>
+                                        <i:InvokeCommandAction Command="{Binding ClearNewListWindow}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
+                            </Button>
+
+                        </StackPanel>
+
+                    </StackPanel>
+
+                </Button.CommandParameter>
+
+            </Button>
+
+        </Grid>
+    </materialDesign:DialogHost>
 </Page>

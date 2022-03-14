@@ -106,5 +106,10 @@ namespace EasyLearn.Data.Repositories.Implementations
                 currentUser.IsCurrent = false;
             }
         }
+
+        public bool IsUserExist(int userId)
+        {
+            return context.Users.Any(user => user.Id == userId);
+        }
     }
 }

@@ -25,7 +25,7 @@ namespace EasyLearn.VM.Core
             return this.canExecute == null || this.canExecute(parameter);
         }
 
-        public void Execute(object parameter)
+        public void Execute(object parameter = null)
         {
             this.execute(parameter);
         }

@@ -3,12 +3,12 @@ using System.Globalization;
 
 namespace EasyLearn.Infrastructure.ValueConverters
 {
-    public class ForwardVisibilityConverter : ValueConverter<ForwardVisibilityConverter>
+    public class ForwardCollapseConverter : ValueConverter<ForwardCollapseConverter>
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool isVisible = (bool)value;
-            return isVisible ? System.Windows.Visibility.Visible : System.Windows.Visibility.Hidden;
+            bool isCollapsed = (bool)value;
+            return isCollapsed ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
         }
 
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

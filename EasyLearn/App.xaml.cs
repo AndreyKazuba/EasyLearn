@@ -47,9 +47,11 @@ namespace EasyLearn
             services.AddSingleton<UsersPage>();
             services.AddSingleton<DictationPage>();
             services.AddSingleton<ListsPage>();
+            services.AddSingleton<EditListsPage>();
 
             services.AddSingleton<UsersPageVM>();
             services.AddSingleton<ListsPageVM>();
+            services.AddSingleton<EditListPageVM>();
 
             services.AddTransient<IRussianUnitsRepository, RussianUnitsRepository>();
             services.AddTransient<IEnglishUnitsRepository, EnglishUnitsRepository>();

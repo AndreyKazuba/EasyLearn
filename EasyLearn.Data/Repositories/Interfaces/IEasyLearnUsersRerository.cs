@@ -8,6 +8,7 @@ namespace EasyLearn.Data.Repositories.Interfaces
     public interface IEasyLearnUsersRerository
     {
         bool IsUserExist(string nickName);
+        bool IsUserExist(int userId);
         Task<bool> IsUserExistAsync(string nickName);
         EasyLearnUser GetUserById(int userId);
         Task<EasyLearnUser> GetUserByIdAsync(int userId);
