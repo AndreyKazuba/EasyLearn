@@ -7,8 +7,10 @@ namespace EasyLearn.Data.Repositories.Interfaces
 {
     public interface ICommonWordListsRepository
     {
-        public Task AddList(string name, string description, int userId, CommonWordListType type);
-        public IEnumerable<CommonWordList> GetUsersCommonLists(int userId);
-        public CommonWordList GetCommonWordList(int listId);
+        Task AddList(string name, string description, int userId, CommonWordListType type);
+        IEnumerable<CommonWordList> GetUsersCommonLists(int userId);
+        CommonWordList GetCommonWordList(int listId);
+        Task<CommonWordList> GetCommonWordListAsync(int listId);
+        bool IsWordListExist(int userListId);
     }
 }

@@ -38,7 +38,7 @@ namespace EasyLearn.Data.Repositories.Implementations
             return await context.RussianUnits.AnyAsync(unit => StringHelper.Equals(unit.Value, value) && unit.Type == type);
         }
 
-        public RussianUnit GetUnitByValueAndType(string value, UnitType type)
+        public RussianUnit? GetUnitByValueAndType(string value, UnitType type)
         {
             return context.RussianUnits.FirstOrDefault(unit => StringHelper.Equals(unit.Value, value) && unit.Type == type);
         }
@@ -58,11 +58,16 @@ namespace EasyLearn.Data.Repositories.Implementations
             return await context.RussianUnits.FirstOrDefaultAsync(unit => unit.Id == unitId);
         }
 
-        public async Task<bool> AddUnit(string value, UnitType type)
+        public async Task<RussianUnit?> CreateUnit(string value, UnitType type)
         {
+            if (string.IsNullOrEmpty(value) || value.Length < ModelConstants.UnitMinLength)
+            {
+                return null;
+            }
+
             if (await IsUnitExistAsync(value, type))
             {
-                return false;
+                return null;
             }
 
             RussianUnit newUnit = new RussianUnit
@@ -75,7 +80,19 @@ namespace EasyLearn.Data.Repositories.Implementations
             context.RussianUnits.Add(newUnit);
             await context.SaveChangesAsync();
 
-            return true;
+            return newUnit;
+        }
+
+        public async Task<RussianUnit?> GetOrCreateUnit(string value, UnitType type)
+        {
+            RussianUnit? russianUnit = await context.RussianUnits.FirstOrDefaultAsync(unit => unit.Value == value && unit.Type == type);
+
+            if (russianUnit is not null)
+            {
+                return russianUnit;
+            }
+
+            return await CreateUnit(value, type);
         }
     }
 }

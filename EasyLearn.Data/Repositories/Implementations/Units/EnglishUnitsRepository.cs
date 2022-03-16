@@ -38,36 +38,36 @@ namespace EasyLearn.Data.Repositories.Implementations
             return await context.EnglishUnits.AnyAsync(unit => unit.Value == value && unit.Type == type);
         }
 
-        public EnglishUnit GetUnitByValueAndType(string value, UnitType type)
+        public EnglishUnit? GetUnitByValueAndType(string value, UnitType type)
         {
             return context.EnglishUnits.FirstOrDefault(unit => StringHelper.Equals(unit.Value, value) && unit.Type == type);
         }
 
         public async Task<EnglishUnit> GetUnitByValueAndTypeAsync(string value, UnitType type)
         {
-            return await context.EnglishUnits.FirstOrDefaultAsync(unit => StringHelper.Equals(unit.Value, value) && unit.Type == type);
+            return await context.EnglishUnits.FirstAsync(unit => StringHelper.Equals(unit.Value, value) && unit.Type == type);
         }
 
         public EnglishUnit GetUnitById(int unitId)
         {
-            return context.EnglishUnits.FirstOrDefault(unit => unit.Id == unitId);
+            return context.EnglishUnits.First(unit => unit.Id == unitId);
         }
 
         public async Task<EnglishUnit> GetUnitByIdAsync(int unitId)
         {
-            return await context.EnglishUnits.FirstOrDefaultAsync(unit => unit.Id == unitId);
+            return await context.EnglishUnits.FirstAsync(unit => unit.Id == unitId);
         }
 
-        public async Task<bool> AddUnit(string value, UnitType type)
+        public async Task<EnglishUnit?> CreateUnit(string value, UnitType type)
         {
-            if (value == null || value.Length < AppConstants.UnitMinLength)
+            if (value == null || value.Length < ModelConstants.UnitMinLength)
             {
-                return false;
+                return null;
             }
 
             if (await IsUnitExistAsync(value, type))
             {
-                return false;
+                return null;
             }
 
             EnglishUnit newUnit = new EnglishUnit
@@ -80,7 +80,19 @@ namespace EasyLearn.Data.Repositories.Implementations
             context.EnglishUnits.Add(newUnit);
             await context.SaveChangesAsync();
 
-            return true;
+            return newUnit;
+        }
+
+        public async Task<EnglishUnit> GetOrCreateUnit(string value, UnitType type)
+        {
+            EnglishUnit? englistUnit = await context.EnglishUnits.FirstOrDefaultAsync(unit => unit.Value == value && unit.Type == type);
+
+            if (englistUnit is not null)
+            {
+                return englistUnit;
+            }
+
+            return await CreateUnit(value, type);
         }
     }
 }

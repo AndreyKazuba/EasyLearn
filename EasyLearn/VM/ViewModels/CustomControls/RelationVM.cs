@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EasyLearn.VM.Core;
 
-namespace EasyLearn.Data
+namespace EasyLearn.VM.ViewModels.CustomControls
 {
-    public static class AppConstants
+    public class RelationVM : ViewModel
     {
-        public const int UnitMinLength = 3;
     }
 }

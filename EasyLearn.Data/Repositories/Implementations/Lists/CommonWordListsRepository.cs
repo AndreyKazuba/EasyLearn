@@ -49,12 +49,24 @@ namespace EasyLearn.Data.Repositories.Implementations
         {
             return context.CommonWordLists
                 .Include(list => list.Relations)
-                .FirstOrDefault(list => list.Id == listId);
+                .First(list => list.Id == listId);
+        }
+
+        public async Task<CommonWordList> GetCommonWordListAsync(int listId)
+        {
+            return await context.CommonWordLists
+                .Include(list => list.Relations)
+                .FirstAsync(list => list.Id == listId);
         }
 
         public IEnumerable<CommonWordList> GetUsersCommonLists(int userId)
         {
             return context.CommonWordLists.Where(list => list.UserId == userId).AsNoTracking();
+        }
+
+        public bool IsWordListExist(int userListId)
+        {
+            return context.CommonWordLists.Any(list => list.Id == userListId);
         }
     }
 }

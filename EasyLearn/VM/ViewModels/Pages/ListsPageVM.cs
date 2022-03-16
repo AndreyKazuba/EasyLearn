@@ -217,15 +217,15 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         private void RefreshLists()
         {
-            UI.CustomControls.List irregularVerbsList = new UI.CustomControls.List(new ListVM("Irregular verbs", 0, ListType.IrregularVerbsList));
+            UI.CustomControls.List irregularVerbsList = new UI.CustomControls.List(new ListVM("Irregular verbs", "Default desc" , 0, ListType.IrregularVerbsList));
 
             IEnumerable<UI.CustomControls.List> commonLists = commonWordListsRepository
                 .GetUsersCommonLists(this.currentUserId)
-                .Select(list => new UI.CustomControls.List(new ListVM(list.Name, list.Id, ListType.CommonWordsList)));
+                .Select(list => new UI.CustomControls.List(new ListVM(list.Name,list.Description, list.Id, ListType.CommonWordsList)));
 
             IEnumerable<UI.CustomControls.List> prepositionsLists = verbPrepositionListsRepository
                 .GetUsersVerbPreposotionLists(this.currentUserId)
-                .Select(list => new UI.CustomControls.List(new ListVM(list.Name, list.Id, ListType.VerbPrepositionsList)));
+                .Select(list => new UI.CustomControls.List(new ListVM(list.Name, list.Description, list.Id, ListType.VerbPrepositionsList)));
 
             List<UI.CustomControls.List> allCurrentUserLists = commonLists.Union(prepositionsLists).ToList();
             allCurrentUserLists.Add(irregularVerbsList);

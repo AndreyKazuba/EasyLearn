@@ -14,12 +14,12 @@
 
         <Grid>
 
-            <ItemsControl Background="Red" ItemsSource="{Binding Users}" 
+            <ItemsControl ItemsSource="{Binding Users}" 
                   VerticalContentAlignment="Top"
                   HorizontalContentAlignment="Left">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel Background="Bisque" Orientation="Horizontal"/>
+                        <WrapPanel Orientation="Horizontal"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>

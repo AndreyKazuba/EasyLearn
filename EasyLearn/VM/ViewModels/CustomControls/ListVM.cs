@@ -15,12 +15,23 @@ namespace EasyLearn.VM.ViewModels.CustomControls
     public class ListVM : ViewModel
     {
         private int listId;
+        private bool isExpanded;
 
         public string Name { get; set; }
-
+        public string Description { get; set; }
         public ListType Type { get; set; }
-
-        public SolidColorBrush Color { get; set; }
+        public bool IsExpanded
+        {
+            get { return isExpanded; }
+            set
+            {
+                isExpanded = value;
+                if (isExpanded)
+                {
+                    SetCurrentList();
+                }
+            }
+        }
 
         #region Commands
 
@@ -30,36 +41,27 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         {
             this.OpenCurrentList = new DelegateCommand(arg =>
             {
-                App.ServiceProvider.GetService<EditListPageVM>().SetCurrentList(listId);
                 App.ServiceProvider.GetService<AppWindowVM>().OpenEditListPage.Execute();
             });
         }
         #endregion
 
-        public ListVM(string name, int listId, ListType type)
+        public ListVM(string name, string description, int listId, ListType type)
         {
             this.Name = name;
             this.Type = type;
             this.listId = listId;
+            this.Description = description;
+        }
 
-            switch (type)
+        private async void SetCurrentList()
+        {
+            EditListPageVM? editListPageVM = App.ServiceProvider.GetService<EditListPageVM>();
+            if (editListPageVM is not null)
             {
-                case ListType.IrregularVerbsList:
-                    Color = new SolidColorBrush(Colors.Red);
-                    break;
-                case ListType.CommonWordsList:
-                    Color = new SolidColorBrush(Colors.Blue);
-                    break;
-                case ListType.VerbPrepositionsList:
-                    Color = new SolidColorBrush(Colors.Green);
-                    break;
+                await editListPageVM.SetCurrentList(listId);
             }
         }
 
-        //private void OpenCurrentList()
-        //{
-        //    App.ServiceProvider.GetService<EditListPageVM>().SetCurrentList(listId);
-        //    App.ServiceProvider.GetService<AppWindowVM>().OpenEditListPage.Execute();
-        //}
     }
 }

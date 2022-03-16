@@ -35,6 +35,6 @@ namespace EasyLearn.Data.Models
 
         [MinLength(2)]
         [MaxLength(100)]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
     }
 }

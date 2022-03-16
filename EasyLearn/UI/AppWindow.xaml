@@ -9,7 +9,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="AppWindow" Height="450" Width="800">
+        Title="EasyLearn" Height="600" Width="950">
     <Grid>
         <materialDesign:DrawerHost>
             <materialDesign:DrawerHost.LeftDrawerContent>
@@ -74,19 +74,34 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <StackPanel Orientation="Horizontal">
-                    <Button Style="{DynamicResource MaterialDesignFlatButton}"
+                <materialDesign:ColorZone Mode="PrimaryDark" 
+                                          Padding="8" 
+                                          materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                          Grid.Row="0"
+                                          ToolTip="Меню">
+
+                    <StackPanel Orientation="Horizontal">
+
+                        <!--Кнопка активация главного меню слева-->
+                        <Button Style="{DynamicResource MaterialDesignFlatButton}"
                                 Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
                                 CommandParameter="{x:Static Dock.Left}"
                                 Height="40"
                                 Width="40"
                                 Margin="0"
                                 Padding="1">
-                        <materialDesign:PackIcon Kind="Menu" Height="30" Width="30" Foreground="Black"
+                            <materialDesign:PackIcon Kind="Menu" Height="30" Width="30" Foreground="Black"
                                                      VerticalAlignment="Center"
                                                      HorizontalAlignment="Center"/>
-                    </Button>
-                </StackPanel>
+                        </Button>
+
+                        <!--Просто название приложения в шапке-->
+                        <TextBlock VerticalAlignment="Center" Margin="16 0 0 0" FontSize="24" Text="EasyLearn"/>
+
+                    </StackPanel>
+
+                </materialDesign:ColorZone>
+
 
                 <Frame JournalOwnership="UsesParentJournal" Grid.Row="1" Content="{Binding CurrentPage, Converter={converters:AppPageConverter}}"/>
 

@@ -8,10 +8,80 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <materialDesign:Card Background="{Binding Color}" Height="50" Width="100" Margin="8">
+    <!--<materialDesign:Card Background="{Binding Color}" Height="50" Width="100" Margin="8">
         <StackPanel>
             <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Name}"></TextBlock>
             <Button Background="ForestGreen" Command="{Binding OpenCurrentList}">Open</Button>
         </StackPanel>
+    </materialDesign:Card>-->
+    
+    <materialDesign:Card Width="260" Margin="6">
+
+        <Expander HorizontalAlignment="Stretch" Height="Auto" IsExpanded="{Binding IsExpanded}">
+
+            <!--Заголовок блока-->
+            <Expander.Header>
+
+                <!--Русский перевод-->
+                <TextBlock Text="{Binding Name}" Style="{DynamicResource MaterialDesignBody1TextBlock}"/>
+
+            </Expander.Header>
+
+            <!--Тело блока-->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+
+                <!--Описание-->
+                <TextBlock Grid.Row="0" Text="{Binding Description}" Foreground="Gray" Margin="10 0 0 0" Style="{DynamicResource MaterialDesignBody2TextBlock}"/>
+
+                
+
+                <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    
+                    
+                    <!--Кнопка открытия-->
+                    <Button Grid.Column="0" Margin="0 0 10 0" ToolTip="Удалить слово" Command="{Binding OpenCurrentList}"
+                                                            HorizontalAlignment="Right"
+                                                            Foreground="ForestGreen"
+                                                            Style="{DynamicResource MaterialDesignFlatButton}">
+
+                        <StackPanel Orientation="Horizontal">
+
+                            <TextBlock Text="Открыть" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <materialDesign:PackIcon Kind="OpenInNew" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+                        </StackPanel>
+
+                    </Button>
+
+
+                    <!--Кнопка удаления-->
+                    <Button Grid.Column="1" Margin="0 0 10 0" ToolTip="Удалить слово" Command="{Binding DeleteCommand}"
+                                                            HorizontalAlignment="Right"
+                                                            Foreground="Red"
+                                                            Style="{DynamicResource MaterialDesignFlatButton}">
+
+                        <StackPanel Orientation="Horizontal">
+
+                            <TextBlock Text="Удалить" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <materialDesign:PackIcon Kind="Trash" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+                        </StackPanel>
+
+                    </Button>
+
+
+                </Grid>
+            </Grid>
+
+        </Expander>
+
     </materialDesign:Card>
 </UserControl>
