@@ -46,14 +46,14 @@ namespace EasyLearn
 
             services.AddSingleton<UsersPage>();
             services.AddSingleton<DictationPage>();
-            services.AddSingleton<ListsPage>();
-            services.AddSingleton<EditCommonWordListPage>();
-            services.AddSingleton<EditVerbPrepositionsListPage>();
+            services.AddSingleton<DictionariesPage>();
+            services.AddSingleton<EditCommonDictionaryPage>();
+            services.AddSingleton<EditVerbPrepositionDictionaryPage>();
 
             services.AddSingleton<UsersPageVM>();
-            services.AddSingleton<ListsPageVM>();
-            services.AddSingleton<EditCommonWordListPageVM>();
-            services.AddSingleton<EditWordPrepositionsListPageVM>();
+            services.AddSingleton<DictionariesPageVM>();
+            services.AddSingleton<EditCommonDictionaryPageVM>();
+            services.AddSingleton<EditVerbPrepositionDictionaryPageVM>();
 
             services.AddTransient<IRussianUnitsRepository, RussianUnitsRepository>();
             services.AddTransient<IEnglishUnitsRepository, EnglishUnitsRepository>();
@@ -61,7 +61,7 @@ namespace EasyLearn
             services.AddTransient<IExamplesRepository, ExamplesRepository>();
 
             services.AddTransient<ICommonRelationsRepository, CommonRelationsRepository>();
-            services.AddTransient<IVerbPrepositionsRepository, VerbPrepositionsRepository>();
+            services.AddTransient<IVerbPrepositionRepository, VerbPrepositionsRepository>();
             services.AddTransient<IIrregularVerbsRepository, IrregularVerbsRepository>();
 
             services.AddTransient<ICommonDictionaryRepository, CommonDictionaryRepository>();

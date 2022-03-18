@@ -11,5 +11,6 @@ namespace EasyLearn.Data.Repositories.Interfaces
         Task<CommonDictionary> GetCommonDictionaryAsync(int dictionaryId);
         IEnumerable<CommonDictionary> GetUsersCommonDictionaries(int userId);
         bool IsCommonDictionaryExist(int dictionaryId);
+        public Task DeleteCommonDictionary(int dictionaryId);
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EasyLearn.Data.Repositories.Interfaces
 {
-    public interface IVerbPrepositionsRepository
+    public interface IVerbPrepositionRepository
     {
     }
 }

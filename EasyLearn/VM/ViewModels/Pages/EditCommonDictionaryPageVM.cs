@@ -19,7 +19,7 @@ using EasyLearn.Infrastructure.Constants;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
-    public class EditCommonWordListPageVM : ViewModel
+    public class EditCommonDictionaryPageVM : ViewModel
     {
         private readonly ICommonDictionaryRepository commonWordListsRepository;
         private readonly ICommonRelationsRepository commonRelationsRepository;
@@ -54,7 +54,7 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         #endregion
 
-        public EditCommonWordListPageVM(ICommonDictionaryRepository commonWordListsRepository, ICommonRelationsRepository commonRelationsRepository)
+        public EditCommonDictionaryPageVM(ICommonDictionaryRepository commonWordListsRepository, ICommonRelationsRepository commonRelationsRepository)
         {
             this.commonWordListsRepository = commonWordListsRepository;
             this.commonRelationsRepository = commonRelationsRepository;
@@ -62,7 +62,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             SetEnglishUnitTypes();
         }
 
-        public async Task SetCurrentList(int listId)
+        public async Task SetAsCurrentDictionary(int listId)
         {
             this.currentCommonWordListId = listId;
             CommonDictionary currentCommonList = await commonWordListsRepository.GetCommonDictionaryAsync(currentCommonWordListId);

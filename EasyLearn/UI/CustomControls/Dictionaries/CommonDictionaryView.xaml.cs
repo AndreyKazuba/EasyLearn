@@ -3,13 +3,13 @@ using EasyLearn.VM.ViewModels.CustomControls;
 
 namespace EasyLearn.UI.CustomControls
 {
-    public partial class CommonWordListView : UserControl
+    public partial class CommonDictionaryView : UserControl
     {
-        public CommonWordListVM ViewModel { get; }
-        public CommonWordListView(CommonWordListVM viewModel)
+        public CommonDictionaryVM ViewModel { get; }
+        public CommonDictionaryView(CommonDictionaryVM viewModel)
         {
             this.ViewModel = viewModel;
-            this.DataContext = ViewModel;
+            this.DataContext = viewModel;
             InitializeComponent();
         }
     }

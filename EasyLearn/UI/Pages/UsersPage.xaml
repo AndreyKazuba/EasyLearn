@@ -25,14 +25,14 @@
             </ItemsControl>
 
             <Button Height="50"
-                Width="50"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                Margin="30"
-                Style="{DynamicResource MaterialDesignFloatingActionButton}"
-                Background="ForestGreen"
-                BorderBrush="ForestGreen"
-                Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
+                    Width="50"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Margin="30"
+                    Style="{DynamicResource MaterialDesignFloatingActionButton}"
+                    Background="ForestGreen"
+                    BorderBrush="ForestGreen"
+                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
 
                 <materialDesign:PackIcon Kind="AccountPlus"
                                          Height="30"
@@ -43,13 +43,13 @@
                 <Button.CommandParameter>
                     <StackPanel Margin="10 10 10 0">
 
-                        <!--User nickname-->
+                        <!--Имя пользователя-->
                         <TextBox Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                  Width="200" 
-                                 materialDesign:HintAssist.Hint="NickName">
+                                 materialDesign:HintAssist.Hint="Имя пользователя">
 
                             <TextBox.Text>
-                                <Binding Path="NewUserNickName" UpdateSourceTrigger="PropertyChanged">
+                                <Binding Path="NewUserName" UpdateSourceTrigger="PropertyChanged">
                                     <!--<Binding.ValidationRules>
                                         <local:NotEmptyValidationRuleForAddAccountWindow ValidatesOnTargetUpdated="True" />
                                         <local:MaxSymbolValidationRuleForAddAccountWindow ValidatesOnTargetUpdated="True"/>
@@ -77,7 +77,7 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding ClearNewUserNickName}"/>
+                                        <i:InvokeCommandAction Command="{Binding ClearUserAddingWindowCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -93,8 +93,8 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding CreateUser}"/>
-                                        <i:InvokeCommandAction Command="{Binding ClearNewUserNickName}"/>
+                                        <i:InvokeCommandAction Command="{Binding CreateUserCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding ClearUserAddingWindowCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 

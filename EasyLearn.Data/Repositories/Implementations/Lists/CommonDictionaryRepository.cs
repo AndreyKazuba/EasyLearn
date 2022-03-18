@@ -72,5 +72,12 @@ namespace EasyLearn.Data.Repositories.Implementations
         {
             return context.CommonDictionaries.Any(commonDictionary => commonDictionary.Id == dictionaryId);
         }
+
+        public async Task DeleteCommonDictionary(int dictionaryId)
+        {
+            CommonDictionary commonDictionary = context.CommonDictionaries.First(commonDictionary => commonDictionary.Id == dictionaryId);
+            context.CommonDictionaries.Remove(commonDictionary);
+            await context.SaveChangesAsync();
+        }
     }
 }

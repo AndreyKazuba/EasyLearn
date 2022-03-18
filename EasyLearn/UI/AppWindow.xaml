@@ -39,13 +39,13 @@
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
                                 <i:InvokeCommandAction Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"/>
-                                <i:InvokeCommandAction Command="{Binding OpenUsersPage}"/>
+                                <i:InvokeCommandAction Command="{Binding OpenListsPage}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
 
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                            <materialDesign:PackIcon Kind="Pencil" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                            <TextBlock Text="Users" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10 0 0 0"/>
+                            <materialDesign:PackIcon Kind="Dictionary" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            <TextBlock Text="Dictionaries" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10 0 0 0"/>
                         </StackPanel>
                     </Button>
                     <Button Margin="4" HorizontalAlignment="Left"
@@ -56,13 +56,13 @@
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
                                 <i:InvokeCommandAction Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"/>
-                                <i:InvokeCommandAction Command="{Binding OpenListsPage}"/>
+                                <i:InvokeCommandAction Command="{Binding OpenUsersPage}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
 
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                            <materialDesign:PackIcon Kind="Pencil" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                            <TextBlock Text="Lists" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10 0 0 0"/>
+                            <materialDesign:PackIcon Kind="User" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            <TextBlock Text="Users" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10 0 0 0"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -110,6 +110,6 @@
 
         </materialDesign:DrawerHost>
 
-        
+
     </Grid>
 </Window>

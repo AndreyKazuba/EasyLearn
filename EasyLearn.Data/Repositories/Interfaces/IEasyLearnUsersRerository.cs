@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using EasyLearn.Data.Models;
 
@@ -12,12 +11,12 @@ namespace EasyLearn.Data.Repositories.Interfaces
         Task<bool> IsUserExistAsync(string nickName);
         EasyLearnUser GetUserById(int userId);
         Task<EasyLearnUser> GetUserByIdAsync(int userId);
-        Task<bool> AddUser(string nickName);
+        Task<EasyLearnUser?> CreateUser(string name);
         IEnumerable<EasyLearnUser> GetAllUsers();
         EasyLearnUser GetCurrentUser();
         Task<EasyLearnUser> GetCurrentUserAsync();
         bool IsUserCurrent(int userId);
-        Task SetCurrentUser(int userId);
+        Task SetUserAsCurrent(int userId);
         Task RemoveUser(int userId);
     }
 }

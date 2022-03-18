@@ -46,6 +46,13 @@ namespace EasyLearn.Data.Repositories.Implementations
             return newVerbPrepositionDictionary;
         }
 
+        public async Task DeleteVerbPrepositionDictionary(int dictionaryId)
+        {
+            VerbPrepositionDictionnary dictionnary = context.VerbPrepositionDictionaries.First(dictionary => dictionary.Id == dictionaryId);
+            context.VerbPrepositionDictionaries.Remove(dictionnary);
+            await context.SaveChangesAsync();
+        }
+
         public IEnumerable<VerbPrepositionDictionnary> GetUsersVerbPreposotionDictionaries(int dictionaryId)
         {
             return context.VerbPrepositionDictionaries.Where(dictionary => dictionary.UserId == dictionaryId).AsNoTracking();

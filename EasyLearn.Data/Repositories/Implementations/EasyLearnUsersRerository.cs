@@ -56,10 +56,10 @@ namespace EasyLearn.Data.Repositories.Implementations
             return context.Users.First(user => user.Id == userId).IsCurrent;
         }
 
-        public async Task SetCurrentUser(int userId)
+        public async Task SetUserAsCurrent(int userId)
         {
             await ResetCurrentUser();
-            EasyLearnUser newCurrentUser = await context.Users.FirstOrDefaultAsync(user => user.Id == userId);
+            EasyLearnUser newCurrentUser = await context.Users.FirstAsync(user => user.Id == userId);
 
             newCurrentUser.IsCurrent = true;
             await context.SaveChangesAsync();
@@ -72,29 +72,27 @@ namespace EasyLearn.Data.Repositories.Implementations
             await context.SaveChangesAsync();
         }
 
-        public async Task<bool> AddUser(string nickName)
+        public async Task<EasyLearnUser?> CreateUser(string name)
         {
-            if (string.IsNullOrEmpty(nickName))
+            if (string.IsNullOrEmpty(name))
             {
-                return false;
+                return null;
             }
 
-            if (IsUserExist(nickName))
+            if (IsUserExist(name))
             {
-                return false;
+                return null;
             }
 
             EasyLearnUser newUser = new EasyLearnUser
             {
-                Name = nickName,
-                IsCurrent = true,
+                Name = name,
             };
 
-            await ResetCurrentUser();
             context.Users.Add(newUser);
             await context.SaveChangesAsync();
 
-            return true;
+            return newUser;
         }
 
         private async Task ResetCurrentUser()

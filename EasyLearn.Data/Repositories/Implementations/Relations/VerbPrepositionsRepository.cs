@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EasyLearn.Data.Repositories.Implementations
 {
-    public class VerbPrepositionsRepository : IVerbPrepositionsRepository
+    public class VerbPrepositionsRepository : IVerbPrepositionRepository
     {
         private readonly EasyLearnContext context;
 

@@ -10,5 +10,6 @@ namespace EasyLearn.Data.Repositories.Interfaces
         IEnumerable<VerbPrepositionDictionnary> GetUsersVerbPreposotionDictionaries(int userId);
         VerbPrepositionDictionnary? GetVerbPrepositionDictionary(int dictionaryId);
         Task<VerbPrepositionDictionnary?> GetVerbPrepositionDictionaryAsync(int dictionaryId);
+        Task DeleteVerbPrepositionDictionary(int dictionaryId);
     }
 }

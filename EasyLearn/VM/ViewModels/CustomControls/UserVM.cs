@@ -13,26 +13,26 @@ namespace EasyLearn.VM.ViewModels.CustomControls
     public class UserVM : ViewModel
     {
         public int Id { get; set; }
-        public string NickName { get; set; }
+        public string Name { get; set; }
         public bool IsCurrent { get; set; }
         public bool BackButtonIsEnabled { get; set; } = true;
 
         public UserVM(EasyLearnUser user)
         {
             this.Id = user.Id;
-            this.NickName = user.Name;
+            this.Name = user.Name;
             this.IsCurrent = user.IsCurrent;
         }
 
         #region Commands
 
-        public DelegateCommand SetCurrentUser { get; private set; }
-        public DelegateCommand RemoveUser { get; private set; }
+        public DelegateCommand SetUserAsCurrentCommand { get; private set; }
+        public DelegateCommand RemoveUserCommand { get; private set; }
 
         protected override void InitCommands()
         {
-            this.SetCurrentUser = new DelegateCommand(async userId => await App.ServiceProvider.GetService<UsersPageVM>().SetCurrentUser((int)userId));
-            this.RemoveUser = new DelegateCommand(async userId => await App.ServiceProvider.GetService<UsersPageVM>().RemoveUser((int)userId));
+            this.SetUserAsCurrentCommand = new DelegateCommand(userId => App.ServiceProvider.GetService<UsersPageVM>().SetUserAsCurrentCommand.Execute(userId));
+            this.RemoveUserCommand = new DelegateCommand(userId => App.ServiceProvider.GetService<UsersPageVM>().RemoveUserCommand.Execute(userId));
         }
 
         #endregion

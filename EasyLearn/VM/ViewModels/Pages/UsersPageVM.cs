@@ -11,7 +11,6 @@ using EasyLearn.UI.CustomControls;
 using System.Collections.ObjectModel;
 using EasyLearn.VM.ViewModels.CustomControls;
 
-//#pragma warning disable 
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -22,73 +21,75 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             this.usersRerository = usersRerository;
 
-            RefreshUsers();
+            LoadUsers();
         }
 
         #region Props for binding
 
         public ObservableCollection<UserView> Users { get; set; }
-        public string NewUserNickName { get; set; }
+        public string NewUserName { get; set; }
         public bool ConfirmNewUserButtonIsEnabled { get; set; } = true;
 
         #endregion
 
         #region Commands
 
-        public DelegateCommand CreateUser { get; private set; }
-        public DelegateCommand DeleteUser { get; private set; }
-
-        public DelegateCommand ClearNewUserNickName { get; private set; }
+        public DelegateCommand CreateUserCommand { get; private set; }
+        public DelegateCommand RemoveUserCommand { get; private set; }
+        public DelegateCommand SetUserAsCurrentCommand { get; private set; }
+        public DelegateCommand ClearUserAddingWindowCommand { get; private set; }
 
         protected override void InitCommands()
         {
-            this.CreateUser = new DelegateCommand(async arg =>
-            {
-                await usersRerository.AddUser(NewUserNickName);
-                RefreshUsers();
-                App.ServiceProvider.GetService<ListsPageVM>().UpdateView();
-            });
-            this.ClearNewUserNickName = new DelegateCommand(arg => this.NewUserNickName = string.Empty);
+            this.CreateUserCommand = new DelegateCommand(async arg => await CreateUser());
+            this.RemoveUserCommand = new DelegateCommand(async userId => await RemoveUser((int)userId));
+            this.SetUserAsCurrentCommand = new DelegateCommand(async userId => await SetUserAsCurrent((int)userId));
+            this.ClearUserAddingWindowCommand = new DelegateCommand(arg => ClearUserAddingWindow());
         }
 
         #endregion
 
-        public async Task SetCurrentUser(int userId)
+        private async Task SetUserAsCurrent(int userId)
         {
-            if (this.Users.Any())
-            {
-                UserView? lastCurrentUser = this.Users.FirstOrDefault(user => user.ViewModel.IsCurrent);
-                if (lastCurrentUser is not null)
-                {
-                    lastCurrentUser.ViewModel.IsCurrent = false;
-                }
-                
-                this.Users.First(user => user.ViewModel.Id == userId).ViewModel.IsCurrent = true;
-            }
-
-            await usersRerository.SetCurrentUser(userId);
-            App.ServiceProvider.GetService<ListsPageVM>().UpdateView();
+            if (!this.Users.Any())
+                throw new Exception("There are no users");
+            UserView? lastCurrentUser = this.Users.FirstOrDefault(user => user.ViewModel.IsCurrent);
+            if (lastCurrentUser is not null)
+                lastCurrentUser.ViewModel.IsCurrent = false;
+            this.Users.First(user => user.ViewModel.Id == userId).ViewModel.IsCurrent = true;
+            await usersRerository.SetUserAsCurrent(userId);
+            UpdateDictionariesPageView();
         }
-
-        public async Task RemoveUser(int userId)
+        private async Task CreateUser()
+        {
+            EasyLearnUser? newUser = await usersRerository.CreateUser(this.NewUserName);
+            if (newUser is null)
+                throw new Exception("Name is incorrect or this user has already created");
+            AddUserToUI(newUser);
+            await SetUserAsCurrent(newUser.Id);
+        }
+        private async Task RemoveUser(int userId)
         {
             UserView user = this.Users.First(user => user.ViewModel.Id == userId);
             bool isCurrent = user.ViewModel.IsCurrent;
-
             this.Users.Remove(user);
-
             if (isCurrent && this.Users.Any())
-            {
-                await SetCurrentUser(this.Users[0].ViewModel.Id);
-            }
-
+                await SetUserAsCurrent(this.Users[0].ViewModel.Id);
             await usersRerository.RemoveUser(userId);
         }
-
-        private void RefreshUsers()
+        private void ClearUserAddingWindow() => this.NewUserName = string.Empty;
+        private void LoadUsers()
         {
             IEnumerable<EasyLearnUser> easyLearnUsers = usersRerository.GetAllUsers();
-            this.Users = new ObservableCollection<UserView>(easyLearnUsers.Select(easyLearnUser => new UserView(new UserVM(easyLearnUser))));
+            IEnumerable<UserView> userViews = easyLearnUsers.Select(easyLearnUser => new UserView(new UserVM(easyLearnUser)));
+            this.Users = new ObservableCollection<UserView>(userViews);
+        }
+        private void AddUserToUI(EasyLearnUser user) => this.Users.Add(new UserView(new UserVM(user)));
+        private void UpdateDictionariesPageView()
+        {
+            DictionariesPageVM? dictionariesPageVM = App.ServiceProvider.GetService<DictionariesPageVM>();
+            if (dictionariesPageVM is not null)
+                dictionariesPageVM.UpdateView();
         }
     }
 }

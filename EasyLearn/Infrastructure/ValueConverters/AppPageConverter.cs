@@ -21,11 +21,11 @@ namespace EasyLearn.Infrastructure.ValueConverters
                 case Page.Users:
                     return App.ServiceProvider.GetService<UsersPage>();
                 case Page.Lists:
-                    return App.ServiceProvider.GetService<ListsPage>();
+                    return App.ServiceProvider.GetService<DictionariesPage>();
                 case Page.EditCommonWordListPage:
-                    return App.ServiceProvider.GetService<EditCommonWordListPage>();
+                    return App.ServiceProvider.GetService<EditCommonDictionaryPage>();
                 case Page.EditVerbPrepositionListPage:
-                    return App.ServiceProvider.GetService<EditVerbPrepositionsListPage>();
+                    return App.ServiceProvider.GetService<EditVerbPrepositionDictionaryPage>();
                 default: 
                     throw new Exception();
             }
