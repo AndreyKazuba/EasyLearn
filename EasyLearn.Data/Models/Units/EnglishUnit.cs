@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using EasyLearn.Data.Enums;
 
+#pragma warning disable CS8618
+
 namespace EasyLearn.Data.Models
 {
     public class EnglishUnit
@@ -10,7 +12,8 @@ namespace EasyLearn.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MinLength(1)]
+        [MinLength(ModelConstants.UnitValueMinLength)]
+        [MaxLength(ModelConstants.UnitValueMaxLength)]
         public string Value { get; set; }
 
         [Required]

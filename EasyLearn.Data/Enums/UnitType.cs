@@ -18,7 +18,7 @@
         Adjective = 3,
 
         /// <summary>
-        /// Мобальный глагол
+        /// Модальный глагол
         /// </summary>
         ModalVerb = 4,
 

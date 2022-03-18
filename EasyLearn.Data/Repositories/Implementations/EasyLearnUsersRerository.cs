@@ -9,9 +9,9 @@ namespace EasyLearn.Data.Repositories.Implementations
 {
     public class EasyLearnUsersRerository : IEasyLearnUsersRerository
     {
-        private readonly EasyLearnDbContext context;
+        private readonly EasyLearnContext context;
 
-        public EasyLearnUsersRerository(EasyLearnDbContext context)
+        public EasyLearnUsersRerository(EasyLearnContext context)
         {
             this.context = context;
         }
@@ -23,12 +23,12 @@ namespace EasyLearn.Data.Repositories.Implementations
 
         public bool IsUserExist(string nickName)
         {
-            return context.Users.Any(user => user.NickName == nickName);
+            return context.Users.Any(user => user.Name == nickName);
         }
 
         public async Task<bool> IsUserExistAsync(string nickName)
         {
-            return await context.Users.AnyAsync(user => user.NickName == nickName);
+            return await context.Users.AnyAsync(user => user.Name == nickName);
         }
 
         public EasyLearnUser GetUserById(int userId)
@@ -86,7 +86,7 @@ namespace EasyLearn.Data.Repositories.Implementations
 
             EasyLearnUser newUser = new EasyLearnUser
             {
-                NickName = nickName,
+                Name = nickName,
                 IsCurrent = true,
             };
 

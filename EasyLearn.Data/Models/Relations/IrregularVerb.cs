@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+#pragma warning disable CS8618
+
 namespace EasyLearn.Data.Models
 {
     public class IrregularVerb
@@ -10,10 +12,10 @@ namespace EasyLearn.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [ForeignKey(nameof(RussianWord))]
-        public int RussianWordId { get; set; }
+        [ForeignKey(nameof(RussianUnit))]
+        public int RussianUnitId { get; set; }
 
-        public RussianUnit RussianWord { get; set; }
+        public RussianUnit RussianUnit { get; set; }
 
         [Required]
         [ForeignKey(nameof(FirstForm))]
@@ -35,8 +37,8 @@ namespace EasyLearn.Data.Models
 
         public List<Example> Examples { get; set; } = new List<Example>();
 
-        [MinLength(2)]
-        [MaxLength(100)]
-        public string Comment { get; set; }
+        [MinLength(ModelConstants.RelationCommentMinLength)]
+        [MaxLength(ModelConstants.RelationCommentMaxLength)]
+        public string? Comment { get; set; }
     }
 }

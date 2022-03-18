@@ -13,11 +13,11 @@ namespace EasyLearn.Data.Repositories.Implementations
 {
     public class ExamplesRepository : IExamplesRepository
     {
-        private readonly EasyLearnDbContext context;
+        private readonly EasyLearnContext context;
         private readonly IRussianUnitsRepository russianUnitsRepository;
         private readonly IEnglishUnitsRepository englishUnitsRepository;
 
-        public ExamplesRepository(EasyLearnDbContext context, IRussianUnitsRepository russianUnitsRepository, IEnglishUnitsRepository englishUnitsRepository)
+        public ExamplesRepository(EasyLearnContext context, IRussianUnitsRepository russianUnitsRepository, IEnglishUnitsRepository englishUnitsRepository)
         {
             this.context = context;
             this.russianUnitsRepository = russianUnitsRepository;

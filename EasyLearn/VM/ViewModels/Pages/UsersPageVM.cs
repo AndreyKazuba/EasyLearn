@@ -27,7 +27,7 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         #region Props for binding
 
-        public ObservableCollection<User> Users { get; set; }
+        public ObservableCollection<UserView> Users { get; set; }
         public string NewUserNickName { get; set; }
         public bool ConfirmNewUserButtonIsEnabled { get; set; } = true;
 
@@ -57,7 +57,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             if (this.Users.Any())
             {
-                User? lastCurrentUser = this.Users.FirstOrDefault(user => user.ViewModel.IsCurrent);
+                UserView? lastCurrentUser = this.Users.FirstOrDefault(user => user.ViewModel.IsCurrent);
                 if (lastCurrentUser is not null)
                 {
                     lastCurrentUser.ViewModel.IsCurrent = false;
@@ -72,7 +72,7 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         public async Task RemoveUser(int userId)
         {
-            User user = this.Users.First(user => user.ViewModel.Id == userId);
+            UserView user = this.Users.First(user => user.ViewModel.Id == userId);
             bool isCurrent = user.ViewModel.IsCurrent;
 
             this.Users.Remove(user);
@@ -88,7 +88,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void RefreshUsers()
         {
             IEnumerable<EasyLearnUser> easyLearnUsers = usersRerository.GetAllUsers();
-            this.Users = new ObservableCollection<User>(easyLearnUsers.Select(easyLearnUser => new User(new UserVM(easyLearnUser))));
+            this.Users = new ObservableCollection<UserView>(easyLearnUsers.Select(easyLearnUser => new UserView(new UserVM(easyLearnUser))));
         }
     }
 }

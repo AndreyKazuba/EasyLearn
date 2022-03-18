@@ -9,35 +9,26 @@ using EasyLearn.Data.Enums;
 using EasyLearn.Data.Models;
 using System.Collections.ObjectModel;
 using EasyLearn.VM.ViewModels.CustomControls;
+using System.Windows.Controls;
+using EasyLearn.UI.CustomControls;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
     public class ListsPageVM : ViewModel
     {
         private readonly IEasyLearnUsersRerository usersRerository;
-        private readonly ICommonWordListsRepository commonWordListsRepository;
-        private readonly IVerbPrepositionListsRepository verbPrepositionListsRepository;
+        private readonly ICommonDictionaryRepository commonWordListsRepository;
+        private readonly IVerbPrepositionDictionaryRepository verbPrepositionListsRepository;
 
         private int currentUserId;
 
-        private ListType currentNewListType;
+        private DictionaryType currentNewListType;
         private bool newListIsCommon;
         private bool newListIsPrepositionsList;
 
-        private CommonWordListType currentCommonWordListType;
-        private bool newListHasNoType;
-        private bool newListWithNouns;
-        private bool newListWithVerbs;
-        private bool newListWithAdjectives;
-        private bool newListWithSentences;
-        private bool newListWithConbinationsOfWords;
-        private bool newListWithPronouns;
-        private bool newListWithNumerals;
-        private bool newListWithAdverbs;
-
         #region Props for binding
 
-        public ObservableCollection<UI.CustomControls.List> Lists { get; set; }
+        public ObservableCollection<UserControl> Lists { get; set; }
         public string NewListName { get; set; }
         public string NewListDescription { get; set; }
         public bool CommonWordListTypeComboBoxIsCollapsed { get; set; }
@@ -48,7 +39,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             set
             {
                 this.newListIsCommon = value;
-                this.currentNewListType = ListType.CommonWordsList;
+                this.currentNewListType = DictionaryType.CommonDictionary;
                 this.CommonWordListTypeComboBoxIsCollapsed = false;
             }
         }
@@ -58,100 +49,13 @@ namespace EasyLearn.VM.ViewModels.Pages
             set
             {
                 this.newListIsPrepositionsList = value;
-                this.currentNewListType = ListType.VerbPrepositionsList;
+                this.currentNewListType = DictionaryType.VerbPrepositionDictionary;
                 this.CommonWordListTypeComboBoxIsCollapsed = true;
             }
         }
 
-        public bool NewListHasNoType
-        {
-            get { return this.newListHasNoType; }
-            set
-            {
-                this.newListHasNoType = value;
-                this.currentCommonWordListType = CommonWordListType.No;
-            }
-        }
 
-        public bool NewListWithNouns
-        {
-            get { return this.newListWithNouns; }
-            set
-            {
-                this.newListWithNouns = value;
-                this.currentCommonWordListType = CommonWordListType.Nouns;
-            }
-        }
 
-        public bool NewListWithVerbs
-        {
-            get { return this.newListWithVerbs; }
-            set
-            {
-                this.newListWithVerbs = value;
-                this.currentCommonWordListType = CommonWordListType.Verbs;
-            }
-        }
-
-        public bool NewListWithAdjectives
-        {
-            get { return this.newListWithAdjectives; }
-            set
-            {
-                this.newListWithAdjectives = value;
-                this.currentCommonWordListType = CommonWordListType.Adjectives;
-            }
-        }
-
-        public bool NewListWithSentences
-        {
-            get { return this.newListWithSentences; }
-            set
-            {
-                this.newListWithSentences = value;
-                this.currentCommonWordListType = CommonWordListType.Sentences;
-            }
-        }
-
-        public bool NewListWithConbinationsOfWords
-        {
-            get { return this.newListWithConbinationsOfWords; }
-            set
-            {
-                this.newListWithConbinationsOfWords = value;
-                this.currentCommonWordListType = CommonWordListType.ConbinationsOfWords;
-            }
-        }
-
-        public bool NewListWithPronouns
-        {
-            get { return this.newListWithPronouns; }
-            set
-            {
-                this.newListWithPronouns = value;
-                this.currentCommonWordListType = CommonWordListType.Pronouns;
-            }
-        }
-
-        public bool NewListWithNumerals
-        {
-            get { return this.newListWithNumerals; }
-            set
-            {
-                this.newListWithNumerals = value;
-                this.currentCommonWordListType = CommonWordListType.Numerals;
-            }
-        }
-
-        public bool NewListWithAdverbs
-        {
-            get { return this.newListWithAdverbs; }
-            set
-            {
-                this.newListWithAdverbs = value;
-                this.currentCommonWordListType = CommonWordListType.Adverbs;
-            }
-        }
 
         #endregion
 
@@ -170,8 +74,8 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         public ListsPageVM
             (IEasyLearnUsersRerository usersRerository,
-            ICommonWordListsRepository commonWordListsRepository,
-            IVerbPrepositionListsRepository verbPrepositionListsRepository)
+            ICommonDictionaryRepository commonWordListsRepository,
+            IVerbPrepositionDictionaryRepository verbPrepositionListsRepository)
         {
             this.usersRerository = usersRerository;
             this.commonWordListsRepository = commonWordListsRepository;
@@ -191,11 +95,11 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             switch (this.currentNewListType)
             {
-                case ListType.CommonWordsList:
-                    await commonWordListsRepository.AddList(this.NewListName, this.NewListDescription, this.currentUserId, this.currentCommonWordListType);
+                case DictionaryType.CommonDictionary:
+                    await commonWordListsRepository.CreateCommonDictionary(this.NewListName, this.NewListDescription, this.currentUserId);
                     break;
-                case ListType.VerbPrepositionsList:
-                    await verbPrepositionListsRepository.AddList(this.NewListName, this.NewListDescription, this.currentUserId);
+                case DictionaryType.VerbPrepositionDictionary:
+                    await verbPrepositionListsRepository.CreateVerbPrepositionDictionary(this.NewListName, this.NewListDescription, this.currentUserId);
                     break;
             }
 
@@ -207,7 +111,6 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.NewListName = string.Empty;
             this.NewListDescription = string.Empty;
             this.NewListIsCommon = true;
-            this.NewListHasNoType = true;
         }
 
         private void UpdateCurrentUserId()
@@ -217,20 +120,20 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         private void RefreshLists()
         {
-            UI.CustomControls.List irregularVerbsList = new UI.CustomControls.List(new ListVM("Irregular verbs", "Default desc" , 0, ListType.IrregularVerbsList));
+            UserControl irregularVerbsList = new IrregularVerbsListView(new IrregularVerbsListVM());
 
-            IEnumerable<UI.CustomControls.List> commonLists = commonWordListsRepository
-                .GetUsersCommonLists(this.currentUserId)
-                .Select(list => new UI.CustomControls.List(new ListVM(list.Name,list.Description, list.Id, ListType.CommonWordsList)));
+            IEnumerable<UserControl> commonLists = commonWordListsRepository
+                .GetUsersCommonDictionaries(this.currentUserId)
+                .Select(list => new CommonWordListView(new CommonWordListVM(list.Name, list.Description, list.Id)));
 
-            IEnumerable<UI.CustomControls.List> prepositionsLists = verbPrepositionListsRepository
-                .GetUsersVerbPreposotionLists(this.currentUserId)
-                .Select(list => new UI.CustomControls.List(new ListVM(list.Name, list.Description, list.Id, ListType.VerbPrepositionsList)));
+            IEnumerable<UserControl> prepositionsLists = verbPrepositionListsRepository
+                .GetUsersVerbPreposotionDictionaries(this.currentUserId)
+                .Select(list => new VerbPrepositionListView(new VerbPrepositionListVM(list.Name, list.Description, list.Id)));
 
-            List<UI.CustomControls.List> allCurrentUserLists = commonLists.Union(prepositionsLists).ToList();
+            List<UserControl> allCurrentUserLists = commonLists.Union(prepositionsLists).ToList();
             allCurrentUserLists.Add(irregularVerbsList);
 
-            this.Lists = new ObservableCollection<UI.CustomControls.List>(allCurrentUserLists);
+            this.Lists = new ObservableCollection<UserControl>(allCurrentUserLists);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿INSERT INTO IrregularVerbs (RussianWordId, FirstFormId, SecondFormId, ThirdFormId, Comment) 
+﻿INSERT INTO IrregularVerbs (RussianUnitId, FirstFormId, SecondFormId, ThirdFormId, Comment) 
 VALUES 
 (
 	(SELECT TOP 1 [rus].[Id] FROM [RussianUnits] AS [rus] WHERE [rus].[Value] = 'подниматься'), 

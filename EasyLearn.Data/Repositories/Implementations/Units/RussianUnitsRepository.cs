@@ -11,9 +11,9 @@ namespace EasyLearn.Data.Repositories.Implementations
 {
     public class RussianUnitsRepository : IRussianUnitsRepository
     {
-        private readonly EasyLearnDbContext context;
+        private readonly EasyLearnContext context;
 
-        public RussianUnitsRepository(EasyLearnDbContext context)
+        public RussianUnitsRepository(EasyLearnContext context)
         {
             this.context = context;
         }
@@ -60,7 +60,7 @@ namespace EasyLearn.Data.Repositories.Implementations
 
         public async Task<RussianUnit?> CreateUnit(string value, UnitType type)
         {
-            if (string.IsNullOrEmpty(value) || value.Length < ModelConstants.UnitMinLength)
+            if (string.IsNullOrEmpty(value) || value.Length < ModelConstants.UnitValueMinLength)
             {
                 return null;
             }

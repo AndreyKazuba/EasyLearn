@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+#pragma warning disable CS8618
+
 namespace EasyLearn.Data.Models
 {
     public class CommonRelation
@@ -11,30 +13,30 @@ namespace EasyLearn.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [ForeignKey(nameof(WordList))]
-        public int WordListId { get; set; }
+        [ForeignKey(nameof(CommonDictionary))]
+        public int CommonDictionaryId { get; set; }
 
-        public CommonWordList WordList { get; set; }
-
-        [Required]
-        [ForeignKey(nameof(RussianWord))]
-        public int RussianWordId { get; set; }
-
-        public RussianUnit RussianWord { get; set; }
+        public CommonDictionary CommonDictionary { get; set; }
 
         [Required]
-        [ForeignKey(nameof(EnglishWord))]
-        public int EnglishWordId { get; set; }
+        [ForeignKey(nameof(RussianUnit))]
+        public int RussianUnitId { get; set; }
 
-        public EnglishUnit EnglishWord { get; set; }
+        public RussianUnit RussianUnit { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(EnglishUnit))]
+        public int EnglishUnitId { get; set; }
+
+        public EnglishUnit EnglishUnit { get; set; }
 
         public List<Example> Examples { get; set; } = new List<Example>();
 
         [Required]
         public DateTime CreationDateUtc { get; set; }
 
-        [MinLength(2)]
-        [MaxLength(100)]
+        [MinLength(ModelConstants.RelationCommentMinLength)]
+        [MaxLength(ModelConstants.RelationCommentMaxLength)]
         public string? Comment { get; set; }
     }
 }

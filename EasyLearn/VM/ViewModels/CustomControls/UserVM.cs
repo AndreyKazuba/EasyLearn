@@ -20,7 +20,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public UserVM(EasyLearnUser user)
         {
             this.Id = user.Id;
-            this.NickName = user.NickName;
+            this.NickName = user.Name;
             this.IsCurrent = user.IsCurrent;
         }
 

@@ -36,9 +36,9 @@ namespace EasyLearn
         {
             ServiceCollection services = new ServiceCollection();
 
-            services.AddDbContext<EasyLearnDbContext>(options =>
+            services.AddDbContext<EasyLearnContext>(options =>
             {
-                options.UseSqlServer(@"Server=localhost\SQLEXPRESS;Database=EasyLearn2;Trusted_Connection=True;");
+                options.UseSqlServer(Config.ConnectionString);
             });
 
             services.AddSingleton<AppWindow>();
@@ -47,23 +47,25 @@ namespace EasyLearn
             services.AddSingleton<UsersPage>();
             services.AddSingleton<DictationPage>();
             services.AddSingleton<ListsPage>();
-            services.AddSingleton<EditListsPage>();
+            services.AddSingleton<EditCommonWordListPage>();
+            services.AddSingleton<EditVerbPrepositionsListPage>();
 
             services.AddSingleton<UsersPageVM>();
             services.AddSingleton<ListsPageVM>();
-            services.AddSingleton<EditListPageVM>();
+            services.AddSingleton<EditCommonWordListPageVM>();
+            services.AddSingleton<EditWordPrepositionsListPageVM>();
 
             services.AddTransient<IRussianUnitsRepository, RussianUnitsRepository>();
             services.AddTransient<IEnglishUnitsRepository, EnglishUnitsRepository>();
 
             services.AddTransient<IExamplesRepository, ExamplesRepository>();
 
-            services.AddTransient<IRelationsRepository, RelationsRepository>();
+            services.AddTransient<ICommonRelationsRepository, CommonRelationsRepository>();
             services.AddTransient<IVerbPrepositionsRepository, VerbPrepositionsRepository>();
             services.AddTransient<IIrregularVerbsRepository, IrregularVerbsRepository>();
 
-            services.AddTransient<ICommonWordListsRepository, CommonWordListsRepository>();
-            services.AddTransient<IVerbPrepositionListsRepository, VerbPrepositionListsRepository>();
+            services.AddTransient<ICommonDictionaryRepository, CommonDictionaryRepository>();
+            services.AddTransient<IVerbPrepositionDictionaryRepository, VerbPrepositionDictionaryRepository>();
 
             services.AddTransient<IEasyLearnUsersRerository, EasyLearnUsersRerository>();
 

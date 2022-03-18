@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+#pragma warning disable CS8618
+
 namespace EasyLearn.Data.Models
 {
     public class VerbPreposition
@@ -13,10 +15,10 @@ namespace EasyLearn.Data.Models
         public string Name { get; set; }
 
         [Required]
-        [ForeignKey(nameof(VerbPrepositionList))]
-        public int VerbPrepositionListId { get; set; }
+        [ForeignKey(nameof(VerbPrepositionDictionary))]
+        public int VerbPrepositionDictionaryId { get; set; }
 
-        public VerbPrepositionList VerbPrepositionList { get; set; }
+        public VerbPrepositionDictionnary VerbPrepositionDictionary { get; set; }
 
         [Required]
         [ForeignKey(nameof(Preposition))]
@@ -30,9 +32,9 @@ namespace EasyLearn.Data.Models
 
         public EnglishUnit Verb { get; set; }
 
-        [MinLength(2)]
-        [MaxLength(100)]
-        public string Comment { get; set; }
+        [MinLength(ModelConstants.RelationCommentMinLength)]
+        [MaxLength(ModelConstants.RelationCommentMaxLength)]
+        public string? Comment { get; set; }
 
         public List<Example> Examples { get; set; } = new List<Example>();
 

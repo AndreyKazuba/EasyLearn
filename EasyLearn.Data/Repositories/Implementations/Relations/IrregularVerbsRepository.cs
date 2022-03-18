@@ -7,9 +7,9 @@ namespace EasyLearn.Data.Repositories.Implementations
 {
     public class IrregularVerbsRepository : IIrregularVerbsRepository
     {
-        private readonly EasyLearnDbContext context;
+        private readonly EasyLearnContext context;
 
-        public IrregularVerbsRepository(EasyLearnDbContext context)
+        public IrregularVerbsRepository(EasyLearnContext context)
         {
             this.context = context;
         }

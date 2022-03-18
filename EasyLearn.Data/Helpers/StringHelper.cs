@@ -4,7 +4,12 @@
     {
         public static bool Equals(string x, string y)
         {
-            return x.ToUpper() == y.ToUpper();
+            return x.ToLower() == y.ToLower();
+        }
+
+        public static string PrepareToDb(string @string)
+        {
+            return @string.ToLower().Trim();
         }
     }
 }
