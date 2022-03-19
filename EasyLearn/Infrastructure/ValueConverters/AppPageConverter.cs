@@ -20,7 +20,7 @@ namespace EasyLearn.Infrastructure.ValueConverters
                     return App.ServiceProvider.GetService<DictationPage>();
                 case Page.Users:
                     return App.ServiceProvider.GetService<UsersPage>();
-                case Page.Lists:
+                case Page.Dictionaries:
                     return App.ServiceProvider.GetService<DictionariesPage>();
                 case Page.EditCommonWordListPage:
                     return App.ServiceProvider.GetService<EditCommonDictionaryPage>();

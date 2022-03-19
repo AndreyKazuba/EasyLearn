@@ -12,8 +12,6 @@ namespace EasyLearn.Data.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public string Name { get; set; }
-
         [Required]
         [ForeignKey(nameof(VerbPrepositionDictionary))]
         public int VerbPrepositionDictionaryId { get; set; }

@@ -8,10 +8,11 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
              mc:Ignorable="d">
-    
+
     <materialDesign:Flipper Style="{DynamicResource MaterialDesignCardFlipper}" 
                             materialDesign:ShadowAssist.ShadowDepth="Depth2"
-                            Margin="17 10 0 0">
+                            Margin="17 10 0 0"
+                            IsFlipped="{Binding IsCardFlipped, Mode=TwoWay}">
 
         <!--Лицевая сторона карточки-->
         <materialDesign:Flipper.FrontContent>
@@ -52,9 +53,9 @@
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding FlipBackAllAnotherCardsCommand}"/>
+                            <i:InvokeCommandAction Command="{Binding SetEditNameFieldValueCommand}"/>
                             <i:InvokeCommandAction Command="{x:Static materialDesign:Flipper.FlipCommand}"/>
-                            <!--<i:InvokeCommandAction Command="{Binding UpdateIntermediatesCommand}"/>
-                            <i:InvokeCommandAction Command="{Binding UpdateGoBackButtonIsEnabledCommand}"/>-->
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
 
@@ -73,7 +74,6 @@
                                 HorizontalAlignment="Center"
                                 Grid.Row="0">
                         <TextBlock Text="{Binding Name}" FontSize="13"/>
-                        <!--<TextBlock Text="{Binding LastName}" FontSize="13" Margin="4 0 0 0"/>-->
                     </StackPanel>
 
                     <!--Кнопка авторизации на аккаунте-->
@@ -85,8 +85,7 @@
                             Grid.Row="1"
                             Margin="0 3 0 0"
                             ToolTip="Войти на аккаунт"
-                            Command="{Binding SetUserAsCurrentCommand}"
-                            CommandParameter="{Binding Id}"/>
+                            Command="{Binding SetUserAsCurrentCommand}"/>
 
                     <!--Надпись "текущий аккаунт"-->
                     <StackPanel Orientation="Horizontal"
@@ -133,15 +132,14 @@
                         <!--Кнопка возвращающая на лицевую сторону карточки-->
                         <Button Style="{DynamicResource MaterialDesignToolForegroundButton}"
                                 HorizontalAlignment="Left"
-                                IsEnabled="{Binding BackButtonIsEnabled}"
-                                ToolTip="Подтвердить изменения и вернуться">
+                                IsEnabled="{Binding BackButtonIsEnabled}">
 
                             <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" />
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
                                     <i:InvokeCommandAction Command="{x:Static materialDesign:Flipper.FlipCommand}"/>
-                                    <!--<i:InvokeCommandAction Command="{Binding RenameAccountCommand}"/>-->
+                                    <i:InvokeCommandAction Command="{Binding EditUserCommand}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
 
@@ -154,71 +152,37 @@
                     </StackPanel>
                 </materialDesign:ColorZone>
 
-                <!--Текстбоксы, изменяющие имя и фамилию аккаунта-->
-                <Grid Grid.Row="1" 
-                      Margin="0 6 0 0" 
-                      HorizontalAlignment="Center" 
-                      VerticalAlignment="Top"
-                      Width="172">
+                <TextBox materialDesign:HintAssist.Hint="Имя пользователя" 
+                         materialDesign:HintAssist.IsFloating="True"
+                         Grid.Row="1"
+                         Margin="0 12 0 0"
+                         Width="172"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Top">
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+                    <TextBox.Text>
+                        <Binding Path="EditNameFieldValue" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                            <Binding.ValidationRules>
+                                <!--<local:NotEmptyValidationRuleForRenameAccountWindow ValidatesOnTargetUpdated="True" />
+                                    <local:MaxSymbolValidationRuleForRenameAccountWindow ValidatesOnTargetUpdated="True"/>-->
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
 
-                    <!--Текстбокс для изменения имени аккаунта-->
-                    <!--<TextBox materialDesign:HintAssist.Hint="Имя" 
-                             materialDesign:HintAssist.IsFloating="True"
-                             Margin="0 12 0 0">
-
-                        <TextBox.Text>
-                            <Binding Path="IntermediateFirstName" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <local:NotEmptyValidationRuleForRenameAccountWindow ValidatesOnTargetUpdated="True" />
-                                    <local:MaxSymbolValidationRuleForRenameAccountWindow ValidatesOnTargetUpdated="True"/>
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="TextChanged">
-                                <i:InvokeCommandAction Command="{Binding UpdateGoBackButtonIsEnabledCommand}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <i:InvokeCommandAction Command="{Binding UpdateGoBackButtonIsEnabledCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
 
 
-                    </TextBox>-->
+                </TextBox>
 
-                    <!--Текстбокс для изменения фамилии аккаунта-->
-                    <!--<TextBox Grid.Row="1" 
-                             materialDesign:HintAssist.Hint="Фамилия" 
-                             materialDesign:HintAssist.IsFloating="True"
-                             Margin="0 12 0 0">
-
-                        <TextBox.Text>
-                            <Binding Path="IntermediateLastName" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <local:NotEmptyValidationRuleForRenameAccountWindow ValidatesOnTargetUpdated="True" />
-                                    <local:MaxSymbolValidationRuleForRenameAccountWindow ValidatesOnTargetUpdated="True"/>
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="TextChanged">
-                                <i:InvokeCommandAction Command="{Binding UpdateGoBackButtonIsEnabledCommand}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-
-                    </TextBox>-->
-
-                </Grid>
 
                 <!--Кнопка удаления аккаунта-->
                 <Button Grid.Row="2" 
                         Margin="30 12 30 12" 
                         Command="{Binding RemoveUserCommand}"
-                        CommandParameter="{Binding Id}"
                         Foreground="Red"
                         Style="{DynamicResource MaterialDesignFlatButton}"
                         ToolTip="Удалить аккаунт"

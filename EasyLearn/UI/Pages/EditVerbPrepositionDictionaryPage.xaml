@@ -14,22 +14,28 @@
     <materialDesign:DialogHost>
 
         <Grid>
-            <Button Height="30" Width="100" Command="{Binding GoBack}">Назад</Button>
 
-            <StackPanel>
-                <ItemsControl ItemsSource="{Binding VerbPrepositions}">
+            <Button Height="30" Width="100" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding GoBack}">Назад</Button>
+
+            <ScrollViewer Margin="120 0 0 0">
+                <ItemsControl ItemsSource="{Binding VerbPrepositions}" 
+                  VerticalContentAlignment="Top"
+                  HorizontalContentAlignment="Left">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
                 </ItemsControl>
-                <TextBlock Text="{Binding Name}"/>
-                <TextBlock Text="{Binding Description}"/>
-            </StackPanel>
+            </ScrollViewer>
 
 
 
             <Button Height="50"
                 Width="50"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                Margin="30"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="10 40 0 0"
                 Style="{DynamicResource MaterialDesignFloatingActionButton}"
                 Background="ForestGreen"
                 BorderBrush="ForestGreen"
@@ -127,7 +133,7 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding ClearCreateRelationWindow}"/>
+                                        <i:InvokeCommandAction Command="{Binding CleanVerbPrepositionCreationWindowCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -143,8 +149,8 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding CreateNewRelation}"/>
-                                        <i:InvokeCommandAction Command="{Binding ClearCreateRelationWindow}"/>
+                                        <i:InvokeCommandAction Command="{Binding CreateVerbPrepositionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding CleanVerbPrepositionCreationWindowCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 

@@ -40,14 +40,14 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         #region Commands
 
-        public DelegateCommand GoBack { get; set; }
-        public DelegateCommand CreateNewRelation { get; set; }
+        public DelegateCommand GoBack { get; private set; }
+        public DelegateCommand CreateNewRelation { get; private set; }
 
         protected override void InitCommands()
         {
             this.GoBack = new DelegateCommand(arg =>
             {
-                App.ServiceProvider.GetService<AppWindowVM>().OpenListsPage.Execute(arg);
+                App.ServiceProvider.GetService<AppWindowVM>().OpenListsPage.Execute();
             });
             this.CreateNewRelation = new DelegateCommand(async arg => await AddNewRelation());
         }
@@ -78,7 +78,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             UnitType engUnitType = this.SelectedEnglishUnitType.UnitType;
             UnitType rusUnitType = this.SelectedRussianUnitType.UnitType;
             string comment = this.Comment;
-            CommonRelation newRelation = await commonRelationsRepository.CreateRelation(rusUnitValue, rusUnitType, engUnitValue, engUnitType, this.currentCommonWordListId, comment);
+            CommonRelation newRelation = await commonRelationsRepository.CreateCommonRelation(rusUnitValue, rusUnitType, engUnitValue, engUnitType, this.currentCommonWordListId, comment);
             this.Relations.Add(new CommonRelationView(new CommonRelationVM(newRelation)));
         }
 

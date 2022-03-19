@@ -10,17 +10,17 @@ using Microsoft.Extensions.DependencyInjection;
 using EasyLearn.UI.CustomControls;
 using System.Collections.ObjectModel;
 using EasyLearn.VM.ViewModels.CustomControls;
-
+using EasyLearn.VM.Windows;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
     public class UsersPageVM : ViewModel
     {
-        private readonly IEasyLearnUsersRerository usersRerository;
-        public UsersPageVM(IEasyLearnUsersRerository usersRerository)
+        private readonly IEasyLearnUserRerository usersRerository;
+        public UsersPageVM(IEasyLearnUserRerository usersRerository)
         {
             this.usersRerository = usersRerository;
-
+            GetAppWindowVM().CurrentPageChanged += () => FlipBackAllCards();
             LoadUsers();
         }
 
@@ -38,6 +38,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public DelegateCommand RemoveUserCommand { get; private set; }
         public DelegateCommand SetUserAsCurrentCommand { get; private set; }
         public DelegateCommand ClearUserAddingWindowCommand { get; private set; }
+        public DelegateCommand FlipBackAllCardsCommand { get; private set; }
 
         protected override void InitCommands()
         {
@@ -45,6 +46,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.RemoveUserCommand = new DelegateCommand(async userId => await RemoveUser((int)userId));
             this.SetUserAsCurrentCommand = new DelegateCommand(async userId => await SetUserAsCurrent((int)userId));
             this.ClearUserAddingWindowCommand = new DelegateCommand(arg => ClearUserAddingWindow());
+            this.FlipBackAllCardsCommand = new DelegateCommand(arg => FlipBackAllCards());
         }
 
         #endregion
@@ -90,6 +92,19 @@ namespace EasyLearn.VM.ViewModels.Pages
             DictionariesPageVM? dictionariesPageVM = App.ServiceProvider.GetService<DictionariesPageVM>();
             if (dictionariesPageVM is not null)
                 dictionariesPageVM.UpdateView();
+        }
+        private void FlipBackAllCards()
+        {
+            foreach (UserView userView in this.Users)
+                userView.ViewModel.IsCardFlipped = false;
+        }
+        private AppWindowVM GetAppWindowVM()
+        {
+            AppWindowVM? appWindowVM = App.ServiceProvider.GetService<AppWindowVM>();
+            if (appWindowVM is not null)
+                return appWindowVM;
+            else
+                throw new Exception("Something went wrong");
         }
     }
 }

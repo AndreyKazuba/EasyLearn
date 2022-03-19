@@ -18,7 +18,7 @@ namespace EasyLearn.VM.ViewModels.Pages
 {
     public class DictionariesPageVM : ViewModel
     {
-        private readonly IEasyLearnUsersRerository usersRerository;
+        private readonly IEasyLearnUserRerository usersRerository;
         private readonly ICommonDictionaryRepository commonDictionaryRepository;
         private readonly IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository;
 
@@ -52,7 +52,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         #endregion
 
         public DictionariesPageVM
-            (IEasyLearnUsersRerository usersRerository,
+            (IEasyLearnUserRerository usersRerository,
             ICommonDictionaryRepository commonWordListsRepository,
             IVerbPrepositionDictionaryRepository verbPrepositionListsRepository)
         {

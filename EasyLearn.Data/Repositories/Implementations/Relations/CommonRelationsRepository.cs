@@ -25,19 +25,19 @@ namespace EasyLearn.Data.Repositories.Implementations
             this.commonWordListsRepository = commonWordListsRepository;
         }
 
-        public bool IsRelationExist(int rusUnitId, int engUnitId)
+        public bool IsRelationExist(int rusUnitId, int engUnitId, int commonDictionaryId)
         {
-            return context.CommonRelations.Any(relation => relation.RussianUnitId == rusUnitId && relation.EnglishUnitId == engUnitId);
+            return context.CommonRelations.Any(relation => relation.RussianUnitId == rusUnitId && relation.EnglishUnitId == engUnitId && relation.CommonDictionaryId == commonDictionaryId);
         }
 
-        public async Task<CommonRelation?> CreateRelation(string rusUnitValue, UnitType rusUnitType, string engUnitValue, UnitType engUnitType, int wordListId, string? comment = null)
+        public async Task<CommonRelation?> CreateCommonRelation(string rusUnitValue, UnitType rusUnitType, string engUnitValue, UnitType engUnitType, int commonDictionaryId, string? comment = null)
         {
-            if (string.IsNullOrWhiteSpace(rusUnitValue) || string.IsNullOrEmpty(engUnitValue))
+            if (string.IsNullOrWhiteSpace(rusUnitValue) || string.IsNullOrWhiteSpace(engUnitValue))
             {
                 return null;
             }
 
-            if (!commonWordListsRepository.IsCommonDictionaryExist(wordListId))
+            if (!commonWordListsRepository.IsCommonDictionaryExist(commonDictionaryId))
             {
                 return null;
             }
@@ -45,7 +45,7 @@ namespace EasyLearn.Data.Repositories.Implementations
             EnglishUnit engUnit = await englishUnitsRepository.GetOrCreateUnit(engUnitValue, engUnitType);
             RussianUnit rusUnit = await russianUnitsRepository.GetOrCreateUnit(rusUnitValue, rusUnitType);
 
-            if (IsRelationExist(rusUnit.Id, engUnit.Id))
+            if (IsRelationExist(rusUnit.Id, engUnit.Id, commonDictionaryId))
             {
                 return null;
             }
@@ -55,7 +55,7 @@ namespace EasyLearn.Data.Repositories.Implementations
                 EnglishUnitId = engUnit.Id,
                 RussianUnitId = rusUnit.Id,
                 CreationDateUtc = DateTime.UtcNow,
-                CommonDictionaryId = wordListId,
+                CommonDictionaryId = commonDictionaryId,
                 Comment = comment,
             };
 

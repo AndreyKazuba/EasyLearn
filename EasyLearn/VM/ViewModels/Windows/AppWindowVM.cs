@@ -1,11 +1,24 @@
 ﻿using EasyLearn.VM.Core;
 using EasyLearn.Infrastructure.Enums;
+using System;
 
 namespace EasyLearn.VM.Windows
 {
     public class AppWindowVM : ViewModel
     {
-        public Page CurrentPage { get; set; }
+        private Page currentPage;
+        public event Action CurrentPageChanged;
+
+        public Page CurrentPage
+        {
+            get { return currentPage; }
+            set 
+            { 
+                currentPage = value;
+                if (this.CurrentPageChanged is not null)
+                    this.CurrentPageChanged.Invoke();
+            }
+        }
 
         public AppWindowVM()
         {
@@ -24,7 +37,7 @@ namespace EasyLearn.VM.Windows
         {
             this.OpenDictationPage = new DelegateCommand(arg => this.CurrentPage = Page.Dictation);
             this.OpenUsersPage = new DelegateCommand(arg => this.CurrentPage = Page.Users);
-            this.OpenListsPage = new DelegateCommand(arg => this.CurrentPage = Page.Lists);
+            this.OpenListsPage = new DelegateCommand(arg => this.CurrentPage = Page.Dictionaries);
             this.OpenEditCommonDictionaryPageCommand = new DelegateCommand(arg => this.CurrentPage = Page.EditCommonWordListPage);
             this.OpenEditVerbPrepositionDictionaryPageCommand = new DelegateCommand(arg => this.CurrentPage = Page.EditVerbPrepositionListPage);
         }

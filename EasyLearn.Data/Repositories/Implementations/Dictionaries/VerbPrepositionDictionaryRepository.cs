@@ -12,9 +12,9 @@ namespace EasyLearn.Data.Repositories.Implementations
     public class VerbPrepositionDictionaryRepository : IVerbPrepositionDictionaryRepository
     {
         private readonly EasyLearnContext context;
-        private readonly IEasyLearnUsersRerository usersRerository;
+        private readonly IEasyLearnUserRerository usersRerository;
 
-        public VerbPrepositionDictionaryRepository(EasyLearnContext context, IEasyLearnUsersRerository usersRerository)
+        public VerbPrepositionDictionaryRepository(EasyLearnContext context, IEasyLearnUserRerository usersRerository)
         {
             this.context = context;
             this.usersRerository = usersRerository;
@@ -58,14 +58,27 @@ namespace EasyLearn.Data.Repositories.Implementations
             return context.VerbPrepositionDictionaries.Where(dictionary => dictionary.UserId == dictionaryId).AsNoTracking();
         }
 
-        public VerbPrepositionDictionnary? GetVerbPrepositionDictionary(int dictionaryId)
+        public VerbPrepositionDictionnary GetVerbPrepositionDictionary(int dictionaryId)
         {
-            return context.VerbPrepositionDictionaries.AsNoTracking().FirstOrDefault(dictionary => dictionary.Id == dictionaryId);
+            return context.VerbPrepositionDictionaries
+                .Include(dictionary => dictionary.VerbPrepositions).ThenInclude(verbPreposition => verbPreposition.Verb)
+                .Include(dictionary => dictionary.VerbPrepositions).ThenInclude(verbPreposition => verbPreposition.Preposition)
+                .AsNoTracking()
+                .First(dictionary => dictionary.Id == dictionaryId);
         }
 
-        public Task<VerbPrepositionDictionnary?> GetVerbPrepositionDictionaryAsync(int dictionaryId)
+        public Task<VerbPrepositionDictionnary> GetVerbPrepositionDictionaryAsync(int dictionaryId)
         {
-            return context.VerbPrepositionDictionaries.AsNoTracking().FirstOrDefaultAsync(dictionary => dictionary.Id == dictionaryId);
+            return context.VerbPrepositionDictionaries
+                .Include(dictionary => dictionary.VerbPrepositions).ThenInclude(verbPreposition => verbPreposition.Verb)
+                .Include(dictionary => dictionary.VerbPrepositions).ThenInclude(verbPreposition => verbPreposition.Preposition)
+                .AsNoTracking()
+                .FirstAsync(dictionary => dictionary.Id == dictionaryId);
+        }
+
+        public bool IsVerbPrepositionDictionaryExist(int dictionaryId)
+        {
+            return context.VerbPrepositionDictionaries.Any(dictionary => dictionary.Id == dictionaryId);
         }
     }
 }

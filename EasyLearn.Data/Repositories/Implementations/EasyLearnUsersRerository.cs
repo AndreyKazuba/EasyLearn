@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EasyLearn.Data.Repositories.Implementations
 {
-    public class EasyLearnUsersRerository : IEasyLearnUsersRerository
+    public class EasyLearnUsersRerository : IEasyLearnUserRerository
     {
         private readonly EasyLearnContext context;
 
@@ -108,6 +108,13 @@ namespace EasyLearn.Data.Repositories.Implementations
         public bool IsUserExist(int userId)
         {
             return context.Users.Any(user => user.Id == userId);
+        }
+
+        public async Task EditUser(int userId, string newName)
+        {
+            EasyLearnUser user = context.Users.First(user => user.Id == userId);
+            user.Name = newName;
+            await context.SaveChangesAsync();
         }
     }
 }

@@ -67,7 +67,7 @@ namespace EasyLearn
             services.AddTransient<ICommonDictionaryRepository, CommonDictionaryRepository>();
             services.AddTransient<IVerbPrepositionDictionaryRepository, VerbPrepositionDictionaryRepository>();
 
-            services.AddTransient<IEasyLearnUsersRerository, EasyLearnUsersRerository>();
+            services.AddTransient<IEasyLearnUserRerository, EasyLearnUsersRerository>();
 
             return services.BuildServiceProvider();
         }

@@ -4,11 +4,301 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:EasyLearn.UI.Pages"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="DictationPage">
 
     <Grid>
-        <TextBlock>Dictation</TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.6*"/>
+            <RowDefinition Height="0.4*"/>
+        </Grid.RowDefinitions>
+
+        <!--Подсказка "используйте Enter"-->
+        <!--<materialDesign:Card Height="50" Width="300" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 20 20 0">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock FontSize="13" Text="Для проверки и перехода к следующему слову" HorizontalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock FontSize="13" Text='можно использовать клавишу ' />
+                        <TextBlock FontSize="13" Text='"Enter"' FontWeight="Bold"/>
+                    </StackPanel>
+                   
+                </StackPanel>
+            </materialDesign:Card>-->
+
+        <!--Текстблок, отображающий русский перевод текущего слова в диктанте-->
+        <TextBlock Grid.Row="0" 
+                       Text="EasyLearn"  
+                       FontSize="90"
+                       Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Margin="0 50 0 0"/>
+
+        <!--Изображение "Чтобы начать, нажмите start"-->
+        <!--<StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="0 100 0 0"
+                        Name="pressStartImage"
+                        Visibility="{Binding PressStartImageVisibility}">
+
+            --><!--<Image Source="D:\Visual Studio Projects\Plaid\Plaid\Images\smile_face.png" 
+                               Width="128"
+                               Height="128"/>--><!--
+
+            <TextBlock Text='Чтобы начать диктант, нажмите "Начать"' 
+                                   Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                                   FontSize="20"
+                                   HorizontalAlignment="Center"
+                                   Margin="0 0 0 10"/>
+
+
+        </StackPanel>-->
+
+        <!--Изображение "нет слов в базе"-->
+        <!--<StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="0 75 0 0"
+                        Name="dictationNoWordsImage"
+                        Visibility="{Binding NoWordsImageVisibility}">
+
+            --><!--<Image Source="D:\Visual Studio Projects\Plaid\Plaid\Images\sleep_face.png" 
+                       Width="128"
+                       Height="128"/>--><!--
+
+            <TextBlock Text='Чтобы начать диктант, добавьте хотя бы одно слово в базу' 
+                                   Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                                   FontSize="20"
+                                   HorizontalAlignment="Center"
+                                   Margin="0 0 0 10"/>
+
+            <TextBlock Text='Для этого нужно перейти в окно "Настройки" и нажать кнопку "Добавить новое слово"' 
+                                   Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                                   FontSize="12"
+                                   HorizontalAlignment="Center"
+                                   Margin="0 0 0 10"/>
+
+
+        </StackPanel>-->
+
+        <!--Изображение "нет ни одного аккаунта"-->
+        <!--<StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="0 75 0 0"
+                        Name="dictationNoAccountImage"
+                        Visibility="{Binding NoAccountImageVisibility}">
+
+
+
+            --><!--<Image Source="D:\Visual Studio Projects\Plaid\Plaid\Images\sleep_face.png" 
+                               Width="128"
+                               Height="128"/>--><!--
+
+            <TextBlock Text='Чтобы проводить диктанты, необходимо создать аккаунт' 
+                                   Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                                   FontSize="20"
+                                   HorizontalAlignment="Center"
+                                   Margin="0 0 0 10"/>
+
+            <TextBlock Text='Для этого нужно перейти в окно "Аккаунты" и нажать кнопку "Создать новый аккаунт"' 
+                                   Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                                   FontSize="12"
+                                   HorizontalAlignment="Center"
+                                   Margin="0 0 0 10"/>
+
+
+        </StackPanel>-->
+
+        <StackPanel Orientation="Horizontal" 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Margin="0 0 0 50"
+                        Grid.Row="2">
+
+            <!--Текстбокс, в который нужно записывать перевод слова для проверки-->
+            <TextBox Grid.Row="2" 
+                     Name="dictationTextBox"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     Height="50"
+                     Text="{Binding SupposedEngTranslation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Width="300"
+                     
+                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                     materialDesign:HintAssist.Hint="Перевод"                
+                     FontSize="16"/>
+
+            <!--Кнопка "проверить и двигаться дальше"-->
+            <Button Grid.Row="1" 
+                    Style="{DynamicResource MaterialDesignFloatingActionMiniButton}"
+                    Command="{Binding NextWordCommand}"
+                        ToolTip="Проверить слово и двигаться дальше">
+
+                <!--<materialDesign:PackIcon Kind="{Binding FirstTrueEnterClick, Converter={StaticResource nextButtonIconConverter}}"
+                                         Height="25"
+                                         Width="25"/>-->
+            </Button>
+
+        </StackPanel>
+
+
+
+        <!--Иконка правильного ответа-->
+        <!--<materialDesign:PackIcon Kind="Check" 
+                                     Height="60" 
+                                     Width="60" 
+                                     Foreground="Green"
+                                     Grid.Row="1"
+                                     HorizontalAlignment="Center"
+                                     Visibility="{Binding TrueAnserIconVisibility}"/>-->
+
+        <!--Иконка неправильного ответа-->
+        <!--<materialDesign:PackIcon Kind="Close" 
+                                     Height="60" 
+                                     Width="60" 
+                                     Foreground="Red"
+                                     Grid.Row="1"
+                                     HorizontalAlignment="Center"
+                                     Visibility="{Binding FalseAnserIconVisibility}"/>-->
+
+        <!--Прогресс текущего диктанта-->
+        <ProgressBar Grid.Row="1" 
+                         VerticalAlignment="Bottom" 
+                         Height="7"
+                         Value="{Binding ProgressBarValue}"
+                         Maximum="{Binding ProgressBarMaxValue}"/>
+
+        <!--Кнопка "начать диктант"-->
+        <Button Grid.Row="2"
+                    Height="40" 
+                    Width="130" 
+                    Command="{Binding StartDictationCommand}"
+                    Margin="0 70 0 0"
+                    FontSize="18"
+                    ToolTip="Начать дикнтант"
+                    Content="Начать"
+                    IsEnabled="{Binding StartDictationButtonIsEnabled}"
+                    Visibility="{Binding StartButtonVisibility}"/>
+
+        <!--Кнопка "завершить диктант"-->
+        <!--<Button Grid.Row="2"
+                    Height="40" 
+                    Name="endButton"
+                    Width="130"                   
+                    Margin="0 70 0 0"
+                    FontSize="18"
+                    Content="Завершить"
+                    ToolTip="Завершить диктант"
+                    Visibility="{Binding EndButtonVisibility}"
+                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
+
+            --><!--View окошка результата диктанта--><!--
+            <Button.CommandParameter>
+                <StackPanel Margin="10">
+
+                    --><!--<Image Source="{Binding TotalGrade, Converter={StaticResource finalResultImageConverter}}" 
+                               Width="128"
+                               Height="128"
+                               Margin="0 0 0 10"/>-->
+
+                    <!--Таблица с результатами--><!--
+                    <Grid>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                                       Text="Всего слов:"
+                                       Grid.Column="0"
+                                       Grid.Row="0"/>
+                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                                       Text="Дано ответов:"
+                                       Grid.Column="0"
+                                       Grid.Row="1"/>
+                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                                       Text="Правильных:"
+                                       Grid.Column="0"
+                                       Grid.Row="2"/>
+                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                                       Text="Ошибочных:"
+                                       Grid.Column="0"
+                                       Grid.Row="3"/>
+                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                                       Text="Оценка:"
+                                       Grid.Column="0"
+                                       Grid.Row="4"/>
+
+                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                                       Text="{Binding CurrentDictationWordCount}"
+                                       Grid.Column="1"
+                                       Grid.Row="0"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Right"/>
+                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                                       Text="{Binding TotalAnsers}"
+                                       Grid.Column="1"
+                                       Grid.Row="1"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Right"/>
+                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                                       Text="{Binding TotalTrueAnsers}"
+                                       Grid.Column="1"
+                                       Grid.Row="2"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Right"/>
+                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                                       Text="{Binding TotalWrongAnsers}"
+                                       Grid.Column="1"
+                                       Grid.Row="3"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Right"/>
+                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                                       Text="{Binding TotalStringGrade}"
+                                       Grid.Column="1"
+                                       Grid.Row="4"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Right"/>
+
+                    </Grid>
+
+                    --><!--Кнопка Ок--><!--
+                    <Button Style="{DynamicResource MaterialDesignFlatButton}"  
+                                HorizontalAlignment="Center"
+                                Content="Понятно"
+                                Margin="0 6 0 10"
+                                Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                                FocusVisualStyle="{x:Null}">
+                    </Button>
+
+                </StackPanel>
+            </Button.CommandParameter>
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <i:InvokeCommandAction Command="{Binding EndDictationCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
+        </Button>-->
+
+        <!--Всплывающая подсказка-->
+        <materialDesign:Snackbar x:Name="promtSnackBar"
+                                     VerticalAlignment="Top"
+                                     IsActive="{Binding PromtIsActive}">
+            <materialDesign:SnackbarMessage Content="{Binding CurrentPromtText}" HorizontalAlignment="Center"/>
+        </materialDesign:Snackbar>
+
     </Grid>
 </Page>

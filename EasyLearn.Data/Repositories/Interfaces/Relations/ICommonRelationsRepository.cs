@@ -10,6 +10,6 @@ namespace EasyLearn.Data.Repositories.Interfaces
 {
     public interface ICommonRelationsRepository
     {
-        Task<CommonRelation> CreateRelation(string rusUnitValue, UnitType rusUnitType, string engUnitValue, UnitType engUnitType, int wordListId, string? comment);
+        Task<CommonRelation> CreateCommonRelation(string rusUnitValue, UnitType rusUnitType, string engUnitValue, UnitType engUnitType, int wordListId, string? comment);
     }
 }

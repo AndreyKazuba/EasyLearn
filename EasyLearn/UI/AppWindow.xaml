@@ -9,7 +9,8 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="EasyLearn" Height="600" Width="950">
+        Title="EasyLearn" Height="600" Width="950"
+        WindowState="Maximized">
     <Grid>
         <materialDesign:DrawerHost>
             <materialDesign:DrawerHost.LeftDrawerContent>

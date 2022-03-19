@@ -11,9 +11,9 @@ namespace EasyLearn.Data.Repositories.Implementations
     public class CommonDictionaryRepository : ICommonDictionaryRepository
     {
         private readonly EasyLearnContext context;
-        private readonly IEasyLearnUsersRerository usersRerository;
+        private readonly IEasyLearnUserRerository usersRerository;
 
-        public CommonDictionaryRepository(EasyLearnContext context, IEasyLearnUsersRerository usersRerository)
+        public CommonDictionaryRepository(EasyLearnContext context, IEasyLearnUserRerository usersRerository)
         {
             this.context = context;
             this.usersRerository = usersRerository;

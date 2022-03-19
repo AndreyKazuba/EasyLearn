@@ -11,5 +11,6 @@ namespace EasyLearn.Data.Repositories.Interfaces
         VerbPrepositionDictionnary? GetVerbPrepositionDictionary(int dictionaryId);
         Task<VerbPrepositionDictionnary?> GetVerbPrepositionDictionaryAsync(int dictionaryId);
         Task DeleteVerbPrepositionDictionary(int dictionaryId);
+        bool IsVerbPrepositionDictionaryExist(int dictionaryId);
     }
 }

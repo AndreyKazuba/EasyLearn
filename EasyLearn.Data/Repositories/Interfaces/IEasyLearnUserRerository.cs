@@ -4,7 +4,7 @@ using EasyLearn.Data.Models;
 
 namespace EasyLearn.Data.Repositories.Interfaces
 {
-    public interface IEasyLearnUsersRerository
+    public interface IEasyLearnUserRerository
     {
         bool IsUserExist(string nickName);
         bool IsUserExist(int userId);
@@ -18,5 +18,6 @@ namespace EasyLearn.Data.Repositories.Interfaces
         bool IsUserCurrent(int userId);
         Task SetUserAsCurrent(int userId);
         Task RemoveUser(int userId);
+        Task EditUser(int userId, string newName);
     }
 }
