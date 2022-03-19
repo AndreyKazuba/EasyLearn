@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using EasyLearn.Data.Exceptions;
 using EasyLearn.Data.Models;
 using EasyLearn.Data.Repositories.Interfaces;
+using EasyLearn.Data.Helpers;
 
 namespace EasyLearn.Data.Repositories.Implementations
 {
@@ -44,8 +45,8 @@ namespace EasyLearn.Data.Repositories.Implementations
             ThrowIfAddingAttemptIncorrect(name, description, userId);
             VerbPrepositionDictionnary newVerbPrepositionDictionary = new VerbPrepositionDictionnary
             {
-                Name = name,
-                Description = description,
+                Name = StringHelper.Prepare(name),
+                Description = StringHelper.Prepare(description),
                 UserId = userId,
                 CreationDateUtc = DateTime.UtcNow,
             };
@@ -63,8 +64,9 @@ namespace EasyLearn.Data.Repositories.Implementations
         {
             ThrowIfEditingAttemptIncorrect(dictionaryId, name, description);
             VerbPrepositionDictionnary verbPrepositionDictionnary = await context.VerbPrepositionDictionaries.FirstAsync(dictionary => dictionary.Id == dictionaryId);
-            verbPrepositionDictionnary.Description = description;
-            verbPrepositionDictionnary.Name = name;
+            verbPrepositionDictionnary.Description = StringHelper.Prepare(description);
+            verbPrepositionDictionnary.Name = StringHelper.Prepare(name);
+            verbPrepositionDictionnary.ChangeDateUtc = DateTime.UtcNow;
             await context.SaveChangesAsync();
         }
         #endregion

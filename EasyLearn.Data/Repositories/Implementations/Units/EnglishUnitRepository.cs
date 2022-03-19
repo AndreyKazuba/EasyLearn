@@ -30,7 +30,7 @@ namespace EasyLearn.Data.Repositories.Implementations
             ThrowIfAddingAttemptIncorrect(value, type);
             EnglishUnit newUnit = new EnglishUnit
             {
-                Value = value,
+                Value = StringHelper.Prepare(value),
                 Type = type,
                 CreationDateUtc = DateTime.UtcNow,
             };

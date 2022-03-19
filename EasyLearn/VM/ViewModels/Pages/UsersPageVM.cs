@@ -62,9 +62,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private async Task CreateUser()
         {
-            EasyLearnUser? newUser = await usersRerository.CreateUser(this.NewUserName);
-            if (newUser is null)
-                throw new Exception("Name is incorrect or this user has already created");
+            EasyLearnUser newUser = await usersRerository.CreateUser(this.NewUserName);
             AddUserToUI(newUser);
             await SetUserAsCurrent(newUser.Id);
         }

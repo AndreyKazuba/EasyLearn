@@ -1,4 +1,5 @@
-﻿using EasyLearn.Data.Models;
+﻿using EasyLearn.Data.Helpers;
+using EasyLearn.Data.Models;
 using EasyLearn.VM.Core;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,9 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public string Comment { get; set; }
         public VerbPrepositionVM(VerbPreposition verbPreposition)
         {
-            this.PrepositionValue = verbPreposition.Preposition.Value;
-            this.VerbValue = verbPreposition.Verb.Value;
-            this.Comment = verbPreposition.Comment;
+            this.PrepositionValue = StringHelper.NormalizeRegister(verbPreposition.Preposition.Value);
+            this.VerbValue = StringHelper.NormalizeRegister(verbPreposition.Verb.Value);
+            this.Comment = StringHelper.TryNormalizeRegister(verbPreposition.Comment);
         }
     }
 }

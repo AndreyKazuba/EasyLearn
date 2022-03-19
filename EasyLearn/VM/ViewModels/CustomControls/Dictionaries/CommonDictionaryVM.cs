@@ -12,8 +12,6 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 {
     public class CommonDictionaryVM : ViewModel
     {
-        private readonly ICommonDictionaryRepository commonDictionaryRepository;
-
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -42,53 +40,29 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 
         public CommonDictionaryVM(CommonDictionary commonDictionary)
         {
-            this.Name = commonDictionary.Name;
-            this.Description = commonDictionary.Description;
+            this.Name = StringHelper.NormalizeRegister(commonDictionary.Name);
+            this.Description = StringHelper.NormalizeRegister(commonDictionary.Description);
             this.Id = commonDictionary.Id;
-
-            ICommonDictionaryRepository? commonDictionaryRepository = App.ServiceProvider.GetService<ICommonDictionaryRepository>();
-            if (commonDictionaryRepository is not null)
-                this.commonDictionaryRepository = commonDictionaryRepository;
-            else
-                throw new Exception("Something went wrong");
         }
         private void RemoveCommonDictionary() => GetDictionariesPageVM().RemoveCommonDictionaryCommand.Execute(Id);
         private async Task EditCommonDictionary()
         {
             string newDictionaryName = this.EditNameFieldValue;
             string newDictionaryDescription = this.EditDescriptionFieldValue;
-            if (string.IsNullOrWhiteSpace(newDictionaryName) || string.IsNullOrWhiteSpace(newDictionaryDescription))
-                throw new Exception("Stomething went wrong");
             if (StringHelper.Equals(this.Name, newDictionaryName) && StringHelper.Equals(this.Description, newDictionaryDescription))
                 return;
             this.Name = newDictionaryName;
             this.Description = newDictionaryDescription;
-            await commonDictionaryRepository.EditCommonDictionary(this.Id, newDictionaryName, newDictionaryDescription);
+            await App.GetService<ICommonDictionaryRepository>().EditCommonDictionary(this.Id, newDictionaryName, newDictionaryDescription);
         }
 
         private void OpenCurrentCommonDictionary()
         {
             SetCurrentDictionary();
-            AppWindowVM? appWindowVM = App.ServiceProvider.GetService<AppWindowVM>();
-
-            if (appWindowVM is not null)
-            {
-                appWindowVM.OpenEditCommonDictionaryPageCommand.Execute();
-            }
-            else
-            {
-                throw new Exception("Something went wrong :(");
-            }
+            App.GetService<AppWindowVM>().OpenEditCommonDictionaryPageCommand.Execute();
         }
         private void FlipBackAllAnotherCards() => GetDictionariesPageVM().FlipBackAllCardsCommand.Execute();
-        private async void SetCurrentDictionary()
-        {
-            EditCommonDictionaryPageVM? editListPageVM = App.ServiceProvider.GetService<EditCommonDictionaryPageVM>();
-            if (editListPageVM is not null)
-            {
-                await editListPageVM.SetAsCurrentDictionary(Id);
-            }
-        }
+        private async void SetCurrentDictionary() => await App.GetService<EditCommonDictionaryPageVM>().SetAsCurrentDictionary(Id);
         private void SetEditFieldsValue()
         {
             this.EditDescriptionFieldValue = this.Description;

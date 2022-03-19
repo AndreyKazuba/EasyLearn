@@ -1,16 +1,13 @@
 ﻿using EasyLearn.Data.Enums;
 using EasyLearn.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EasyLearn.Data.Repositories.Interfaces
 {
     public interface ICommonRelationRepository
     {
-        Task<CommonRelation> CreateCommonRelation(string rusUnitValue, UnitType rusUnitType, string engUnitValue, UnitType engUnitType, int commonDictionaryId, string? comment);
+        bool IsCommonRelationExist(int russianUnitId, int englishUnitId, int dictionaryId);
+        Task<CommonRelation> CreateCommonRelation(string russianUnitValue, UnitType russianUnitType, string englishUnitValue, UnitType englishUnitType, int dictionaryId, string? comment);
         Task DeleteAllDictionaryRelations(int dictionaryId);
     }
 }

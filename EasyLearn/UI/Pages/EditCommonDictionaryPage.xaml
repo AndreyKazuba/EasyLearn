@@ -8,7 +8,7 @@
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="EditListsPage" Background="#D4FEF1">
+      Title="EditListsPage" Background="GhostWhite">
 
     <materialDesign:DialogHost>
 
@@ -144,7 +144,7 @@
                                         <i:Interaction.Triggers>
                                             <i:EventTrigger EventName="Click">
                                                 <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                                <i:InvokeCommandAction Command="{Binding ClearCreateRelationWindow}"/>
+                                                <i:InvokeCommandAction Command="{Binding ClearCommonRelationAddingWindowCommand}"/>
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>
 
@@ -161,7 +161,7 @@
                                             <i:EventTrigger EventName="Click">
                                                 <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                                 <i:InvokeCommandAction Command="{Binding CreateNewRelation}"/>
-                                                <i:InvokeCommandAction Command="{Binding ClearCreateRelationWindow}"/>
+                                                <i:InvokeCommandAction Command="{Binding ClearCommonRelationAddingWindowCommand}"/>
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>
 

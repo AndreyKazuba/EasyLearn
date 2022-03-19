@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using EasyLearn.Data.Exceptions;
 using EasyLearn.Data.Models;
 using EasyLearn.Data.Repositories.Interfaces;
+using EasyLearn.Data.Helpers;
 
 namespace EasyLearn.Data.Repositories.Implementations
 {
@@ -44,8 +45,8 @@ namespace EasyLearn.Data.Repositories.Implementations
             ThrowIfAddingAttemptIncorrect(name, description, userId);
             CommonDictionary newList = new CommonDictionary
             {
-                Name = name,
-                Description = description,
+                Name = StringHelper.Prepare(name),
+                Description = StringHelper.Prepare(description),
                 UserId = userId,
                 CreationDateUtc = DateTime.UtcNow,
             };
@@ -63,8 +64,9 @@ namespace EasyLearn.Data.Repositories.Implementations
         {
             ThrowIfEditingAttemptIncorrect(dictionaryId, name, description);
             CommonDictionary commonDictionary = await context.CommonDictionaries.FirstAsync(dictionary => dictionary.Id == dictionaryId);
-            commonDictionary.Description = description;
-            commonDictionary.Name = name;
+            commonDictionary.Description = StringHelper.Prepare(description);
+            commonDictionary.Name = StringHelper.Prepare(name);
+            commonDictionary.ChangeDateUtc = DateTime.UtcNow;
             await context.SaveChangesAsync();
         }
         #endregion

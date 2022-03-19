@@ -34,7 +34,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public UnitTypeComboBoxItem SelectedEnglishUnitType { get; set; }
         public string NewEngUnitValue { get; set; }
         public string NewRusUnitValue { get; set; }
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         public ObservableCollection<CommonRelationView> Relations { get; set; }
 
@@ -43,15 +43,14 @@ namespace EasyLearn.VM.ViewModels.Pages
         public DelegateCommand GoBack { get; private set; }
         public DelegateCommand CreateNewRelation { get; private set; }
         public DelegateCommand ClearCommonDictionaryCommand { get; private set; }
+        public DelegateCommand ClearCommonRelationAddingWindowCommand { get; private set; }
 
         protected override void InitCommands()
         {
-            this.GoBack = new DelegateCommand(arg =>
-            {
-                App.ServiceProvider.GetService<AppWindowVM>().OpenListsPage.Execute();
-            });
+            this.GoBack = new DelegateCommand(arg => App.GetService<AppWindowVM>().OpenListsPage.Execute());
             this.CreateNewRelation = new DelegateCommand(async arg => await AddNewRelation());
             this.ClearCommonDictionaryCommand = new DelegateCommand(async arg => await ClearCommonDictionary());
+            this.ClearCommonRelationAddingWindowCommand = new DelegateCommand(arg => ClearCommonRelationAddingWindow());
         }
 
         #endregion
@@ -84,9 +83,17 @@ namespace EasyLearn.VM.ViewModels.Pages
             string engUnitValue = this.NewEngUnitValue;
             UnitType engUnitType = this.SelectedEnglishUnitType.UnitType;
             UnitType rusUnitType = this.SelectedRussianUnitType.UnitType;
-            string comment = this.Comment;
+            string? comment = this.Comment;
             CommonRelation newRelation = await commonRelationRepository.CreateCommonRelation(rusUnitValue, rusUnitType, engUnitValue, engUnitType, this.currentCommonDictionaryId, comment);
             this.Relations.Add(new CommonRelationView(new CommonRelationVM(newRelation)));
+        }
+        private void ClearCommonRelationAddingWindow()
+        {
+            this.NewEngUnitValue = String.Empty;
+            this.NewRusUnitValue = String.Empty;
+            this.Comment = null;
+            this.SelectedRussianUnitType = RussianUnitTypes[0];
+            this.SelectedEnglishUnitType = EnglishUnitTypes[0];
         }
 
         private void SetRussianUnitTypes()

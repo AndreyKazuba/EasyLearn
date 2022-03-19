@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using EasyLearn.Data.Exceptions;
 using EasyLearn.Data.Models;
 using EasyLearn.Data.Repositories.Interfaces;
+using EasyLearn.Data.Helpers;
 
 namespace EasyLearn.Data.Repositories.Implementations
 {
@@ -29,7 +30,7 @@ namespace EasyLearn.Data.Repositories.Implementations
             ThrowIfUserNameIsInvalid(userName);
             EasyLearnUser newUser = new EasyLearnUser
             {
-                Name = userName,
+                Name = StringHelper.Prepare(userName),
             };
             context.Users.Add(newUser);
             await context.SaveChangesAsync();
@@ -45,7 +46,7 @@ namespace EasyLearn.Data.Repositories.Implementations
         {
             ThrowIfUserNameIsInvalid(userName);
             EasyLearnUser user = context.Users.First(user => user.Id == userId);
-            user.Name = userName;
+            user.Name = StringHelper.Prepare(userName);
             await context.SaveChangesAsync();
         }
         public async Task SetUserAsCurrent(int userId)

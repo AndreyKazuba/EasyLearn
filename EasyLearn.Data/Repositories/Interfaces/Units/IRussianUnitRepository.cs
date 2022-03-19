@@ -17,6 +17,6 @@ namespace EasyLearn.Data.Repositories.Interfaces
         RussianUnit? TryGetUnit(int unitId);
         RussianUnit? TryGetUnit(string value, UnitType type);
         Task<RussianUnit> CreateUnit(string value, UnitType type);
-        Task<RussianUnit?> GetOrCreateUnit(string value, UnitType type);
+        Task<RussianUnit> GetOrCreateUnit(string value, UnitType type);
     }
 }

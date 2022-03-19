@@ -5,14 +5,9 @@ using System.Collections.Generic;
 
 namespace EasyLearn.Data.Repositories.Implementations
 {
-    public class IrregularVerbsRepository : IIrregularVerbsRepository
+    public class IrregularVerbsRepository : Repository, IIrregularVerbsRepository
     {
-        private readonly EasyLearnContext context;
-
-        public IrregularVerbsRepository(EasyLearnContext context)
-        {
-            this.context = context;
-        }
+        public IrregularVerbsRepository(EasyLearnContext context) : base(context) { }
 
         public IEnumerable<IrregularVerb> GetAllIrregularVerbs()
         {

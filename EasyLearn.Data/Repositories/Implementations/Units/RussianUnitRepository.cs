@@ -30,7 +30,7 @@ namespace EasyLearn.Data.Repositories.Implementations
             ThrowIfAddingAttemptIncorrect(value, type);
             RussianUnit newUnit = new RussianUnit
             {
-                Value = value,
+                Value = StringHelper.Prepare(value),
                 Type = type,
                 CreationDateUtc = DateTime.UtcNow,
             };
@@ -38,7 +38,7 @@ namespace EasyLearn.Data.Repositories.Implementations
             await context.SaveChangesAsync();
             return newUnit;
         }
-        public async Task<RussianUnit?> GetOrCreateUnit(string value, UnitType type)
+        public async Task<RussianUnit> GetOrCreateUnit(string value, UnitType type)
         {
             RussianUnit? russianUnit = TryGetUnit(value, type);
             return russianUnit is not null ? russianUnit : await CreateUnit(value, type);
