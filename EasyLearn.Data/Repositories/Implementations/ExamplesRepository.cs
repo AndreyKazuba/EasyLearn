@@ -14,10 +14,10 @@ namespace EasyLearn.Data.Repositories.Implementations
     public class ExamplesRepository : IExamplesRepository
     {
         private readonly EasyLearnContext context;
-        private readonly IRussianUnitsRepository russianUnitsRepository;
-        private readonly IEnglishUnitsRepository englishUnitsRepository;
+        private readonly IRussianUnitRepository russianUnitsRepository;
+        private readonly IEnglishUnitRepository englishUnitsRepository;
 
-        public ExamplesRepository(EasyLearnContext context, IRussianUnitsRepository russianUnitsRepository, IEnglishUnitsRepository englishUnitsRepository)
+        public ExamplesRepository(EasyLearnContext context, IRussianUnitRepository russianUnitsRepository, IEnglishUnitRepository englishUnitsRepository)
         {
             this.context = context;
             this.russianUnitsRepository = russianUnitsRepository;
@@ -41,8 +41,8 @@ namespace EasyLearn.Data.Repositories.Implementations
                 return false;
             }
 
-            RussianUnit russianTranslation = russianUnitsRepository.GetUnitByValueAndType(rusTranslation, UnitType.Sentence);
-            EnglishUnit englishTranslation = englishUnitsRepository.GetUnitByValueAndType(engTranslation, UnitType.Sentence);
+            RussianUnit russianTranslation = russianUnitsRepository.GetUnit(rusTranslation, UnitType.Sentence);
+            EnglishUnit englishTranslation = englishUnitsRepository.GetUnit(engTranslation, UnitType.Sentence);
 
             if (russianTranslation == null || englishTranslation == null)
             {
@@ -59,8 +59,8 @@ namespace EasyLearn.Data.Repositories.Implementations
                 return false;
             }
 
-            RussianUnit russianTranslation = await russianUnitsRepository.GetUnitByValueAndTypeAsync(rusTranslation, UnitType.Sentence);
-            EnglishUnit englishTranslation = await englishUnitsRepository.GetUnitByValueAndTypeAsync(engTranslation, UnitType.Sentence);
+            RussianUnit russianTranslation = await russianUnitsRepository.GetUnitAsync(rusTranslation, UnitType.Sentence);
+            EnglishUnit englishTranslation = await englishUnitsRepository.GetUnitAsync(engTranslation, UnitType.Sentence);
 
             if (russianTranslation == null || englishTranslation == null)
             {

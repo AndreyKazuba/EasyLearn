@@ -24,6 +24,14 @@ namespace EasyLearn
     public partial class App : Application
     {
         public static IServiceProvider ServiceProvider { get; private set; }
+        public static TService GetService<TService>()
+        {
+            TService? service = ServiceProvider.GetService<TService>();
+            if (service is not null)
+                return service;
+            else
+                throw new Exception("There is no such service");
+        }
 
         public App()
         {
@@ -55,19 +63,19 @@ namespace EasyLearn
             services.AddSingleton<EditCommonDictionaryPageVM>();
             services.AddSingleton<EditVerbPrepositionDictionaryPageVM>();
 
-            services.AddTransient<IRussianUnitsRepository, RussianUnitsRepository>();
-            services.AddTransient<IEnglishUnitsRepository, EnglishUnitsRepository>();
+            services.AddTransient<IRussianUnitRepository, RussianUnitRepository>();
+            services.AddTransient<IEnglishUnitRepository, EnglishUnitRepository>();
 
             services.AddTransient<IExamplesRepository, ExamplesRepository>();
 
-            services.AddTransient<ICommonRelationsRepository, CommonRelationsRepository>();
+            services.AddTransient<ICommonRelationRepository, CommonRelationsRepository>();
             services.AddTransient<IVerbPrepositionRepository, VerbPrepositionsRepository>();
             services.AddTransient<IIrregularVerbsRepository, IrregularVerbsRepository>();
 
             services.AddTransient<ICommonDictionaryRepository, CommonDictionaryRepository>();
             services.AddTransient<IVerbPrepositionDictionaryRepository, VerbPrepositionDictionaryRepository>();
 
-            services.AddTransient<IEasyLearnUserRerository, EasyLearnUsersRerository>();
+            services.AddTransient<IEasyLearnUserRepository, EasyLearnUsersRerository>();
 
             return services.BuildServiceProvider();
         }

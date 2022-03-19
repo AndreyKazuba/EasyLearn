@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using EasyLearn.VM.Core;
 using EasyLearn.Data.Repositories.Interfaces;
 using EasyLearn.Data.Models;
-using Microsoft.Extensions.DependencyInjection;
 using EasyLearn.UI.CustomControls;
 using System.Collections.ObjectModel;
 using EasyLearn.VM.ViewModels.CustomControls;
@@ -16,11 +14,11 @@ namespace EasyLearn.VM.ViewModels.Pages
 {
     public class UsersPageVM : ViewModel
     {
-        private readonly IEasyLearnUserRerository usersRerository;
-        public UsersPageVM(IEasyLearnUserRerository usersRerository)
+        private readonly IEasyLearnUserRepository usersRerository;
+        public UsersPageVM(IEasyLearnUserRepository usersRerository)
         {
             this.usersRerository = usersRerository;
-            GetAppWindowVM().CurrentPageChanged += () => FlipBackAllCards();
+            App.GetService<AppWindowVM>().CurrentPageChanged += () => FlipBackAllCards();
             LoadUsers();
         }
 
@@ -77,7 +75,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.Users.Remove(user);
             if (isCurrent && this.Users.Any())
                 await SetUserAsCurrent(this.Users[0].ViewModel.Id);
-            await usersRerository.RemoveUser(userId);
+            await usersRerository.DeleteUser(userId);
         }
         private void ClearUserAddingWindow() => this.NewUserName = string.Empty;
         private void LoadUsers()
@@ -87,24 +85,11 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.Users = new ObservableCollection<UserView>(userViews);
         }
         private void AddUserToUI(EasyLearnUser user) => this.Users.Add(new UserView(new UserVM(user)));
-        private void UpdateDictionariesPageView()
-        {
-            DictionariesPageVM? dictionariesPageVM = App.ServiceProvider.GetService<DictionariesPageVM>();
-            if (dictionariesPageVM is not null)
-                dictionariesPageVM.UpdateView();
-        }
+        private void UpdateDictionariesPageView() => App.GetService<DictionariesPageVM>().UpdateView();
         private void FlipBackAllCards()
         {
             foreach (UserView userView in this.Users)
                 userView.ViewModel.IsCardFlipped = false;
-        }
-        private AppWindowVM GetAppWindowVM()
-        {
-            AppWindowVM? appWindowVM = App.ServiceProvider.GetService<AppWindowVM>();
-            if (appWindowVM is not null)
-                return appWindowVM;
-            else
-                throw new Exception("Something went wrong");
         }
     }
 }

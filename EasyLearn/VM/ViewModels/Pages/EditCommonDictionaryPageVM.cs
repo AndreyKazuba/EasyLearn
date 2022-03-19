@@ -22,9 +22,9 @@ namespace EasyLearn.VM.ViewModels.Pages
     public class EditCommonDictionaryPageVM : ViewModel
     {
         private readonly ICommonDictionaryRepository commonWordListsRepository;
-        private readonly ICommonRelationsRepository commonRelationsRepository;
+        private readonly ICommonRelationRepository commonRelationRepository;
 
-        private int currentCommonWordListId;
+        private int currentCommonDictionaryId;
 
         public string Name { get; set; }
         public string Description { get; set; }
@@ -42,6 +42,7 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         public DelegateCommand GoBack { get; private set; }
         public DelegateCommand CreateNewRelation { get; private set; }
+        public DelegateCommand ClearCommonDictionaryCommand { get; private set; }
 
         protected override void InitCommands()
         {
@@ -50,22 +51,28 @@ namespace EasyLearn.VM.ViewModels.Pages
                 App.ServiceProvider.GetService<AppWindowVM>().OpenListsPage.Execute();
             });
             this.CreateNewRelation = new DelegateCommand(async arg => await AddNewRelation());
+            this.ClearCommonDictionaryCommand = new DelegateCommand(async arg => await ClearCommonDictionary());
         }
 
         #endregion
 
-        public EditCommonDictionaryPageVM(ICommonDictionaryRepository commonWordListsRepository, ICommonRelationsRepository commonRelationsRepository)
+        public EditCommonDictionaryPageVM(ICommonDictionaryRepository commonWordListsRepository, ICommonRelationRepository commonRelationsRepository)
         {
             this.commonWordListsRepository = commonWordListsRepository;
-            this.commonRelationsRepository = commonRelationsRepository;
+            this.commonRelationRepository = commonRelationsRepository;
             SetRussianUnitTypes();
             SetEnglishUnitTypes();
+        }
+        private async Task ClearCommonDictionary()
+        {
+            this.Relations.Clear();
+            await commonRelationRepository.DeleteAllDictionaryRelations(currentCommonDictionaryId);
         }
 
         public async Task SetAsCurrentDictionary(int listId)
         {
-            this.currentCommonWordListId = listId;
-            CommonDictionary currentCommonList = await commonWordListsRepository.GetCommonDictionaryAsync(currentCommonWordListId);
+            this.currentCommonDictionaryId = listId;
+            CommonDictionary currentCommonList = await commonWordListsRepository.GetCommonDictionaryAsync(currentCommonDictionaryId);
             this.Name = currentCommonList.Name;
             this.Description = currentCommonList.Description;
             this.Relations = new ObservableCollection<CommonRelationView>(currentCommonList.Relations.Select(relation => new CommonRelationView(new CommonRelationVM(relation))));
@@ -78,7 +85,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             UnitType engUnitType = this.SelectedEnglishUnitType.UnitType;
             UnitType rusUnitType = this.SelectedRussianUnitType.UnitType;
             string comment = this.Comment;
-            CommonRelation newRelation = await commonRelationsRepository.CreateCommonRelation(rusUnitValue, rusUnitType, engUnitValue, engUnitType, this.currentCommonWordListId, comment);
+            CommonRelation newRelation = await commonRelationRepository.CreateCommonRelation(rusUnitValue, rusUnitType, engUnitValue, engUnitType, this.currentCommonDictionaryId, comment);
             this.Relations.Add(new CommonRelationView(new CommonRelationVM(newRelation)));
         }
 

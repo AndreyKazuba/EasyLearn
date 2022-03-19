@@ -2,21 +2,22 @@
 using EasyLearn.Data.Models;
 using EasyLearn.Data.Repositories.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace EasyLearn.Data.Repositories.Implementations
 {
-    public class CommonRelationsRepository : ICommonRelationsRepository
+    public class CommonRelationsRepository : ICommonRelationRepository
     {
         private readonly EasyLearnContext context;
-        private readonly IEnglishUnitsRepository englishUnitsRepository;
-        private readonly IRussianUnitsRepository russianUnitsRepository;
+        private readonly IEnglishUnitRepository englishUnitsRepository;
+        private readonly IRussianUnitRepository russianUnitsRepository;
         private readonly ICommonDictionaryRepository commonWordListsRepository;
 
         public CommonRelationsRepository(EasyLearnContext context, 
-            IRussianUnitsRepository russianUnitsRepository,
-            IEnglishUnitsRepository englishUnitsRepository,
+            IRussianUnitRepository russianUnitsRepository,
+            IEnglishUnitRepository englishUnitsRepository,
             ICommonDictionaryRepository commonWordListsRepository)
         {
             this.context = context;
@@ -63,6 +64,13 @@ namespace EasyLearn.Data.Repositories.Implementations
             await context.SaveChangesAsync();
 
             return newRelation;
+        }
+
+        public async Task DeleteAllDictionaryRelations(int dictionaryId)
+        {
+            IEnumerable<CommonRelation> commonRelations = context.CommonRelations.Where(relation => relation.CommonDictionaryId == dictionaryId);
+            context.CommonRelations.RemoveRange(commonRelations);
+            await context.SaveChangesAsync();
         }
     }
 }

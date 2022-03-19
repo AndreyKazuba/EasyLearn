@@ -9,11 +9,11 @@ namespace EasyLearn.Data.Repositories.Implementations
 {
     public class VerbPrepositionsRepository : IVerbPrepositionRepository
     {
-        private readonly IEnglishUnitsRepository englishUnitsRepository;
+        private readonly IEnglishUnitRepository englishUnitsRepository;
         private readonly IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository;
         private readonly EasyLearnContext context;
 
-        public VerbPrepositionsRepository(EasyLearnContext context, IEnglishUnitsRepository englishUnitsRepository, IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository)
+        public VerbPrepositionsRepository(EasyLearnContext context, IEnglishUnitRepository englishUnitsRepository, IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository)
         {
             this.context = context;
             this.englishUnitsRepository = englishUnitsRepository;

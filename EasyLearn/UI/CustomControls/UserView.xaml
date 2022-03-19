@@ -152,6 +152,7 @@
                     </StackPanel>
                 </materialDesign:ColorZone>
 
+                <!--Редактировать имя пользвателя-->
                 <TextBox materialDesign:HintAssist.Hint="Имя пользователя" 
                          materialDesign:HintAssist.IsFloating="True"
                          Grid.Row="1"

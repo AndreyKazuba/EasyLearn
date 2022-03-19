@@ -1,36 +1,47 @@
-﻿using EasyLearn.Data.Models;
-using EasyLearn.Data.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using EasyLearn.Data.Exceptions;
+using EasyLearn.Data.Models;
+using EasyLearn.Data.Repositories.Interfaces;
 
 namespace EasyLearn.Data.Repositories.Implementations
 {
-    public class CommonDictionaryRepository : ICommonDictionaryRepository
+    public class CommonDictionaryRepository : Repository, ICommonDictionaryRepository
     {
-        private readonly EasyLearnContext context;
-        private readonly IEasyLearnUserRerository usersRerository;
+        #region Private fields
+        private readonly IEasyLearnUserRepository userRepository;
+        #endregion
 
-        public CommonDictionaryRepository(EasyLearnContext context, IEasyLearnUserRerository usersRerository)
+        public CommonDictionaryRepository(EasyLearnContext context, IEasyLearnUserRepository userRerository) : base(context)
         {
-            this.context = context;
-            this.usersRerository = usersRerository;
+            this.userRepository = userRerository;
         }
 
-        public async Task<CommonDictionary?> CreateCommonDictionary(string name, string description, int userId)
+        #region Public members
+        public bool IsCommonDictionaryExist(int dictionaryId) => context.CommonDictionaries.Any(dictionary => dictionary.Id == dictionaryId);
+        public CommonDictionary GetCommonDictionary(int dictionaryId)
         {
-            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(description))
-            {
-                return null;
-            }
-
-            if (!usersRerository.IsUserExist(userId))
-            {
-                return null;
-            }
-
+            return context.CommonDictionaries
+                .Include(dictionary => dictionary.Relations).ThenInclude(commonRelation => commonRelation.EnglishUnit)
+                .Include(dictionary => dictionary.Relations).ThenInclude(commonRelatiob => commonRelatiob.RussianUnit)
+                .AsNoTracking()
+                .First(dictionary => dictionary.Id == dictionaryId);
+        }
+        public async Task<CommonDictionary> GetCommonDictionaryAsync(int dictionaryId)
+        {
+            return await context.CommonDictionaries
+                .Include(dictionary => dictionary.Relations).ThenInclude(commonRelation => commonRelation.EnglishUnit)
+                .Include(dictionary => dictionary.Relations).ThenInclude(commonRelatiob => commonRelatiob.RussianUnit)
+                .AsNoTracking()
+                .FirstAsync(dictionary => dictionary.Id == dictionaryId);
+        }
+        public IEnumerable<CommonDictionary> GetUsersCommonDictionaries(int userId) => context.CommonDictionaries.Where(dictionary => dictionary.UserId == userId).AsNoTracking();
+        public async Task<CommonDictionary> CreateCommonDictionary(string name, string description, int userId)
+        {
+            ThrowIfAddingAttemptIncorrect(name, description, userId);
             CommonDictionary newList = new CommonDictionary
             {
                 Name = name,
@@ -38,46 +49,49 @@ namespace EasyLearn.Data.Repositories.Implementations
                 UserId = userId,
                 CreationDateUtc = DateTime.UtcNow,
             };
-
             context.CommonDictionaries.Add(newList);
             await context.SaveChangesAsync();
-
             return newList;
         }
-
-        public CommonDictionary GetCommonDictionary(int dictionaryId)
-        {
-            return context.CommonDictionaries
-                .Include(commonDictionary => commonDictionary.Relations).ThenInclude(commonRelation => commonRelation.EnglishUnit)
-                .Include(commonDictionary => commonDictionary.Relations).ThenInclude(commonRelatiob => commonRelatiob.RussianUnit)
-                .AsNoTracking()
-                .First(commonDictionary => commonDictionary.Id == dictionaryId);
-        }
-
-        public async Task<CommonDictionary> GetCommonDictionaryAsync(int dictionaryId)
-        {
-            return await context.CommonDictionaries
-                .Include(commonDictionary => commonDictionary.Relations).ThenInclude(commonRelation => commonRelation.EnglishUnit)
-                .Include(commonDictionary => commonDictionary.Relations).ThenInclude(commonRelatiob => commonRelatiob.RussianUnit)
-                .AsNoTracking()
-                .FirstAsync(commonDictionary => commonDictionary.Id == dictionaryId);
-        }
-
-        public IEnumerable<CommonDictionary> GetUsersCommonDictionaries(int userId)
-        {
-            return context.CommonDictionaries.Where(commonDictionary => commonDictionary.UserId == userId).AsNoTracking();
-        }
-
-        public bool IsCommonDictionaryExist(int dictionaryId)
-        {
-            return context.CommonDictionaries.Any(commonDictionary => commonDictionary.Id == dictionaryId);
-        }
-
         public async Task DeleteCommonDictionary(int dictionaryId)
         {
-            CommonDictionary commonDictionary = context.CommonDictionaries.First(commonDictionary => commonDictionary.Id == dictionaryId);
+            CommonDictionary commonDictionary = context.CommonDictionaries.First(dictionary => dictionary.Id == dictionaryId);
             context.CommonDictionaries.Remove(commonDictionary);
             await context.SaveChangesAsync();
         }
+        public async Task EditCommonDictionary(int dictionaryId, string name, string description)
+        {
+            ThrowIfEditingAttemptIncorrect(dictionaryId, name, description);
+            CommonDictionary commonDictionary = await context.CommonDictionaries.FirstAsync(dictionary => dictionary.Id == dictionaryId);
+            commonDictionary.Description = description;
+            commonDictionary.Name = name;
+            await context.SaveChangesAsync();
+        }
+        #endregion
+
+        #region Private members
+        private void ThrowIfEditingAttemptIncorrect(int dictionaryId, string name, string description)
+        {
+            ThrowIfDictionaryNameInvalid(name);
+            ThrowIfDictionaryDescriptionInvalid(description);
+        }
+        private void ThrowIfAddingAttemptIncorrect(string name, string description, int userId)
+        {
+            ThrowIfDictionaryNameInvalid(name);
+            ThrowIfDictionaryDescriptionInvalid(description);
+            if (!userRepository.IsUserExist(userId))
+                throw new InvalidDbOperationException($"Попытка добавить {nameof(CommonDictionary)} несуществующему {nameof(EasyLearnUser)} с {nameof(EasyLearnUser.Id)} = '{userId}'");
+        }
+        private void ThrowIfDictionaryNameInvalid(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name) || name.Length < ModelConstants.DictionaryNameMinLength || name.Length > ModelConstants.DictionaryNameMaxLength)
+                throw new InvalidDbOperationException(ExceptionMessagesHelper.PropertyInvalidValue(nameof(CommonDictionary.Name), nameof(CommonDictionary), name));
+        }
+        private void ThrowIfDictionaryDescriptionInvalid(string description)
+        {
+            if (string.IsNullOrWhiteSpace(description) || description.Length < ModelConstants.DictionaryDescriptionMinLength || description.Length > ModelConstants.DictionaryDescriptionMaxLength)
+                throw new InvalidDbOperationException(ExceptionMessagesHelper.PropertyInvalidValue(nameof(CommonDictionary.Description), nameof(CommonDictionary), description));
+        }
+        #endregion
     }
 }

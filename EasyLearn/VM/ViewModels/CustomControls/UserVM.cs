@@ -14,7 +14,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 {
     public class UserVM : ViewModel
     {
-        private readonly IEasyLearnUserRerository userRerository;
+        private readonly IEasyLearnUserRepository userRerository;
 
         public int Id { get; set; }
         public string Name { get; set; }
@@ -29,7 +29,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             this.Name = user.Name;
             this.IsCurrent = user.IsCurrent;
 
-            IEasyLearnUserRerository? usersRerository = App.ServiceProvider.GetService<IEasyLearnUserRerository>();
+            IEasyLearnUserRepository? usersRerository = App.ServiceProvider.GetService<IEasyLearnUserRepository>();
             if (usersRerository is not null)
                 this.userRerository = usersRerository;
             else
@@ -53,17 +53,10 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             this.SetEditNameFieldValueCommand = new DelegateCommand(arg => SetEditNameFieldValue());
             this.FlipBackAllAnotherCardsCommand = new DelegateCommand(arg => FlipBackAllAnotherCards());
         }
-
-        private void SetUserAsCurrent()
-        {
-            GetUsersPageVM().SetUserAsCurrentCommand.Execute(this.Id);
-        }
-
-        private void RemoveUser()
-        {
-            GetUsersPageVM().RemoveUserCommand.Execute(this.Id);
-        }
-
+        private void SetUserAsCurrent() => GetUsersPageVM().SetUserAsCurrentCommand.Execute(this.Id);
+        private void RemoveUser() => GetUsersPageVM().RemoveUserCommand.Execute(this.Id);
+        private void FlipBackAllAnotherCards() => GetUsersPageVM().FlipBackAllCardsCommand.Execute();
+        private void SetEditNameFieldValue() => this.EditNameFieldValue = this.Name;
         private async Task EditUser()
         {
             string newUserName = this.EditNameFieldValue;
@@ -74,14 +67,6 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             this.Name = newUserName;
             await userRerository.EditUser(this.Id, newUserName);
         }
-
-        private void SetEditNameFieldValue() => this.EditNameFieldValue = this.Name;
-
-        private void FlipBackAllAnotherCards()
-        {
-            GetUsersPageVM().FlipBackAllCardsCommand.Execute();
-        }
-
         private UsersPageVM GetUsersPageVM()
         {
             UsersPageVM? usersPageVM = App.ServiceProvider.GetService<UsersPageVM>();
@@ -90,7 +75,6 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             else
                 throw new Exception("Something went wrong");
         }
-
         #endregion
     }
 }

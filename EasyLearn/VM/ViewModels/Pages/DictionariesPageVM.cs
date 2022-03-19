@@ -13,12 +13,14 @@ using System.Windows.Controls;
 using EasyLearn.UI.CustomControls;
 using EasyLearn.VM.ViewModels.ExpandedElements;
 using EasyLearn.Infrastructure.Constants;
+using EasyLearn.VM.Windows;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
     public class DictionariesPageVM : ViewModel
     {
-        private readonly IEasyLearnUserRerository usersRerository;
+        private readonly IEasyLearnUserRepository usersRerository;
         private readonly ICommonDictionaryRepository commonDictionaryRepository;
         private readonly IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository;
 
@@ -40,6 +42,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public DelegateCommand CreateNewList { get; private set; }
         public DelegateCommand RemoveCommonDictionaryCommand { get; private set; }
         public DelegateCommand RemoveVerbPrepositionDictionaryCommand { get; private set; }
+        public DelegateCommand FlipBackAllCardsCommand { get; private set; }
 
         protected override void InitCommands()
         {
@@ -47,18 +50,20 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.CreateNewList = new DelegateCommand(async arg => await AddNewDictionary());
             this.RemoveCommonDictionaryCommand = new DelegateCommand(async commonDictionaryId => await RemoveCommonDictionary((int)commonDictionaryId));
             this.RemoveVerbPrepositionDictionaryCommand = new DelegateCommand(async dictionaryId => await RemoveVerbPrepositionDictionary((int)dictionaryId));
+            this.FlipBackAllCardsCommand = new DelegateCommand(arg => FlipBackAllCards());
         }
 
         #endregion
 
         public DictionariesPageVM
-            (IEasyLearnUserRerository usersRerository,
+            (IEasyLearnUserRepository usersRerository,
             ICommonDictionaryRepository commonWordListsRepository,
             IVerbPrepositionDictionaryRepository verbPrepositionListsRepository)
         {
             this.usersRerository = usersRerository;
             this.commonDictionaryRepository = commonWordListsRepository;
             this.verbPrepositionDictionaryRepository = verbPrepositionListsRepository;
+            App.GetService<AppWindowVM>().CurrentPageChanged += () => FlipBackAllCards();
             CleanDictionaryAddingWindow();
             UpdateCurrentUserId();
             RefreshDictionaries();
@@ -69,6 +74,16 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             UpdateCurrentUserId();
             RefreshDictionaries();
+        }
+        private void FlipBackAllCards()
+        {
+            foreach(UserControl dictionary in this.Dictionaries)
+            {
+                if (dictionary is VerbPrepositionDictionaryView)
+                    ((VerbPrepositionDictionaryView)dictionary).ViewModel.IsCardFlipped = false;
+                if (dictionary is CommonDictionaryView)
+                    ((CommonDictionaryView)dictionary).ViewModel.IsCardFlipped = false;
+            }
         }
 
         private async Task RemoveCommonDictionary(int commonDictionaryId)
@@ -164,7 +179,7 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         private void UpdateCurrentUserId()
         {
-            this.currentUserId = usersRerository.GetCurrentUser().Id;
+            this.currentUserId = usersRerository.TryGetCurrentUser().Id;
         }
 
         private void RefreshDictionaries()

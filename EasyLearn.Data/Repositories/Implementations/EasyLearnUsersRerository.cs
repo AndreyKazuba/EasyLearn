@@ -1,120 +1,74 @@
-﻿using EasyLearn.Data.Models;
-using EasyLearn.Data.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using EasyLearn.Data.Exceptions;
+using EasyLearn.Data.Models;
+using EasyLearn.Data.Repositories.Interfaces;
 
 namespace EasyLearn.Data.Repositories.Implementations
 {
-    public class EasyLearnUsersRerository : IEasyLearnUserRerository
+    public class EasyLearnUsersRerository : Repository, IEasyLearnUserRepository
     {
-        private readonly EasyLearnContext context;
+        public EasyLearnUsersRerository(EasyLearnContext context) : base(context) { }
 
-        public EasyLearnUsersRerository(EasyLearnContext context)
+        #region Public members
+        public bool IsUserCurrent(int userId) => context.Users.First(user => user.Id == userId).IsCurrent;
+        public bool IsUserExist(int userId) => context.Users.Any(user => user.Id == userId);
+        public bool IsUserExist(string userName) => context.Users.Any(user => user.Name == userName);
+        public async Task<bool> IsUserExistAsync(int userId) => await context.Users.AnyAsync(user => user.Id == userId);
+        public async Task<bool> IsUserExistAsync(string userName) => await context.Users.AnyAsync(user => user.Name == userName);
+        public EasyLearnUser GetUser(int userId) => context.Users.AsNoTracking().First(user => user.Id == userId);
+        public async Task<EasyLearnUser> GetUserAsync(int userId) => await context.Users.AsNoTracking().FirstAsync(user => user.Id == userId);
+        public EasyLearnUser? TryGetUser(int userId) => context.Users.AsNoTracking().FirstOrDefault(user => user.Id == userId);
+        public EasyLearnUser? TryGetCurrentUser() => context.Users.AsNoTracking().FirstOrDefault(user => user.IsCurrent);
+        public async Task<EasyLearnUser?> TryGetCurrentUserAsync() => await context.Users.AsNoTracking().FirstOrDefaultAsync(user => user.IsCurrent);
+        public IEnumerable<EasyLearnUser> GetAllUsers() => context.Users.AsNoTracking().AsEnumerable();
+        public async Task<EasyLearnUser> CreateUser(string userName)
         {
-            this.context = context;
-        }
-
-        public IEnumerable<EasyLearnUser> GetAllUsers()
-        {
-            return context.Users.AsNoTracking().AsEnumerable();
-        }
-
-        public bool IsUserExist(string nickName)
-        {
-            return context.Users.Any(user => user.Name == nickName);
-        }
-
-        public async Task<bool> IsUserExistAsync(string nickName)
-        {
-            return await context.Users.AnyAsync(user => user.Name == nickName);
-        }
-
-        public EasyLearnUser GetUserById(int userId)
-        {
-            return context.Users.FirstOrDefault(user => user.Id == userId);
-        }
-
-        public async Task<EasyLearnUser> GetUserByIdAsync(int userId)
-        {
-            return await context.Users.FirstOrDefaultAsync(user => user.Id == userId);
-        }
-
-        public EasyLearnUser GetCurrentUser()
-        {
-            return context.Users.First(user => user.IsCurrent);
-        }
-
-        public async Task<EasyLearnUser> GetCurrentUserAsync()
-        {
-            return await context.Users.FirstAsync(user => user.IsCurrent);
-        }
-
-        public bool IsUserCurrent(int userId)
-        {
-            return context.Users.First(user => user.Id == userId).IsCurrent;
-        }
-
-        public async Task SetUserAsCurrent(int userId)
-        {
-            await ResetCurrentUser();
-            EasyLearnUser newCurrentUser = await context.Users.FirstAsync(user => user.Id == userId);
-
-            newCurrentUser.IsCurrent = true;
+            ThrowIfUserNameIsInvalid(userName);
+            EasyLearnUser newUser = new EasyLearnUser
+            {
+                Name = userName,
+            };
+            context.Users.Add(newUser);
             await context.SaveChangesAsync();
+            return newUser;
         }
-
-        public async Task RemoveUser(int userId)
+        public async Task DeleteUser(int userId)
         {
-            EasyLearnUser user = await context.Users.FirstOrDefaultAsync(user => user.Id == userId);
+            EasyLearnUser user = await context.Users.FirstAsync(user => user.Id == userId);
             context.Users.Remove(user);
             await context.SaveChangesAsync();
         }
-
-        public async Task<EasyLearnUser?> CreateUser(string name)
+        public async Task EditUser(int userId, string userName)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                return null;
-            }
-
-            if (IsUserExist(name))
-            {
-                return null;
-            }
-
-            EasyLearnUser newUser = new EasyLearnUser
-            {
-                Name = name,
-            };
-
-            context.Users.Add(newUser);
+            ThrowIfUserNameIsInvalid(userName);
+            EasyLearnUser user = context.Users.First(user => user.Id == userId);
+            user.Name = userName;
             await context.SaveChangesAsync();
-
-            return newUser;
         }
+        public async Task SetUserAsCurrent(int userId)
+        {
+            await TryResetCurrentUser();
+            EasyLearnUser newCurrentUser = await context.Users.FirstAsync(user => user.Id == userId);
+            newCurrentUser.IsCurrent = true;
+            await context.SaveChangesAsync();
+        }
+        #endregion
 
-        private async Task ResetCurrentUser()
+        #region Private members
+        private async Task TryResetCurrentUser()
         {
             EasyLearnUser? currentUser = await context.Users.FirstOrDefaultAsync(user => user.IsCurrent);
-
             if (currentUser is not null)
-            {
                 currentUser.IsCurrent = false;
-            }
         }
-
-        public bool IsUserExist(int userId)
+        private void ThrowIfUserNameIsInvalid(string userName)
         {
-            return context.Users.Any(user => user.Id == userId);
+            if (string.IsNullOrWhiteSpace(userName) || userName.Length < ModelConstants.UserNameMinLength || userName.Length > ModelConstants.UserNameMaxLength)
+                throw new InvalidDbOperationException($"Попытка задать в качестве {nameof(EasyLearnUser.Name)} для {nameof(EasyLearn)} невалидное значение: '{userName}'");
         }
-
-        public async Task EditUser(int userId, string newName)
-        {
-            EasyLearnUser user = context.Users.First(user => user.Id == userId);
-            user.Name = newName;
-            await context.SaveChangesAsync();
-        }
+        #endregion
     }
 }
