@@ -65,8 +65,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.verbPrepositionDictionaryRepository = verbPrepositionListsRepository;
             App.GetService<AppWindowVM>().CurrentPageChanged += () => FlipBackAllCards();
             CleanDictionaryAddingWindow();
-            UpdateCurrentUserId();
-            RefreshDictionaries();
+            UpdateView();
             SetDictionaryTypes();
         }
 

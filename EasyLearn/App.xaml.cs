@@ -60,6 +60,7 @@ namespace EasyLearn
 
             services.AddSingleton<UsersPageVM>();
             services.AddSingleton<DictionariesPageVM>();
+            services.AddSingleton<DictationPageVM>();
             services.AddSingleton<EditCommonDictionaryPageVM>();
             services.AddSingleton<EditVerbPrepositionDictionaryPageVM>();
 

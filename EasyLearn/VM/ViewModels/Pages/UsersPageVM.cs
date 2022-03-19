@@ -58,7 +58,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 lastCurrentUser.ViewModel.IsCurrent = false;
             this.Users.First(user => user.ViewModel.Id == userId).ViewModel.IsCurrent = true;
             await usersRerository.SetUserAsCurrent(userId);
-            UpdateDictionariesPageView();
+            UpdatePages();
         }
         private async Task CreateUser()
         {
@@ -83,7 +83,11 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.Users = new ObservableCollection<UserView>(userViews);
         }
         private void AddUserToUI(EasyLearnUser user) => this.Users.Add(new UserView(new UserVM(user)));
-        private void UpdateDictionariesPageView() => App.GetService<DictionariesPageVM>().UpdateView();
+        private void UpdatePages()
+        {
+            App.GetService<DictionariesPageVM>().UpdateView();
+            App.GetService<DictationPageVM>().UpdateView();
+        }
         private void FlipBackAllCards()
         {
             foreach (UserView userView in this.Users)
