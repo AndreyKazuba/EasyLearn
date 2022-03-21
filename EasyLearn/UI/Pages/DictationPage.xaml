@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:EasyLearn.UI.Pages"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="DictationPage">
@@ -29,14 +30,24 @@
                 </StackPanel>
             </materialDesign:Card>-->
 
-            <!--Текстблок, отображающий русский перевод текущего слова в диктанте-->
-            <TextBlock Grid.Row="0" 
+            <StackPanel Grid.Row="0" VerticalAlignment="Center" Margin="0 40 0 0">
+                <TextBlock
                        FontSize="90"
                        Text="{Binding DisplayValue}"
                        Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
-                       Margin="0 50 0 0"/>
+                       Margin="0 0 0 10"/>
+                <TextBlock
+                       FontSize="50"
+                       Text="{Binding DisplayCommentValue}"
+                       Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                    Foreground="Gray"/>
+            </StackPanel>
+            <!--Текстблок, отображающий русский перевод текущего слова в диктанте-->
+
 
             <!--Изображение "Чтобы начать, нажмите start"-->
             <!--<StackPanel HorizontalAlignment="Center"
@@ -130,22 +141,35 @@
                      HorizontalAlignment="Center"
                      VerticalAlignment="Center"
                      Height="50"
-                     Text="{Binding SupposedEngTranslation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         KeyDown="dictationTextBox_KeyDown"
+                     Text="{Binding AnswerValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Width="300"
-                     
                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                      materialDesign:HintAssist.Hint="Перевод"                
                      FontSize="16"/>
 
-                <!--Кнопка "проверить и двигаться дальше"-->
+                <!--Кнопка "проверить"-->
                 <Button Grid.Row="1" 
-                    Style="{DynamicResource MaterialDesignFloatingActionMiniButton}"
-                    Command="{Binding NextWordCommand}"
-                        ToolTip="Проверить слово и двигаться дальше">
+                        Style="{DynamicResource MaterialDesignFloatingActionMiniButton}"
+                        Command="{Binding CheckAnswerCommand}"
+                        ToolTip="Проверить слово"
+                        Visibility="{Binding IsCheckWordButtonVisible, Converter={converters:ReverseCollapseConverter}}">
 
-                    <!--<materialDesign:PackIcon Kind="{Binding FirstTrueEnterClick, Converter={StaticResource nextButtonIconConverter}}"
+                    <materialDesign:PackIcon Kind="Eye"
                                          Height="25"
-                                         Width="25"/>-->
+                                         Width="25"/>
+                </Button>
+
+                <!--Кнопка "двигаться дальше"-->
+                <Button Grid.Row="1" 
+                        Style="{DynamicResource MaterialDesignFloatingActionMiniButton}"
+                        Command="{Binding TryGoNextCommand}"
+                        ToolTip="Проверить слово и двигаться дальше"
+                        Visibility="{Binding IsNextWordButtonVisible, Converter={converters:ReverseCollapseConverter}}">
+
+                    <materialDesign:PackIcon Kind="ArrowRightBold"
+                                         Height="25"
+                                         Width="25"/>
                 </Button>
 
             </StackPanel>
@@ -153,28 +177,28 @@
 
 
             <!--Иконка правильного ответа-->
-            <!--<materialDesign:PackIcon Kind="Check" 
+            <materialDesign:PackIcon Kind="Check" 
                                      Height="60" 
                                      Width="60" 
                                      Foreground="Green"
                                      Grid.Row="1"
                                      HorizontalAlignment="Center"
-                                     Visibility="{Binding TrueAnserIconVisibility}"/>-->
+                                     Visibility="{Binding CorrectAnswerIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
 
             <!--Иконка неправильного ответа-->
-            <!--<materialDesign:PackIcon Kind="Close" 
+            <materialDesign:PackIcon Kind="Close" 
                                      Height="60" 
                                      Width="60" 
                                      Foreground="Red"
                                      Grid.Row="1"
                                      HorizontalAlignment="Center"
-                                     Visibility="{Binding FalseAnserIconVisibility}"/>-->
+                                     Visibility="{Binding WrongAnswerIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
 
             <!--Прогресс текущего диктанта-->
             <ProgressBar Grid.Row="1" 
                          VerticalAlignment="Bottom" 
                          Height="7"
-                         Value="{Binding ProgressBarValue}"
+                         Value="{Binding ProgressBarCurrentValue}"
                          Maximum="{Binding ProgressBarMaxValue}"/>
 
             <!--Кнопка "начать диктант"-->
@@ -185,15 +209,15 @@
                     FontSize="18"
                     ToolTip="Начать дикнтант"
                     Content="Начать"
-                    IsEnabled="{Binding StartDictationButtonIsEnabled}"
-                    Visibility="{Binding StartButtonVisibility}"
+                    IsEnabled="{Binding IsStartButtonEnabled}"
+                    Visibility="{Binding IsStartButtonVisible, Converter={converters:ForwardVisibilityConverter}}"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
 
                 <Button.CommandParameter>
                     <StackPanel Margin="10">
                         <Slider Grid.Row="1"
-                                Minimum="{Binding SliderMinValue, Mode=TwoWay}" 
-                                Maximum="{Binding SliderMaxValue, Mode=TwoWay}" 
+                                Minimum="{Binding SliderMinValue}" 
+                                Maximum="{Binding SliderMaxValue}" 
                                 Style="{DynamicResource MaterialDesignDiscreteSlider}" 
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Center"
@@ -211,9 +235,10 @@
 
                         </ComboBox>
                         <StackPanel Orientation="Horizontal"
-                                    Margin="0 10 0 0">
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center">
 
-                            <!--Кнопка отмены добавления новой связи-->
+                            <!--Кнопка отмены старта диктанта-->
                             <Button Style="{DynamicResource MaterialDesignFlatButton}" 
                                     Content="Отмена"
                                     Margin="6">
@@ -221,24 +246,21 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding ClearCommonRelationAddingWindowCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
                             </Button>
 
-                            <!--Кнопка подтверждения добавления новой связи-->
+                            <!--Кнопка подтверждения старта диктанта-->
                             <Button Style="{DynamicResource MaterialDesignFlatButton}"  
                                     HorizontalAlignment="Center"
                                     Content="Начать"
-                                    Margin="10"
-                                    IsEnabled="{Binding ConfirmNewUserButtonIsEnabled}">
+                                    Margin="10">
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding StartDictationCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding ClearCommonRelationAddingWindowCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -250,7 +272,7 @@
             </Button>
 
             <!--Кнопка "завершить диктант"-->
-            <!--<Button Grid.Row="2"
+            <Button Grid.Row="2"
                     Height="40" 
                     Name="endButton"
                     Width="130"                   
@@ -258,113 +280,113 @@
                     FontSize="18"
                     Content="Завершить"
                     ToolTip="Завершить диктант"
-                    Visibility="{Binding EndButtonVisibility}"
-                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
+                    Visibility="{Binding IsEndButtonVisible, Converter={converters:ForwardVisibilityConverter}}">
 
-            -->
-            <!--View окошка результата диктанта-->
-            <!--
-            <Button.CommandParameter>
-                <StackPanel Margin="10">
 
-                    -->
-            <!--<Image Source="{Binding TotalGrade, Converter={StaticResource finalResultImageConverter}}" 
+                <!--View окошка результата диктанта-->
+
+                <Button.CommandParameter>
+                    <StackPanel Margin="10">
+
+
+                        <!--<Image Source="{Binding TotalGrade, Converter={StaticResource finalResultImageConverter}}" 
                                Width="128"
                                Height="128"
                                Margin="0 0 0 10"/>-->
 
-            <!--Таблица с результатами-->
-            <!--
-                    <Grid>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="140"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
 
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
+                        <!--<Grid>
 
-                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="140"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
                                        Text="Всего слов:"
                                        Grid.Column="0"
                                        Grid.Row="0"/>
-                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                            <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
                                        Text="Дано ответов:"
                                        Grid.Column="0"
                                        Grid.Row="1"/>
-                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                            <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
                                        Text="Правильных:"
                                        Grid.Column="0"
                                        Grid.Row="2"/>
-                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                            <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
                                        Text="Ошибочных:"
                                        Grid.Column="0"
                                        Grid.Row="3"/>
-                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                            <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
                                        Text="Оценка:"
                                        Grid.Column="0"
                                        Grid.Row="4"/>
 
-                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                            <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
                                        Text="{Binding CurrentDictationWordCount}"
                                        Grid.Column="1"
                                        Grid.Row="0"
                                        FontWeight="Bold"
                                        HorizontalAlignment="Right"/>
-                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                            <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
                                        Text="{Binding TotalAnsers}"
                                        Grid.Column="1"
                                        Grid.Row="1"
                                        FontWeight="Bold"
                                        HorizontalAlignment="Right"/>
-                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                            <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
                                        Text="{Binding TotalTrueAnsers}"
                                        Grid.Column="1"
                                        Grid.Row="2"
                                        FontWeight="Bold"
                                        HorizontalAlignment="Right"/>
-                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                            <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
                                        Text="{Binding TotalWrongAnsers}"
                                        Grid.Column="1"
                                        Grid.Row="3"
                                        FontWeight="Bold"
                                        HorizontalAlignment="Right"/>
-                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                            <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}"
                                        Text="{Binding TotalStringGrade}"
                                        Grid.Column="1"
                                        Grid.Row="4"
                                        FontWeight="Bold"
                                        HorizontalAlignment="Right"/>
 
-                    </Grid>
+                        </Grid>-->
 
-                    -->
-            <!--Кнопка Ок-->
-            <!--
-                    <Button Style="{DynamicResource MaterialDesignFlatButton}"  
+
+
+
+                        <Button Style="{DynamicResource MaterialDesignFlatButton}"  
                                 HorizontalAlignment="Center"
                                 Content="Понятно"
                                 Margin="0 6 0 10"
                                 Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
                                 FocusVisualStyle="{x:Null}">
-                    </Button>
+                        </Button>
 
-                </StackPanel>
-            </Button.CommandParameter>
+                    </StackPanel>
+                </Button.CommandParameter>
 
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Click">
-                    <i:InvokeCommandAction Command="{Binding EndDictationCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding EndDictationCommand}"/>
+                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
 
-        </Button>-->
+            </Button>
 
             <!--Всплывающая подсказка-->
             <materialDesign:Snackbar x:Name="promtSnackBar"

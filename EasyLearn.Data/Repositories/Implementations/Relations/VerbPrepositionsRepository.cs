@@ -42,6 +42,8 @@ namespace EasyLearn.Data.Repositories.Implementations
             };
             context.VerbPrepositions.Add(newVerbPreposition);
             await context.SaveChangesAsync();
+            newVerbPreposition.Verb = verb;
+            newVerbPreposition.Preposition = preposition;
             return newVerbPreposition;
         }
         public async Task DeleteAllDictionaryVerbPrepositions(int dictionaryId)

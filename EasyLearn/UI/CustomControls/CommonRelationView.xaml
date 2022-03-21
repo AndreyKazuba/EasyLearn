@@ -26,6 +26,8 @@
             <TextBlock FontSize="25" Margin="0 -7 0 0" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Text="-"/>
 
             <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Comment}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+            <materialDesign:Chip VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Content="{Binding Type}" Icon="T"/>
         </Grid>
     </materialDesign:Card>
 </UserControl>

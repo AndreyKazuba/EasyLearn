@@ -23,14 +23,14 @@ namespace EasyLearn.Infrastructure.Dictation
             this.maxCurrentRelationId = relations.Count - 1;
         }
 
-        public string Start()
+        public CommonRelation Start()
         {
             if (this.relations is null || !this.relations.Any())
             {
                 throw new Exception("Something went wrong");
             }
 
-            return this.relations[currentRelationId].RussianUnit.Value;
+            return this.relations[currentRelationId];
         }
 
         public bool GoNext()
