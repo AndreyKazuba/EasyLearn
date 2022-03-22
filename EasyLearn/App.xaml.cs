@@ -58,9 +58,9 @@ namespace EasyLearn
             services.AddSingleton<EditCommonDictionaryPage>();
             services.AddSingleton<EditVerbPrepositionDictionaryPage>();
 
+            services.AddSingleton<DictationPageVM>();
             services.AddSingleton<UsersPageVM>();
             services.AddSingleton<DictionariesPageVM>();
-            services.AddSingleton<DictationPageVM>();
             services.AddSingleton<EditCommonDictionaryPageVM>();
             services.AddSingleton<EditVerbPrepositionDictionaryPageVM>();
 

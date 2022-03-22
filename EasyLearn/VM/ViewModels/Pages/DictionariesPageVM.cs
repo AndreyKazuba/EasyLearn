@@ -18,7 +18,7 @@ namespace EasyLearn.VM.ViewModels.Pages
     public class DictionariesPageVM : ViewModel
     {
         #region Repositories
-        private readonly IEasyLearnUserRepository userRerository;
+        private readonly IEasyLearnUserRepository userRepository;
         private readonly ICommonDictionaryRepository commonDictionaryRepository;
         private readonly IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository;
         #endregion
@@ -33,21 +33,21 @@ namespace EasyLearn.VM.ViewModels.Pages
             ICommonDictionaryRepository commonDictionaryRepository,
             IVerbPrepositionDictionaryRepository erbPrepositionDictionaryRepository)
         {
-            this.userRerository = userRerository;
+            this.userRepository = userRerository;
             this.commonDictionaryRepository = commonDictionaryRepository;
             this.verbPrepositionDictionaryRepository = erbPrepositionDictionaryRepository;
             SubscribeToEvents();
-            ClearAddingWindow();
             UpdatePageForNewUser();
             SetAddingWindowDictionaryTypes();
+            ClearAddingWindow();
         }
 #pragma warning restore CS8618
 
 
         #region Props for binding
         public ObservableCollection<UserControl> DictionaryViews { get; set; }
-        public string AddingWindowNameValue { get; set; }
-        public string AddingWindowDescriptionValue { get; set; }
+        public string AddingWindowDictionaryNameValue { get; set; }
+        public string AddingWindowDictionaryDescriptionValue { get; set; }
         public ObservableCollection<DictionaryTypeComboBoxItem> AddingWindowDictionaryTypes { get; set; }
         public DictionaryTypeComboBoxItem AddingWindowSelectedDictionaryType { get; set; }
 
@@ -62,20 +62,20 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command UpdatePageForNewUserCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.ClearAddingWindowCommand = new Command(arg => ClearAddingWindow());
-            this.CreateDictionaryCommand = new Command(async arg => await CreateDictionary());
+            this.ClearAddingWindowCommand = new Command(ClearAddingWindow);
+            this.CreateDictionaryCommand = new Command(async () => await CreateDictionary());
             this.DeleteCommonDictionaryCommand = new Command<int>(async dictionaryId => await DeleteCommonDictionary(dictionaryId));
             this.DeleteVerbPrepositionDictionaryCommand = new Command<int>(async dictionaryId => await DeleteVerbPrepositionDictionary(dictionaryId));
-            this.FlipBackAllCardsCommand = new Command(arg => FlipBackAllCards());
-            this.UpdatePageForNewUserCommand = new Command(arg => UpdatePageForNewUser());
+            this.FlipBackAllCardsCommand = new Command(FlipBackAllCards);
+            this.UpdatePageForNewUserCommand = new Command(UpdatePageForNewUser);
         }
         #endregion
 
         #region Command logic methods
         private void ClearAddingWindow()
         {
-            this.AddingWindowNameValue = String.Empty;
-            this.AddingWindowDescriptionValue = String.Empty;
+            this.AddingWindowDictionaryNameValue = String.Empty;
+            this.AddingWindowDictionaryDescriptionValue = String.Empty;
             this.AddingWindowSelectedDictionaryType = this.AddingWindowDictionaryTypes[0];
         }
         private async Task CreateDictionary()
@@ -123,16 +123,16 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Other private methods
         private async Task CreateCommonDictionary()
         {
-            string name = this.AddingWindowNameValue;
-            string description = this.AddingWindowDescriptionValue;
+            string name = this.AddingWindowDictionaryNameValue;
+            string description = this.AddingWindowDictionaryDescriptionValue;
             int userId = this.currentUserId;
             CommonDictionary newCommonDictionary = await commonDictionaryRepository.CreateCommonDictionary(name, description, userId);
             AddCommonDictionaryToUI(newCommonDictionary);
         }
         private async Task CreateVerbPrepositionDictionary()
         {
-            string name = this.AddingWindowNameValue;
-            string description = this.AddingWindowDescriptionValue;
+            string name = this.AddingWindowDictionaryNameValue;
+            string description = this.AddingWindowDictionaryDescriptionValue;
             int userId = this.currentUserId;
             VerbPrepositionDictionnary newVerbPrepositionDictionary = await verbPrepositionDictionaryRepository.CreateVerbPrepositionDictionary(name, description, userId);
             AddVerbPrepositionDictionaryToUI(newVerbPrepositionDictionary);
@@ -174,7 +174,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void SetCurrentUserId()
         {
-            int? currentUserId = userRerository.TryGetCurrentUser()?.Id;
+            int? currentUserId = userRepository.TryGetCurrentUser()?.Id;
             if (!currentUserId.HasValue)
                 throw new Exception("Не удалось получить из базы текущего пользователя");
             this.currentUserId = currentUserId.Value;

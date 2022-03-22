@@ -21,7 +21,6 @@ namespace EasyLearn.VM.ViewModels.Pages
         public UsersPageVM(IEasyLearnUserRepository userRerository)
         {
             this.userRerository = userRerository;
-            SubscribeToEvents();
             LoadUserViews();
         }
 #pragma warning restore CS8618
@@ -29,6 +28,13 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Props for binding
         public ObservableCollection<UserView> UserViews { get; set; }
         public string AddingWindowUserNameValue { get; set; }
+        #endregion
+
+        #region Events
+        protected override void InitEvents()
+        {
+            App.GetService<AppWindowVM>().CurrentPageChanged += () => FlipBackAllCards();
+        }
         #endregion
 
         #region Commands
@@ -39,11 +45,11 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command FlipBackAllCardsCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.CreateUserCommand = new Command(async arg => await CreateUser());
+            this.CreateUserCommand = new Command(async () => await CreateUser());
             this.DeleteUserCommand = new Command<int>(async userId => await DeleteUser(userId));
             this.SetUserAsCurrentCommand = new Command<int>(async userId => await SetUserAsCurrent(userId));
-            this.ClearAddingWindowCommand = new Command(arg => ClearAddingWindow());
-            this.FlipBackAllCardsCommand = new Command(arg => FlipBackAllCards());
+            this.ClearAddingWindowCommand = new Command(ClearAddingWindow);
+            this.FlipBackAllCardsCommand = new Command(FlipBackAllCards);
         }
         #endregion
 
@@ -66,9 +72,9 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private async Task SetUserAsCurrent(int userId)
         {
-            UserView? lastCurrentUser = FindCurrentUserView();
-            if (lastCurrentUser is not null)
-                lastCurrentUser.ViewModel.IsCurrent = false;
+            UserView? lastCurrentUserView = TryFindCurrentUserView();
+            if (lastCurrentUserView is not null)
+                lastCurrentUserView.ViewModel.IsCurrent = false;
             FindUserView(userId).ViewModel.IsCurrent = true;
             await userRerository.SetUserAsCurrent(userId);
             UpdatePagesForNewUser();
@@ -85,17 +91,16 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void LoadUserViews()
         {
             IEnumerable<EasyLearnUser> easyLearnUsers = userRerository.GetAllUsers();
-            IEnumerable<UserView> userViews = easyLearnUsers.Select(easyLearnUser => UserView.Create(easyLearnUser)));
+            IEnumerable<UserView> userViews = easyLearnUsers.Select(easyLearnUser => UserView.Create(easyLearnUser));
             this.UserViews = new ObservableCollection<UserView>(userViews);
         }
-        private void SubscribeToEvents() => App.GetService<AppWindowVM>().CurrentPageChanged += () => FlipBackAllCards();
         private void AddUserToUI(EasyLearnUser user) => this.UserViews.Add(UserView.Create(user));
         private UserView FindUserView(int userId) => this.UserViews.First(userView => userView.ViewModel.Id == userId);
-        private UserView? FindCurrentUserView() => this.UserViews.FirstOrDefault(userView => userView.ViewModel.IsCurrent);
+        private UserView? TryFindCurrentUserView() => this.UserViews.FirstOrDefault(userView => userView.ViewModel.IsCurrent);
         private void UpdatePagesForNewUser()
         {
-            App.GetService<DictionariesPageVM>().UpdatePageForNewUser();
-            App.GetService<DictationPageVM>().UpdatePageForNewUser();
+            App.GetService<DictionariesPageVM>().UpdatePageForNewUserCommand.Execute();
+            App.GetService<DictationPageVM>().UpdatePageForNewUserCommand.Execute();
         }
         #endregion
     }

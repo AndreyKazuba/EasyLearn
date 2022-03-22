@@ -20,21 +20,18 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public bool IsCardFlipped { get; set; }
 
         #region Commands
-
         public Command OpenCurrentCommonDictionaryCommand { get; private set; }
         public Command RemoveCommonDictionaryCommand { get; private set; }
         public Command EditCommonDictionaryCommand { get; private set; }
         public Command SetEditFieldsValueCommand { get; private set; }
         public Command FlipBackAllAnotherCardsCommand { get; private set; }
-
-
         protected override void InitCommands()
         {
-            this.OpenCurrentCommonDictionaryCommand = new Command(arg => OpenCurrentCommonDictionary());
-            this.RemoveCommonDictionaryCommand = new Command(arg => RemoveCommonDictionary());
-            this.EditCommonDictionaryCommand = new Command(async arg => await EditCommonDictionary());
-            this.SetEditFieldsValueCommand = new Command(arg => SetEditFieldsValue());
-            this.FlipBackAllAnotherCardsCommand = new Command(arg => FlipBackAllAnotherCards());
+            this.OpenCurrentCommonDictionaryCommand = new Command(OpenCurrentCommonDictionary);
+            this.RemoveCommonDictionaryCommand = new Command(RemoveCommonDictionary);
+            this.EditCommonDictionaryCommand = new Command(async () => await EditCommonDictionary());
+            this.SetEditFieldsValueCommand = new Command(SetEditFieldsValue);
+            this.FlipBackAllAnotherCardsCommand = new Command(FlipBackAllAnotherCards);
         }
         #endregion
 

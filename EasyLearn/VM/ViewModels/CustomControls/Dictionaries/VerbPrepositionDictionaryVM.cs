@@ -31,11 +31,11 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public Command FlipBackAllAnotherCardsCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.OpenCurrentVerbPrepositionDictionaryCommand = new Command(arg => OpenCurrentVerbPrepositionDictionary());
-            this.RemoveVerbPrepositionDictionaryCommand = new Command(arg => RemoveVerbPrepositionDictionary());
-            this.SetEditFieldsValueCommand = new Command(arg => SetEditFieldsValue());
-            this.EditVerbPrepositionDictionaryCommand = new Command(async arg => await EditVerbPrepositionDictionary());
-            this.FlipBackAllAnotherCardsCommand = new Command(arg => FlipBackAllAnotherCards());
+            this.OpenCurrentVerbPrepositionDictionaryCommand = new Command(OpenCurrentVerbPrepositionDictionary);
+            this.RemoveVerbPrepositionDictionaryCommand = new Command(RemoveVerbPrepositionDictionary);
+            this.SetEditFieldsValueCommand = new Command(SetEditFieldsValue);
+            this.EditVerbPrepositionDictionaryCommand = new Command(async () => await EditVerbPrepositionDictionary());
+            this.FlipBackAllAnotherCardsCommand = new Command(FlipBackAllAnotherCards);
         }
         #endregion
 

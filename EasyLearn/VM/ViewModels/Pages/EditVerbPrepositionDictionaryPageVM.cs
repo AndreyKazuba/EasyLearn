@@ -48,9 +48,9 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command<int> SetDictionaryAsCurrentCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.GoBackCommand = new Command(arg => GoBack());
-            this.CreateVerbPrepositionCommand = new Command(async arg => await CreateVerbPreposition());
-            this.ClearAddingWindowCommand = new Command(arg => ClearAddingWindow());
+            this.GoBackCommand = new Command(GoBack);
+            this.CreateVerbPrepositionCommand = new Command(async () => await CreateVerbPreposition());
+            this.ClearAddingWindowCommand = new Command(ClearAddingWindow);
             this.SetDictionaryAsCurrentCommand = new Command<int>(async verbPrepositionDictionaryId => await SetDictionaryAsCurrent(verbPrepositionDictionaryId));
         }
         #endregion

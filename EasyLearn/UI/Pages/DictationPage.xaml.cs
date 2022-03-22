@@ -1,4 +1,5 @@
 ﻿using EasyLearn.VM.ViewModels.Pages;
+using System;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -7,6 +8,8 @@ namespace EasyLearn.UI.Pages
     public partial class DictationPage : Page
     {
         private DictationPageVM viewModel;
+
+        public static event Action? EnterClick;
         public DictationPage(DictationPageVM viewModel)
         {
             this.DataContext = viewModel;
@@ -14,10 +17,10 @@ namespace EasyLearn.UI.Pages
             InitializeComponent();
         }
 
-        private void dictationTextBox_KeyDown(object sender, KeyEventArgs e)
+        private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-                this.viewModel.PressEnterCommand.Execute();
+            if (e.Key == Key.Enter && EnterClick is not null)
+                EnterClick();
         }
     }
 }

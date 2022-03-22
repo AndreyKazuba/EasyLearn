@@ -26,17 +26,17 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock
                        FontSize="90"
-                       Text="{Binding DisplayValue}"
+                       Text="{Binding MainDisplayValue}"
                        Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        Margin="0 0 0 10"/>
-                    <materialDesign:Chip Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="T" Content="{Binding CurrentUnitType}"/>
+                    <materialDesign:Chip Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="T" Content="{Binding UnitTypeDisplayValue}"/>
                 </Grid>
                 
                 <TextBlock
                        FontSize="50"
-                       Text="{Binding DisplayCommentValue}"
+                       Text="{Binding CommentDisplayValue}"
                        Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
@@ -51,23 +51,23 @@
 
                 <!--Текстбокс, в который нужно записывать перевод слова для проверки-->
                 <TextBox Grid.Row="2" 
-                     Name="dictationTextBox"
-                     HorizontalAlignment="Center"
-                     VerticalAlignment="Center"
-                     Height="50"
-                         KeyDown="dictationTextBox_KeyDown"
-                     Text="{Binding AnswerValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Width="300"
-                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                     materialDesign:HintAssist.Hint="Перевод"                
-                     FontSize="16"/>
+                         Name="dictationTextBox"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center"
+                         Height="50"
+                         KeyDown="OnKeyDown"
+                         Text="{Binding AnswerValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Width="300"
+                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                         materialDesign:HintAssist.Hint="Перевод"                
+                         FontSize="16"/>
 
                 <!--Кнопка "проверить"-->
                 <Button Grid.Row="1" 
                         Style="{DynamicResource MaterialDesignFloatingActionMiniButton}"
                         Command="{Binding CheckAnswerCommand}"
                         ToolTip="Проверить слово"
-                        Visibility="{Binding IsCheckWordButtonVisible, Converter={converters:ReverseCollapseConverter}}">
+                        Visibility="{Binding CheckAnswerButtonIsVisible, Converter={converters:ReverseCollapseConverter}}">
 
                     <materialDesign:PackIcon Kind="Eye"
                                              Height="25"
@@ -79,7 +79,7 @@
                         Style="{DynamicResource MaterialDesignFloatingActionMiniButton}"
                         Command="{Binding TryGoNextCommand}"
                         ToolTip="Проверить слово и двигаться дальше"
-                        Visibility="{Binding IsNextWordButtonVisible, Converter={converters:ReverseCollapseConverter}}">
+                        Visibility="{Binding NextButtonIsVisible, Converter={converters:ReverseCollapseConverter}}">
 
                     <materialDesign:PackIcon Kind="ArrowRightBold"
                                              Height="25"
@@ -110,8 +110,8 @@
             <ProgressBar Grid.Row="1" 
                          VerticalAlignment="Bottom" 
                          Height="7"
-                         Value="{Binding ProgressBarCurrentValue}"
-                         Maximum="{Binding ProgressBarMaxValue}"/>
+                         Value="{Binding DictationProgressBarCurrentValue}"
+                         Maximum="{Binding DictationProgressBarMaxValue}"/>
 
             <!--Кнопка "начать диктант"-->
             <Button Grid.Row="2"
@@ -121,20 +121,20 @@
                     FontSize="18"
                     ToolTip="Начать дикнтант"
                     Content="Начать"
-                    IsEnabled="{Binding IsStartButtonEnabled}"
-                    Visibility="{Binding IsStartButtonVisible, Converter={converters:ForwardVisibilityConverter}}"
+                    IsEnabled="{Binding StartButtonIsEnabled}"
+                    Visibility="{Binding StartButtonIsVisible, Converter={converters:ForwardVisibilityConverter}}"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
 
                 <Button.CommandParameter>
                     <StackPanel Margin="10">
                         <Slider Grid.Row="1"
-                                Minimum="{Binding SliderMinValue}" 
-                                Maximum="{Binding SliderMaxValue}" 
+                                Minimum="{Binding DictationLengthSliderMinValue}" 
+                                Maximum="{Binding DictationLengthSliderMaxValue}" 
                                 Style="{DynamicResource MaterialDesignDiscreteSlider}" 
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Center"
                                 ToolTip="Задать кол-во слов в диктанте"
-                                Value="{Binding SliderCurrentValue, Mode=TwoWay}"
+                                Value="{Binding DictationLengthSliderCurrentValue, Mode=TwoWay}"
                                 Width="360"
                                 Margin="5 0"/>
                         <ComboBox Grid.Row="0" 
@@ -189,7 +189,7 @@
                     FontSize="18"
                     Content="Завершить"
                     ToolTip="Завершить диктант"
-                    Visibility="{Binding IsEndButtonVisible, Converter={converters:ForwardVisibilityConverter}}">
+                    Visibility="{Binding StopButtonIsVisible, Converter={converters:ForwardVisibilityConverter}}">
 
 
                 <!--View окошка результата диктанта-->
@@ -207,18 +207,11 @@
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <i:InvokeCommandAction Command="{Binding EndDictationCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding StopDictationCommand}"/>
                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
-
-            <!--Всплывающая подсказка-->
-            <materialDesign:Snackbar x:Name="promtSnackBar"
-                                     VerticalAlignment="Top"
-                                     IsActive="{Binding PromtIsActive}">
-                <materialDesign:SnackbarMessage Content="{Binding CurrentPromtText}" HorizontalAlignment="Center"/>
-            </materialDesign:Snackbar>
         </Grid>
     </materialDesign:DialogHost>
 </Page>

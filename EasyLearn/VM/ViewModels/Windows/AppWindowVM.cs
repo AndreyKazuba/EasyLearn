@@ -13,7 +13,7 @@ namespace EasyLearn.VM.Windows
         {
             get { return currentPage; }
             set 
-            { 
+            {
                 currentPage = value;
                 if (this.CurrentPageChanged is not null)
                     this.CurrentPageChanged.Invoke();
@@ -26,25 +26,23 @@ namespace EasyLearn.VM.Windows
         }
 
         #region Commands
-
         public Command OpenDictationPage { get; set; }
         public Command OpenUsersPage { get; set; }
         public Command OpenDictionariesPageCommand { get; set; }
         public Command OpenEditCommonDictionaryPageCommand { get; set; }
         public Command OpenEditVerbPrepositionDictionaryPageCommand { get; set; }
-
         protected override void InitCommands()
         {
-            this.OpenDictationPage = new Command(arg => this.CurrentPage = Page.Dictation);
-            this.OpenUsersPage = new Command(arg => this.CurrentPage = Page.Users);
-            this.OpenDictionariesPageCommand = new Command(arg => this.CurrentPage = Page.Dictionaries);
-            this.OpenEditCommonDictionaryPageCommand = new Command(arg => this.CurrentPage = Page.EditCommonWordListPage);
-            this.OpenEditVerbPrepositionDictionaryPageCommand = new Command(arg => this.CurrentPage = Page.EditVerbPrepositionListPage);
+            this.OpenDictationPage = new Command(() => this.CurrentPage = Page.Dictation);
+            this.OpenUsersPage = new Command(() => this.CurrentPage = Page.Users);
+            this.OpenDictionariesPageCommand = new Command(() => this.CurrentPage = Page.Dictionaries);
+            this.OpenEditCommonDictionaryPageCommand = new Command(() => this.CurrentPage = Page.EditCommonWordListPage);
+            this.OpenEditVerbPrepositionDictionaryPageCommand = new Command(() => this.CurrentPage = Page.EditVerbPrepositionListPage);
         }
 
         #endregion
 
-        private void SetStartPage() => this.CurrentPage = Page.Dictionaries;
+        private void SetStartPage() => this.CurrentPage = Page.Users;
         
     }
 }

@@ -5,15 +5,27 @@ namespace EasyLearn.VM.Core
 {
     public class Command : ICommand
     {
+        private Action action;
+        public event EventHandler? CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
+        public Command(Action action) => this.action = action;
+        public bool CanExecute(object? parameter) => true;
+        public void Execute(object? parameter = null) => this.action.Invoke();
+    }
+    public class CommandB : ICommand
+    {
         private Action<object?> action;
         public event EventHandler? CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
-        public Command(Action<object?> action) => this.action = action;
+        public CommandB(Action<object?> action) => this.action = action;
         public bool CanExecute(object? parameter) => true;
-        public void Execute(object? parameter = null) => this.action(parameter);
+        public void Execute(object? parameter = null) => this.action.Invoke(parameter);
     }
     public class Command<TArgument> : ICommand
     {

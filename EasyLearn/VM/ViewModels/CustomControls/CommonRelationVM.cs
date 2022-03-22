@@ -40,7 +40,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public Command DeleteRelationCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.DeleteRelationCommand = new Command(arg => DeleteRelation());
+            this.DeleteRelationCommand = new Command(DeleteRelation);
         }
         #endregion
 

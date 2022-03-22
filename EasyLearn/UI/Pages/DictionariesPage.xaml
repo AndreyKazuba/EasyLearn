@@ -14,7 +14,7 @@
     <materialDesign:DialogHost>
 
         <Grid>
-            <ItemsControl ItemsSource="{Binding Dictionaries}" 
+            <ItemsControl ItemsSource="{Binding DictionaryViews}" 
                   VerticalContentAlignment="Top"
                   HorizontalContentAlignment="Left">
                 <ItemsControl.ItemsPanel>
@@ -47,7 +47,7 @@
                         <TextBox Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                  Width="200" 
                                  materialDesign:HintAssist.Hint="Название"
-                                 Text="{Binding NewDictionaryName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                 Text="{Binding AddingWindowDictionaryNameValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         </TextBox>
 
                         <!--Описание списка слов-->
@@ -57,7 +57,7 @@
                                  VerticalScrollBarVisibility="Auto"
                                  materialDesign:HintAssist.Hint="Описание"
                                  materialDesign:HintAssist.IsFloating="True"
-                                 Text="{Binding NewDictionaryDescription}"/>
+                                 Text="{Binding AddingWindowDictionaryDescriptionValue}"/>
 
                         <!--Выбор "обычный список/список с предлогами"-->
                         <ComboBox Grid.Row="0" 
@@ -65,8 +65,8 @@
                                   materialDesign:HintAssist.IsFloating="True"
                                   MaxDropDownHeight="200"
                                   Margin="4 4 4 0"
-                                  ItemsSource="{Binding DictionaryTypes}"
-                                  SelectedItem="{Binding SelectedDictionaryType}">
+                                  ItemsSource="{Binding AddingWindowDictionaryTypes}"
+                                  SelectedItem="{Binding AddingWindowSelectedDictionaryType}">
                         </ComboBox>
 
                         <!--Кнопки отмены и подтверждения добавления-->
@@ -81,7 +81,7 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding CleanDictionaryAddingWindowCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -96,8 +96,8 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding CreateNewList}"/>
-                                        <i:InvokeCommandAction Command="{Binding CleanDictionaryAddingWindowCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding CreateDictionaryCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>

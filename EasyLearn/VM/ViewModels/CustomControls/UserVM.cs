@@ -36,11 +36,11 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public Command FlipBackAllAnotherCardsCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.SetUserAsCurrentCommand = new Command(arg => SetUserAsCurrent());
-            this.RemoveUserCommand = new Command(arg => RemoveUser());
-            this.EditUserCommand = new Command(async arg => await EditUser());
-            this.SetEditNameFieldValueCommand = new Command(arg => SetEditNameFieldValue());
-            this.FlipBackAllAnotherCardsCommand = new Command(arg => FlipBackAllAnotherCards());
+            this.SetUserAsCurrentCommand = new Command(SetUserAsCurrent);
+            this.RemoveUserCommand = new Command(RemoveUser);
+            this.EditUserCommand = new Command(async () => await EditUser());
+            this.SetEditNameFieldValueCommand = new Command(SetEditNameFieldValue);
+            this.FlipBackAllAnotherCardsCommand = new Command(FlipBackAllAnotherCards);
         }
         #endregion
 

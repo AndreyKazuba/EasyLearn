@@ -6,35 +6,45 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EasyLearn.Data.Enums;
-using EasyLearn.Infrastructure.Dictation;
-using MaterialDesignThemes.Wpf;
+using EasyLearn.Infrastructure.DictationManagers;
 using EasyLearn.Data.Helpers;
 using EasyLearn.UI.Pages;
+using EasyLearn.Infrastructure.Constants;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
     public class DictationPageVM : ViewModel
     {
-        #region Private fields
-        private bool isDictationStarted;
-        private bool isFirstAnswer;
-        private int currentUserId;
-
-        private IEasyLearnUserRepository userRepository;
-        private ICommonDictionaryRepository commonDictionaryRepository;
-        private IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository;
-
-        private CommonDictionary selectedCommonDictionary;
-        private VerbPrepositionDictionnary selectedVerbPrepositionDictionnary;
-
-        private CommonDictationManager commonDictationManager;
+        #region Repositories
+        private readonly IEasyLearnUserRepository userRepository;
+        private readonly ICommonDictionaryRepository commonDictionaryRepository;
+        private readonly IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository;
         #endregion
 
-        #region Private props
-        private int ItemsInSelectedDictionary
+        #region Private fields
+        private bool isDictationStarted;
+        private int currentUserId;
+        private CommonDictionary loadedCommonDictionary;
+        private VerbPrepositionDictionnary loadedVerbPrepositionDictionary;
+        private DictionaryComboBoxItem selectedDictionaryComboBoxItem;
+        private CommonDictationManager? commonDictationManager;
+        private VerbPrepositionDictationManager? verbPrepositionDictationManager;
+        #endregion
+
+#pragma warning disable CS8618
+        public DictationPageVM(IEasyLearnUserRepository userRepository, ICommonDictionaryRepository commonDictionaryRepository, IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository)
+        {
+            this.userRepository = userRepository;
+            this.commonDictionaryRepository = commonDictionaryRepository;
+            this.verbPrepositionDictionaryRepository = verbPrepositionDictionaryRepository;
+            UpdatePageForNewUser();
+            SetDefaultPageState();
+        }
+#pragma warning restore CS8618
+
+        #region Helper props
+        private int ItemsInSelectedLoadedDictionary
         {
             get
             {
@@ -42,9 +52,9 @@ namespace EasyLearn.VM.ViewModels.Pages
                 switch (selectedDictionaryType)
                 {
                     case DictionaryType.CommonDictionary:
-                        return selectedCommonDictionary.Relations.Count;
+                        return loadedCommonDictionary.Relations.Count;
                     case DictionaryType.VerbPrepositionDictionary:
-                        return selectedVerbPrepositionDictionnary.VerbPrepositions.Count;
+                        return loadedVerbPrepositionDictionary.VerbPrepositions.Count;
                     default:
                         return 120;
                 }
@@ -54,7 +64,6 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         #region Props for binding
         public ObservableCollection<DictionaryComboBoxItem> DictionaryComboBoxItems { get; set; }
-        private DictionaryComboBoxItem selectedDictionaryComboBoxItem;
         public DictionaryComboBoxItem SelectedDictionaryComboBoxItem
         {
             get { return selectedDictionaryComboBoxItem; }
@@ -62,77 +71,229 @@ namespace EasyLearn.VM.ViewModels.Pages
             {
                 selectedDictionaryComboBoxItem = value;
                 LoadSelectedDictionary();
-                RefreshSlider();
+                UpdateDictationLengthSlider();
             }
         }
-        public int SliderMaxValue { get; set; }
-        public int SliderMinValue { get; set; }
-        public int SliderCurrentValue { get; set; }
-        public string DisplayValue { get; set; }
-        public string DisplayCommentValue { get; set; }
+        public int DictationLengthSliderMaxValue { get; set; }
+        public int DictationLengthSliderMinValue { get; set; }
+        public int DictationLengthSliderCurrentValue { get; set; }
+        public int DictationProgressBarMaxValue { get; set; }
+        public int DictationProgressBarCurrentValue { get; set; }
+        public string MainDisplayValue { get; set; }
+        public string CommentDisplayValue { get; set; }
         public string AnswerValue { get; set; }
+        public string UnitTypeDisplayValue { get; set; }
         public bool CorrectAnswerIconIsVisible { get; set; }
         public bool WrongAnswerIconIsVisible { get; set; }
-        public bool IsCheckWordButtonVisible { get; set; }
-        public bool IsNextWordButtonVisible { get; set; }
-        public int ProgressBarMaxValue { get; set; }
-        public int ProgressBarCurrentValue { get; set; }
-        public bool IsStartButtonVisible { get; set; }
-        public bool IsStartButtonEnabled { get; set; } = true;
-        public bool IsEndButtonVisible { get; set; }
-        public string CurrentUnitType { get; set; }
+        public bool CheckAnswerButtonIsVisible { get; set; }
+        public bool NextButtonIsVisible { get; set; }
+        public bool StartButtonIsVisible { get; set; }
+        public bool StartButtonIsEnabled { get; set; } = true;
+        public bool StopButtonIsVisible { get; set; }
         #endregion
 
-        public DictationPageVM(IEasyLearnUserRepository userRepository, ICommonDictionaryRepository commonDictionaryRepository, IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository)
-        {
-            this.userRepository = userRepository;
-            this.commonDictionaryRepository = commonDictionaryRepository;
-            this.verbPrepositionDictionaryRepository = verbPrepositionDictionaryRepository;
-            UpdatePageForNewUser();
-            SetDefaultPageState();
-        }
-
         #region Commands 
-        public Command RefreshSliderCommand { get; private set; }
+        public Command UpdateDictationLengthSliderCommand { get; private set; }
         public Command StartDictationCommand { get; private set; }
         public Command CheckAnswerCommand { get; private set; }
         public Command TryGoNextCommand { get; private set; }
-        public Command EndDictationCommand { get; private set; }
-        public Command PressEnterCommand { get; private set; }
+        public Command StopDictationCommand { get; private set; }
+        public Command UpdatePageForNewUserCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.RefreshSliderCommand = new Command(arg => RefreshSlider());
-            this.StartDictationCommand = new Command(arg => StartCommonDictation());
-            this.CheckAnswerCommand = new Command(arg => CheckAnswer());
-            this.TryGoNextCommand = new Command(arg => TryGoNext());
-            this.EndDictationCommand = new Command(arg => StopDictation());
-            this.PressEnterCommand = new Command(arg => OnPressEnter());
+            this.UpdateDictationLengthSliderCommand = new Command(UpdateDictationLengthSlider);
+            this.StartDictationCommand = new Command(StartDictation);
+            this.CheckAnswerCommand = new Command(CheckAnswer);
+            this.TryGoNextCommand = new Command(TryGoNext);
+            this.StopDictationCommand = new Command(StopDictation);
+            this.UpdatePageForNewUserCommand = new Command(UpdatePageForNewUser);
         }
         #endregion
 
+        #region Command logic methods
+        private void UpdateDictationLengthSlider()
+        {
+            this.DictationLengthSliderMinValue = this.ItemsInSelectedLoadedDictionary > 0 ? 1 : 0;
+            this.DictationLengthSliderMaxValue = this.ItemsInSelectedLoadedDictionary;
+            this.DictationLengthSliderCurrentValue = this.DictationLengthSliderMaxValue;
+        }
+        private void StartDictation()
+        {
+            DictionaryType selectedDictionaryType = selectedDictionaryComboBoxItem.DictionaryType;
+            switch (selectedDictionaryType)
+            {
+                case DictionaryType.CommonDictionary:
+                    StartCommonDictation();
+                    break;
+                case DictionaryType.VerbPrepositionDictionary:
+                    StartVerbPrepositionDictionary();
+                    break;
+            }
+        }
+        private void CheckAnswer()
+        {
+            DictionaryType selectedDictionaryType = selectedDictionaryComboBoxItem.DictionaryType;
+            switch (selectedDictionaryType)
+            {
+                case DictionaryType.CommonDictionary:
+                    CheckAnswerForCommonDictionary();
+                    break;
+                case DictionaryType.VerbPrepositionDictionary:
+                    CheckAnswerForVerbPrepositionDictionary();
+                    break;
+            }
+        }
+        private void TryGoNext()
+        {
+            DictionaryType selectedDictionaryType = selectedDictionaryComboBoxItem.DictionaryType;
+            switch (selectedDictionaryType)
+            {
+                case DictionaryType.CommonDictionary:
+                    TryGoNextForCommonDictionary();
+                    break;
+                case DictionaryType.VerbPrepositionDictionary:
+                    TryGoNextForVerbPrepositionDictionary();
+                    break;
+            }
+        }
+        private void StopDictation()
+        {
+            SetDefaultPageState();
+            this.commonDictationManager = null;
+            this.verbPrepositionDictationManager = null;
+        }
         public void UpdatePageForNewUser()
         {
-            UpdateCurrentUserId();
-            RefreshDictionaries();
+            SetCurrentUserId();
+            UpdateDictionaryComboBoxItems();
             LoadSelectedDictionary();
-            RefreshSlider();
+            UpdateDictationLengthSlider();
         }
-        private void RefreshDictionaries()
+        #endregion
+
+        #region Dictation process methods
+        private void StartCommonDictation()
         {
-            IEnumerable<CommonDictionary> commonDictionaries = App.GetService<ICommonDictionaryRepository>().GetUsersCommonDictionaries(currentUserId);
-            IEnumerable<VerbPrepositionDictionnary> verbPrepositionDictionnaries = App.GetService<IVerbPrepositionDictionaryRepository>().GetUsersVerbPreposotionDictionaries(currentUserId);
+            SetDefaultPageState();
+            this.isDictationStarted = true;
+            int countOfRelations = this.DictationLengthSliderCurrentValue;
+            List<CommonRelation> commonRelations = ShuffleCommonRelation(this.loadedCommonDictionary.Relations).Take(countOfRelations).ToList();
+            this.commonDictationManager = new CommonDictationManager(commonRelations);
+            CommonRelation firstCommonRelation = commonDictationManager.Start();
+            this.MainDisplayValue = firstCommonRelation.RussianUnit.Value.NormalizeRegister();
+            this.CommentDisplayValue = firstCommonRelation.Comment.TryNormalizeRegister();
+            this.UnitTypeDisplayValue = firstCommonRelation.RussianUnit.Type.ToString().NormalizeRegister();
+            SwitchStartAndStopButtons();
+            FocusAnswerTextBox();
+            SetDictationProgressBar();
+        }
+        private void CheckAnswerForCommonDictionary()
+        {
+            if (!isDictationStarted || this.commonDictationManager is null)
+                return;
+            bool answerIsCorrect = this.commonDictationManager.IsAnswerCorrect(this.AnswerValue);
+            if (answerIsCorrect)
+            {
+                ShowCorrectAnswerIcon();
+                IncreaseDictationProgressBarCurrentValue();
+                SwitchCheckAnswerAndNextButtons();
+            }
+            else
+            {
+                ShowWrongAnswerIcon();
+            }
+        }
+        private void TryGoNextForCommonDictionary()
+        {
+            if (!this.isDictationStarted || this.commonDictationManager is null)
+                return;
+            if (this.commonDictationManager.GoNext())
+            {
+                this.MainDisplayValue = commonDictationManager.CurrentCommonRelation.RussianUnit.Value.NormalizeRegister();
+                this.CommentDisplayValue = commonDictationManager.CurrentCommonRelation.Comment.TryNormalizeRegister();
+                this.UnitTypeDisplayValue = commonDictationManager.CurrentCommonRelation.RussianUnit.Type.ToString().NormalizeRegister();
+                SetDefaultAnswerValue();
+                HideCorrectAndWrongAnswerIcons();
+                SwitchCheckAnswerAndNextButtons();
+            }
+            else
+            {
+                StopDictation();
+            }
+        }
+        private void StartVerbPrepositionDictionary()
+        {
+            SetDefaultPageState();
+            this.isDictationStarted = true;
+            int countOfVerbPrepositions = this.DictationLengthSliderCurrentValue;
+            List<VerbPreposition> verbPrepositions = ShuffleVerbPrepositions(this.loadedVerbPrepositionDictionary.VerbPrepositions).Take(countOfVerbPrepositions).ToList();
+            this.verbPrepositionDictationManager = new VerbPrepositionDictationManager(verbPrepositions);
+            VerbPreposition firstVerbPreposition = verbPrepositionDictationManager.Start();
+            this.MainDisplayValue = firstVerbPreposition.Verb.Value.NormalizeRegister();
+            this.CommentDisplayValue = firstVerbPreposition.Comment.TryNormalizeRegister();
+            this.UnitTypeDisplayValue = firstVerbPreposition.Verb.Type.ToString().NormalizeRegister();
+            SwitchStartAndStopButtons();
+            FocusAnswerTextBox();
+            SetDictationProgressBar();
+        }
+        private void CheckAnswerForVerbPrepositionDictionary()
+        {
+            if (!isDictationStarted || this.verbPrepositionDictationManager is null)
+                return;
+            bool answerIsCorrect = this.verbPrepositionDictationManager.IsAnswerCorrect(this.AnswerValue);
+            if (answerIsCorrect)
+            {
+                ShowCorrectAnswerIcon();
+                IncreaseDictationProgressBarCurrentValue();
+                SwitchCheckAnswerAndNextButtons();
+            }
+            else
+            {
+                ShowWrongAnswerIcon();
+            }
+        }
+        private void TryGoNextForVerbPrepositionDictionary()
+        {
+            if (!this.isDictationStarted || this.verbPrepositionDictationManager is null)
+                return;
+            if (this.verbPrepositionDictationManager.GoNext())
+            {
+                this.MainDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Verb.Value.NormalizeRegister();
+                this.CommentDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Comment.TryNormalizeRegister();
+                this.UnitTypeDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Verb.Type.ToString().NormalizeRegister();
+                SetDefaultAnswerValue();
+                HideCorrectAndWrongAnswerIcons();
+                SwitchCheckAnswerAndNextButtons();
+            }
+            else
+            {
+                StopDictation();
+            }
+        }
+        #endregion
 
-            IEnumerable<DictionaryComboBoxItem> commonDictionaryViews = commonDictionaries.Select(dictionary => new DictionaryComboBoxItem(StringHelper.NormalizeRegister(dictionary.Name), dictionary.Id, DictionaryType.CommonDictionary));
-            IEnumerable<DictionaryComboBoxItem> verbPrepositionDictionnaryViews = verbPrepositionDictionnaries.Select(dictionary => new DictionaryComboBoxItem(StringHelper.NormalizeRegister(dictionary.Name), dictionary.Id, DictionaryType.VerbPrepositionDictionary));
-            DictionaryComboBoxItem irregularVerbDictionaryView = new DictionaryComboBoxItem("Неправильные глаголы", int.MinValue, DictionaryType.IrregularVerbDictionary);
-
-            List<DictionaryComboBoxItem> dictionaries = commonDictionaryViews.Union(verbPrepositionDictionnaryViews).ToList();
-            dictionaries.Add(irregularVerbDictionaryView);
-
-            this.DictionaryComboBoxItems = new ObservableCollection<DictionaryComboBoxItem>(dictionaries);
+        #region Other private methods
+        private void SetCurrentUserId()
+        {
+            int? currentUserId = userRepository.TryGetCurrentUser()?.Id;
+            if (!currentUserId.HasValue)
+                throw new Exception("Не удалось получить из базы текущего пользователя");
+            this.currentUserId = currentUserId.Value;
+        }
+        private void UpdateDictionaryComboBoxItems()
+        {
+            IEnumerable<CommonDictionary> commonDictionaries = commonDictionaryRepository.GetUsersCommonDictionaries(currentUserId);
+            IEnumerable<VerbPrepositionDictionnary> verbPrepositionDictionnaries = verbPrepositionDictionaryRepository.GetUsersVerbPreposotionDictionaries(currentUserId);
+            IEnumerable<DictionaryComboBoxItem> commonDictionaryComboBoxItems = commonDictionaries
+                .Select(dictionary => new DictionaryComboBoxItem(StringHelper.NormalizeRegister(dictionary.Name), dictionary.Id, DictionaryType.CommonDictionary));
+            IEnumerable<DictionaryComboBoxItem> verbPrepositionDictionnaryComboBoxItems = verbPrepositionDictionnaries
+                .Select(dictionary => new DictionaryComboBoxItem(StringHelper.NormalizeRegister(dictionary.Name), dictionary.Id, DictionaryType.VerbPrepositionDictionary));
+            DictionaryComboBoxItem irregularVerbDictionaryComboBoxItem = new DictionaryComboBoxItem(DictionaryTypeRussianNames.IrregularVerbDictionary, int.MinValue, DictionaryType.IrregularVerbDictionary);
+            List<DictionaryComboBoxItem> dictionaryComboBoxItems = commonDictionaryComboBoxItems.Union(verbPrepositionDictionnaryComboBoxItems).ToList();
+            dictionaryComboBoxItems.Add(irregularVerbDictionaryComboBoxItem);
+            this.DictionaryComboBoxItems = new ObservableCollection<DictionaryComboBoxItem>(dictionaryComboBoxItems);
             this.SelectedDictionaryComboBoxItem = this.DictionaryComboBoxItems[0];
         }
-        
         private void LoadSelectedDictionary()
         {
             int selectedDictionaryId = this.SelectedDictionaryComboBoxItem.DictionaryId;
@@ -140,138 +301,76 @@ namespace EasyLearn.VM.ViewModels.Pages
             switch (selectedDictionaryType)
             {
                 case DictionaryType.CommonDictionary:
-                    this.selectedCommonDictionary = commonDictionaryRepository.GetCommonDictionary(selectedDictionaryId);
+                    this.loadedCommonDictionary = commonDictionaryRepository.GetCommonDictionary(selectedDictionaryId);
                     break;
                 case DictionaryType.VerbPrepositionDictionary:
-                    this.selectedVerbPrepositionDictionnary = verbPrepositionDictionaryRepository.GetVerbPrepositionDictionary(selectedDictionaryId);
+                    this.loadedVerbPrepositionDictionary = verbPrepositionDictionaryRepository.GetVerbPrepositionDictionary(selectedDictionaryId);
                     break;
             }
         }
-        private void UpdateCurrentUserId()
+        #endregion
+
+        #region Event handling
+        protected override void InitEvents()
         {
-            this.currentUserId = userRepository.TryGetCurrentUser().Id;
+            DictationPage.EnterClick += this.OnEnterClick;
         }
-        private void StartCommonDictation()
-        {
-            SetDefaultPageState();
-            IEnumerable<CommonRelation> commonRelations = ShuffleCommonRelation(this.selectedCommonDictionary.Relations.Take(this.SliderCurrentValue));
-            this.commonDictationManager = new CommonDictationManager(commonRelations.ToList());
-            this.isDictationStarted = true;
-            CommonRelation commonRelation = commonDictationManager.Start();
-            this.DisplayValue = commonRelation.RussianUnit.Value.NormalizeRegister();
-            this.DisplayCommentValue = commonRelation.Comment.TryNormalizeRegister();
-            this.CurrentUnitType = commonRelation.RussianUnit.Type.ToString().NormalizeRegister();
-            SwitchStartAndEndButtons();
-            FocusAnswerTextBox();
-            SetProgressBarLength();
-        }
-        private void CheckAnswer()
+        private void OnEnterClick()
         {
             if (!this.isDictationStarted)
                 return;
-            bool isTrue = this.commonDictationManager.IsAnswerCorrect(this.AnswerValue);
-            if (isTrue && isFirstAnswer)
-            {
-                ShowCorrectAnswerIcon();
-                IncreaseProgressBarValue();
-                SwitchCheckAndNextButtons();
-            }
-            else if (!isTrue && isFirstAnswer)
-            {
-                ShowWrongAnswerIcon();
-            }
-            else if (isTrue)
-            {
-                SwitchCorrectAndWrongAnswerIcons();
-                IncreaseProgressBarValue();
-                SwitchCheckAndNextButtons();
-            }
-        }
-        private void StopDictation()
-        {
-            SetDefaultPageState();
-        }
-        private void TryGoNext()
-        {
-            if (!this.isDictationStarted)
-                return;
-            if (this.commonDictationManager.GoNext())
-            {
-                this.DisplayValue = commonDictationManager.CurrentRelation.RussianUnit.Value.NormalizeRegister();
-                this.DisplayCommentValue = commonDictationManager.CurrentRelation.Comment.TryNormalizeRegister();
-                this.CurrentUnitType = commonDictationManager.CurrentRelation.RussianUnit.Type.ToString().NormalizeRegister();
-                ClearAnswerValue();
-                HideCorrectAndWrongAnswerIcons();
-                SwitchCheckAndNextButtons();
-            }
-            else
-            {
-                StopDictation();
-            }
-        }
-        private void OnPressEnter()
-        {
-            if (!this.isDictationStarted)
-                return;
-            if (this.IsCheckWordButtonVisible)
+            if (this.CheckAnswerButtonIsVisible)
                 CheckAnswer();
             else
                 TryGoNext();
         }
+        #endregion
+
+        #region Display actions
         private void SetDefaultPageState()
         {
             this.isDictationStarted = false;
-            this.isFirstAnswer = true;
-            SetDefaultDisplayValue();
-            SetDefaultDisplayCommentValue();
-            ClearAnswerValue();
+            SetDefaultMainDisplayValue();
+            SetDefaultCommentDisplayValue();
+            SetDefaultAnswerValue();
             ShowStartButton();
-            ShowCheckButton();
-            ResetProgressBarValue();
+            ShowCheckAnswerButton();
+            ResetDictationProgressBarCurrentValue();
             HideCorrectAndWrongAnswerIcons();
         }
-
-
-        #region Display actions
-        private void RefreshSlider()
+        private void ShowCheckAnswerButton()
         {
-            this.SliderMinValue = this.ItemsInSelectedDictionary > 0 ? 1 : 0;
-            this.SliderMaxValue = this.ItemsInSelectedDictionary;
-            this.SliderCurrentValue = this.SliderMaxValue;
-        }
-        private void ShowCheckButton()
-        {
-            this.IsCheckWordButtonVisible = true;
-            this.IsNextWordButtonVisible = false;
+            this.CheckAnswerButtonIsVisible = true;
+            this.NextButtonIsVisible = false;
         }
         private void ShowNextButton()
         {
-            this.IsCheckWordButtonVisible = false;
-            this.IsNextWordButtonVisible = true;
+            this.CheckAnswerButtonIsVisible = false;
+            this.NextButtonIsVisible = true;
         }
-        private void SwitchCheckAndNextButtons()
+        private void SwitchCheckAnswerAndNextButtons()
         {
-            this.IsCheckWordButtonVisible = !this.IsCheckWordButtonVisible;
-            this.IsNextWordButtonVisible = !this.IsNextWordButtonVisible;
+            this.CheckAnswerButtonIsVisible = !this.CheckAnswerButtonIsVisible;
+            this.NextButtonIsVisible = !this.NextButtonIsVisible;
         }
         private void ShowStartButton()
         {
-            this.IsStartButtonVisible = true;
-            this.IsEndButtonVisible = false;
+            this.StartButtonIsVisible = true;
+            this.StopButtonIsVisible = false;
         }
-        private void ShowEndButton()
+        private void ShowStopButton()
         {
-            this.IsEndButtonVisible = true;
-            this.IsStartButtonVisible = false;
+            this.StopButtonIsVisible = true;
+            this.StartButtonIsVisible = false;
         }
-        private void SwitchStartAndEndButtons()
+        private void SwitchStartAndStopButtons()
         {
-            this.IsStartButtonVisible = !this.IsStartButtonVisible;
-            this.IsEndButtonVisible= !this.IsEndButtonVisible;
+            this.StartButtonIsVisible = !this.StartButtonIsVisible;
+            this.StopButtonIsVisible = !this.StopButtonIsVisible;
         }
-        private void ClearAnswerValue() => this.AnswerValue = string.Empty;
-        private void SetDefaultDisplayValue() => this.DisplayValue = "EasyLearn";
-        private void SetDefaultDisplayCommentValue() => this.DisplayCommentValue = string.Empty;
+        private void SetDefaultAnswerValue() => this.AnswerValue = String.Empty;
+        private void SetDefaultMainDisplayValue() => this.MainDisplayValue = "EasyLearn";
+        private void SetDefaultCommentDisplayValue() => this.CommentDisplayValue = String.Empty;
         private void ShowWrongAnswerIcon()
         {
             this.WrongAnswerIconIsVisible = true;
@@ -293,9 +392,14 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.WrongAnswerIconIsVisible = !this.WrongAnswerIconIsVisible;
         }
         private void FocusAnswerTextBox() => App.GetService<DictationPage>().dictationTextBox.Focus();
-        private void SetProgressBarLength() => this.ProgressBarMaxValue = this.SliderCurrentValue;
-        private void IncreaseProgressBarValue() => this.ProgressBarCurrentValue++;
-        private void ResetProgressBarValue() => this.ProgressBarCurrentValue = 0;
+        private void SetDictationProgressBar()
+        {
+            SetDictationProgressBarMaxValue();
+            ResetDictationProgressBarCurrentValue();
+        }
+        private void SetDictationProgressBarMaxValue() => this.DictationProgressBarMaxValue = this.DictationLengthSliderCurrentValue;
+        private void IncreaseDictationProgressBarCurrentValue() => this.DictationProgressBarCurrentValue++;
+        private void ResetDictationProgressBarCurrentValue() => this.DictationProgressBarCurrentValue = 0;
         #endregion
 
         #region Helpers
@@ -303,6 +407,11 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             Random random = new Random();
             return relations.OrderBy(relation => random.Next());
+        }
+        private IEnumerable<VerbPreposition> ShuffleVerbPrepositions(IEnumerable<VerbPreposition> verbPrepositions)
+        {
+            Random random = new Random();
+            return verbPrepositions.OrderBy(verbPrepositions => random.Next());
         }
         #endregion
     }

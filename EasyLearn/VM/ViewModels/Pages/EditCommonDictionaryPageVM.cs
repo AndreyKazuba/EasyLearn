@@ -58,11 +58,11 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command<int> SetDictionaryAsCurrentCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.GoBackCommand = new Command(arg => GoBack());
-            this.CreateCommonRelationCommand = new Command(async arg => await CreateCommonRelation());
+            this.GoBackCommand = new Command(GoBack);
+            this.CreateCommonRelationCommand = new Command(async () => await CreateCommonRelation());
             this.DeleteCommonRelationCommand = new Command<int>(async commonRelationId => await DeleteCommonRelation(commonRelationId));
-            this.DeleteAllCommonRelationsCommand = new Command(async arg => await DeleteAllCommonRelations());
-            this.ClearAddingWindowCommand = new Command(arg => ClearAddingWindow());
+            this.DeleteAllCommonRelationsCommand = new Command(async () => await DeleteAllCommonRelations());
+            this.ClearAddingWindowCommand = new Command(ClearAddingWindow);
             this.SetDictionaryAsCurrentCommand = new Command<int>(async commonDictionaryId => await SetDictionaryAsCurrent(commonDictionaryId));
         }
         #endregion

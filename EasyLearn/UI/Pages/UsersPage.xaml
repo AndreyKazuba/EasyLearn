@@ -14,7 +14,7 @@
 
         <Grid>
 
-            <ItemsControl ItemsSource="{Binding Users}" 
+            <ItemsControl ItemsSource="{Binding UserViews}" 
                   VerticalContentAlignment="Top"
                   HorizontalContentAlignment="Left">
                 <ItemsControl.ItemsPanel>
@@ -47,7 +47,7 @@
                         <TextBox Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                  Width="200" 
                                  materialDesign:HintAssist.Hint="Имя пользователя"
-                                 Text="{Binding NewUserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                 Text="{Binding AddingWindowUserNameValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         </TextBox>
 
                         <!--Кнопки отмены и подтверждения добавления-->
@@ -61,7 +61,7 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding ClearUserAddingWindowCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
@@ -77,7 +77,7 @@
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding CreateUserCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding ClearUserAddingWindowCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
