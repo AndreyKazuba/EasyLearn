@@ -30,6 +30,10 @@ namespace EasyLearn.Data.Models
 
         public EnglishUnit Verb { get; set; }
 
+        [MinLength(ModelConstants.VerbPrepositiontranslationMinLength)]
+        [MaxLength(ModelConstants.VerbPrepositiontranslationMaxLength)]
+        public string Translation { get; set; }
+
         [MinLength(ModelConstants.RelationCommentMinLength)]
         [MaxLength(ModelConstants.RelationCommentMaxLength)]
         public string? Comment { get; set; }

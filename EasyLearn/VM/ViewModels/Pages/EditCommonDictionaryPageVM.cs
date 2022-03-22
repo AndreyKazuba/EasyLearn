@@ -21,7 +21,7 @@ namespace EasyLearn.VM.ViewModels.Pages
 {
     public class EditCommonDictionaryPageVM : ViewModel
     {
-        private readonly ICommonDictionaryRepository commonWordListsRepository;
+        private readonly ICommonDictionaryRepository commonDictionaryRepository;
         private readonly ICommonRelationRepository commonRelationRepository;
 
         private int currentCommonDictionaryId;
@@ -42,6 +42,7 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         public DelegateCommand GoBack { get; private set; }
         public DelegateCommand CreateNewRelation { get; private set; }
+        public DelegateCommand DeleteRelationCommand { get; private set; }
         public DelegateCommand ClearCommonDictionaryCommand { get; private set; }
         public DelegateCommand ClearCommonRelationAddingWindowCommand { get; private set; }
 
@@ -51,13 +52,14 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.CreateNewRelation = new DelegateCommand(async arg => await AddNewRelation());
             this.ClearCommonDictionaryCommand = new DelegateCommand(async arg => await ClearCommonDictionary());
             this.ClearCommonRelationAddingWindowCommand = new DelegateCommand(arg => ClearCommonRelationAddingWindow());
+            this.DeleteRelationCommand = new DelegateCommand(async relationId => await DeleteRelation((int)relationId));
         }
 
         #endregion
 
         public EditCommonDictionaryPageVM(ICommonDictionaryRepository commonWordListsRepository, ICommonRelationRepository commonRelationsRepository)
         {
-            this.commonWordListsRepository = commonWordListsRepository;
+            this.commonDictionaryRepository = commonWordListsRepository;
             this.commonRelationRepository = commonRelationsRepository;
             SetRussianUnitTypes();
             SetEnglishUnitTypes();
@@ -71,12 +73,17 @@ namespace EasyLearn.VM.ViewModels.Pages
         public async Task SetAsCurrentDictionary(int listId)
         {
             this.currentCommonDictionaryId = listId;
-            CommonDictionary currentCommonList = await commonWordListsRepository.GetCommonDictionaryAsync(currentCommonDictionaryId);
+            CommonDictionary currentCommonList = await commonDictionaryRepository.GetCommonDictionaryAsync(currentCommonDictionaryId);
             this.Name = currentCommonList.Name;
             this.Description = currentCommonList.Description;
             this.Relations = new ObservableCollection<CommonRelationView>(currentCommonList.Relations.Select(relation => new CommonRelationView(new CommonRelationVM(relation))));
         }
-
+        private async Task DeleteRelation(int relationId)
+        {
+            CommonRelationView commonRelationView = this.Relations.First(relationView => relationView.ViewModel.Id == relationId);
+            this.Relations.Remove(commonRelationView);
+            await commonRelationRepository.DeleteCommonRelation(relationId);
+        }
         private async Task AddNewRelation()
         {
             string rusUnitValue = this.NewRusUnitValue;
@@ -110,7 +117,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                     new UnitTypeComboBoxItem(UnitTypeRussianNames.CombinationOfWords, UnitType.CombinationOfWords),
                     new UnitTypeComboBoxItem(UnitTypeRussianNames.Pronoun, UnitType.Pronoun),
                     new UnitTypeComboBoxItem(UnitTypeRussianNames.Numeral, UnitType.Numeral),
-                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Adjective, UnitType.Adverb),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Adverb, UnitType.Adverb),
                 });
 
             UnitTypeComboBoxItem selectedItem = russianUnitTypes[0];
@@ -134,7 +141,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                     new UnitTypeComboBoxItem(UnitTypeEnglishNames.CombinationOfWords, UnitType.CombinationOfWords),
                     new UnitTypeComboBoxItem(UnitTypeEnglishNames.Pronoun, UnitType.Pronoun),
                     new UnitTypeComboBoxItem(UnitTypeEnglishNames.Numeral, UnitType.Numeral),
-                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Adverb, UnitType.Adverb),
+                    new UnitTypeComboBoxItem(UnitTypeEnglishNames.Adverb, UnitType.Adverb),
                 });
 
             UnitTypeComboBoxItem selectedItem = englishUnitTypes[0];

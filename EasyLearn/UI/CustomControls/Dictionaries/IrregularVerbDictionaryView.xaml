@@ -15,9 +15,6 @@
                             Height="256"
                             Width="200">
 
-
-
-
         <materialDesign:Flipper.FrontContent>
 
             <Grid Height="256" Width="200">
@@ -27,28 +24,21 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-
                 <!--Пространство с картинкой и закрашенным фоном-->
                 <materialDesign:ColorZone Mode="PrimaryDark" VerticalAlignment="Stretch">
 
-                    <materialDesign:PackIcon Kind="Yahoo" 
-                                             Height="128" 
-                                             Width="128"
-                                             VerticalAlignment="Center" 
-                                             HorizontalAlignment="Center" />
+                    <materialDesign:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                             Height="128" Width="128"
+                                             Kind="Yahoo"/>
 
                 </materialDesign:ColorZone>
 
-
-                <materialDesign:PackIcon Kind="Star" 
-                                         HorizontalAlignment="Right"
-                                         VerticalAlignment="Top"
+                <materialDesign:PackIcon HorizontalAlignment="Right" VerticalAlignment="Top"
+                                         Kind="Star" 
                                          Foreground="Gold"
-                                         Width="30"
-                                         Height="30"
+                                         Width="30" Height="30"
                                          Padding="1"
                                          Margin="0 6 6 0"/>
-
 
                 <!--Пространство под картинкой аккаунта-->
                 <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -62,17 +52,12 @@
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 Grid.Row="0">
-                        <TextBlock Style="{DynamicResource MaterialDesignHeadline6TextBlock}" Text="Неправильные глаоголы" FontSize="15
-                               "/>
+                        <TextBlock Style="{DynamicResource MaterialDesignHeadline6TextBlock}" 
+                                   Text="Неправильные глаоголы" 
+                                   FontSize="15"/>
                     </StackPanel>
-
-
-
-
                 </Grid>
-
             </Grid>
-
         </materialDesign:Flipper.FrontContent>
 
         <!--Задняя сторона карточки-->
@@ -95,22 +80,16 @@
                                 HorizontalAlignment="Left"
                                 IsEnabled="{Binding BackButtonIsEnabled}"
                                 ToolTip="Подтвердить изменения и вернуться">
-
                             <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" />
-
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
                                     <i:InvokeCommandAction Command="{x:Static materialDesign:Flipper.FlipCommand}"/>
-                                    <!--<i:InvokeCommandAction Command="{Binding RenameAccountCommand}"/>-->
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
-
                         </Button>
-
                         <TextBlock Margin="8 0 0 0" 
                                    VerticalAlignment="Center"
                                    Text="Настройки аккаунта"/>
-
                     </StackPanel>
                 </materialDesign:ColorZone>
 
@@ -125,53 +104,6 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-
-                    <!--Текстбокс для изменения имени аккаунта-->
-                    <!--<TextBox materialDesign:HintAssist.Hint="Имя" 
-                             materialDesign:HintAssist.IsFloating="True"
-                             Margin="0 12 0 0">
-
-                        <TextBox.Text>
-                            <Binding Path="IntermediateFirstName" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <local:NotEmptyValidationRuleForRenameAccountWindow ValidatesOnTargetUpdated="True" />
-                                    <local:MaxSymbolValidationRuleForRenameAccountWindow ValidatesOnTargetUpdated="True"/>
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="TextChanged">
-                                <i:InvokeCommandAction Command="{Binding UpdateGoBackButtonIsEnabledCommand}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-
-
-                    </TextBox>-->
-
-                    <!--Текстбокс для изменения фамилии аккаунта-->
-                    <!--<TextBox Grid.Row="1" 
-                             materialDesign:HintAssist.Hint="Фамилия" 
-                             materialDesign:HintAssist.IsFloating="True"
-                             Margin="0 12 0 0">
-
-                        <TextBox.Text>
-                            <Binding Path="IntermediateLastName" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <local:NotEmptyValidationRuleForRenameAccountWindow ValidatesOnTargetUpdated="True" />
-                                    <local:MaxSymbolValidationRuleForRenameAccountWindow ValidatesOnTargetUpdated="True"/>
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="TextChanged">
-                                <i:InvokeCommandAction Command="{Binding UpdateGoBackButtonIsEnabledCommand}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-
-                    </TextBox>-->
-
                 </Grid>
 
                 <!--Кнопка удаления аккаунта-->
@@ -185,16 +117,11 @@
                         VerticalAlignment="Bottom">
 
                     <StackPanel Orientation="Horizontal">
-
                         <TextBlock Text="Удалить" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <materialDesign:PackIcon Kind="Trash" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-
                     </StackPanel>
-
                 </Button>
-
             </Grid>
         </materialDesign:Flipper.BackContent>
-
     </materialDesign:Flipper>
 </UserControl>

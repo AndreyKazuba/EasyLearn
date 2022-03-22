@@ -5,29 +5,75 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EasyLearn.UI.CustomControls"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <materialDesign:Card Margin="4" Height="100" Width="200">
+             d:DesignHeight="100" d:DesignWidth="300">
+    <materialDesign:Card Margin="6" materialDesign:ShadowAssist.ShadowDepth="Depth1" Height="{Binding CardHeight}" VerticalAlignment="Top">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="0.4*"/>
-                <ColumnDefinition/>
+                <ColumnDefinition MinWidth="100" Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition MinWidth="100" Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition Height="0.3*"/>
-                <RowDefinition/>
+                <RowDefinition Height="45"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Style="{DynamicResource MaterialDesignBody2TextBlock}" FontSize="15" Text="{Binding RussianValue}" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="10 5 0 0"/>
-            <TextBlock Grid.Row="0" Grid.Column="2" Style="{DynamicResource MaterialDesignBody2TextBlock}" FontSize="15" Text="{Binding EnglishValue}" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0 5 10 0"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Style="{DynamicResource MaterialDesignHeadline5TextBlock}" FontSize="19" Text="{Binding RussianValue}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20 8"/>
+            <TextBlock Grid.Row="0" Grid.Column="2" Style="{DynamicResource MaterialDesignHeadline5TextBlock}" FontSize="19" Text="{Binding EnglishValue}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20 8"/>
 
-            <TextBlock FontSize="25" Margin="0 -7 0 0" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Text="-"/>
+            <!--Разделитель-->
+            <Border BorderBrush="LightGray" 
+                    BorderThickness="0.8" 
+                    Grid.RowSpan="2"
+                    Margin="{Binding VerticalExpanderMargin}"
+                    Grid.Column="1"/>
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Comment}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <materialDesign:Chip VerticalAlignment="Top" Height="25" HorizontalAlignment="Center" Grid.Row="1" Foreground="Black" Content="{Binding RussianUnitType}" Margin="20 0"/>
+            <materialDesign:Chip VerticalAlignment="Top" Height="25" HorizontalAlignment="Center" Grid.Row="1" Foreground="Black" Content="{Binding EnglishUnitType}" Margin="20 0" Grid.Column="2"/>
 
-            <materialDesign:Chip VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Content="{Binding Type}" Icon="T"/>
+            <Border BorderBrush="LightGray" 
+                    BorderThickness="0.8" 
+                    Grid.ColumnSpan="3"
+                    Margin="5 0.3"
+                    Grid.Column="0"
+                    Grid.Row="2"
+                    Visibility="{Binding IsCommentVisible, Converter={converters:ReverseCollapseConverter}}"/>
+
+            <materialDesign:Chip Visibility="{Binding IsCommentVisible, Converter={converters:ReverseCollapseConverter}}" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="3" Margin="0 8" Content="{Binding Comment}" Icon="C"/>
+
+            <!--Кнопка перехода на заднюю сторону карточки (настройки аккаунта)-->
+            <Button Style="{DynamicResource MaterialDesignFlatButton}"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Foreground="Black"
+                        Width="20"
+                        Height="20"
+                        Padding="1"
+                    Grid.Column="2"
+                        Margin="0 2 2 0"
+                        ToolTip="Настройки аккаунта">
+
+                <materialDesign:PackIcon Kind="Settings" 
+                                             Width="15" 
+                                             Height="15"
+                                         Foreground="IndianRed"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"/>
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding DeleteRelationCommand}"/>
+                        <i:InvokeCommandAction Command="{x:Static materialDesign:Flipper.FlipCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
+            </Button>
+
         </Grid>
     </materialDesign:Card>
 </UserControl>

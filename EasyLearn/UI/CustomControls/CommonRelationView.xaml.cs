@@ -18,8 +18,10 @@ namespace EasyLearn.UI.CustomControls
 {
     public partial class CommonRelationView : UserControl
     {
+        public CommonRelationVM ViewModel { get; set; }
         public CommonRelationView(CommonRelationVM viewModel)
         {
+            ViewModel = viewModel;
             this.DataContext = viewModel;
             InitializeComponent();
         }

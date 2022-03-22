@@ -14,7 +14,6 @@
     <materialDesign:DialogHost>
 
         <Grid>
-
             <ItemsControl ItemsSource="{Binding Dictionaries}" 
                   VerticalContentAlignment="Top"
                   HorizontalContentAlignment="Left">
@@ -47,23 +46,8 @@
                         <!--Имя словаря-->
                         <TextBox Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                  Width="200" 
-                                 materialDesign:HintAssist.Hint="Название">
-
-                            <TextBox.Text>
-                                <Binding Path="NewDictionaryName" UpdateSourceTrigger="PropertyChanged">
-                                    <!--<Binding.ValidationRules>
-                                        <local:NotEmptyValidationRuleForAddAccountWindow ValidatesOnTargetUpdated="True" />
-                                        <local:MaxSymbolValidationRuleForAddAccountWindow ValidatesOnTargetUpdated="True"/>
-                                    </Binding.ValidationRules>-->
-                                </Binding>
-                            </TextBox.Text>
-
-                            <!--<i:Interaction.Triggers>
-                                <i:EventTrigger EventName="TextChanged">
-                                    <i:InvokeCommandAction Command="{Binding UpdateConfirmButtonIsEnabledCommand}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>-->
-
+                                 materialDesign:HintAssist.Hint="Название"
+                                 Text="{Binding NewDictionaryName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         </TextBox>
 
                         <!--Описание списка слов-->
@@ -83,7 +67,6 @@
                                   Margin="4 4 4 0"
                                   ItemsSource="{Binding DictionaryTypes}"
                                   SelectedItem="{Binding SelectedDictionaryType}">
-
                         </ComboBox>
 
                         <!--Кнопки отмены и подтверждения добавления-->
@@ -117,17 +100,11 @@
                                         <i:InvokeCommandAction Command="{Binding CleanDictionaryAddingWindowCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
-
                             </Button>
-
                         </StackPanel>
-
                     </StackPanel>
-
                 </Button.CommandParameter>
-
             </Button>
-
         </Grid>
     </materialDesign:DialogHost>
 </Page>

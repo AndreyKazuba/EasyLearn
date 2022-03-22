@@ -80,6 +80,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public bool IsStartButtonVisible { get; set; }
         public bool IsStartButtonEnabled { get; set; } = true;
         public bool IsEndButtonVisible { get; set; }
+        public string CurrentUnitType { get; set; }
         #endregion
 
         public DictationPageVM(IEasyLearnUserRepository userRepository, ICommonDictionaryRepository commonDictionaryRepository, IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository)
@@ -121,8 +122,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             IEnumerable<CommonDictionary> commonDictionaries = App.GetService<ICommonDictionaryRepository>().GetUsersCommonDictionaries(currentUserId);
             IEnumerable<VerbPrepositionDictionnary> verbPrepositionDictionnaries = App.GetService<IVerbPrepositionDictionaryRepository>().GetUsersVerbPreposotionDictionaries(currentUserId);
 
-            IEnumerable<DictionaryComboBoxItem> commonDictionaryViews = commonDictionaries.Select(dictionary => new DictionaryComboBoxItem(dictionary.Name, dictionary.Id, DictionaryType.CommonDictionary));
-            IEnumerable<DictionaryComboBoxItem> verbPrepositionDictionnaryViews = verbPrepositionDictionnaries.Select(dictionary => new DictionaryComboBoxItem(dictionary.Name, dictionary.Id, DictionaryType.VerbPrepositionDictionary));
+            IEnumerable<DictionaryComboBoxItem> commonDictionaryViews = commonDictionaries.Select(dictionary => new DictionaryComboBoxItem(StringHelper.NormalizeRegister(dictionary.Name), dictionary.Id, DictionaryType.CommonDictionary));
+            IEnumerable<DictionaryComboBoxItem> verbPrepositionDictionnaryViews = verbPrepositionDictionnaries.Select(dictionary => new DictionaryComboBoxItem(StringHelper.NormalizeRegister(dictionary.Name), dictionary.Id, DictionaryType.VerbPrepositionDictionary));
             DictionaryComboBoxItem irregularVerbDictionaryView = new DictionaryComboBoxItem("Неправильные глаголы", int.MinValue, DictionaryType.IrregularVerbDictionary);
 
             List<DictionaryComboBoxItem> dictionaries = commonDictionaryViews.Union(verbPrepositionDictionnaryViews).ToList();
@@ -159,6 +160,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             CommonRelation commonRelation = commonDictationManager.Start();
             this.DisplayValue = commonRelation.RussianUnit.Value.NormalizeRegister();
             this.DisplayCommentValue = commonRelation.Comment.TryNormalizeRegister();
+            this.CurrentUnitType = commonRelation.RussianUnit.Type.ToString().NormalizeRegister();
             SwitchStartAndEndButtons();
             FocusAnswerTextBox();
             SetProgressBarLength();
@@ -197,6 +199,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             {
                 this.DisplayValue = commonDictationManager.CurrentRelation.RussianUnit.Value.NormalizeRegister();
                 this.DisplayCommentValue = commonDictationManager.CurrentRelation.Comment.TryNormalizeRegister();
+                this.CurrentUnitType = commonDictationManager.CurrentRelation.RussianUnit.Type.ToString().NormalizeRegister();
                 ClearAnswerValue();
                 HideCorrectAndWrongAnswerIcons();
                 SwitchCheckAndNextButtons();

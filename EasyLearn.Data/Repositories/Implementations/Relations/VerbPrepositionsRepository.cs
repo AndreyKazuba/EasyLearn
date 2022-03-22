@@ -27,16 +27,17 @@ namespace EasyLearn.Data.Repositories.Implementations
 
         #region Public members
         public bool IsVerbPrepositionExist(int verbId, int prepositionId, int dictionaryId) => context.VerbPrepositions.Any(verbPreposition => verbPreposition.VerbId == verbId && verbPreposition.PrepositionId == prepositionId && verbPreposition.VerbPrepositionDictionaryId == dictionaryId);
-        public async Task<VerbPreposition> CreateVerbPreposition(string verbValue, string prepositionValue, int dictionaryId, string? comment)
+        public async Task<VerbPreposition> CreateVerbPreposition(string verbValue, string prepositionValue, int dictionaryId, string translation, string? comment)
         {
             EnglishUnit verb = await englishUnitRepository.GetOrCreateUnit(verbValue, UnitType.Verb);
             EnglishUnit preposition = await englishUnitRepository.GetOrCreateUnit(prepositionValue, UnitType.Preposition);
-            ThrowIfAddingAttemptIncorrect(dictionaryId, comment, verb.Id, preposition.Id);
+            ThrowIfAddingAttemptIncorrect(dictionaryId, comment, verb.Id, preposition.Id, translation);
             VerbPreposition newVerbPreposition = new VerbPreposition
             {
                 VerbId = verb.Id,
                 PrepositionId = preposition.Id,
                 Comment = StringHelper.TryPrepare(comment),
+                Translation = StringHelper.Prepare(translation),
                 CreationDateUtc = DateTime.UtcNow,
                 VerbPrepositionDictionaryId = dictionaryId,
             };
@@ -55,13 +56,19 @@ namespace EasyLearn.Data.Repositories.Implementations
         #endregion
 
         #region Private members
-        private void ThrowIfAddingAttemptIncorrect(int dictionaryId, string? comment, int verbId, int prepositionId)
+        private void ThrowIfAddingAttemptIncorrect(int dictionaryId, string? comment, int verbId, int prepositionId, string translation)
         {
             ThrowIfCommentInvalid(comment);
+            ThrowIfTranslationInvalid(translation);
             if (IsVerbPrepositionExist(dictionaryId, verbId, prepositionId))
                 throw new InvalidDbOperationException($"Попытка добавить уже существующий {nameof(VerbPreposition)}");
             if (!verbPrepositionDictionaryRepository.IsVerbPrepositionDictionaryExist(dictionaryId))
                 throw new InvalidDbOperationException($"Попытка добавить {nameof(VerbPreposition)} в несуществующий {nameof(VerbPrepositionDictionnary)} c {nameof(VerbPrepositionDictionnary.Id)} = '{dictionaryId}'");
+        }
+        private void ThrowIfTranslationInvalid(string translation)
+        {
+            if (string.IsNullOrEmpty(translation) || StringHelper.IsEmptyOrWhiteSpace(translation) || translation.Length > ModelConstants.VerbPrepositiontranslationMaxLength || translation.Length < ModelConstants.VerbPrepositiontranslationMinLength)
+                throw new InvalidDbOperationException(ExceptionMessagesHelper.PropertyInvalidValue(nameof(VerbPreposition.Translation), nameof(VerbPreposition), translation));
         }
         private void ThrowIfCommentInvalid(string? comment)
         {

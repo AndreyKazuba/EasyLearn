@@ -46,23 +46,8 @@
                         <!--Имя пользователя-->
                         <TextBox Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                  Width="200" 
-                                 materialDesign:HintAssist.Hint="Имя пользователя">
-
-                            <TextBox.Text>
-                                <Binding Path="NewUserName" UpdateSourceTrigger="PropertyChanged">
-                                    <!--<Binding.ValidationRules>
-                                        <local:NotEmptyValidationRuleForAddAccountWindow ValidatesOnTargetUpdated="True" />
-                                        <local:MaxSymbolValidationRuleForAddAccountWindow ValidatesOnTargetUpdated="True"/>
-                                    </Binding.ValidationRules>-->
-                                </Binding>
-                            </TextBox.Text>
-
-                            <!--<i:Interaction.Triggers>
-                                <i:EventTrigger EventName="TextChanged">
-                                    <i:InvokeCommandAction Command="{Binding UpdateConfirmButtonIsEnabledCommand}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>-->
-
+                                 materialDesign:HintAssist.Hint="Имя пользователя"
+                                 Text="{Binding NewUserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         </TextBox>
 
                         <!--Кнопки отмены и подтверждения добавления-->
@@ -73,14 +58,12 @@
                             <Button Style="{DynamicResource MaterialDesignFlatButton}" 
                                     Content="Отмена"
                                     Margin="6">
-
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding ClearUserAddingWindowCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
-
                             </Button>
 
                             <!--Кнопка подтверждения добавления нового аккаунта-->
@@ -97,19 +80,11 @@
                                         <i:InvokeCommandAction Command="{Binding ClearUserAddingWindowCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
-
                             </Button>
-
                         </StackPanel>
-
                     </StackPanel>
-
                 </Button.CommandParameter>
-
             </Button>
-
         </Grid>
     </materialDesign:DialogHost>
-
-
 </Page>

@@ -5,7 +5,7 @@ namespace EasyLearn.Data.Repositories.Interfaces
 {
     public interface IVerbPrepositionRepository
     {
-        Task<VerbPreposition> CreateVerbPreposition(string verbValue, string prepositionValue, int dictionaryId, string? comment);
+        Task<VerbPreposition> CreateVerbPreposition(string verbValue, string prepositionValue, int dictionaryId, string translation, string? comment);
         Task DeleteAllDictionaryVerbPrepositions(int dictionaryId);
     }
 }

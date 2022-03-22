@@ -159,26 +159,15 @@
                          Margin="0 12 0 0"
                          Width="172"
                          HorizontalAlignment="Center"
-                         VerticalAlignment="Top">
-
-                    <TextBox.Text>
-                        <Binding Path="EditNameFieldValue" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
-                            <Binding.ValidationRules>
-                                <!--<local:NotEmptyValidationRuleForRenameAccountWindow ValidatesOnTargetUpdated="True" />
-                                    <local:MaxSymbolValidationRuleForRenameAccountWindow ValidatesOnTargetUpdated="True"/>-->
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
+                         VerticalAlignment="Top"
+                         Text="{Binding EditNameFieldValue, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="TextChanged">
                             <i:InvokeCommandAction Command="{Binding UpdateGoBackButtonIsEnabledCommand}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-
-
                 </TextBox>
-
 
                 <!--Кнопка удаления аккаунта-->
                 <Button Grid.Row="2" 
@@ -190,16 +179,11 @@
                         VerticalAlignment="Bottom">
 
                     <StackPanel Orientation="Horizontal">
-
                         <TextBlock Text="Удалить" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <materialDesign:PackIcon Kind="Trash" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-
                     </StackPanel>
-
                 </Button>
-
             </Grid>
         </materialDesign:Flipper.BackContent>
-
     </materialDesign:Flipper>
 </UserControl>

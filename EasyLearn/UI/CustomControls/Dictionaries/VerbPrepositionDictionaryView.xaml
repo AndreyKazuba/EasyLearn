@@ -7,7 +7,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="300" d:DesignWidth="300">
 
     <materialDesign:Flipper Style="{DynamicResource MaterialDesignCardFlipper}" 
                             materialDesign:ShadowAssist.ShadowDepth="Depth2"
@@ -25,18 +25,16 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-
                 <!--Пространство с картинкой и закрашенным фоном-->
                 <materialDesign:ColorZone Mode="PrimaryMid" VerticalAlignment="Stretch">
 
-                    <materialDesign:PackIcon Kind="IceCream" 
+                    <materialDesign:PackIcon Kind="AboutCircle" 
                                              Height="128" 
                                              Width="128"
                                              VerticalAlignment="Center" 
                                              HorizontalAlignment="Center" />
 
                 </materialDesign:ColorZone>
-
 
                 <!--Кнопка перехода на заднюю сторону карточки (настройки словаря)-->
                 <Button Style="{DynamicResource MaterialDesignFlatButton}"
@@ -64,7 +62,6 @@
                     </i:Interaction.Triggers>
 
                 </Button>
-
 
                 <!--Пространство под картинкой аккаунта-->
                 <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -117,7 +114,6 @@
                                     <i:InvokeCommandAction Command="{Binding EditVerbPrepositionDictionaryCommand}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
-
                         </Button>
 
                         <TextBlock Margin="8 0 0 0" 
@@ -134,31 +130,20 @@
                          Margin="0 10 0 0"
                          Width="172"
                          HorizontalAlignment="Center"
-                         VerticalAlignment="Top">
-
-                    <TextBox.Text>
-                        <Binding Path="EditNameFieldValue" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
-                            <Binding.ValidationRules>
-                                <!--<local:NotEmptyValidationRuleForRenameAccountWindow ValidatesOnTargetUpdated="True" />
-                                    <local:MaxSymbolValidationRuleForRenameAccountWindow ValidatesOnTargetUpdated="True"/>-->
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
+                         VerticalAlignment="Top"
+                         Text="{Binding EditNameFieldValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="TextChanged">
                             <i:InvokeCommandAction Command="{Binding UpdateGoBackButtonIsEnabledCommand}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-
-
                 </TextBox>
 
                 <!--Редактировать описание словаря-->
                 <TextBox TextWrapping="Wrap"
                          VerticalAlignment="Stretch"
                          Width="172"
-                         
                          VerticalScrollBarVisibility="Auto"
                          materialDesign:HintAssist.Hint="Описание"
                          materialDesign:HintAssist.IsFloating="True"
@@ -171,49 +156,35 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
-                    <!--Кнопка удаления аккаунта-->
+                    <!--Кнопка удаления словаря-->
                     <Button Command="{Binding RemoveVerbPrepositionDictionaryCommand}"
-                            CommandParameter="{Binding Id}"
                             Foreground="Red"
                             Style="{DynamicResource MaterialDesignFlatButton}"
-                            ToolTip="Удалить"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" HorizontalAlignment="Center"
                             Grid.Column="0"
-                            Margin="3 0 0 0">
-
+                            Margin="3 0 0 0"
+                            Padding="10 0 6 0">
                         <StackPanel Orientation="Horizontal" Margin="-3 0 0 0">
-
                             <TextBlock Text="Удалить" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <materialDesign:PackIcon Kind="Trash" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-
                         </StackPanel>
-
                     </Button>
 
-                    <!--Кнопка открытия-->
-                    <Button HorizontalAlignment="Center"
+                    <!--Кнопка открытия словаря-->
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Center"
                             Command="{Binding OpenCurrentVerbPrepositionDictionaryCommand}"
-                            CommandParameter="{Binding Id}"
                             Foreground="ForestGreen"
                             Style="{DynamicResource MaterialDesignFlatButton}"
-                            ToolTip="Открыть"
-                            VerticalAlignment="Center"
                             Grid.Column="1"
-                            Margin="0 0 3 0">
-
+                            Padding="14 0 6 0"
+                            Margin="0 0 8 0">
                         <StackPanel Orientation="Horizontal" Margin="-7 0 0 0">
-
                             <TextBlock Text="Открыть" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <materialDesign:PackIcon Kind="Pencil" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-
                         </StackPanel>
-
                     </Button>
                 </Grid>
-
             </Grid>
         </materialDesign:Flipper.BackContent>
-
     </materialDesign:Flipper>
 </UserControl>

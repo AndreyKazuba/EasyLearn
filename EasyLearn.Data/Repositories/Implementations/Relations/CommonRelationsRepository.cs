@@ -3,6 +3,7 @@ using EasyLearn.Data.Exceptions;
 using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
 using EasyLearn.Data.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,12 @@ namespace EasyLearn.Data.Repositories.Implementations
         {
             IEnumerable<CommonRelation> commonRelations = context.CommonRelations.Where(relation => relation.CommonDictionaryId == dictionaryId);
             context.CommonRelations.RemoveRange(commonRelations);
+            await context.SaveChangesAsync();
+        }
+        public async Task DeleteCommonRelation(int commonRelationId)
+        {
+            CommonRelation commonRelation = await context.CommonRelations.FirstAsync(commonRelation => commonRelation.Id == commonRelationId);
+            context.CommonRelations.Remove(commonRelation);
             await context.SaveChangesAsync();
         }
         #endregion

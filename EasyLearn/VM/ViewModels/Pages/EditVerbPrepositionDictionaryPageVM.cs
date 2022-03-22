@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
 using EasyLearn.Data.Repositories.Interfaces;
 using EasyLearn.UI.CustomControls;
@@ -16,33 +17,32 @@ namespace EasyLearn.VM.ViewModels.Pages
 {
     public class EditVerbPrepositionDictionaryPageVM : ViewModel
     {
+        #region Private fields
         private int currentVerbPrepositionListId;
         private readonly IVerbPrepositionRepository verbPrepositionRepository;
         private readonly IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository;
+        #endregion
 
+        #region Props for binding
         public ObservableCollection<VerbPrepositionView> VerbPrepositions { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string NewVerbValue { get; set; }
         public string NewPrepositionValue { get; set; }
         public string Comment { get; set; }
+        public string Translation { get; set; }
+        #endregion
 
         #region Commands 
-
         public DelegateCommand GoBack { get; private set; }
         public DelegateCommand CreateVerbPrepositionCommand { get; private set; }
         public DelegateCommand CleanVerbPrepositionCreationWindowCommand { get; private set; }
-
         protected override void InitCommands()
         {
-            this.GoBack = new DelegateCommand(arg =>
-            {
-                App.ServiceProvider.GetService<AppWindowVM>().OpenListsPage.Execute();
-            });
+            this.GoBack = new DelegateCommand(arg => App.GetService<AppWindowVM>().OpenListsPage.Execute());
             this.CleanVerbPrepositionCreationWindowCommand = new DelegateCommand(arg => CleanVerbPrepositionCreationWindow());
             this.CreateVerbPrepositionCommand = new DelegateCommand(async arg => await CreateVerbPreposition());
         }
-
         #endregion
 
         public EditVerbPrepositionDictionaryPageVM(IVerbPrepositionRepository verbPrepositionsRepository, IVerbPrepositionDictionaryRepository verbPrepositionListsRepository)
@@ -53,10 +53,11 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         private async Task CreateVerbPreposition()
         {
-            string newPrepositionValue = this.NewPrepositionValue;
-            string comment = this.Comment;
-            string newVerbValue = this.NewVerbValue;
-            VerbPreposition newVerbPreposition = await verbPrepositionRepository.CreateVerbPreposition(newVerbValue, newPrepositionValue, currentVerbPrepositionListId, comment);
+            string prepositionValue = this.NewPrepositionValue;
+            string verbValue = this.NewVerbValue;
+            string translation = this.Translation;
+            string? comment = StringHelper.IsEmptyOrWhiteSpace(this.Comment) ? null : this.Comment;
+            VerbPreposition newVerbPreposition = await verbPrepositionRepository.CreateVerbPreposition(verbValue, prepositionValue, currentVerbPrepositionListId, translation, comment);
             this.VerbPrepositions.Add(new VerbPrepositionView(new VerbPrepositionVM(newVerbPreposition)));
         }
 

@@ -15,8 +15,6 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 {
     public class VerbPrepositionDictionaryVM : ViewModel
     {
-        private readonly IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository;
-
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -26,13 +24,11 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 
 
         #region Commands
-
         public DelegateCommand OpenCurrentVerbPrepositionDictionaryCommand { get; private set; }
         public DelegateCommand RemoveVerbPrepositionDictionaryCommand { get; private set; }
         public DelegateCommand EditVerbPrepositionDictionaryCommand { get; private set; }
         public DelegateCommand SetEditFieldsValueCommand { get; private set; }
         public DelegateCommand FlipBackAllAnotherCardsCommand { get; private set; }
-
         protected override void InitCommands()
         {
             this.OpenCurrentVerbPrepositionDictionaryCommand = new DelegateCommand(arg => OpenCurrentVerbPrepositionDictionary());
@@ -45,15 +41,9 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 
         public VerbPrepositionDictionaryVM(VerbPrepositionDictionnary verbPrepositionDictionnary)
         {
-            this.Name = verbPrepositionDictionnary.Name;
-            this.Description = verbPrepositionDictionnary.Description;
+            this.Name = StringHelper.NormalizeRegister(verbPrepositionDictionnary.Name);
+            this.Description = StringHelper.NormalizeRegister(verbPrepositionDictionnary.Description);
             this.Id = verbPrepositionDictionnary.Id;
-
-            IVerbPrepositionDictionaryRepository? verbPrepositionDictionaryRepository = App.ServiceProvider.GetService<IVerbPrepositionDictionaryRepository>();
-            if (verbPrepositionDictionaryRepository is not null)
-                this.verbPrepositionDictionaryRepository = verbPrepositionDictionaryRepository;
-            else
-                throw new Exception("Something went wrong");
         }
 
         private void FlipBackAllAnotherCards() => GetDictionariesPageVM().FlipBackAllCardsCommand.Execute();
@@ -95,7 +85,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
                 return;
             this.Name = newDictionaryName;
             this.Description = newDictionaryDescription;
-            await verbPrepositionDictionaryRepository.EditVerbPrepositionDictionary(this.Id, newDictionaryName, newDictionaryDescription);
+            await App.GetService<IVerbPrepositionDictionaryRepository>().EditVerbPrepositionDictionary(this.Id, newDictionaryName, newDictionaryDescription);
         }
 
         private async void SetCurrentDictionary()

@@ -9,5 +9,6 @@ namespace EasyLearn.Data.Repositories.Interfaces
         bool IsCommonRelationExist(int russianUnitId, int englishUnitId, int dictionaryId);
         Task<CommonRelation> CreateCommonRelation(string russianUnitValue, UnitType russianUnitType, string englishUnitValue, UnitType englishUnitType, int dictionaryId, string? comment);
         Task DeleteAllDictionaryRelations(int dictionaryId);
+        Task DeleteCommonRelation(int commonRelationId);
     }
 }

@@ -44,7 +44,7 @@ namespace EasyLearn.VM.Windows
 
         #endregion
 
-        private void SetStartPage() => this.CurrentPage = Page.Users;
+        private void SetStartPage() => this.CurrentPage = Page.Dictionaries;
         
     }
 }
