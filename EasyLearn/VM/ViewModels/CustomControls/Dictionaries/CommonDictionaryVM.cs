@@ -21,20 +21,20 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 
         #region Commands
 
-        public DelegateCommand OpenCurrentCommonDictionaryCommand { get; private set; }
-        public DelegateCommand RemoveCommonDictionaryCommand { get; private set; }
-        public DelegateCommand EditCommonDictionaryCommand { get; private set; }
-        public DelegateCommand SetEditFieldsValueCommand { get; private set; }
-        public DelegateCommand FlipBackAllAnotherCardsCommand { get; private set; }
+        public Command OpenCurrentCommonDictionaryCommand { get; private set; }
+        public Command RemoveCommonDictionaryCommand { get; private set; }
+        public Command EditCommonDictionaryCommand { get; private set; }
+        public Command SetEditFieldsValueCommand { get; private set; }
+        public Command FlipBackAllAnotherCardsCommand { get; private set; }
 
 
         protected override void InitCommands()
         {
-            this.OpenCurrentCommonDictionaryCommand = new DelegateCommand(arg => OpenCurrentCommonDictionary());
-            this.RemoveCommonDictionaryCommand = new DelegateCommand(arg => RemoveCommonDictionary());
-            this.EditCommonDictionaryCommand = new DelegateCommand(async arg => await EditCommonDictionary());
-            this.SetEditFieldsValueCommand = new DelegateCommand(arg => SetEditFieldsValue());
-            this.FlipBackAllAnotherCardsCommand = new DelegateCommand(arg => FlipBackAllAnotherCards());
+            this.OpenCurrentCommonDictionaryCommand = new Command(arg => OpenCurrentCommonDictionary());
+            this.RemoveCommonDictionaryCommand = new Command(arg => RemoveCommonDictionary());
+            this.EditCommonDictionaryCommand = new Command(async arg => await EditCommonDictionary());
+            this.SetEditFieldsValueCommand = new Command(arg => SetEditFieldsValue());
+            this.FlipBackAllAnotherCardsCommand = new Command(arg => FlipBackAllAnotherCards());
         }
         #endregion
 
@@ -44,7 +44,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             this.Description = StringHelper.NormalizeRegister(commonDictionary.Description);
             this.Id = commonDictionary.Id;
         }
-        private void RemoveCommonDictionary() => GetDictionariesPageVM().RemoveCommonDictionaryCommand.Execute(Id);
+        private void RemoveCommonDictionary() => GetDictionariesPageVM().DeleteCommonDictionaryCommand.Execute(Id);
         private async Task EditCommonDictionary()
         {
             string newDictionaryName = this.EditNameFieldValue;

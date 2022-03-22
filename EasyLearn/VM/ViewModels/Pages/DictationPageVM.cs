@@ -88,29 +88,29 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.userRepository = userRepository;
             this.commonDictionaryRepository = commonDictionaryRepository;
             this.verbPrepositionDictionaryRepository = verbPrepositionDictionaryRepository;
-            UpdateView();
+            UpdatePageForNewUser();
             SetDefaultPageState();
         }
 
         #region Commands 
-        public DelegateCommand RefreshSliderCommand { get; private set; }
-        public DelegateCommand StartDictationCommand { get; private set; }
-        public DelegateCommand CheckAnswerCommand { get; private set; }
-        public DelegateCommand TryGoNextCommand { get; private set; }
-        public DelegateCommand EndDictationCommand { get; private set; }
-        public DelegateCommand PressEnterCommand { get; private set; }
+        public Command RefreshSliderCommand { get; private set; }
+        public Command StartDictationCommand { get; private set; }
+        public Command CheckAnswerCommand { get; private set; }
+        public Command TryGoNextCommand { get; private set; }
+        public Command EndDictationCommand { get; private set; }
+        public Command PressEnterCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.RefreshSliderCommand = new DelegateCommand(arg => RefreshSlider());
-            this.StartDictationCommand = new DelegateCommand(arg => StartCommonDictation());
-            this.CheckAnswerCommand = new DelegateCommand(arg => CheckAnswer());
-            this.TryGoNextCommand = new DelegateCommand(arg => TryGoNext());
-            this.EndDictationCommand = new DelegateCommand(arg => StopDictation());
-            this.PressEnterCommand = new DelegateCommand(arg => OnPressEnter());
+            this.RefreshSliderCommand = new Command(arg => RefreshSlider());
+            this.StartDictationCommand = new Command(arg => StartCommonDictation());
+            this.CheckAnswerCommand = new Command(arg => CheckAnswer());
+            this.TryGoNextCommand = new Command(arg => TryGoNext());
+            this.EndDictationCommand = new Command(arg => StopDictation());
+            this.PressEnterCommand = new Command(arg => OnPressEnter());
         }
         #endregion
 
-        public void UpdateView()
+        public void UpdatePageForNewUser()
         {
             UpdateCurrentUserId();
             RefreshDictionaries();

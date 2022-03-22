@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using EasyLearn.Data.Models;
 using EasyLearn.VM.ViewModels.CustomControls;
 
 namespace EasyLearn.UI.CustomControls
@@ -12,5 +13,7 @@ namespace EasyLearn.UI.CustomControls
             this.DataContext = viewModel;
             InitializeComponent();
         }
+
+        public static CommonDictionaryView Create(CommonDictionary commonDictionary) => new CommonDictionaryView(new CommonDictionaryVM(commonDictionary));
     }
 }

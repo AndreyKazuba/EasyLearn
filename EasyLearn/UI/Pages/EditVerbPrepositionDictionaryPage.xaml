@@ -21,7 +21,7 @@
             <DockPanel>
 
                 <!--Кнопка "назад"-->
-                <Button Command="{Binding GoBack}"
+                <Button Command="{Binding GoBackCommand}"
                         Style="{DynamicResource MaterialDesignFlatButton}"
                         VerticalAlignment="Center"
                         DockPanel.Dock="Left"
@@ -61,7 +61,7 @@
                                      Margin="5"
                                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                      materialDesign:HintAssist.Hint="Глагол"
-                                     Text="{Binding NewVerbValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                     Text="{Binding AddingWindowVerbValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             </TextBox>
 
                             <!--Текстбокс для введения значения предлога в новом VerbPreposition-->
@@ -70,7 +70,7 @@
                                      Margin="5"
                                      materialDesign:HintAssist.Hint="Предлог"
                                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                                     Text="{Binding NewPrepositionValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                     Text="{Binding AddingWindowPrepositionValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             </TextBox>
 
                             <!--Текстбокс для введения перевода нового VerbPreposition-->
@@ -79,7 +79,7 @@
                                      Margin="5"
                                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                      materialDesign:HintAssist.Hint="Перевод"
-                                     Text="{Binding Translation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                     Text="{Binding AddingWindowTranslationValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             </TextBox>
 
                             <!--Текстбокс для введения комментария нового VerbPreposition-->
@@ -88,7 +88,7 @@
                                      Margin="5"
                                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                      materialDesign:HintAssist.Hint="Комментарий"
-                                     Text="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                     Text="{Binding AddingWindowCommentValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             </TextBox>
 
                             <!--Кнопка отмены добавления нового VerbPreposition-->
@@ -101,7 +101,7 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding CleanVerbPrepositionCreationWindowCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                                 
@@ -120,7 +120,7 @@
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding CreateVerbPrepositionCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding CleanVerbPrepositionCreationWindowCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                                 
@@ -132,8 +132,7 @@
                 </Button>
 
                 <!--Кнопка "удалить все VerbPreposition"-->
-                <Button VerticalAlignment="Center" 
-                        Command="{Binding ClearCommonDictionaryCommand}"
+                <Button VerticalAlignment="Center"
                         Style="{DynamicResource MaterialDesignFlatButton}"
                         Content="Очистить"
                         DockPanel.Dock="Right"
@@ -164,7 +163,7 @@
 
             <!--Контейнер для содержания всех VerbPreposition-->
             <ScrollViewer Grid.Row="1">
-                <ItemsControl ItemsSource="{Binding VerbPrepositions}" 
+                <ItemsControl ItemsSource="{Binding VerbPrepositionViews}" 
                   VerticalContentAlignment="Top"
                   HorizontalContentAlignment="Left">
                     <ItemsControl.ItemsPanel>

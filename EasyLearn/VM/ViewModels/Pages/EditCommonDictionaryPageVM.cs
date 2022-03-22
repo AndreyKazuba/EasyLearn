@@ -50,20 +50,20 @@ namespace EasyLearn.VM.ViewModels.Pages
         #endregion
 
         #region Commands
-        public DelegateCommand GoBackCommand { get; private set; }
-        public DelegateCommand CreateCommonRelationCommand { get; private set; }
-        public DelegateCommand<int> DeleteCommonRelationCommand { get; private set; }
-        public DelegateCommand DeleteAllCommonRelationsCommand { get; private set; }
-        public DelegateCommand ClearAddingWindowCommand { get; private set; }
-        public DelegateCommand<int> SetDictionaryAsCurrentCommand { get; private set; }
+        public Command GoBackCommand { get; private set; }
+        public Command CreateCommonRelationCommand { get; private set; }
+        public Command<int> DeleteCommonRelationCommand { get; private set; }
+        public Command DeleteAllCommonRelationsCommand { get; private set; }
+        public Command ClearAddingWindowCommand { get; private set; }
+        public Command<int> SetDictionaryAsCurrentCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.GoBackCommand = new DelegateCommand(arg => GoBack());
-            this.CreateCommonRelationCommand = new DelegateCommand(async arg => await CreateCommonRelation());
-            this.DeleteCommonRelationCommand = new DelegateCommand<int>(async commonRelationId => await DeleteCommonRelation(commonRelationId));
-            this.DeleteAllCommonRelationsCommand = new DelegateCommand(async arg => await DeleteAllCommonRelations());
-            this.ClearAddingWindowCommand = new DelegateCommand(arg => ClearAddingWindow());
-            this.SetDictionaryAsCurrentCommand = new DelegateCommand<int>(async commonDictionaryId => await SetDictionaryAsCurrent(commonDictionaryId));
+            this.GoBackCommand = new Command(arg => GoBack());
+            this.CreateCommonRelationCommand = new Command(async arg => await CreateCommonRelation());
+            this.DeleteCommonRelationCommand = new Command<int>(async commonRelationId => await DeleteCommonRelation(commonRelationId));
+            this.DeleteAllCommonRelationsCommand = new Command(async arg => await DeleteAllCommonRelations());
+            this.ClearAddingWindowCommand = new Command(arg => ClearAddingWindow());
+            this.SetDictionaryAsCurrentCommand = new Command<int>(async commonDictionaryId => await SetDictionaryAsCurrent(commonDictionaryId));
         }
         #endregion
 
@@ -78,7 +78,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             string? comment = StringHelper.NullIfEmptyOrWhiteSpace(this.AddingWindowCommentValue);
             int commonDictionaryId = this.dictionaryId;
             CommonRelation newCommonRelation = await commonRelationRepository.CreateCommonRelation(russianUnitValue, russianUnitType, englishUnitValue, englishUnitType, commonDictionaryId, comment);
-            this.CommonRelationViews.Add(CommonRelationView.Create(newCommonRelation));
+            AddCommonRelationToUI(newCommonRelation);
         }
         private async Task DeleteCommonRelation(int commonRelationId)
         {
@@ -112,6 +112,7 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         #region Other private members
         private CommonRelationView FindCommonRelationView(int commonRelationId) => this.CommonRelationViews.First(commonRelationView => commonRelationView.ViewModel.Id == commonRelationId);
+        private void AddCommonRelationToUI(CommonRelation commonRelation) => this.CommonRelationViews.Add(CommonRelationView.Create(commonRelation));
         private void SetAddingWindowRussianUnitTypes()
         {
             ObservableCollection<UnitTypeComboBoxItem> russianUnitTypes = new ObservableCollection<UnitTypeComboBoxItem>(

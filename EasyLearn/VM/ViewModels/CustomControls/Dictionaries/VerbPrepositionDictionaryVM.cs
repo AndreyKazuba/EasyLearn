@@ -24,18 +24,18 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 
 
         #region Commands
-        public DelegateCommand OpenCurrentVerbPrepositionDictionaryCommand { get; private set; }
-        public DelegateCommand RemoveVerbPrepositionDictionaryCommand { get; private set; }
-        public DelegateCommand EditVerbPrepositionDictionaryCommand { get; private set; }
-        public DelegateCommand SetEditFieldsValueCommand { get; private set; }
-        public DelegateCommand FlipBackAllAnotherCardsCommand { get; private set; }
+        public Command OpenCurrentVerbPrepositionDictionaryCommand { get; private set; }
+        public Command RemoveVerbPrepositionDictionaryCommand { get; private set; }
+        public Command EditVerbPrepositionDictionaryCommand { get; private set; }
+        public Command SetEditFieldsValueCommand { get; private set; }
+        public Command FlipBackAllAnotherCardsCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.OpenCurrentVerbPrepositionDictionaryCommand = new DelegateCommand(arg => OpenCurrentVerbPrepositionDictionary());
-            this.RemoveVerbPrepositionDictionaryCommand = new DelegateCommand(arg => RemoveVerbPrepositionDictionary());
-            this.SetEditFieldsValueCommand = new DelegateCommand(arg => SetEditFieldsValue());
-            this.EditVerbPrepositionDictionaryCommand = new DelegateCommand(async arg => await EditVerbPrepositionDictionary());
-            this.FlipBackAllAnotherCardsCommand = new DelegateCommand(arg => FlipBackAllAnotherCards());
+            this.OpenCurrentVerbPrepositionDictionaryCommand = new Command(arg => OpenCurrentVerbPrepositionDictionary());
+            this.RemoveVerbPrepositionDictionaryCommand = new Command(arg => RemoveVerbPrepositionDictionary());
+            this.SetEditFieldsValueCommand = new Command(arg => SetEditFieldsValue());
+            this.EditVerbPrepositionDictionaryCommand = new Command(async arg => await EditVerbPrepositionDictionary());
+            this.FlipBackAllAnotherCardsCommand = new Command(arg => FlipBackAllAnotherCards());
         }
         #endregion
 
@@ -46,14 +46,14 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             this.Id = verbPrepositionDictionnary.Id;
         }
 
-        private void FlipBackAllAnotherCards() => GetDictionariesPageVM().FlipBackAllCardsCommand.Execute();
+        private void FlipBackAllAnotherCards() => App.GetService<DictionariesPageVM>().FlipBackAllCardsCommand.Execute();
         private void RemoveVerbPrepositionDictionary()
         {
             DictionariesPageVM? dictionariesPageVM = App.ServiceProvider.GetService<DictionariesPageVM>();
 
             if (dictionariesPageVM is not null)
             {
-                dictionariesPageVM.RemoveVerbPrepositionDictionaryCommand.Execute(Id);
+                dictionariesPageVM.DeleteVerbPrepositionDictionaryCommand.Execute(Id);
             }
             else
             {
@@ -64,16 +64,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         private void OpenCurrentVerbPrepositionDictionary()
         {
             SetCurrentDictionary();
-            AppWindowVM? appWindowVM = App.ServiceProvider.GetService<AppWindowVM>();
-
-            if (appWindowVM is not null)
-            {
-                appWindowVM.OpenEditVerbPrepositionDictionaryPageCommand.Execute();
-            }
-            else
-            {
-                throw new Exception("Something went wrong :(");
-            }
+            App.GetService<AppWindowVM>().OpenEditVerbPrepositionDictionaryPageCommand.Execute();
         }
         private async Task EditVerbPrepositionDictionary()
         {
@@ -88,26 +79,12 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             await App.GetService<IVerbPrepositionDictionaryRepository>().EditVerbPrepositionDictionary(this.Id, newDictionaryName, newDictionaryDescription);
         }
 
-        private async void SetCurrentDictionary()
-        {
-            EditVerbPrepositionDictionaryPageVM? editVerbPrepositionDictionaryPageVM = App.ServiceProvider.GetService<EditVerbPrepositionDictionaryPageVM>();
-            if (editVerbPrepositionDictionaryPageVM is not null)
-            {
-                await editVerbPrepositionDictionaryPageVM.SetAsCurrentDictionary(Id);
-            }
-        }
+        private void SetCurrentDictionary() => App.GetService<EditVerbPrepositionDictionaryPageVM>().SetDictionaryAsCurrentCommand.Execute(Id);
+
         private void SetEditFieldsValue()
         {
             this.EditDescriptionFieldValue = this.Description;
             this.EditNameFieldValue = this.Name;
-        }
-        private DictionariesPageVM GetDictionariesPageVM()
-        {
-            DictionariesPageVM? dictionariesPageVM = App.ServiceProvider.GetRequiredService<DictionariesPageVM>();
-            if (dictionariesPageVM is not null)
-                return dictionariesPageVM;
-            else
-                throw new Exception("Something went wrong :(");
         }
     }
 }

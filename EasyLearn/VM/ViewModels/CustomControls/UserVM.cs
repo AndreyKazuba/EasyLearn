@@ -29,23 +29,23 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         }
 
         #region Commands
-        public DelegateCommand SetUserAsCurrentCommand { get; private set; }
-        public DelegateCommand RemoveUserCommand { get; private set; }
-        public DelegateCommand EditUserCommand { get; private set; }
-        public DelegateCommand SetEditNameFieldValueCommand { get; private set; }
-        public DelegateCommand FlipBackAllAnotherCardsCommand { get; private set; }
+        public Command SetUserAsCurrentCommand { get; private set; }
+        public Command RemoveUserCommand { get; private set; }
+        public Command EditUserCommand { get; private set; }
+        public Command SetEditNameFieldValueCommand { get; private set; }
+        public Command FlipBackAllAnotherCardsCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.SetUserAsCurrentCommand = new DelegateCommand(arg => SetUserAsCurrent());
-            this.RemoveUserCommand = new DelegateCommand(arg => RemoveUser());
-            this.EditUserCommand = new DelegateCommand(async arg => await EditUser());
-            this.SetEditNameFieldValueCommand = new DelegateCommand(arg => SetEditNameFieldValue());
-            this.FlipBackAllAnotherCardsCommand = new DelegateCommand(arg => FlipBackAllAnotherCards());
+            this.SetUserAsCurrentCommand = new Command(arg => SetUserAsCurrent());
+            this.RemoveUserCommand = new Command(arg => RemoveUser());
+            this.EditUserCommand = new Command(async arg => await EditUser());
+            this.SetEditNameFieldValueCommand = new Command(arg => SetEditNameFieldValue());
+            this.FlipBackAllAnotherCardsCommand = new Command(arg => FlipBackAllAnotherCards());
         }
         #endregion
 
         private void SetUserAsCurrent() => App.GetService<UsersPageVM>().SetUserAsCurrentCommand.Execute(this.Id);
-        private void RemoveUser() => App.GetService<UsersPageVM>().RemoveUserCommand.Execute(this.Id);
+        private void RemoveUser() => App.GetService<UsersPageVM>().DeleteUserCommand.Execute(this.Id);
         private void FlipBackAllAnotherCards() => App.GetService<UsersPageVM>().FlipBackAllCardsCommand.Execute();
         private void SetEditNameFieldValue() => this.EditNameFieldValue = this.Name;
         private async Task EditUser()

@@ -27,19 +27,19 @@ namespace EasyLearn.VM.Windows
 
         #region Commands
 
-        public DelegateCommand OpenDictationPage { get; set; }
-        public DelegateCommand OpenUsersPage { get; set; }
-        public DelegateCommand OpenDictionariesPageCommand { get; set; }
-        public DelegateCommand OpenEditCommonDictionaryPageCommand { get; set; }
-        public DelegateCommand OpenEditVerbPrepositionDictionaryPageCommand { get; set; }
+        public Command OpenDictationPage { get; set; }
+        public Command OpenUsersPage { get; set; }
+        public Command OpenDictionariesPageCommand { get; set; }
+        public Command OpenEditCommonDictionaryPageCommand { get; set; }
+        public Command OpenEditVerbPrepositionDictionaryPageCommand { get; set; }
 
         protected override void InitCommands()
         {
-            this.OpenDictationPage = new DelegateCommand(arg => this.CurrentPage = Page.Dictation);
-            this.OpenUsersPage = new DelegateCommand(arg => this.CurrentPage = Page.Users);
-            this.OpenDictionariesPageCommand = new DelegateCommand(arg => this.CurrentPage = Page.Dictionaries);
-            this.OpenEditCommonDictionaryPageCommand = new DelegateCommand(arg => this.CurrentPage = Page.EditCommonWordListPage);
-            this.OpenEditVerbPrepositionDictionaryPageCommand = new DelegateCommand(arg => this.CurrentPage = Page.EditVerbPrepositionListPage);
+            this.OpenDictationPage = new Command(arg => this.CurrentPage = Page.Dictation);
+            this.OpenUsersPage = new Command(arg => this.CurrentPage = Page.Users);
+            this.OpenDictionariesPageCommand = new Command(arg => this.CurrentPage = Page.Dictionaries);
+            this.OpenEditCommonDictionaryPageCommand = new Command(arg => this.CurrentPage = Page.EditCommonWordListPage);
+            this.OpenEditVerbPrepositionDictionaryPageCommand = new Command(arg => this.CurrentPage = Page.EditVerbPrepositionListPage);
         }
 
         #endregion

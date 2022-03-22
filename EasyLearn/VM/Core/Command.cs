@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace EasyLearn.VM.Core
 {
-    public class DelegateCommand : ICommand
+    public class Command : ICommand
     {
         private Action<object?> action;
         public event EventHandler? CanExecuteChanged
@@ -11,11 +11,11 @@ namespace EasyLearn.VM.Core
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
-        public DelegateCommand(Action<object?> action) => this.action = action;
+        public Command(Action<object?> action) => this.action = action;
         public bool CanExecute(object? parameter) => true;
         public void Execute(object? parameter = null) => this.action(parameter);
     }
-    public class DelegateCommand<TArgument> : ICommand
+    public class Command<TArgument> : ICommand
     {
         private Action<TArgument> action;
         public event EventHandler? CanExecuteChanged
@@ -23,7 +23,7 @@ namespace EasyLearn.VM.Core
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
-        public DelegateCommand(Action<TArgument> action) => this.action = action;
+        public Command(Action<TArgument> action) => this.action = action;
         public bool CanExecute(object? parameter) => true;
         public void Execute(object? parameter = null)
         {

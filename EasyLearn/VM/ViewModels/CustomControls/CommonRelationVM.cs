@@ -37,10 +37,10 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         }
 
         #region Commands
-        public DelegateCommand DeleteRelationCommand { get; private set; }
+        public Command DeleteRelationCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.DeleteRelationCommand = new DelegateCommand(arg => DeleteRelation());
+            this.DeleteRelationCommand = new Command(arg => DeleteRelation());
         }
         #endregion
 

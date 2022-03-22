@@ -42,16 +42,16 @@ namespace EasyLearn.VM.ViewModels.Pages
         #endregion
 
         #region Commands 
-        public DelegateCommand GoBackCommand { get; private set; }
-        public DelegateCommand CreateVerbPrepositionCommand { get; private set; }
-        public DelegateCommand ClearAddingWindowCommand { get; private set; }
-        public DelegateCommand<int> SetDictionaryAsCurrentCommand { get; private set; }
+        public Command GoBackCommand { get; private set; }
+        public Command CreateVerbPrepositionCommand { get; private set; }
+        public Command ClearAddingWindowCommand { get; private set; }
+        public Command<int> SetDictionaryAsCurrentCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.GoBackCommand = new DelegateCommand(arg => GoBack());
-            this.CreateVerbPrepositionCommand = new DelegateCommand(async arg => await CreateVerbPreposition());
-            this.ClearAddingWindowCommand = new DelegateCommand(arg => ClearAddingWindow());
-            this.SetDictionaryAsCurrentCommand = new DelegateCommand<int>(async verbPrepositionDictionaryId => await SetDictionaryAsCurrent(verbPrepositionDictionaryId));
+            this.GoBackCommand = new Command(arg => GoBack());
+            this.CreateVerbPrepositionCommand = new Command(async arg => await CreateVerbPreposition());
+            this.ClearAddingWindowCommand = new Command(arg => ClearAddingWindow());
+            this.SetDictionaryAsCurrentCommand = new Command<int>(async verbPrepositionDictionaryId => await SetDictionaryAsCurrent(verbPrepositionDictionaryId));
         }
         #endregion
 
@@ -65,7 +65,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             string? comment = StringHelper.NullIfEmptyOrWhiteSpace(this.AddingWindowCommentValue);
             int verbPrepositionDictionaryId = this.dictionaryId;
             VerbPreposition newVerbPreposition = await verbPrepositionRepository.CreateVerbPreposition(verbValue, prepositionValue, verbPrepositionDictionaryId, translation, comment);
-            this.VerbPrepositionViews.Add(VerbPrepositionView.Create(newVerbPreposition));
+            AddVerbPrepositionToUI(newVerbPreposition);
         }
         private void ClearAddingWindow()
         {
@@ -83,6 +83,10 @@ namespace EasyLearn.VM.ViewModels.Pages
             IEnumerable<VerbPrepositionView> verbPrepositionViews = verbPrepositionDictionary.VerbPrepositions.Select(verbPreposition => VerbPrepositionView.Create(verbPreposition));
             this.VerbPrepositionViews = new ObservableCollection<VerbPrepositionView>(verbPrepositionViews);
         }
+        #endregion
+
+        #region Other private methods
+        private void AddVerbPrepositionToUI(VerbPreposition verbPreposition) => this.VerbPrepositionViews.Add(VerbPrepositionView.Create(verbPreposition));
         #endregion
     }
 }

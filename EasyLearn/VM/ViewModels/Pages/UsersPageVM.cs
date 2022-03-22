@@ -1,97 +1,102 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 using EasyLearn.VM.Core;
 using EasyLearn.Data.Repositories.Interfaces;
 using EasyLearn.Data.Models;
 using EasyLearn.UI.CustomControls;
-using System.Collections.ObjectModel;
-using EasyLearn.VM.ViewModels.CustomControls;
 using EasyLearn.VM.Windows;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
     public class UsersPageVM : ViewModel
     {
-        private readonly IEasyLearnUserRepository usersRerository;
-        public UsersPageVM(IEasyLearnUserRepository usersRerository)
+        #region Repositories
+        private readonly IEasyLearnUserRepository userRerository;
+        #endregion
+
+#pragma warning disable CS8618
+        public UsersPageVM(IEasyLearnUserRepository userRerository)
         {
-            this.usersRerository = usersRerository;
-            App.GetService<AppWindowVM>().CurrentPageChanged += () => FlipBackAllCards();
-            LoadUsers();
+            this.userRerository = userRerository;
+            SubscribeToEvents();
+            LoadUserViews();
         }
+#pragma warning restore CS8618
 
         #region Props for binding
-
-        public ObservableCollection<UserView> Users { get; set; }
-        public string NewUserName { get; set; }
-        public bool ConfirmNewUserButtonIsEnabled { get; set; } = true;
-
+        public ObservableCollection<UserView> UserViews { get; set; }
+        public string AddingWindowUserNameValue { get; set; }
         #endregion
 
         #region Commands
-
-        public DelegateCommand CreateUserCommand { get; private set; }
-        public DelegateCommand RemoveUserCommand { get; private set; }
-        public DelegateCommand SetUserAsCurrentCommand { get; private set; }
-        public DelegateCommand ClearUserAddingWindowCommand { get; private set; }
-        public DelegateCommand FlipBackAllCardsCommand { get; private set; }
-
+        public Command CreateUserCommand { get; private set; }
+        public Command<int> DeleteUserCommand { get; private set; }
+        public Command<int> SetUserAsCurrentCommand { get; private set; }
+        public Command ClearAddingWindowCommand { get; private set; }
+        public Command FlipBackAllCardsCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.CreateUserCommand = new DelegateCommand(async arg => await CreateUser());
-            this.RemoveUserCommand = new DelegateCommand(async userId => await RemoveUser((int)userId));
-            this.SetUserAsCurrentCommand = new DelegateCommand(async userId => await SetUserAsCurrent((int)userId));
-            this.ClearUserAddingWindowCommand = new DelegateCommand(arg => ClearUserAddingWindow());
-            this.FlipBackAllCardsCommand = new DelegateCommand(arg => FlipBackAllCards());
+            this.CreateUserCommand = new Command(async arg => await CreateUser());
+            this.DeleteUserCommand = new Command<int>(async userId => await DeleteUser(userId));
+            this.SetUserAsCurrentCommand = new Command<int>(async userId => await SetUserAsCurrent(userId));
+            this.ClearAddingWindowCommand = new Command(arg => ClearAddingWindow());
+            this.FlipBackAllCardsCommand = new Command(arg => FlipBackAllCards());
         }
-
         #endregion
 
-        private async Task SetUserAsCurrent(int userId)
-        {
-            if (!this.Users.Any())
-                throw new Exception("There are no users");
-            UserView? lastCurrentUser = this.Users.FirstOrDefault(user => user.ViewModel.IsCurrent);
-            if (lastCurrentUser is not null)
-                lastCurrentUser.ViewModel.IsCurrent = false;
-            this.Users.First(user => user.ViewModel.Id == userId).ViewModel.IsCurrent = true;
-            await usersRerository.SetUserAsCurrent(userId);
-            UpdatePages();
-        }
+        #region Command logic methods
         private async Task CreateUser()
         {
-            EasyLearnUser newUser = await usersRerository.CreateUser(this.NewUserName);
+            string userName = this.AddingWindowUserNameValue;
+            EasyLearnUser newUser = await userRerository.CreateUser(userName);
             AddUserToUI(newUser);
             await SetUserAsCurrent(newUser.Id);
         }
-        private async Task RemoveUser(int userId)
+        private async Task DeleteUser(int userId)
         {
-            UserView user = this.Users.First(user => user.ViewModel.Id == userId);
-            bool isCurrent = user.ViewModel.IsCurrent;
-            this.Users.Remove(user);
-            if (isCurrent && this.Users.Any())
-                await SetUserAsCurrent(this.Users[0].ViewModel.Id);
-            await usersRerository.DeleteUser(userId);
+            UserView userView = FindUserView(userId);
+            bool wasCurrent = userView.ViewModel.IsCurrent;
+            this.UserViews.Remove(userView);
+            if (wasCurrent && this.UserViews.Any())
+                await SetUserAsCurrent(this.UserViews[0].ViewModel.Id);
+            await userRerository.DeleteUser(userId);
         }
-        private void ClearUserAddingWindow() => this.NewUserName = string.Empty;
-        private void LoadUsers()
+        private async Task SetUserAsCurrent(int userId)
         {
-            IEnumerable<EasyLearnUser> easyLearnUsers = usersRerository.GetAllUsers();
-            IEnumerable<UserView> userViews = easyLearnUsers.Select(easyLearnUser => new UserView(new UserVM(easyLearnUser)));
-            this.Users = new ObservableCollection<UserView>(userViews);
+            UserView? lastCurrentUser = FindCurrentUserView();
+            if (lastCurrentUser is not null)
+                lastCurrentUser.ViewModel.IsCurrent = false;
+            FindUserView(userId).ViewModel.IsCurrent = true;
+            await userRerository.SetUserAsCurrent(userId);
+            UpdatePagesForNewUser();
         }
-        private void AddUserToUI(EasyLearnUser user) => this.Users.Add(new UserView(new UserVM(user)));
-        private void UpdatePages()
-        {
-            App.GetService<DictionariesPageVM>().UpdateView();
-            App.GetService<DictationPageVM>().UpdateView();
-        }
+        private void ClearAddingWindow() => this.AddingWindowUserNameValue = String.Empty;
         private void FlipBackAllCards()
         {
-            foreach (UserView userView in this.Users)
+            foreach (UserView userView in this.UserViews)
                 userView.ViewModel.IsCardFlipped = false;
         }
+        #endregion
+
+        #region Other private methods
+        private void LoadUserViews()
+        {
+            IEnumerable<EasyLearnUser> easyLearnUsers = userRerository.GetAllUsers();
+            IEnumerable<UserView> userViews = easyLearnUsers.Select(easyLearnUser => UserView.Create(easyLearnUser)));
+            this.UserViews = new ObservableCollection<UserView>(userViews);
+        }
+        private void SubscribeToEvents() => App.GetService<AppWindowVM>().CurrentPageChanged += () => FlipBackAllCards();
+        private void AddUserToUI(EasyLearnUser user) => this.UserViews.Add(UserView.Create(user));
+        private UserView FindUserView(int userId) => this.UserViews.First(userView => userView.ViewModel.Id == userId);
+        private UserView? FindCurrentUserView() => this.UserViews.FirstOrDefault(userView => userView.ViewModel.IsCurrent);
+        private void UpdatePagesForNewUser()
+        {
+            App.GetService<DictionariesPageVM>().UpdatePageForNewUser();
+            App.GetService<DictationPageVM>().UpdatePageForNewUser();
+        }
+        #endregion
     }
 }

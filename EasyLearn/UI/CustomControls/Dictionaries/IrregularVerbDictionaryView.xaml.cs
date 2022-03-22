@@ -12,5 +12,7 @@ namespace EasyLearn.UI.CustomControls
             this.DataContext = viewModel;
             InitializeComponent();
         }
+
+        public static IrregularVerbDictionaryView Create() => new IrregularVerbDictionaryView(new IrregularVerbDictionaryVM());
     }
 }
