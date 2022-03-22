@@ -29,7 +29,7 @@ namespace EasyLearn.VM.Windows
 
         public DelegateCommand OpenDictationPage { get; set; }
         public DelegateCommand OpenUsersPage { get; set; }
-        public DelegateCommand OpenListsPage { get; set; }
+        public DelegateCommand OpenDictionariesPageCommand { get; set; }
         public DelegateCommand OpenEditCommonDictionaryPageCommand { get; set; }
         public DelegateCommand OpenEditVerbPrepositionDictionaryPageCommand { get; set; }
 
@@ -37,7 +37,7 @@ namespace EasyLearn.VM.Windows
         {
             this.OpenDictationPage = new DelegateCommand(arg => this.CurrentPage = Page.Dictation);
             this.OpenUsersPage = new DelegateCommand(arg => this.CurrentPage = Page.Users);
-            this.OpenListsPage = new DelegateCommand(arg => this.CurrentPage = Page.Dictionaries);
+            this.OpenDictionariesPageCommand = new DelegateCommand(arg => this.CurrentPage = Page.Dictionaries);
             this.OpenEditCommonDictionaryPageCommand = new DelegateCommand(arg => this.CurrentPage = Page.EditCommonWordListPage);
             this.OpenEditVerbPrepositionDictionaryPageCommand = new DelegateCommand(arg => this.CurrentPage = Page.EditVerbPrepositionListPage);
         }

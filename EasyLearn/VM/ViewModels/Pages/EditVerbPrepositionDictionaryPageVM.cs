@@ -1,80 +1,88 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
 using EasyLearn.Data.Repositories.Interfaces;
 using EasyLearn.UI.CustomControls;
 using EasyLearn.VM.Core;
-using EasyLearn.VM.ViewModels.CustomControls;
 using EasyLearn.VM.Windows;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
     public class EditVerbPrepositionDictionaryPageVM : ViewModel
     {
-        #region Private fields
-        private int currentVerbPrepositionListId;
+        #region Repositories
         private readonly IVerbPrepositionRepository verbPrepositionRepository;
         private readonly IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository;
         #endregion
 
+        #region Private fields
+        private int dictionaryId;
+        #endregion
+
+#pragma warning disable CS8618
+        public EditVerbPrepositionDictionaryPageVM(IVerbPrepositionRepository verbPrepositionRepository, IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository)
+        {
+            this.verbPrepositionRepository = verbPrepositionRepository;
+            this.verbPrepositionDictionaryRepository = verbPrepositionDictionaryRepository;
+        }
+#pragma warning restore CS8618
+
         #region Props for binding
-        public ObservableCollection<VerbPrepositionView> VerbPrepositions { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string NewVerbValue { get; set; }
-        public string NewPrepositionValue { get; set; }
-        public string Comment { get; set; }
-        public string Translation { get; set; }
+        public ObservableCollection<VerbPrepositionView> VerbPrepositionViews { get; set; }
+        public string DictionaryName { get; set; }
+        public string DictionaryDescription { get; set; }
+        public string AddingWindowVerbValue { get; set; }
+        public string AddingWindowPrepositionValue { get; set; }
+        public string AddingWindowCommentValue { get; set; }
+        public string AddingWindowTranslationValue { get; set; }
         #endregion
 
         #region Commands 
-        public DelegateCommand GoBack { get; private set; }
+        public DelegateCommand GoBackCommand { get; private set; }
         public DelegateCommand CreateVerbPrepositionCommand { get; private set; }
-        public DelegateCommand CleanVerbPrepositionCreationWindowCommand { get; private set; }
+        public DelegateCommand ClearAddingWindowCommand { get; private set; }
+        public DelegateCommand<int> SetDictionaryAsCurrentCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.GoBack = new DelegateCommand(arg => App.GetService<AppWindowVM>().OpenListsPage.Execute());
-            this.CleanVerbPrepositionCreationWindowCommand = new DelegateCommand(arg => CleanVerbPrepositionCreationWindow());
+            this.GoBackCommand = new DelegateCommand(arg => GoBack());
             this.CreateVerbPrepositionCommand = new DelegateCommand(async arg => await CreateVerbPreposition());
+            this.ClearAddingWindowCommand = new DelegateCommand(arg => ClearAddingWindow());
+            this.SetDictionaryAsCurrentCommand = new DelegateCommand<int>(async verbPrepositionDictionaryId => await SetDictionaryAsCurrent(verbPrepositionDictionaryId));
         }
         #endregion
 
-        public EditVerbPrepositionDictionaryPageVM(IVerbPrepositionRepository verbPrepositionsRepository, IVerbPrepositionDictionaryRepository verbPrepositionListsRepository)
-        {
-            this.verbPrepositionRepository = verbPrepositionsRepository;
-            this.verbPrepositionDictionaryRepository = verbPrepositionListsRepository;
-        }
-
+        #region Command logic methods
+        private void GoBack() => App.GetService<AppWindowVM>().OpenDictionariesPageCommand.Execute();
         private async Task CreateVerbPreposition()
         {
-            string prepositionValue = this.NewPrepositionValue;
-            string verbValue = this.NewVerbValue;
-            string translation = this.Translation;
-            string? comment = StringHelper.IsEmptyOrWhiteSpace(this.Comment) ? null : this.Comment;
-            VerbPreposition newVerbPreposition = await verbPrepositionRepository.CreateVerbPreposition(verbValue, prepositionValue, currentVerbPrepositionListId, translation, comment);
-            this.VerbPrepositions.Add(new VerbPrepositionView(new VerbPrepositionVM(newVerbPreposition)));
+            string prepositionValue = this.AddingWindowPrepositionValue;
+            string verbValue = this.AddingWindowVerbValue;
+            string translation = this.AddingWindowTranslationValue;
+            string? comment = StringHelper.NullIfEmptyOrWhiteSpace(this.AddingWindowCommentValue);
+            int verbPrepositionDictionaryId = this.dictionaryId;
+            VerbPreposition newVerbPreposition = await verbPrepositionRepository.CreateVerbPreposition(verbValue, prepositionValue, verbPrepositionDictionaryId, translation, comment);
+            this.VerbPrepositionViews.Add(VerbPrepositionView.Create(newVerbPreposition));
         }
-
-        private void CleanVerbPrepositionCreationWindow()
+        private void ClearAddingWindow()
         {
-            this.NewVerbValue = String.Empty;
-            this.NewPrepositionValue = String.Empty;
-            this.Comment = String.Empty;
+            this.AddingWindowVerbValue = String.Empty;
+            this.AddingWindowPrepositionValue = String.Empty;
+            this.AddingWindowCommentValue = String.Empty;
+            this.AddingWindowTranslationValue = String.Empty;
         }
-
-        public async Task SetAsCurrentDictionary(int dictionaryId)
+        private async Task SetDictionaryAsCurrent(int verbPrepositionDictionaryId)
         {
-            this.currentVerbPrepositionListId = dictionaryId;
-            VerbPrepositionDictionnary verbPrepositionList = await verbPrepositionDictionaryRepository.GetVerbPrepositionDictionaryAsync(currentVerbPrepositionListId);
-            this.Name = verbPrepositionList.Name;
-            this.Description = verbPrepositionList.Description;
-            this.VerbPrepositions = new ObservableCollection<VerbPrepositionView>(verbPrepositionList.VerbPrepositions.Select(verbPreposition => new VerbPrepositionView(new VerbPrepositionVM(verbPreposition))));
+            VerbPrepositionDictionnary verbPrepositionDictionary = await verbPrepositionDictionaryRepository.GetVerbPrepositionDictionaryAsync(verbPrepositionDictionaryId);
+            this.dictionaryId = verbPrepositionDictionaryId;
+            this.DictionaryName = verbPrepositionDictionary.Name;
+            this.DictionaryDescription = StringHelper.EmptyIfNull(verbPrepositionDictionary.Description);
+            IEnumerable<VerbPrepositionView> verbPrepositionViews = verbPrepositionDictionary.VerbPrepositions.Select(verbPreposition => VerbPrepositionView.Create(verbPreposition));
+            this.VerbPrepositionViews = new ObservableCollection<VerbPrepositionView>(verbPrepositionViews);
         }
+        #endregion
     }
 }

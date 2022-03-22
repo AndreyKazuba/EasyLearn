@@ -21,5 +21,7 @@ namespace EasyLearn.Data.Helpers
         public static string NormalizeRegister(this string @string) => @string.Substring(0, 1).ToUpper() + @string.Remove(0, 1).ToLower();
         public static string TryNormalizeRegister(this string? @string) => @string?.Substring(0, 1).ToUpper() + @string?.Remove(0, 1).ToLower();
         public static string PrepareAndNormalize(this string @string) => @string.Prepare().NormalizeRegister();
+        public static string? NullIfEmptyOrWhiteSpace(this string @string) => IsEmptyOrWhiteSpace(@string) ? null : @string;
+        public static string EmptyIfNull(this string? @string) => @string is null ? String.Empty : @string;
     }
 }

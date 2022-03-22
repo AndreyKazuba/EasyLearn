@@ -21,7 +21,7 @@
             <DockPanel>
 
                 <!--Кнопка "назад"-->
-                <Button Command="{Binding GoBack}"
+                <Button Command="{Binding GoBackCommand}"
                         Style="{DynamicResource MaterialDesignFlatButton}"
                         VerticalAlignment="Center"
                         DockPanel.Dock="Left"
@@ -63,7 +63,7 @@
                                      Grid.Row="0"
                                      Margin="10"
                                      materialDesign:HintAssist.Hint="Русский перевод"
-                                     Text="{Binding NewRusUnitValue, UpdateSourceTrigger=PropertyChanged}">
+                                     Text="{Binding AddingWindowRussianValue, UpdateSourceTrigger=PropertyChanged}">
                             </TextBox>
 
                             <!--Комбобокс для выбора типа RussianUnit в новом CommonRelation-->
@@ -73,8 +73,8 @@
                                       Margin="10"
                                       Grid.Row="1"
                                       Grid.Column="0"
-                                      ItemsSource="{Binding RussianUnitTypes}"
-                                      SelectedItem="{Binding SelectedRussianUnitType, Mode=TwoWay}">
+                                      ItemsSource="{Binding AddingWindowRussianUnitTypes}"
+                                      SelectedItem="{Binding AddingWindowSelectedRussianUnitType, Mode=TwoWay}">
                             </ComboBox>
 
                             <!--Текстбокс для введения английского значения в новом CommonRelation-->
@@ -84,7 +84,7 @@
                                      Grid.Column="1"
                                      Margin="10"
                                      materialDesign:HintAssist.Hint="Английский перевод"
-                                     Text="{Binding NewEngUnitValue, UpdateSourceTrigger=PropertyChanged}">
+                                     Text="{Binding AddingWindowEnglishValue, UpdateSourceTrigger=PropertyChanged}">
                             </TextBox>
 
                             <!--Комбобокс для выбора типа EnglishUnit в новом CommonRelation-->
@@ -94,8 +94,8 @@
                                       Margin="10"
                                       Grid.Row="1"
                                       Grid.Column="1"
-                                      ItemsSource="{Binding EnglishUnitTypes}"
-                                      SelectedItem="{Binding SelectedEnglishUnitType, Mode=TwoWay}">
+                                      ItemsSource="{Binding AddingWidnowEnglishUnitTypes}"
+                                      SelectedItem="{Binding AddingWindowSelectedEnglishUnitType, Mode=TwoWay}">
                             </ComboBox>
 
                             <!--Текстбокс для введения комментария к новому CommonRelation-->
@@ -106,7 +106,7 @@
                                      Grid.ColumnSpan="2"
                                      Margin="10"
                                      materialDesign:HintAssist.Hint="Комментарий"
-                                     Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged}">
+                                     Text="{Binding AddingWindowCommentValue, UpdateSourceTrigger=PropertyChanged}">
                             </TextBox>
 
                             <!--Кнопки отмены и подтверждения добавления нового CommonRelation-->
@@ -131,7 +131,7 @@
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Click">
                                             <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                            <i:InvokeCommandAction Command="{Binding ClearCommonRelationAddingWindowCommand}"/>
+                                            <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
 
@@ -149,8 +149,8 @@
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Click">
                                             <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                            <i:InvokeCommandAction Command="{Binding CreateNewRelation}"/>
-                                            <i:InvokeCommandAction Command="{Binding ClearCommonRelationAddingWindowCommand}"/>
+                                            <i:InvokeCommandAction Command="{Binding CreateCommonRelationCommand}"/>
+                                            <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
 
@@ -197,7 +197,7 @@
 
             <!--Контейнер для содержания всех CommonRelations-->
             <ScrollViewer Grid.Row="1">
-                <ItemsControl ItemsSource="{Binding Relations}" 
+                <ItemsControl ItemsSource="{Binding CommonRelationViews}" 
                   VerticalContentAlignment="Top"
                   HorizontalContentAlignment="Left">
                     <ItemsControl.ItemsPanel>

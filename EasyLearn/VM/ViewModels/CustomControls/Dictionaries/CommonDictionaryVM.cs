@@ -62,7 +62,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             App.GetService<AppWindowVM>().OpenEditCommonDictionaryPageCommand.Execute();
         }
         private void FlipBackAllAnotherCards() => GetDictionariesPageVM().FlipBackAllCardsCommand.Execute();
-        private async void SetCurrentDictionary() => await App.GetService<EditCommonDictionaryPageVM>().SetAsCurrentDictionary(Id);
+        private void SetCurrentDictionary() => App.GetService<EditCommonDictionaryPageVM>().SetDictionaryAsCurrentCommand.Execute(Id);
         private void SetEditFieldsValue()
         {
             this.EditDescriptionFieldValue = this.Description;

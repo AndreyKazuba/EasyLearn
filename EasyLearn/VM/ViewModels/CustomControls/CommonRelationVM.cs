@@ -46,7 +46,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 
         private void DeleteRelation()
         {
-            App.GetService<EditCommonDictionaryPageVM>().DeleteRelationCommand.Execute(Id);
+            App.GetService<EditCommonDictionaryPageVM>().DeleteCommonRelationCommand.Execute(Id);
         }
     }
 }

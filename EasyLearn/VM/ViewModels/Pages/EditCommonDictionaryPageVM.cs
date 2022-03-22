@@ -1,109 +1,118 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using EasyLearn.VM.Core;
 using EasyLearn.VM.Windows;
-using Microsoft.Extensions.DependencyInjection;
 using EasyLearn.Data.Repositories.Interfaces;
 using EasyLearn.Data.Models;
 using EasyLearn.Data.Enums;
-using System.Collections.ObjectModel;
 using EasyLearn.UI.CustomControls;
-using EasyLearn.VM.ViewModels.CustomControls;
-using System.Windows.Controls;
-using System.Windows;
 using EasyLearn.VM.ViewModels.ExpandedElements;
 using EasyLearn.Infrastructure.Constants;
+using EasyLearn.Data.Helpers;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
     public class EditCommonDictionaryPageVM : ViewModel
     {
+        #region Repositories
         private readonly ICommonDictionaryRepository commonDictionaryRepository;
         private readonly ICommonRelationRepository commonRelationRepository;
-
-        private int currentCommonDictionaryId;
-
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public ObservableCollection<UnitTypeComboBoxItem> RussianUnitTypes { get; set; }
-        public ObservableCollection<UnitTypeComboBoxItem> EnglishUnitTypes { get; set; }
-        public UnitTypeComboBoxItem SelectedRussianUnitType { get; set; }
-        public UnitTypeComboBoxItem SelectedEnglishUnitType { get; set; }
-        public string NewEngUnitValue { get; set; }
-        public string NewRusUnitValue { get; set; }
-        public string? Comment { get; set; }
-
-        public ObservableCollection<CommonRelationView> Relations { get; set; }
-
-        #region Commands
-
-        public DelegateCommand GoBack { get; private set; }
-        public DelegateCommand CreateNewRelation { get; private set; }
-        public DelegateCommand DeleteRelationCommand { get; private set; }
-        public DelegateCommand ClearCommonDictionaryCommand { get; private set; }
-        public DelegateCommand ClearCommonRelationAddingWindowCommand { get; private set; }
-
-        protected override void InitCommands()
-        {
-            this.GoBack = new DelegateCommand(arg => App.GetService<AppWindowVM>().OpenListsPage.Execute());
-            this.CreateNewRelation = new DelegateCommand(async arg => await AddNewRelation());
-            this.ClearCommonDictionaryCommand = new DelegateCommand(async arg => await ClearCommonDictionary());
-            this.ClearCommonRelationAddingWindowCommand = new DelegateCommand(arg => ClearCommonRelationAddingWindow());
-            this.DeleteRelationCommand = new DelegateCommand(async relationId => await DeleteRelation((int)relationId));
-        }
-
         #endregion
 
-        public EditCommonDictionaryPageVM(ICommonDictionaryRepository commonWordListsRepository, ICommonRelationRepository commonRelationsRepository)
-        {
-            this.commonDictionaryRepository = commonWordListsRepository;
-            this.commonRelationRepository = commonRelationsRepository;
-            SetRussianUnitTypes();
-            SetEnglishUnitTypes();
-        }
-        private async Task ClearCommonDictionary()
-        {
-            this.Relations.Clear();
-            await commonRelationRepository.DeleteAllDictionaryRelations(currentCommonDictionaryId);
-        }
+        #region Private fields
+        private int dictionaryId;
+        #endregion
 
-        public async Task SetAsCurrentDictionary(int listId)
+#pragma warning disable CS8618
+        public EditCommonDictionaryPageVM(ICommonDictionaryRepository commonDictionaryRepository, ICommonRelationRepository commonRelationRepository)
         {
-            this.currentCommonDictionaryId = listId;
-            CommonDictionary currentCommonList = await commonDictionaryRepository.GetCommonDictionaryAsync(currentCommonDictionaryId);
-            this.Name = currentCommonList.Name;
-            this.Description = currentCommonList.Description;
-            this.Relations = new ObservableCollection<CommonRelationView>(currentCommonList.Relations.Select(relation => new CommonRelationView(new CommonRelationVM(relation))));
+            this.commonDictionaryRepository = commonDictionaryRepository;
+            this.commonRelationRepository = commonRelationRepository;
+            SetAddingWindowRussianUnitTypes();
+            SetAddingWidnowEnglishUnitTypes();
         }
-        private async Task DeleteRelation(int relationId)
-        {
-            CommonRelationView commonRelationView = this.Relations.First(relationView => relationView.ViewModel.Id == relationId);
-            this.Relations.Remove(commonRelationView);
-            await commonRelationRepository.DeleteCommonRelation(relationId);
-        }
-        private async Task AddNewRelation()
-        {
-            string rusUnitValue = this.NewRusUnitValue;
-            string engUnitValue = this.NewEngUnitValue;
-            UnitType engUnitType = this.SelectedEnglishUnitType.UnitType;
-            UnitType rusUnitType = this.SelectedRussianUnitType.UnitType;
-            string? comment = this.Comment;
-            CommonRelation newRelation = await commonRelationRepository.CreateCommonRelation(rusUnitValue, rusUnitType, engUnitValue, engUnitType, this.currentCommonDictionaryId, comment);
-            this.Relations.Add(new CommonRelationView(new CommonRelationVM(newRelation)));
-        }
-        private void ClearCommonRelationAddingWindow()
-        {
-            this.NewEngUnitValue = String.Empty;
-            this.NewRusUnitValue = String.Empty;
-            this.Comment = null;
-            this.SelectedRussianUnitType = RussianUnitTypes[0];
-            this.SelectedEnglishUnitType = EnglishUnitTypes[0];
-        }
+#pragma warning restore CS8618
 
-        private void SetRussianUnitTypes()
+        #region Props for binding
+        public ObservableCollection<CommonRelationView> CommonRelationViews { get; set; }
+        public string DictionaryName { get; set; }
+        public string DictionaryDescription { get; set; }
+        public string AddingWindowEnglishValue { get; set; }
+        public string AddingWindowRussianValue { get; set; }
+        public string AddingWindowCommentValue { get; set; }
+        public ObservableCollection<UnitTypeComboBoxItem> AddingWindowRussianUnitTypes { get; set; }
+        public ObservableCollection<UnitTypeComboBoxItem> AddingWidnowEnglishUnitTypes { get; set; }
+        public UnitTypeComboBoxItem AddingWindowSelectedRussianUnitType { get; set; }
+        public UnitTypeComboBoxItem AddingWindowSelectedEnglishUnitType { get; set; }
+        #endregion
+
+        #region Commands
+        public DelegateCommand GoBackCommand { get; private set; }
+        public DelegateCommand CreateCommonRelationCommand { get; private set; }
+        public DelegateCommand<int> DeleteCommonRelationCommand { get; private set; }
+        public DelegateCommand DeleteAllCommonRelationsCommand { get; private set; }
+        public DelegateCommand ClearAddingWindowCommand { get; private set; }
+        public DelegateCommand<int> SetDictionaryAsCurrentCommand { get; private set; }
+        protected override void InitCommands()
+        {
+            this.GoBackCommand = new DelegateCommand(arg => GoBack());
+            this.CreateCommonRelationCommand = new DelegateCommand(async arg => await CreateCommonRelation());
+            this.DeleteCommonRelationCommand = new DelegateCommand<int>(async commonRelationId => await DeleteCommonRelation(commonRelationId));
+            this.DeleteAllCommonRelationsCommand = new DelegateCommand(async arg => await DeleteAllCommonRelations());
+            this.ClearAddingWindowCommand = new DelegateCommand(arg => ClearAddingWindow());
+            this.SetDictionaryAsCurrentCommand = new DelegateCommand<int>(async commonDictionaryId => await SetDictionaryAsCurrent(commonDictionaryId));
+        }
+        #endregion
+
+        #region Command logic methods
+        private void GoBack() => App.GetService<AppWindowVM>().OpenDictionariesPageCommand.Execute();
+        private async Task CreateCommonRelation()
+        {
+            string russianUnitValue = this.AddingWindowRussianValue;
+            string englishUnitValue = this.AddingWindowEnglishValue;
+            UnitType englishUnitType = this.AddingWindowSelectedEnglishUnitType.UnitType;
+            UnitType russianUnitType = this.AddingWindowSelectedRussianUnitType.UnitType;
+            string? comment = StringHelper.NullIfEmptyOrWhiteSpace(this.AddingWindowCommentValue);
+            int commonDictionaryId = this.dictionaryId;
+            CommonRelation newCommonRelation = await commonRelationRepository.CreateCommonRelation(russianUnitValue, russianUnitType, englishUnitValue, englishUnitType, commonDictionaryId, comment);
+            this.CommonRelationViews.Add(CommonRelationView.Create(newCommonRelation));
+        }
+        private async Task DeleteCommonRelation(int commonRelationId)
+        {
+            CommonRelationView commonRelationView = FindCommonRelationView(commonRelationId);
+            this.CommonRelationViews.Remove(commonRelationView);
+            await commonRelationRepository.DeleteCommonRelation(commonRelationId);
+        }
+        private async Task DeleteAllCommonRelations()
+        {
+            this.CommonRelationViews.Clear();
+            await commonRelationRepository.DeleteAllDictionaryRelations(this.dictionaryId);
+        }
+        private void ClearAddingWindow()
+        {
+            this.AddingWindowEnglishValue = String.Empty;
+            this.AddingWindowRussianValue = String.Empty;
+            this.AddingWindowCommentValue = String.Empty;
+            this.AddingWindowSelectedRussianUnitType = AddingWindowRussianUnitTypes[0];
+            this.AddingWindowSelectedEnglishUnitType = AddingWidnowEnglishUnitTypes[0];
+        }
+        private async Task SetDictionaryAsCurrent(int commonDictionaryId)
+        {
+            CommonDictionary commonDictionary = await commonDictionaryRepository.GetCommonDictionaryAsync(commonDictionaryId);
+            this.dictionaryId = commonDictionaryId;
+            this.DictionaryName = commonDictionary.Name;
+            this.DictionaryDescription = StringHelper.EmptyIfNull(commonDictionary.Description);
+            IEnumerable<CommonRelationView> commonRelationViews = commonDictionary.Relations.Select(commonRelation => CommonRelationView.Create(commonRelation));
+            this.CommonRelationViews = new ObservableCollection<CommonRelationView>(commonRelationViews);
+        }
+        #endregion
+
+        #region Other private members
+        private CommonRelationView FindCommonRelationView(int commonRelationId) => this.CommonRelationViews.First(commonRelationView => commonRelationView.ViewModel.Id == commonRelationId);
+        private void SetAddingWindowRussianUnitTypes()
         {
             ObservableCollection<UnitTypeComboBoxItem> russianUnitTypes = new ObservableCollection<UnitTypeComboBoxItem>(
                 new[]
@@ -119,14 +128,11 @@ namespace EasyLearn.VM.ViewModels.Pages
                     new UnitTypeComboBoxItem(UnitTypeRussianNames.Numeral, UnitType.Numeral),
                     new UnitTypeComboBoxItem(UnitTypeRussianNames.Adverb, UnitType.Adverb),
                 });
-
-            UnitTypeComboBoxItem selectedItem = russianUnitTypes[0];
-
-            this.RussianUnitTypes = russianUnitTypes;
-            this.SelectedRussianUnitType = selectedItem;
+            UnitTypeComboBoxItem selectedRussianUnitType = russianUnitTypes[0];
+            this.AddingWindowRussianUnitTypes = russianUnitTypes;
+            this.AddingWindowSelectedRussianUnitType = selectedRussianUnitType;
         }
-
-        private void SetEnglishUnitTypes()
+        private void SetAddingWidnowEnglishUnitTypes()
         {
             ObservableCollection<UnitTypeComboBoxItem> englishUnitTypes = new ObservableCollection<UnitTypeComboBoxItem>(
                 new[]
@@ -143,11 +149,10 @@ namespace EasyLearn.VM.ViewModels.Pages
                     new UnitTypeComboBoxItem(UnitTypeEnglishNames.Numeral, UnitType.Numeral),
                     new UnitTypeComboBoxItem(UnitTypeEnglishNames.Adverb, UnitType.Adverb),
                 });
-
-            UnitTypeComboBoxItem selectedItem = englishUnitTypes[0];
-
-            this.EnglishUnitTypes = englishUnitTypes;
-            this.SelectedEnglishUnitType = selectedItem;
+            UnitTypeComboBoxItem selectedEnglishUnitType = englishUnitTypes[0];
+            this.AddingWidnowEnglishUnitTypes = englishUnitTypes;
+            this.AddingWindowSelectedEnglishUnitType = selectedEnglishUnitType;
         }
+        #endregion
     }
 }

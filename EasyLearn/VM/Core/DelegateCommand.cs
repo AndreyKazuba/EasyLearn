@@ -5,29 +5,31 @@ namespace EasyLearn.VM.Core
 {
     public class DelegateCommand : ICommand
     {
-        private Action<object> execute;
-        private Func<object, bool> canExecute;
-
-        public event EventHandler CanExecuteChanged
+        private Action<object?> action;
+        public event EventHandler? CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
-
-        public DelegateCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        public DelegateCommand(Action<object?> action) => this.action = action;
+        public bool CanExecute(object? parameter) => true;
+        public void Execute(object? parameter = null) => this.action(parameter);
+    }
+    public class DelegateCommand<TArgument> : ICommand
+    {
+        private Action<TArgument> action;
+        public event EventHandler? CanExecuteChanged
         {
-            this.execute = execute;
-            this.canExecute = canExecute;
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
         }
-
-        public bool CanExecute(object parameter)
+        public DelegateCommand(Action<TArgument> action) => this.action = action;
+        public bool CanExecute(object? parameter) => true;
+        public void Execute(object? parameter = null)
         {
-            return this.canExecute == null || this.canExecute(parameter);
-        }
-
-        public void Execute(object parameter = null)
-        {
-            this.execute(parameter);
+            if (parameter is not TArgument)
+                throw new ArgumentException($"Аргумент {nameof(parameter)} должен быть типа {nameof(TArgument)}");
+            this.action((TArgument)parameter);
         }
     }
 }
