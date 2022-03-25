@@ -64,18 +64,18 @@ namespace EasyLearn.VM.ViewModels.Pages
         private async Task DeleteUser(int userId)
         {
             UserView userView = FindUserView(userId);
-            bool wasCurrent = userView.ViewModel.IsCurrent;
+            bool wasCurrent = userView.IsCurrent;
             this.UserViews.Remove(userView);
             if (wasCurrent && this.UserViews.Any())
-                await SetUserAsCurrent(this.UserViews[0].ViewModel.Id);
+                await SetUserAsCurrent(this.UserViews[0].Id);
             await userRerository.DeleteUser(userId);
         }
         private async Task SetUserAsCurrent(int userId)
         {
             UserView? lastCurrentUserView = TryFindCurrentUserView();
             if (lastCurrentUserView is not null)
-                lastCurrentUserView.ViewModel.IsCurrent = false;
-            FindUserView(userId).ViewModel.IsCurrent = true;
+                lastCurrentUserView.IsCurrent = false;
+            FindUserView(userId).IsCurrent = true;
             await userRerository.SetUserAsCurrent(userId);
             UpdatePagesForNewUser();
         }
@@ -83,7 +83,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void FlipBackAllCards()
         {
             foreach (UserView userView in this.UserViews)
-                userView.ViewModel.IsCardFlipped = false;
+                userView.IsCardFlipped = false;
         }
         #endregion
 
@@ -95,8 +95,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.UserViews = new ObservableCollection<UserView>(userViews);
         }
         private void AddUserToUI(EasyLearnUser user) => this.UserViews.Add(UserView.Create(user));
-        private UserView FindUserView(int userId) => this.UserViews.First(userView => userView.ViewModel.Id == userId);
-        private UserView? TryFindCurrentUserView() => this.UserViews.FirstOrDefault(userView => userView.ViewModel.IsCurrent);
+        private UserView FindUserView(int userId) => this.UserViews.First(userView => userView.Id == userId);
+        private UserView? TryFindCurrentUserView() => this.UserViews.FirstOrDefault(userView => userView.IsCurrent);
         private void UpdatePagesForNewUser()
         {
             App.GetService<DictionariesPageVM>().UpdatePageForNewUserCommand.Execute();

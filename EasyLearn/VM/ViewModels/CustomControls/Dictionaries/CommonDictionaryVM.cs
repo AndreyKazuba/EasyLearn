@@ -1,8 +1,6 @@
 ﻿using EasyLearn.VM.Core;
-using Microsoft.Extensions.DependencyInjection;
 using EasyLearn.VM.ViewModels.Pages;
 using EasyLearn.VM.Windows;
-using System;
 using EasyLearn.Data.Models;
 using EasyLearn.Data.Repositories.Interfaces;
 using EasyLearn.Data.Helpers;
@@ -41,7 +39,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             this.Description = StringHelper.NormalizeRegister(commonDictionary.Description);
             this.Id = commonDictionary.Id;
         }
-        private void RemoveCommonDictionary() => GetDictionariesPageVM().DeleteCommonDictionaryCommand.Execute(Id);
+        private void RemoveCommonDictionary() => App.GetService<DictionariesPageVM>().DeleteCommonDictionaryCommand.Execute(Id);
         private async Task EditCommonDictionary()
         {
             string newDictionaryName = this.EditNameFieldValue;
@@ -58,20 +56,12 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             SetCurrentDictionary();
             App.GetService<AppWindowVM>().OpenEditCommonDictionaryPageCommand.Execute();
         }
-        private void FlipBackAllAnotherCards() => GetDictionariesPageVM().FlipBackAllCardsCommand.Execute();
+        private void FlipBackAllAnotherCards() => App.GetService<DictionariesPageVM>().FlipBackAllCardsCommand.Execute();
         private void SetCurrentDictionary() => App.GetService<EditCommonDictionaryPageVM>().SetDictionaryAsCurrentCommand.Execute(Id);
         private void SetEditFieldsValue()
         {
             this.EditDescriptionFieldValue = this.Description;
             this.EditNameFieldValue = this.Name;
-        }
-        private DictionariesPageVM GetDictionariesPageVM()
-        {
-            DictionariesPageVM? dictionariesPageVM = App.ServiceProvider.GetRequiredService<DictionariesPageVM>();
-            if (dictionariesPageVM is not null)
-                return dictionariesPageVM;
-            else
-                throw new Exception("Something went wrong :(");
         }
     }
 }

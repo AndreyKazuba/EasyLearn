@@ -95,22 +95,22 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             CommonDictionaryView commonDictionaryView = FindCommonDictionaryView(commonDictionaryId);
             this.DictionaryViews.Remove(commonDictionaryView);
-            await commonDictionaryRepository.DeleteCommonDictionary(commonDictionaryView.ViewModel.Id);
+            await commonDictionaryRepository.DeleteCommonDictionary(commonDictionaryView.Id);
         }
         private async Task DeleteVerbPrepositionDictionary(int verbPrepositionDictionaryId)
         {
             VerbPrepositionDictionaryView verbPrepositionDictionaryView = FindVerbPrepositionDictionaryView(verbPrepositionDictionaryId);
             this.DictionaryViews.Remove(verbPrepositionDictionaryView);
-            await verbPrepositionDictionaryRepository.DeleteVerbPrepositionDictionary(verbPrepositionDictionaryView.ViewModel.Id);
+            await verbPrepositionDictionaryRepository.DeleteVerbPrepositionDictionary(verbPrepositionDictionaryView.Id);
         }
         private void FlipBackAllCards()
         {
             foreach (UserControl dictionaryView in this.DictionaryViews)
             {
                 if (dictionaryView is VerbPrepositionDictionaryView)
-                    ((VerbPrepositionDictionaryView)dictionaryView).ViewModel.IsCardFlipped = false;
+                    ((VerbPrepositionDictionaryView)dictionaryView).IsCardFlipped = false;
                 if (dictionaryView is CommonDictionaryView)
-                    ((CommonDictionaryView)dictionaryView).ViewModel.IsCardFlipped = false;
+                    ((CommonDictionaryView)dictionaryView).IsCardFlipped = false;
             }
         }
         private void UpdatePageForNewUser()
@@ -145,7 +145,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 if (dictionary is CommonDictionaryView)
                 {
                     CommonDictionaryView dictionaryView = (CommonDictionaryView)dictionary;
-                    if (dictionaryView.ViewModel.Id == commonDictionaryId)
+                    if (dictionaryView.Id == commonDictionaryId)
                         return dictionaryView;
                 }
             throw new Exception($"На UI нет {nameof(CommonDictionary)} с Id = {commonDictionaryId}");
@@ -156,7 +156,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 if (dictionary is VerbPrepositionDictionaryView)
                 {
                     VerbPrepositionDictionaryView dictionaryView = (VerbPrepositionDictionaryView)dictionary;
-                    if (dictionaryView.ViewModel.Id == verbPrepositionDictionaryId)
+                    if (dictionaryView.Id == verbPrepositionDictionaryId)
                         return dictionaryView;
                 }
             throw new Exception($"На UI нет {nameof(VerbPrepositionDictionnary)} с Id = {verbPrepositionDictionaryId}");

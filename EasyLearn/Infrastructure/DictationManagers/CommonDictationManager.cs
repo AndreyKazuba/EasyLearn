@@ -12,12 +12,10 @@ namespace EasyLearn.Infrastructure.DictationManagers
         private int currentRelationId;
         private int maxCurrentRelationId;
         private List<CommonRelation> commonRelations;
-        public CommonRelation CurrentCommonRelation { get => commonRelations[currentRelationId]; }
+        public CommonRelation CurrentCommonRelation => commonRelations[currentRelationId];
         public CommonDictationManager(List<CommonRelation> commonRelations)
         {
-            this.isStarted = false;
             this.commonRelations = commonRelations;
-            this.currentRelationId = 0;
             this.maxCurrentRelationId = commonRelations.Count - 1;
         }
         public CommonRelation Start()

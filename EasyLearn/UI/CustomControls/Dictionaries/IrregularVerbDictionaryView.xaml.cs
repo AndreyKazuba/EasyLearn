@@ -5,14 +5,14 @@ namespace EasyLearn.UI.CustomControls
 {
     public partial class IrregularVerbDictionaryView : UserControl
     {
-        public IrregularVerbDictionaryVM ViewModel { get; }
         public IrregularVerbDictionaryView(IrregularVerbDictionaryVM viewModel)
         {
-            this.ViewModel = viewModel;
             this.DataContext = viewModel;
             InitializeComponent();
         }
 
+        #region Static members
         public static IrregularVerbDictionaryView Create() => new IrregularVerbDictionaryView(new IrregularVerbDictionaryVM());
+        #endregion
     }
 }

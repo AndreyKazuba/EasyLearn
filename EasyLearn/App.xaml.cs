@@ -71,7 +71,7 @@ namespace EasyLearn
 
             services.AddTransient<ICommonRelationRepository, CommonRelationsRepository>();
             services.AddTransient<IVerbPrepositionRepository, VerbPrepositionsRepository>();
-            services.AddTransient<IIrregularVerbsRepository, IrregularVerbsRepository>();
+            services.AddTransient<IIrregularVerbRepository, IrregularVerbsRepository>();
 
             services.AddTransient<ICommonDictionaryRepository, CommonDictionaryRepository>();
             services.AddTransient<IVerbPrepositionDictionaryRepository, VerbPrepositionDictionaryRepository>();

@@ -12,12 +12,10 @@ namespace EasyLearn.Infrastructure.DictationManagers
         private int currentVerbPrepositionId;
         private int maxCurrentVerbPrepositionId;
         private List<VerbPreposition> verbPrepositions;
-        public VerbPreposition CurrentVerbPreposition { get => verbPrepositions[currentVerbPrepositionId]; }
+        public VerbPreposition CurrentVerbPreposition => verbPrepositions[currentVerbPrepositionId];
         public VerbPrepositionDictationManager(List<VerbPreposition> verbPrepositions)
         {
-            this.isStarted = false;
             this.verbPrepositions = verbPrepositions;
-            this.currentVerbPrepositionId = 0;
             this.maxCurrentVerbPrepositionId = verbPrepositions.Count - 1;
         }
         public VerbPreposition Start()

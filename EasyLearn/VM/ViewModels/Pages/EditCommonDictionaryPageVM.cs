@@ -111,7 +111,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         #endregion
 
         #region Other private members
-        private CommonRelationView FindCommonRelationView(int commonRelationId) => this.CommonRelationViews.First(commonRelationView => commonRelationView.ViewModel.Id == commonRelationId);
+        private CommonRelationView FindCommonRelationView(int commonRelationId) => this.CommonRelationViews.First(commonRelationView => commonRelationView.Id == commonRelationId);
         private void AddCommonRelationToUI(CommonRelation commonRelation) => this.CommonRelationViews.Add(CommonRelationView.Create(commonRelation));
         private void SetAddingWindowRussianUnitTypes()
         {

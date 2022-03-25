@@ -12,6 +12,8 @@ namespace EasyLearn.UI.CustomControls
             InitializeComponent();
         }
 
+        #region Static members
         public static VerbPrepositionView Create(VerbPreposition verbPreposition) => new VerbPrepositionView(new VerbPrepositionVM(verbPreposition));
+        #endregion
     }
 }

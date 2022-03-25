@@ -6,13 +6,23 @@ namespace EasyLearn.UI.CustomControls
 {
     public partial class CommonRelationView : UserControl
     {
-        public CommonRelationVM ViewModel { get; }
+        #region Private fields
+        private CommonRelationVM viewModel;
+        #endregion
+
+        #region Public props
+        public int Id => viewModel.Id;
+        #endregion
+
         public CommonRelationView(CommonRelationVM viewModel)
         {
-            ViewModel = viewModel;
+            this.viewModel = viewModel;
             this.DataContext = viewModel;
             InitializeComponent();
         }
+
+        #region Static members
         public static CommonRelationView Create(CommonRelation commonRelation) => new CommonRelationView(new CommonRelationVM(commonRelation));
+        #endregion
     }
 }

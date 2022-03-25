@@ -11,6 +11,7 @@ using EasyLearn.Infrastructure.DictationManagers;
 using EasyLearn.Data.Helpers;
 using EasyLearn.UI.Pages;
 using EasyLearn.Infrastructure.Constants;
+using EasyLearn.Infrastructure.Enums;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -20,24 +21,31 @@ namespace EasyLearn.VM.ViewModels.Pages
         private readonly IEasyLearnUserRepository userRepository;
         private readonly ICommonDictionaryRepository commonDictionaryRepository;
         private readonly IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository;
+        private readonly IIrregularVerbRepository irregularVerbRepository;
         #endregion
 
         #region Private fields
         private bool isDictationStarted;
         private int currentUserId;
+        private IrregularVerbForm currentIrregularVerbForm;
         private CommonDictionary loadedCommonDictionary;
         private VerbPrepositionDictionnary loadedVerbPrepositionDictionary;
-        private DictionaryComboBoxItem selectedDictionaryComboBoxItem;
         private CommonDictationManager? commonDictationManager;
         private VerbPrepositionDictationManager? verbPrepositionDictationManager;
+        private IrregularVerbDictationManager? irregularVerbDictationManager;
+        private DictionaryComboBoxItem selectedDictionaryComboBoxItem;
         #endregion
 
 #pragma warning disable CS8618
-        public DictationPageVM(IEasyLearnUserRepository userRepository, ICommonDictionaryRepository commonDictionaryRepository, IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository)
+        public DictationPageVM(IEasyLearnUserRepository userRepository,
+            ICommonDictionaryRepository commonDictionaryRepository,
+            IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository,
+            IIrregularVerbRepository irregularVerbRepository)
         {
             this.userRepository = userRepository;
             this.commonDictionaryRepository = commonDictionaryRepository;
             this.verbPrepositionDictionaryRepository = verbPrepositionDictionaryRepository;
+            this.irregularVerbRepository = irregularVerbRepository;
             UpdatePageForNewUser();
             SetDefaultPageState();
         }
@@ -72,6 +80,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 selectedDictionaryComboBoxItem = value;
                 LoadSelectedDictionary();
                 UpdateDictationLengthSlider();
+                SetCurrentDictationSection();
             }
         }
         public int DictationLengthSliderMaxValue { get; set; }
@@ -79,17 +88,39 @@ namespace EasyLearn.VM.ViewModels.Pages
         public int DictationLengthSliderCurrentValue { get; set; }
         public int DictationProgressBarMaxValue { get; set; }
         public int DictationProgressBarCurrentValue { get; set; }
-        public string MainDisplayValue { get; set; }
-        public string CommentDisplayValue { get; set; }
+        public string MainCommonDictationDisplayValue { get; set; }
+        public string UnitTypeCommonDictationDisplayValue { get; set; }
+        public string CommentCommonDictationDisplayValue { get; set; }
+        public string MainVerbPrepositionDictationDisplayValue { get; set; }
+        public string UnitTypeVerbPrepositionDictationDisplayValue { get; set; }
+        public string CommentVerbPrepositionDictationDisplayValue { get; set; }
+        public string MainIrregularVerbDictationDisplayValue { get; set; }
+        public string CommentIrregularVerbDictationDisplayValue { get; set; }
+        public string IrregularVerbDictationFirstFormFixedAnswerValue { get; set; }
+        public string IrregularVerbDictationSecondFormFixedAnswerValue { get; set; }
+        public string IrregularVerbDictationThirdFormFixedAnswerValue { get; set; }
         public string AnswerValue { get; set; }
-        public string UnitTypeDisplayValue { get; set; }
-        public bool CorrectAnswerIconIsVisible { get; set; }
-        public bool WrongAnswerIconIsVisible { get; set; }
+        public bool CommonDictationCorrectAnswerIconIsVisible { get; set; }
+        public bool CommonDictationWrongAnswerIconIsVisible { get; set; }
+        public bool VerbPrepositionDictationCorrectAnswerIconIsVisible { get; set; }
+        public bool VerbPrepositionDictationWrongAnswerIconIsVisible { get; set; }
         public bool CheckAnswerButtonIsVisible { get; set; }
         public bool NextButtonIsVisible { get; set; }
         public bool StartButtonIsVisible { get; set; }
         public bool StartButtonIsEnabled { get; set; } = true;
         public bool StopButtonIsVisible { get; set; }
+        public bool IsCommonDictationSectionVisible { get; set; }
+        public bool IsVerbPrepositionDictationSectionVisible { get; set; }
+        public bool IsIrregularVerbDictationSectionVisible { get; set; }
+        public bool IrregularVerbDictationFirstFormGrayIconIsVisible { get; set; }
+        public bool IrregularVerbDictationFirstFormCorrectAnswerIconIsVisible { get; set; }
+        public bool IrregularVerbDictationFirstFormWrongAnswerIconIsVisible { get; set; }
+        public bool IrregularVerbDictationSecondFormGrayIconIsVisible { get; set; }
+        public bool IrregularVerbDictationSecondFormCorrectAnswerIconIsVisible { get; set; }
+        public bool IrregularVerbDictationSecondFormWrongAnswerIconIsVisible { get; set; }
+        public bool IrregularVerbDictationThirdFormGrayIconIsVisible { get; set; }
+        public bool IrregularVerbDictationThirdFormCorrectAnswerIconIsVisible { get; set; }
+        public bool IrregularVerbDictationThirdFormWrongAnswerIconIsVisible { get; set; }
         #endregion
 
         #region Commands 
@@ -128,6 +159,9 @@ namespace EasyLearn.VM.ViewModels.Pages
                 case DictionaryType.VerbPrepositionDictionary:
                     StartVerbPrepositionDictionary();
                     break;
+                case DictionaryType.IrregularVerbDictionary:
+                    StartIrregularVerbDictation();
+                    break;
             }
         }
         private void CheckAnswer()
@@ -140,6 +174,9 @@ namespace EasyLearn.VM.ViewModels.Pages
                     break;
                 case DictionaryType.VerbPrepositionDictionary:
                     CheckAnswerForVerbPrepositionDictionary();
+                    break;
+                case DictionaryType.IrregularVerbDictionary:
+                    CheckAnswerForIrregularVerbDictionary();
                     break;
             }
         }
@@ -154,6 +191,9 @@ namespace EasyLearn.VM.ViewModels.Pages
                 case DictionaryType.VerbPrepositionDictionary:
                     TryGoNextForVerbPrepositionDictionary();
                     break;
+                case DictionaryType.IrregularVerbDictionary:
+                    TryGoNextForIrregularVerbDictionary();
+                    break;
             }
         }
         private void StopDictation()
@@ -161,6 +201,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             SetDefaultPageState();
             this.commonDictationManager = null;
             this.verbPrepositionDictationManager = null;
+            this.irregularVerbDictationManager = null;
         }
         public void UpdatePageForNewUser()
         {
@@ -180,9 +221,9 @@ namespace EasyLearn.VM.ViewModels.Pages
             List<CommonRelation> commonRelations = ShuffleCommonRelation(this.loadedCommonDictionary.Relations).Take(countOfRelations).ToList();
             this.commonDictationManager = new CommonDictationManager(commonRelations);
             CommonRelation firstCommonRelation = commonDictationManager.Start();
-            this.MainDisplayValue = firstCommonRelation.RussianUnit.Value.NormalizeRegister();
-            this.CommentDisplayValue = firstCommonRelation.Comment.TryNormalizeRegister();
-            this.UnitTypeDisplayValue = firstCommonRelation.RussianUnit.Type.ToString().NormalizeRegister();
+            this.MainCommonDictationDisplayValue = firstCommonRelation.RussianUnit.Value.NormalizeRegister();
+            this.CommentCommonDictationDisplayValue = firstCommonRelation.Comment.TryNormalizeRegister();
+            this.UnitTypeCommonDictationDisplayValue = firstCommonRelation.RussianUnit.Type.ToString().NormalizeRegister();
             SwitchStartAndStopButtons();
             FocusAnswerTextBox();
             SetDictationProgressBar();
@@ -194,13 +235,14 @@ namespace EasyLearn.VM.ViewModels.Pages
             bool answerIsCorrect = this.commonDictationManager.IsAnswerCorrect(this.AnswerValue);
             if (answerIsCorrect)
             {
-                ShowCorrectAnswerIcon();
+                ShowCommonDictationCorrectAnswerIcon();
                 IncreaseDictationProgressBarCurrentValue();
                 SwitchCheckAnswerAndNextButtons();
+                SetDefaultAnswerValue();
             }
             else
             {
-                ShowWrongAnswerIcon();
+                ShowCommonDictationWrongAnswerIcon();
             }
         }
         private void TryGoNextForCommonDictionary()
@@ -209,11 +251,11 @@ namespace EasyLearn.VM.ViewModels.Pages
                 return;
             if (this.commonDictationManager.GoNext())
             {
-                this.MainDisplayValue = commonDictationManager.CurrentCommonRelation.RussianUnit.Value.NormalizeRegister();
-                this.CommentDisplayValue = commonDictationManager.CurrentCommonRelation.Comment.TryNormalizeRegister();
-                this.UnitTypeDisplayValue = commonDictationManager.CurrentCommonRelation.RussianUnit.Type.ToString().NormalizeRegister();
+                this.MainCommonDictationDisplayValue = commonDictationManager.CurrentCommonRelation.RussianUnit.Value.NormalizeRegister();
+                this.CommentCommonDictationDisplayValue = commonDictationManager.CurrentCommonRelation.Comment.TryNormalizeRegister();
+                this.UnitTypeCommonDictationDisplayValue = commonDictationManager.CurrentCommonRelation.RussianUnit.Type.ToString().NormalizeRegister();
                 SetDefaultAnswerValue();
-                HideCorrectAndWrongAnswerIcons();
+                HideCommonDictationCorrectAndWrongAnswerIcons();
                 SwitchCheckAnswerAndNextButtons();
             }
             else
@@ -229,9 +271,9 @@ namespace EasyLearn.VM.ViewModels.Pages
             List<VerbPreposition> verbPrepositions = ShuffleVerbPrepositions(this.loadedVerbPrepositionDictionary.VerbPrepositions).Take(countOfVerbPrepositions).ToList();
             this.verbPrepositionDictationManager = new VerbPrepositionDictationManager(verbPrepositions);
             VerbPreposition firstVerbPreposition = verbPrepositionDictationManager.Start();
-            this.MainDisplayValue = firstVerbPreposition.Verb.Value.NormalizeRegister();
-            this.CommentDisplayValue = firstVerbPreposition.Comment.TryNormalizeRegister();
-            this.UnitTypeDisplayValue = firstVerbPreposition.Verb.Type.ToString().NormalizeRegister();
+            this.MainVerbPrepositionDictationDisplayValue = firstVerbPreposition.Verb.Value.NormalizeRegister();
+            this.CommentVerbPrepositionDictationDisplayValue = firstVerbPreposition.Comment.TryNormalizeRegister();
+            this.UnitTypeVerbPrepositionDictationDisplayValue = firstVerbPreposition.Verb.Type.ToString().NormalizeRegister();
             SwitchStartAndStopButtons();
             FocusAnswerTextBox();
             SetDictationProgressBar();
@@ -243,13 +285,14 @@ namespace EasyLearn.VM.ViewModels.Pages
             bool answerIsCorrect = this.verbPrepositionDictationManager.IsAnswerCorrect(this.AnswerValue);
             if (answerIsCorrect)
             {
-                ShowCorrectAnswerIcon();
+                ShowVerbPrepositionDictationCorrectAnswerIcon();
                 IncreaseDictationProgressBarCurrentValue();
                 SwitchCheckAnswerAndNextButtons();
+                SetDefaultAnswerValue();
             }
             else
             {
-                ShowWrongAnswerIcon();
+                ShowVerbPrepositionDictationWrongAnswerIcon();
             }
         }
         private void TryGoNextForVerbPrepositionDictionary()
@@ -258,12 +301,99 @@ namespace EasyLearn.VM.ViewModels.Pages
                 return;
             if (this.verbPrepositionDictationManager.GoNext())
             {
-                this.MainDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Verb.Value.NormalizeRegister();
-                this.CommentDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Comment.TryNormalizeRegister();
-                this.UnitTypeDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Verb.Type.ToString().NormalizeRegister();
+                this.MainCommonDictationDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Verb.Value.NormalizeRegister();
+                this.CommentCommonDictationDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Comment.TryNormalizeRegister();
+                this.UnitTypeCommonDictationDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Verb.Type.ToString().NormalizeRegister();
                 SetDefaultAnswerValue();
-                HideCorrectAndWrongAnswerIcons();
+                HideVerbPrepositionDictationCorrectAndWrongAnswerIcons();
                 SwitchCheckAnswerAndNextButtons();
+            }
+            else
+            {
+                StopDictation();
+            }
+        }
+        private void StartIrregularVerbDictation()
+        {
+            SetDefaultPageState();
+            this.isDictationStarted = true;
+            int countOfIrregularVerbs = this.DictationLengthSliderCurrentValue;
+            List<IrregularVerb> irregularVerbs = ShuffleIrregularVerbs(this.irregularVerbRepository.GetAllIrregularVerbs()).Take(countOfIrregularVerbs).ToList();
+            this.irregularVerbDictationManager = new IrregularVerbDictationManager(irregularVerbs);
+            IrregularVerb firstIrregularVerb = irregularVerbDictationManager.Start();
+            this.MainIrregularVerbDictationDisplayValue = firstIrregularVerb.RussianUnit.Value.NormalizeRegister();
+            this.CommentIrregularVerbDictationDisplayValue = firstIrregularVerb.Comment.TryNormalizeRegister();
+            SwitchStartAndStopButtons();
+            FocusAnswerTextBox();
+            SetDictationProgressBar();
+        }
+        private void CheckAnswerForIrregularVerbDictionary()
+        {
+            if (!isDictationStarted || this.irregularVerbDictationManager is null)
+                return;
+
+            switch (currentIrregularVerbForm)
+            {
+                case IrregularVerbForm.FirstForm:
+                    bool firstFormIsCorrect = this.irregularVerbDictationManager.IsFirstFormAnswerCorrect(this.AnswerValue);
+                    if (firstFormIsCorrect)
+                    {
+                        ShowFirstFormCorrectAnswerIcon();
+                        IncreaseDictationProgressBarCurrentValue();
+                        this.IrregularVerbDictationFirstFormFixedAnswerValue = StringHelper.NormalizeRegister(this.AnswerValue);
+                        this.currentIrregularVerbForm = IrregularVerbForm.SecondForm;
+                        SetDefaultAnswerValue();
+                    }
+                    else
+                    {
+                        ShowFirstFormWrongAnswerIcon();
+                    }
+                    break;
+                case IrregularVerbForm.SecondForm:
+                    bool secondFormIsCorrect = this.irregularVerbDictationManager.IsSecondFormAnswerCorrect(this.AnswerValue);
+                    if (secondFormIsCorrect)
+                    {
+                        ShowSecondFormCorrectAnswerIcon();
+                        IncreaseDictationProgressBarCurrentValue();
+                        this.IrregularVerbDictationSecondFormFixedAnswerValue = StringHelper.NormalizeRegister(this.AnswerValue);
+                        this.currentIrregularVerbForm = IrregularVerbForm.ThirdForm;
+                        SetDefaultAnswerValue();
+                    }
+                    else
+                    {
+                        ShowSecondFormWrongAnswerIcon();
+                    }
+                    break;
+                case IrregularVerbForm.ThirdForm:
+                    bool thirdFormIsCorrect = this.irregularVerbDictationManager.IsThirdFormAnswerCorrect(this.AnswerValue);
+                    if (thirdFormIsCorrect)
+                    {
+                        ShowThirdFormCorrectAnswerIcon();
+                        IncreaseDictationProgressBarCurrentValue();
+                        SwitchCheckAnswerAndNextButtons();
+                        this.IrregularVerbDictationThirdFormFixedAnswerValue = StringHelper.NormalizeRegister(this.AnswerValue);
+                        SetDefaultAnswerValue();
+                        this.currentIrregularVerbForm = IrregularVerbForm.FirstForm;
+                    }
+                    else
+                    {
+                        ShowThirdFormWrongAnswerIcon();
+                    }
+                    break;
+            }
+        }
+        private void TryGoNextForIrregularVerbDictionary()
+        {
+            if (!this.isDictationStarted || this.irregularVerbDictationManager is null)
+                return;
+            if (this.irregularVerbDictationManager.GoNext())
+            {
+                this.MainIrregularVerbDictationDisplayValue = irregularVerbDictationManager.CurrentIrregularVerb.RussianUnit.Value.NormalizeRegister();
+                this.CommentIrregularVerbDictationDisplayValue = irregularVerbDictationManager.CurrentIrregularVerb.Comment.TryNormalizeRegister();
+                SetDefaultAnswerValue();
+                ShowIrregularVerbSectionGrayIcons();
+                SwitchCheckAnswerAndNextButtons();
+                SetDefaultIrrefularVerbDictationFixedValues();
             }
             else
             {
@@ -330,13 +460,15 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void SetDefaultPageState()
         {
             this.isDictationStarted = false;
+            this.currentIrregularVerbForm = IrregularVerbForm.FirstForm;
             SetDefaultMainDisplayValue();
             SetDefaultCommentDisplayValue();
             SetDefaultAnswerValue();
             ShowStartButton();
             ShowCheckAnswerButton();
             ResetDictationProgressBarCurrentValue();
-            HideCorrectAndWrongAnswerIcons();
+            HideAllCorrectAndWrongAnswerIcons();
+            SetDefaultIrrefularVerbDictationFixedValues();
         }
         private void ShowCheckAnswerButton()
         {
@@ -369,27 +501,59 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.StopButtonIsVisible = !this.StopButtonIsVisible;
         }
         private void SetDefaultAnswerValue() => this.AnswerValue = String.Empty;
-        private void SetDefaultMainDisplayValue() => this.MainDisplayValue = "EasyLearn";
-        private void SetDefaultCommentDisplayValue() => this.CommentDisplayValue = String.Empty;
-        private void ShowWrongAnswerIcon()
+        private void SetDefaultMainDisplayValue()
         {
-            this.WrongAnswerIconIsVisible = true;
-            this.CorrectAnswerIconIsVisible = false;
+            string easyLearn = "EasyLearn";
+            this.MainCommonDictationDisplayValue = easyLearn;
+            this.MainVerbPrepositionDictationDisplayValue = easyLearn;
+            this.MainIrregularVerbDictationDisplayValue = easyLearn;
         }
-        private void ShowCorrectAnswerIcon()
+        private void SetDefaultCommentDisplayValue()
         {
-            this.CorrectAnswerIconIsVisible = true;
-            this.WrongAnswerIconIsVisible = false;
+            this.CommentCommonDictationDisplayValue = String.Empty;
+            this.CommentVerbPrepositionDictationDisplayValue = String.Empty;
+            this.CommentIrregularVerbDictationDisplayValue = String.Empty;
         }
-        private void HideCorrectAndWrongAnswerIcons()
+        private void ShowCommonDictationWrongAnswerIcon()
         {
-            this.CorrectAnswerIconIsVisible = false;
-            this.WrongAnswerIconIsVisible = false;
+            this.CommonDictationWrongAnswerIconIsVisible = true;
+            this.CommonDictationCorrectAnswerIconIsVisible = false;
         }
-        private void SwitchCorrectAndWrongAnswerIcons()
+        private void ShowCommonDictationCorrectAnswerIcon()
         {
-            this.CorrectAnswerIconIsVisible = !this.CorrectAnswerIconIsVisible;
-            this.WrongAnswerIconIsVisible = !this.WrongAnswerIconIsVisible;
+            this.CommonDictationCorrectAnswerIconIsVisible = true;
+            this.CommonDictationWrongAnswerIconIsVisible = false;
+        }
+        private void HideCommonDictationCorrectAndWrongAnswerIcons()
+        {
+            this.CommonDictationCorrectAnswerIconIsVisible = false;
+            this.CommonDictationWrongAnswerIconIsVisible = false;
+        }
+        private void ShowVerbPrepositionDictationWrongAnswerIcon()
+        {
+            this.VerbPrepositionDictationWrongAnswerIconIsVisible = true;
+            this.VerbPrepositionDictationCorrectAnswerIconIsVisible = false;
+        }
+        private void ShowVerbPrepositionDictationCorrectAnswerIcon()
+        {
+            this.VerbPrepositionDictationCorrectAnswerIconIsVisible = true;
+            this.VerbPrepositionDictationWrongAnswerIconIsVisible = false;
+        }
+        private void HideVerbPrepositionDictationCorrectAndWrongAnswerIcons()
+        {
+            this.VerbPrepositionDictationCorrectAnswerIconIsVisible = false;
+            this.VerbPrepositionDictationWrongAnswerIconIsVisible = false;
+        }
+        private void HideAllCorrectAndWrongAnswerIcons()
+        {
+            HideCommonDictationCorrectAndWrongAnswerIcons();
+            HideVerbPrepositionDictationCorrectAndWrongAnswerIcons();
+            ShowIrregularVerbSectionGrayIcons();
+        }
+        private void SwitchCommonDictationCorrectAndWrongAnswerIcons()
+        {
+            this.CommonDictationCorrectAnswerIconIsVisible = !this.CommonDictationCorrectAnswerIconIsVisible;
+            this.CommonDictationWrongAnswerIconIsVisible = !this.CommonDictationWrongAnswerIconIsVisible;
         }
         private void FocusAnswerTextBox() => App.GetService<DictationPage>().dictationTextBox.Focus();
         private void SetDictationProgressBar()
@@ -397,9 +561,111 @@ namespace EasyLearn.VM.ViewModels.Pages
             SetDictationProgressBarMaxValue();
             ResetDictationProgressBarCurrentValue();
         }
-        private void SetDictationProgressBarMaxValue() => this.DictationProgressBarMaxValue = this.DictationLengthSliderCurrentValue;
+        private void SetDictationProgressBarMaxValue()
+        {
+            DictionaryType currentDictionaryType = SelectedDictionaryComboBoxItem.DictionaryType;
+            if (currentDictionaryType == DictionaryType.IrregularVerbDictionary)
+                this.DictationProgressBarMaxValue = this.DictationLengthSliderCurrentValue * 3;
+            else
+                this.DictationProgressBarMaxValue = this.DictationLengthSliderCurrentValue;
+        }
         private void IncreaseDictationProgressBarCurrentValue() => this.DictationProgressBarCurrentValue++;
         private void ResetDictationProgressBarCurrentValue() => this.DictationProgressBarCurrentValue = 0;
+        private void SetCurrentDictationSection()
+        {
+            DictionaryType currentDictionaryType = SelectedDictionaryComboBoxItem.DictionaryType;
+            switch (currentDictionaryType)
+            {
+                case DictionaryType.CommonDictionary:
+                    ShowCommonSection();
+                    break;
+                case DictionaryType.VerbPrepositionDictionary:
+                    ShowVerbPrepositionSection();
+                    break;
+                case DictionaryType.IrregularVerbDictionary:
+                    ShowIrregularVerbSection();
+                    break;
+            }
+        }
+        private void ShowCommonSection()
+        {
+            this.IsCommonDictationSectionVisible = true;
+            this.IsVerbPrepositionDictationSectionVisible = false;
+            this.IsIrregularVerbDictationSectionVisible = false;
+        }
+        private void ShowVerbPrepositionSection()
+        {
+            this.IsCommonDictationSectionVisible = false;
+            this.IsVerbPrepositionDictationSectionVisible = true;
+            this.IsIrregularVerbDictationSectionVisible = false;
+        }
+        private void ShowIrregularVerbSection()
+        {
+            this.IsCommonDictationSectionVisible = false;
+            this.IsVerbPrepositionDictationSectionVisible = false;
+            this.IsIrregularVerbDictationSectionVisible = true;
+        }
+        private void SetDefaultIrrefularVerbDictationFixedValues()
+        {
+            this.IrregularVerbDictationFirstFormFixedAnswerValue = "????";
+            this.IrregularVerbDictationSecondFormFixedAnswerValue = "????";
+            this.IrregularVerbDictationThirdFormFixedAnswerValue = "????";
+        }
+        private void ShowFirstFormCorrectAnswerIcon()
+        {
+            this.IrregularVerbDictationFirstFormGrayIconIsVisible = false;
+            this.IrregularVerbDictationFirstFormCorrectAnswerIconIsVisible = true;
+            this.IrregularVerbDictationFirstFormWrongAnswerIconIsVisible = false;
+        }
+        private void ShowFirstFormWrongAnswerIcon()
+        {
+            this.IrregularVerbDictationFirstFormGrayIconIsVisible = false;
+            this.IrregularVerbDictationFirstFormCorrectAnswerIconIsVisible = false;
+            this.IrregularVerbDictationFirstFormWrongAnswerIconIsVisible = true;
+        }
+        private void ShowSecondFormCorrectAnswerIcon()
+        {
+            this.IrregularVerbDictationSecondFormGrayIconIsVisible = false;
+            this.IrregularVerbDictationSecondFormCorrectAnswerIconIsVisible = true;
+            this.IrregularVerbDictationSecondFormWrongAnswerIconIsVisible = false;
+        }
+        private void ShowSecondFormWrongAnswerIcon()
+        {
+            this.IrregularVerbDictationSecondFormGrayIconIsVisible = false;
+            this.IrregularVerbDictationSecondFormCorrectAnswerIconIsVisible = false;
+            this.IrregularVerbDictationSecondFormWrongAnswerIconIsVisible = true;
+        }
+        private void ShowThirdFormCorrectAnswerIcon()
+        {
+            this.IrregularVerbDictationThirdFormGrayIconIsVisible = false;
+            this.IrregularVerbDictationThirdFormCorrectAnswerIconIsVisible = true;
+            this.IrregularVerbDictationThirdFormWrongAnswerIconIsVisible = false;
+        }
+        private void ShowThirdFormWrongAnswerIcon()
+        {
+            this.IrregularVerbDictationThirdFormGrayIconIsVisible = false;
+            this.IrregularVerbDictationThirdFormCorrectAnswerIconIsVisible = false;
+            this.IrregularVerbDictationThirdFormWrongAnswerIconIsVisible = true;
+        }
+        private void ShowIrregularVerbSectionGrayIcons()
+        {
+            HideAllIrregularVerbSectionAnswerIcons();
+            this.IrregularVerbDictationFirstFormGrayIconIsVisible = true;
+            this.IrregularVerbDictationSecondFormGrayIconIsVisible = true;
+            this.IrregularVerbDictationThirdFormGrayIconIsVisible = true;
+        }
+        private void HideAllIrregularVerbSectionAnswerIcons()
+        {
+            this.IrregularVerbDictationFirstFormGrayIconIsVisible = false;
+            this.IrregularVerbDictationSecondFormGrayIconIsVisible = false;
+            this.IrregularVerbDictationThirdFormGrayIconIsVisible = false;
+            this.IrregularVerbDictationFirstFormCorrectAnswerIconIsVisible = false;
+            this.IrregularVerbDictationSecondFormCorrectAnswerIconIsVisible = false;
+            this.IrregularVerbDictationThirdFormCorrectAnswerIconIsVisible = false;
+            this.IrregularVerbDictationFirstFormWrongAnswerIconIsVisible = false;
+            this.IrregularVerbDictationSecondFormWrongAnswerIconIsVisible = false;
+            this.IrregularVerbDictationThirdFormWrongAnswerIconIsVisible = false;
+        }
         #endregion
 
         #region Helpers
@@ -412,6 +678,11 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             Random random = new Random();
             return verbPrepositions.OrderBy(verbPrepositions => random.Next());
+        }
+        private IEnumerable<IrregularVerb> ShuffleIrregularVerbs(IEnumerable<IrregularVerb> irregularVerbs)
+        {
+            Random random = new Random();
+            return irregularVerbs.OrderBy(irregularVerb => random.Next());
         }
         #endregion
     }

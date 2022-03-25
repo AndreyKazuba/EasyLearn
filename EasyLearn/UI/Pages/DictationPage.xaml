@@ -18,7 +18,8 @@
                 <RowDefinition Height="0.4*"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 40 0 0">
+            <!--Система отображения для обычного диктанта-->
+            <StackPanel Visibility="{Binding IsCommonDictationSectionVisible, Converter={converters:ReverseCollapseConverter}}" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 40 0 0">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -26,28 +27,207 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock
                        FontSize="90"
-                       Text="{Binding MainDisplayValue}"
+                       Text="{Binding MainCommonDictationDisplayValue}"
                        Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        Margin="0 0 0 10"/>
-                    <materialDesign:Chip Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="T" Content="{Binding UnitTypeDisplayValue}"/>
+                    <materialDesign:Chip Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="T" Content="{Binding UnitTypeCommonDictationDisplayValue}"/>
                 </Grid>
-                
+
                 <TextBlock
                        FontSize="50"
-                       Text="{Binding CommentDisplayValue}"
+                       Text="{Binding CommentCommonDictationDisplayValue}"
                        Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                     Foreground="Gray"/>
+
+                <!--Иконка правильного простого диктанта-->
+                <materialDesign:PackIcon Kind="Check" 
+                                     Height="60" 
+                                     Width="60" 
+                                     Foreground="Green"
+                                     HorizontalAlignment="Center"
+                                     Visibility="{Binding CommonDictationCorrectAnswerIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
+
+                <!--Иконка неправильного ответа сложного диктанта-->
+                <materialDesign:PackIcon Kind="Close" 
+                                     Height="60" 
+                                     Width="60" 
+                                     Foreground="Red"
+                                     HorizontalAlignment="Center"
+                                     Visibility="{Binding CommonDictationWrongAnswerIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
+
             </StackPanel>
-            
+
+
+
+            <!--Система отображения для дикнтанта предлогов-->
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 40 0 0" Visibility="{Binding IsVerbPrepositionDictationSectionVisible, Converter={converters:ReverseCollapseConverter}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                       FontSize="90"
+                       Text="{Binding MainVerbPrepositionDictationDisplayValue}"
+                       Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Margin="0 0 0 10"/>
+                    <materialDesign:Chip Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Icon="T" Content="{Binding UnitTypeVerbPrepositionDictationDisplayValue}"/>
+                </Grid>
+
+                <TextBlock
+                       FontSize="50"
+                       Text="{Binding CommentVerbPrepositionDictationDisplayValue}"
+                       Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                    Foreground="Gray"/>
+
+                <!--Иконка правильного простого диктанта-->
+                <materialDesign:PackIcon Kind="Check" 
+                                     Height="60" 
+                                     Width="60" 
+                                     Foreground="Green"
+                                     HorizontalAlignment="Center"
+                                     Visibility="{Binding VerbPrepositionDictationCorrectAnswerIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
+
+                <!--Иконка неправильного ответа сложного диктанта-->
+                <materialDesign:PackIcon Kind="Close" 
+                                     Height="60" 
+                                     Width="60" 
+                                     Foreground="Red"
+                                     HorizontalAlignment="Center"
+                                     Visibility="{Binding VerbPrepositionDictationWrongAnswerIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
+            </StackPanel>
+
+            <!--Система отображения для диктанта неправильных глаголов-->
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 40 0 0" Visibility="{Binding IsIrregularVerbDictationSectionVisible, Converter={converters:ReverseCollapseConverter}}">
+                <TextBlock
+                       FontSize="90"
+                       Text="{Binding MainIrregularVerbDictationDisplayValue}"
+                       Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Margin="0 0 0 10"/>
+
+                <TextBlock
+                       FontSize="50"
+                       Text="{Binding CommentIrregularVerbDictationDisplayValue}"
+                       Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                    Foreground="Gray"/>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--Серая галочка над первой формой-->
+                    <materialDesign:PackIcon Kind="Check" 
+                                             Height="40" 
+                                             Width="40" 
+                                             Foreground="Gray"
+                                             Grid.Row="0" Grid.Column="0"
+                                             HorizontalAlignment="Center"
+                                             Visibility="{Binding IrregularVerbDictationFirstFormGrayIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
+
+                    <!--Иконка правильного на первую форму-->
+                    <materialDesign:PackIcon Kind="Check" 
+                                             Height="40" 
+                                             Width="40" 
+                                             Foreground="Green"
+                                             Grid.Row="0" Grid.Column="0"
+                                             HorizontalAlignment="Center"
+                                             Visibility="{Binding IrregularVerbDictationFirstFormCorrectAnswerIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
+
+                    <!--Иконка неправильного ответа на первую форму-->
+                    <materialDesign:PackIcon Kind="Close" 
+                                             Height="40" 
+                                             Width="40" 
+                                             Foreground="Red"
+                                             Grid.Row="0" Grid.Column="0"
+                                             HorizontalAlignment="Center"
+                                             Visibility="{Binding IrregularVerbDictationFirstFormWrongAnswerIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
+
+                    <!--Серая галочка над второй формой-->
+                    <materialDesign:PackIcon Kind="Check" 
+                                             Height="40" 
+                                             Width="40" 
+                                             Foreground="Gray"
+                                             Grid.Row="0" Grid.Column="1"
+                                             HorizontalAlignment="Center"
+                                             Visibility="{Binding IrregularVerbDictationSecondFormGrayIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
+
+                    <!--Иконка правильного на вторую форму-->
+                    <materialDesign:PackIcon Kind="Check" 
+                                             Height="40" 
+                                             Width="40" 
+                                             Foreground="Green"
+                                             Grid.Row="0" Grid.Column="1"
+                                             HorizontalAlignment="Center"
+                                             Visibility="{Binding IrregularVerbDictationSecondFormCorrectAnswerIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
+
+                    <!--Иконка неправильного ответа на вторую форму-->
+                    <materialDesign:PackIcon Kind="Close" 
+                                             Height="40" 
+                                             Width="40" 
+                                             Foreground="Red"
+                                             Grid.Row="0" Grid.Column="1"
+                                             HorizontalAlignment="Center"
+                                             Visibility="{Binding IrregularVerbDictationSecondFormWrongAnswerIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
+
+                    <!--Серая галочка над третей формой-->
+                    <materialDesign:PackIcon Kind="Check" 
+                                             Height="40" 
+                                             Width="40" 
+                                             Foreground="Gray"
+                                             Grid.Row="0" Grid.Column="2"
+                                             HorizontalAlignment="Center"
+                                             Visibility="{Binding IrregularVerbDictationThirdFormGrayIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
+
+                    <!--Иконка правильного на третью форму-->
+                    <materialDesign:PackIcon Kind="Check" 
+                                             Height="40" 
+                                             Width="40" 
+                                             Foreground="Green"
+                                             Grid.Row="0" Grid.Column="2"
+                                             HorizontalAlignment="Center"
+                                             Visibility="{Binding IrregularVerbDictationThirdFormCorrectAnswerIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
+
+                    <!--Иконка неправильного ответа на третью форму-->
+                    <materialDesign:PackIcon Kind="Close" 
+                                             Height="40" 
+                                             Width="40" 
+                                             Foreground="Red"
+                                             Grid.Row="0" Grid.Column="2"
+                                             HorizontalAlignment="Center"
+                                             Visibility="{Binding IrregularVerbDictationThirdFormWrongAnswerIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
+
+                    <TextBlock FontSize="30" Margin="10 0" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignHeadline1TextBlock}" Grid.Column="0" Grid.Row="1" Text="{Binding IrregularVerbDictationFirstFormFixedAnswerValue}"/>
+                    <TextBlock FontSize="30" Margin="10 0" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignHeadline1TextBlock}" Grid.Column="1" Grid.Row="1" Text="{Binding IrregularVerbDictationSecondFormFixedAnswerValue}"/>
+                    <TextBlock FontSize="30" Margin="10 0" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignHeadline1TextBlock}" Grid.Column="2" Grid.Row="1" Text="{Binding IrregularVerbDictationThirdFormFixedAnswerValue}"/>
+                </Grid>
+
+            </StackPanel>
+
             <StackPanel Orientation="Horizontal" 
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Margin="0 0 0 50"
-                        Grid.Row="2">
+                        Grid.Row="1">
 
                 <!--Текстбокс, в который нужно записывать перевод слова для проверки-->
                 <TextBox Grid.Row="2" 
@@ -62,13 +242,12 @@
                          materialDesign:HintAssist.Hint="Перевод"                
                          FontSize="16"/>
 
-                <!--Кнопка "проверить"-->
+                <!--Кнопка "проверить слово"-->
                 <Button Grid.Row="1" 
                         Style="{DynamicResource MaterialDesignFloatingActionMiniButton}"
                         Command="{Binding CheckAnswerCommand}"
                         ToolTip="Проверить слово"
                         Visibility="{Binding CheckAnswerButtonIsVisible, Converter={converters:ReverseCollapseConverter}}">
-
                     <materialDesign:PackIcon Kind="Eye"
                                              Height="25"
                                              Width="25"/>
@@ -80,7 +259,6 @@
                         Command="{Binding TryGoNextCommand}"
                         ToolTip="Проверить слово и двигаться дальше"
                         Visibility="{Binding NextButtonIsVisible, Converter={converters:ReverseCollapseConverter}}">
-
                     <materialDesign:PackIcon Kind="ArrowRightBold"
                                              Height="25"
                                              Width="25"/>
@@ -88,33 +266,8 @@
 
             </StackPanel>
 
-            <!--Иконка правильного ответа-->
-            <materialDesign:PackIcon Kind="Check" 
-                                     Height="60" 
-                                     Width="60" 
-                                     Foreground="Green"
-                                     Grid.Row="1"
-                                     HorizontalAlignment="Center"
-                                     Visibility="{Binding CorrectAnswerIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
-
-            <!--Иконка неправильного ответа-->
-            <materialDesign:PackIcon Kind="Close" 
-                                     Height="60" 
-                                     Width="60" 
-                                     Foreground="Red"
-                                     Grid.Row="1"
-                                     HorizontalAlignment="Center"
-                                     Visibility="{Binding WrongAnswerIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
-
-            <!--Прогресс текущего диктанта-->
-            <ProgressBar Grid.Row="1" 
-                         VerticalAlignment="Bottom" 
-                         Height="7"
-                         Value="{Binding DictationProgressBarCurrentValue}"
-                         Maximum="{Binding DictationProgressBarMaxValue}"/>
-
             <!--Кнопка "начать диктант"-->
-            <Button Grid.Row="2"
+            <Button Grid.Row="1"
                     Height="40" 
                     Width="130" 
                     Margin="0 70 0 0"
@@ -125,8 +278,11 @@
                     Visibility="{Binding StartButtonIsVisible, Converter={converters:ForwardVisibilityConverter}}"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
 
+                <!--Диалоговое окно начала диктанта-->
                 <Button.CommandParameter>
                     <StackPanel Margin="10">
+
+                        <!--Слайдер для указания кол-ва слов из словаря для диктанта-->
                         <Slider Grid.Row="1"
                                 Minimum="{Binding DictationLengthSliderMinValue}" 
                                 Maximum="{Binding DictationLengthSliderMaxValue}" 
@@ -137,6 +293,8 @@
                                 Value="{Binding DictationLengthSliderCurrentValue, Mode=TwoWay}"
                                 Width="360"
                                 Margin="5 0"/>
+
+                        <!--Комбобокс для выбора словаря-->
                         <ComboBox Grid.Row="0" 
                                   materialDesign:HintAssist.Hint="Словарь" 
                                   materialDesign:HintAssist.IsFloating="True"
@@ -144,8 +302,9 @@
                                   Margin="10"
                                   ItemsSource="{Binding DictionaryComboBoxItems}"
                                   SelectedItem="{Binding SelectedDictionaryComboBoxItem}">
-
                         </ComboBox>
+
+                        <!--Контейнер для кнопок отмены и подтверждения старта диктанта-->
                         <StackPanel Orientation="Horizontal"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Center">
@@ -155,11 +314,13 @@
                                     Content="Отмена"
                                     Margin="6">
 
+                                <!--Действие кнопки при её нажатии-->
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
+
                             </Button>
 
                             <!--Кнопка подтверждения старта диктанта-->
@@ -168,13 +329,16 @@
                                     Content="Начать"
                                     Margin="10">
 
+                                <!--Действие кнопки при её нажатии-->
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding StartDictationCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
+
                             </Button>
+
                         </StackPanel>
                     </StackPanel>
                 </Button.CommandParameter>
@@ -205,6 +369,7 @@
                     </StackPanel>
                 </Button.CommandParameter>
 
+                <!--Действие кнопки при её нажатии-->
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <i:InvokeCommandAction Command="{Binding StopDictationCommand}"/>
@@ -212,6 +377,14 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
+
+            <!--Прогресс текущего диктанта-->
+            <ProgressBar Grid.Row="1" 
+                         VerticalAlignment="Bottom" 
+                         Height="7"
+                         Value="{Binding DictationProgressBarCurrentValue}"
+                         Maximum="{Binding DictationProgressBarMaxValue}"/>
+
         </Grid>
     </materialDesign:DialogHost>
 </Page>

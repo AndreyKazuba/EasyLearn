@@ -9,7 +9,7 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="300">
-    <materialDesign:Card Margin="6" materialDesign:ShadowAssist.ShadowDepth="Depth1" Height="{Binding CardHeight}" VerticalAlignment="Top">
+    <materialDesign:Card UniformCornerRadius="16" Margin="6" materialDesign:ShadowAssist.ShadowDepth="Depth1" Height="{Binding CardHeight}" VerticalAlignment="Top">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MinWidth="100" Width="Auto"/>

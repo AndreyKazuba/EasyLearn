@@ -6,14 +6,28 @@ namespace EasyLearn.UI.CustomControls
 {
     public partial class VerbPrepositionDictionaryView : UserControl
     {
-        public VerbPrepositionDictionaryVM ViewModel { get; }
+        #region Private fields
+        private VerbPrepositionDictionaryVM viewModel;
+        #endregion
+
+        #region Public props
+        public int Id => viewModel.Id;
+        public bool IsCardFlipped
+        {
+            get => viewModel.IsCardFlipped;
+            set => viewModel.IsCardFlipped = value;
+        }
+        #endregion
+
         public VerbPrepositionDictionaryView(VerbPrepositionDictionaryVM viewModel)
         {
-            this.ViewModel = viewModel;
+            this.viewModel = viewModel;
             this.DataContext = viewModel;
             InitializeComponent();
         }
 
+        #region Static members
         public static VerbPrepositionDictionaryView Create(VerbPrepositionDictionnary verbPrepositionDictionary) => new VerbPrepositionDictionaryView(new VerbPrepositionDictionaryVM(verbPrepositionDictionary));
+        #endregion
     }
 }

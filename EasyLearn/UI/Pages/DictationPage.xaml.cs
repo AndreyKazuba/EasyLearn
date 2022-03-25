@@ -7,13 +7,10 @@ namespace EasyLearn.UI.Pages
 {
     public partial class DictationPage : Page
     {
-        private DictationPageVM viewModel;
-
         public static event Action? EnterClick;
         public DictationPage(DictationPageVM viewModel)
         {
             this.DataContext = viewModel;
-            this.viewModel = viewModel;
             InitializeComponent();
         }
 
