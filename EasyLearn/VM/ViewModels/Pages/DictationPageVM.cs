@@ -12,6 +12,8 @@ using EasyLearn.Data.Helpers;
 using EasyLearn.UI.Pages;
 using EasyLearn.Infrastructure.Constants;
 using EasyLearn.Infrastructure.Enums;
+using System.Windows.Media;
+using EasyLearn.Data;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -63,8 +65,10 @@ namespace EasyLearn.VM.ViewModels.Pages
                         return loadedCommonDictionary.Relations.Count;
                     case DictionaryType.VerbPrepositionDictionary:
                         return loadedVerbPrepositionDictionary.VerbPrepositions.Count;
+                    case DictionaryType.IrregularVerbDictionary:
+                        return ModelConstants.IrregularVerbsCount;
                     default:
-                        return 120;
+                        throw new Exception("Нет такого типа");
                 }
             }
         }
@@ -83,6 +87,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 SetCurrentDictationSection();
             }
         }
+        public Brush CommonDictationUnitTypeForegraundColor { get; set; } 
         public int DictationLengthSliderMaxValue { get; set; }
         public int DictationLengthSliderMinValue { get; set; }
         public int DictationLengthSliderCurrentValue { get; set; }
@@ -94,6 +99,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public string MainVerbPrepositionDictationDisplayValue { get; set; }
         public string UnitTypeVerbPrepositionDictationDisplayValue { get; set; }
         public string CommentVerbPrepositionDictationDisplayValue { get; set; }
+        public string TranslationVerbPrepositionDictationDisplayValue { get; set; }
         public string MainIrregularVerbDictationDisplayValue { get; set; }
         public string CommentIrregularVerbDictationDisplayValue { get; set; }
         public string IrregularVerbDictationFirstFormFixedAnswerValue { get; set; }
@@ -102,6 +108,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public string AnswerValue { get; set; }
         public bool CommonDictationCorrectAnswerIconIsVisible { get; set; }
         public bool CommonDictationWrongAnswerIconIsVisible { get; set; }
+        public bool CommonDictationTypeChipIsVisible { get; set; }
         public bool VerbPrepositionDictationCorrectAnswerIconIsVisible { get; set; }
         public bool VerbPrepositionDictationWrongAnswerIconIsVisible { get; set; }
         public bool CheckAnswerButtonIsVisible { get; set; }
@@ -217,13 +224,15 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             SetDefaultPageState();
             this.isDictationStarted = true;
+            this.CommonDictationTypeChipIsVisible = true;
             int countOfRelations = this.DictationLengthSliderCurrentValue;
             List<CommonRelation> commonRelations = ShuffleCommonRelation(this.loadedCommonDictionary.Relations).Take(countOfRelations).ToList();
             this.commonDictationManager = new CommonDictationManager(commonRelations);
             CommonRelation firstCommonRelation = commonDictationManager.Start();
             this.MainCommonDictationDisplayValue = firstCommonRelation.RussianUnit.Value.NormalizeRegister();
             this.CommentCommonDictationDisplayValue = firstCommonRelation.Comment.TryNormalizeRegister();
-            this.UnitTypeCommonDictationDisplayValue = firstCommonRelation.RussianUnit.Type.ToString().NormalizeRegister();
+            this.UnitTypeCommonDictationDisplayValue = firstCommonRelation.RussianUnit.Type.GetRussianValue();
+            this.CommonDictationUnitTypeForegraundColor = firstCommonRelation.RussianUnit.Type.GetColor();
             SwitchStartAndStopButtons();
             FocusAnswerTextBox();
             SetDictationProgressBar();
@@ -253,7 +262,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             {
                 this.MainCommonDictationDisplayValue = commonDictationManager.CurrentCommonRelation.RussianUnit.Value.NormalizeRegister();
                 this.CommentCommonDictationDisplayValue = commonDictationManager.CurrentCommonRelation.Comment.TryNormalizeRegister();
-                this.UnitTypeCommonDictationDisplayValue = commonDictationManager.CurrentCommonRelation.RussianUnit.Type.ToString().NormalizeRegister();
+                this.UnitTypeCommonDictationDisplayValue = commonDictationManager.CurrentCommonRelation.RussianUnit.Type.GetRussianValue();
+                this.CommonDictationUnitTypeForegraundColor = commonDictationManager.CurrentCommonRelation.RussianUnit.Type.GetColor();
                 SetDefaultAnswerValue();
                 HideCommonDictationCorrectAndWrongAnswerIcons();
                 SwitchCheckAnswerAndNextButtons();
@@ -273,6 +283,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             VerbPreposition firstVerbPreposition = verbPrepositionDictationManager.Start();
             this.MainVerbPrepositionDictationDisplayValue = firstVerbPreposition.Verb.Value.NormalizeRegister();
             this.CommentVerbPrepositionDictationDisplayValue = firstVerbPreposition.Comment.TryNormalizeRegister();
+            this.TranslationVerbPrepositionDictationDisplayValue = firstVerbPreposition.Translation.NormalizeRegister();
             this.UnitTypeVerbPrepositionDictationDisplayValue = firstVerbPreposition.Verb.Type.ToString().NormalizeRegister();
             SwitchStartAndStopButtons();
             FocusAnswerTextBox();
@@ -303,6 +314,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             {
                 this.MainCommonDictationDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Verb.Value.NormalizeRegister();
                 this.CommentCommonDictationDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Comment.TryNormalizeRegister();
+                this.TranslationVerbPrepositionDictationDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Translation.NormalizeRegister();
                 this.UnitTypeCommonDictationDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Verb.Type.ToString().NormalizeRegister();
                 SetDefaultAnswerValue();
                 HideVerbPrepositionDictationCorrectAndWrongAnswerIcons();
@@ -461,9 +473,11 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             this.isDictationStarted = false;
             this.currentIrregularVerbForm = IrregularVerbForm.FirstForm;
+            this.CommonDictationTypeChipIsVisible = false;
             SetDefaultMainDisplayValue();
             SetDefaultCommentDisplayValue();
             SetDefaultAnswerValue();
+            SetDefaultVerbPrepositionTranslationDisplayValue();
             ShowStartButton();
             ShowCheckAnswerButton();
             ResetDictationProgressBarCurrentValue();
@@ -611,6 +625,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.IrregularVerbDictationSecondFormFixedAnswerValue = "????";
             this.IrregularVerbDictationThirdFormFixedAnswerValue = "????";
         }
+        private void SetDefaultVerbPrepositionTranslationDisplayValue() => this.TranslationVerbPrepositionDictationDisplayValue = String.Empty;
         private void ShowFirstFormCorrectAnswerIcon()
         {
             this.IrregularVerbDictationFirstFormGrayIconIsVisible = false;

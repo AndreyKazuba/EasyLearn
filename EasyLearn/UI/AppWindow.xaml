@@ -9,6 +9,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
+        KeyDown="OnWindowKeyDown"
         Title="EasyLearn" Height="600" Width="950"
         WindowState="Maximized">
     <Grid>

@@ -43,16 +43,16 @@ namespace EasyLearn.Data.Repositories.Implementations
         public async Task<CommonDictionary> CreateCommonDictionary(string name, string description, int userId)
         {
             ThrowIfAddingAttemptIncorrect(name, description, userId);
-            CommonDictionary newList = new CommonDictionary
+            CommonDictionary newCommonDictionary = new CommonDictionary
             {
                 Name = StringHelper.Prepare(name),
                 Description = StringHelper.Prepare(description),
                 UserId = userId,
                 CreationDateUtc = DateTime.UtcNow,
             };
-            context.CommonDictionaries.Add(newList);
+            context.CommonDictionaries.Add(newCommonDictionary);
             await context.SaveChangesAsync();
-            return newList;
+            return newCommonDictionary;
         }
         public async Task DeleteCommonDictionary(int dictionaryId)
         {

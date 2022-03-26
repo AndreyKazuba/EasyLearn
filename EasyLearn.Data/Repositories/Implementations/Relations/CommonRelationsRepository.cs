@@ -31,6 +31,14 @@ namespace EasyLearn.Data.Repositories.Implementations
 
         #region Public members
         public bool IsCommonRelationExist(int russianUnitId, int englishUnitId, int dictionaryId) => context.CommonRelations.Any(relation => relation.RussianUnitId == russianUnitId && relation.EnglishUnitId == englishUnitId && relation.CommonDictionaryId == dictionaryId);
+        public bool IsCommonRelationExist(string russianUnitValue, UnitType russianUnitType, string eglishUnitValue, UnitType englishUnitType, int dictionaryId)
+        {
+            EnglishUnit? englishUnit = englishUnitRepository.TryGetUnit(eglishUnitValue, englishUnitType);
+            RussianUnit? russianUnit = russianUnitRepository.TryGetUnit(russianUnitValue, russianUnitType);
+            if (englishUnit is null || russianUnit is null)
+                return false;
+            return IsCommonRelationExist(russianUnit.Id, englishUnit.Id, dictionaryId);
+        }
         public async Task<CommonRelation> CreateCommonRelation(string russianUnitValue, UnitType russianUnitType, string englishUnitValue, UnitType englishUnitType, int dictionaryId, string? comment)
         {
             EnglishUnit englishUnit = await englishUnitRepository.GetOrCreateUnit(englishUnitValue, englishUnitType);

@@ -18,5 +18,7 @@
 
         public const int VerbPrepositiontranslationMaxLength = 50;
         public const int VerbPrepositiontranslationMinLength = 2;
+
+        public const int IrregularVerbsCount = 120;
     }
 }

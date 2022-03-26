@@ -5,10 +5,13 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:valudationRules="clr-namespace:EasyLearn.Infrastructure.ValidationRules"
       mc:Ignorable="d" 
+      xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
+      KeyDown="OnPageKeyDown"
       d:DesignHeight="450" d:DesignWidth="800" Background="GhostWhite">
     <materialDesign:DialogHost>
-        <Grid>
+        <Grid >
 
             <Grid.RowDefinitions>
                 <!--Место для панели с "инструментами"-->
@@ -38,8 +41,15 @@
                         Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
                         Foreground="ForestGreen"
                         Content="Добавить"
+                        Name="openNewCommonRelationAddingWindowButton"
                         DockPanel.Dock="Left"
                         Margin="5 0">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
 
                     <!--Диалоговое окно добавления нового CommonRelation-->
                     <Button.CommandParameter>
@@ -50,31 +60,60 @@
                                 <RowDefinition/>
                                 <RowDefinition/>
                                 <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <!--Текстбокс для введения английского значения в новом CommonRelation-->
+                            <!--Текстбокс для введения русского значения в новом CommonRelation-->
                             <TextBox Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                      Width="200" 
                                      Grid.Column="0"
                                      Grid.Row="0"
+                                     InputLanguageManager.InputLanguage="ru-RU"
                                      Margin="10"
-                                     materialDesign:HintAssist.Hint="Русский перевод"
-                                     Text="{Binding AddingWindowRussianValue, UpdateSourceTrigger=PropertyChanged}">
+                                     KeyDown="OnRussianValueTextBoxKeyDown"
+                                     Name="newCommonRelationRussianValueTextBox"
+                                     materialDesign:HintAssist.Hint="Русский перевод">
+
+                                <TextBox.Text>
+                                    <Binding Path="AddingWindowRussianValue" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <valudationRules:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                            <valudationRules:MinAndMaxValidationRule Min="2" Max="15" ValidatesOnTargetUpdated="True"/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TextChanged">
+                                        <i:InvokeCommandAction Command="{Binding CheckCommonRelationForExistingCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UpdateConfirmCommonRelationAddingButtonAvailabilityCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
                             </TextBox>
 
                             <!--Комбобокс для выбора типа RussianUnit в новом CommonRelation-->
                             <ComboBox materialDesign:HintAssist.Hint="Тип русского перевода" 
                                       materialDesign:HintAssist.IsFloating="True"
                                       MaxDropDownHeight="200"
-                                      Margin="10"
+                                      Margin="10 20 10 0"
                                       Grid.Row="1"
                                       Grid.Column="0"
+                                      KeyDown="OnRussianUnitTypeComboBoxKeyDown"
+                                      Name="newCommonRelationRussianUnitTypeComboBox"
                                       ItemsSource="{Binding AddingWindowRussianUnitTypes}"
                                       SelectedItem="{Binding AddingWindowSelectedRussianUnitType, Mode=TwoWay}">
+                                
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding CheckCommonRelationForExistingCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                
                             </ComboBox>
 
                             <!--Текстбокс для введения английского значения в новом CommonRelation-->
@@ -83,19 +122,47 @@
                                      Grid.Row="0"
                                      Grid.Column="1"
                                      Margin="10"
-                                     materialDesign:HintAssist.Hint="Английский перевод"
-                                     Text="{Binding AddingWindowEnglishValue, UpdateSourceTrigger=PropertyChanged}">
+                                     InputLanguageManager.InputLanguage="en-US"
+                                     KeyDown="OnEnglishValueTextBoxKeyDown"
+                                     Name="newCommonRelationEnglishValueTextBox"
+                                     materialDesign:HintAssist.Hint="Английский перевод">
+
+                                <TextBox.Text>
+                                    <Binding Path="AddingWindowEnglishValue" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <valudationRules:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                            <valudationRules:MinAndMaxValidationRule Min="2" Max="15" ValidatesOnTargetUpdated="True"/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TextChanged">
+                                        <i:InvokeCommandAction Command="{Binding CheckCommonRelationForExistingCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UpdateConfirmCommonRelationAddingButtonAvailabilityCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
                             </TextBox>
 
                             <!--Комбобокс для выбора типа EnglishUnit в новом CommonRelation-->
                             <ComboBox materialDesign:HintAssist.Hint="Тип английского перевода" 
                                       materialDesign:HintAssist.IsFloating="True"
                                       MaxDropDownHeight="200"
-                                      Margin="10"
+                                      Margin="10 20 10 0"
                                       Grid.Row="1"
                                       Grid.Column="1"
+                                      KeyDown="OnEnglishUnitTypeComboBoxKeyDown"
+                                      Name="newCommonRelationEnglishUnitTypeComboBox"
                                       ItemsSource="{Binding AddingWidnowEnglishUnitTypes}"
                                       SelectedItem="{Binding AddingWindowSelectedEnglishUnitType, Mode=TwoWay}">
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding CheckCommonRelationForExistingCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
                             </ComboBox>
 
                             <!--Текстбокс для введения комментария к новому CommonRelation-->
@@ -104,10 +171,28 @@
                                      Grid.Row="2"
                                      Grid.Column="0"
                                      Grid.ColumnSpan="2"
+                                     InputLanguageManager.InputLanguage="ru-RU"
+                                     Name="newCommonRelationCommentValueTextBox"
                                      Margin="10"
-                                     materialDesign:HintAssist.Hint="Комментарий"
-                                     Text="{Binding AddingWindowCommentValue, UpdateSourceTrigger=PropertyChanged}">
+                                     KeyDown="OnCommentValueTextBoxKeyDown"
+                                     materialDesign:HintAssist.Hint="Комментарий">
+                                
+                                <TextBox.Text>
+                                    <Binding Path="AddingWindowCommentValue" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <valudationRules:MinAndMaxValidationRule Max="26" ValidatesOnTargetUpdated="True"/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TextChanged">
+                                        <i:InvokeCommandAction Command="{Binding UpdateConfirmCommonRelationAddingButtonAvailabilityCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
                             </TextBox>
+
 
                             <!--Кнопки отмены и подтверждения добавления нового CommonRelation-->
                             <Grid Margin="0 10 0 0"
@@ -125,7 +210,9 @@
                                 <!--Кнопка отмены добавления нового CommonRelation-->
                                 <Button Style="{DynamicResource MaterialDesignFlatButton}" 
                                         Content="Отмена"
-                                        Margin="6">
+                                        Margin="6"
+                                        Foreground="Red"
+                                        Name="newCommonRelationAddingWindowCancelButton">
 
                                     <!--Действия кнопки при её нажатии-->
                                     <i:Interaction.Triggers>
@@ -143,20 +230,29 @@
                                         Content="Добавить"
                                         Margin="10"
                                         Grid.Column="1"
-                                        IsEnabled="{Binding ConfirmNewUserButtonIsEnabled}">
+                                        Foreground="ForestGreen"
+                                        Name="newCommonRelationAddingButton"
+                                        IsEnabled="{Binding IsConfirmCommonRelationAddingButtonEnabled}">
 
                                     <!--Действия кнопки при её нажатии-->
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Click">
                                             <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                             <i:InvokeCommandAction Command="{Binding CreateCommonRelationCommand}"/>
-                                            <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
 
                                 </Button>
 
                             </Grid>
+
+                            <TextBlock Grid.Row="4" Grid.ColumnSpan="2" 
+                                       VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                       Foreground="Brown" 
+                                       Text="Такая запись уже есть в словаре" 
+                                       Style="{DynamicResource MaterialDesignHeadline6TextBlock}"
+                                       Visibility="{Binding CommonRelationHasExistLableIsVisible, Converter={converters:ReverseCollapseConverter}}"/>
+
 
                         </Grid>
 
@@ -196,7 +292,7 @@
             </DockPanel>
 
             <!--Контейнер для содержания всех CommonRelations-->
-            <ScrollViewer Grid.Row="1">
+            <ScrollViewer Grid.Row="1" >
                 <ItemsControl ItemsSource="{Binding CommonRelationViews}" 
                   VerticalContentAlignment="Top"
                   HorizontalContentAlignment="Left">

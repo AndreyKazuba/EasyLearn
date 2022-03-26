@@ -12,6 +12,11 @@ using EasyLearn.UI.CustomControls;
 using EasyLearn.VM.ViewModels.ExpandedElements;
 using EasyLearn.Infrastructure.Constants;
 using EasyLearn.Data.Helpers;
+using EasyLearn.UI.Pages;
+using EasyLearn.Infrastructure.Helpers;
+using EasyLearn.UI;
+using EasyLearn.Infrastructure.Enums;
+using EasyLearn.Infrastructure.ValidationRules;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -24,6 +29,7 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         #region Private fields
         private int dictionaryId;
+        private Guid relationAlreadyExistValidationRuleId;
         #endregion
 
 #pragma warning disable CS8618
@@ -33,6 +39,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.commonRelationRepository = commonRelationRepository;
             SetAddingWindowRussianUnitTypes();
             SetAddingWidnowEnglishUnitTypes();
+            RegisterRelationExistValidationRule();
         }
 #pragma warning restore CS8618
 
@@ -43,10 +50,47 @@ namespace EasyLearn.VM.ViewModels.Pages
         public string AddingWindowEnglishValue { get; set; }
         public string AddingWindowRussianValue { get; set; }
         public string AddingWindowCommentValue { get; set; }
+        public bool IsConfirmCommonRelationAddingButtonEnabled { get; set; }
+        public bool CommonRelationHasExistLableIsVisible { get; set; }
         public ObservableCollection<UnitTypeComboBoxItem> AddingWindowRussianUnitTypes { get; set; }
         public ObservableCollection<UnitTypeComboBoxItem> AddingWidnowEnglishUnitTypes { get; set; }
         public UnitTypeComboBoxItem AddingWindowSelectedRussianUnitType { get; set; }
         public UnitTypeComboBoxItem AddingWindowSelectedEnglishUnitType { get; set; }
+        #endregion
+
+        #region Events
+        protected override void InitEvents()
+        {
+            EditCommonDictionaryPage.RussianValueTextBoxEnterDown += OnRussianValueTextBoxEnterDown;
+            EditCommonDictionaryPage.EnglishValueTextBoxEnterDown += OnEnglishValueTextBoxEnterDown;
+            EditCommonDictionaryPage.RussianUnitTypeComboBoxEnterDown += OnRussianUnitTypeComboBoxEnterDown;
+            EditCommonDictionaryPage.EnglishUnitTypeComboBoxEnterDown += OnEnglishUnitTypeComboBoxEnterDown;
+            EditCommonDictionaryPage.CommentValueTextBoxEnterDown += OnCommentValueTextBoxEnterDown;
+            AppWindow.WindowCtrlNDown += OnWindowCtrlNDown;
+            AppWindow.WindowEscDown += OnWindowEscDown;
+        }
+        private void OnRussianValueTextBoxEnterDown() => FocusEnglishValueTextBox();
+        private void OnEnglishValueTextBoxEnterDown() => FocusRussianUnitTypeComboBox();
+        private void OnRussianUnitTypeComboBoxEnterDown() => FocusEnglishUnitTypeComboBox();
+        private void OnEnglishUnitTypeComboBoxEnterDown() => FocusCommentValueTextBox();
+        private void OnCommentValueTextBoxEnterDown()
+        {
+            if (!ValidationsPool.IsAddingCommonRelationWindowInvalid)
+                AddingNewCommonRelationButtonSoftClick();
+        }
+        private void OnWindowCtrlNDown()
+        {
+            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditCommonWordListPage)
+            {
+                FocusRussianValueTextBox();
+                OpenNewCommonRelationAddingWindowButtonSoftClick();
+            }
+        }
+        private void OnWindowEscDown()
+        {
+            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditCommonWordListPage)
+                NewCommonRelationAddingWindowCancelButtonSortClick();
+        }
         #endregion
 
         #region Commands
@@ -56,6 +100,8 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command DeleteAllCommonRelationsCommand { get; private set; }
         public Command ClearAddingWindowCommand { get; private set; }
         public Command<int> SetDictionaryAsCurrentCommand { get; private set; }
+        public Command UpdateConfirmCommonRelationAddingButtonAvailabilityCommand { get; private set; }
+        public Command CheckCommonRelationForExistingCommand { get; private set; }
         protected override void InitCommands()
         {
             this.GoBackCommand = new Command(GoBack);
@@ -64,6 +110,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.DeleteAllCommonRelationsCommand = new Command(async () => await DeleteAllCommonRelations());
             this.ClearAddingWindowCommand = new Command(ClearAddingWindow);
             this.SetDictionaryAsCurrentCommand = new Command<int>(async commonDictionaryId => await SetDictionaryAsCurrent(commonDictionaryId));
+            this.UpdateConfirmCommonRelationAddingButtonAvailabilityCommand = new Command(UpdateConfirmCommonRelationAddingButtonAvailability);
+            this.CheckCommonRelationForExistingCommand = new Command(CheckCommonRelationForExisting);
         }
         #endregion
 
@@ -108,6 +156,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             IEnumerable<CommonRelationView> commonRelationViews = commonDictionary.Relations.Select(commonRelation => CommonRelationView.Create(commonRelation));
             this.CommonRelationViews = new ObservableCollection<CommonRelationView>(commonRelationViews);
         }
+        private void UpdateConfirmCommonRelationAddingButtonAvailability() => IsConfirmCommonRelationAddingButtonEnabled = !ValidationsPool.IsAddingCommonRelationWindowInvalid;
         #endregion
 
         #region Other private members
@@ -154,6 +203,37 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.AddingWidnowEnglishUnitTypes = englishUnitTypes;
             this.AddingWindowSelectedEnglishUnitType = selectedEnglishUnitType;
         }
+        private void RegisterRelationExistValidationRule()
+        {
+            this.relationAlreadyExistValidationRuleId = ValidationsPool.RegisterCommonRelationAddingWindowValidationRule(false);
+        }
+        private void CheckCommonRelationForExisting()
+        {
+            string englishValue = this.AddingWindowEnglishValue;
+            string russianValue = this.AddingWindowRussianValue;
+            UnitType englishUnitType = this.AddingWindowSelectedEnglishUnitType.UnitType;
+            UnitType russianUnitType = this.AddingWindowSelectedRussianUnitType.UnitType;
+            bool relationExist = commonRelationRepository.IsCommonRelationExist(russianValue, russianUnitType, englishValue, englishUnitType, this.dictionaryId);
+            if (relationExist)
+            {
+                ValidationsPool.SetCommonRelationAddingWindowValidationRule(this.relationAlreadyExistValidationRuleId, false);
+                this.CommonRelationHasExistLableIsVisible = true;
+            }
+            else
+            {
+                ValidationsPool.SetCommonRelationAddingWindowValidationRule(this.relationAlreadyExistValidationRuleId, true);
+                this.CommonRelationHasExistLableIsVisible = false;
+            }
+        }
         #endregion
+
+        private void FocusRussianValueTextBox() => App.GetService<EditCommonDictionaryPage>().newCommonRelationRussianValueTextBox.Focus();
+        private void FocusEnglishValueTextBox() => App.GetService<EditCommonDictionaryPage>().newCommonRelationEnglishValueTextBox.Focus();
+        private void FocusRussianUnitTypeComboBox() => App.GetService<EditCommonDictionaryPage>().newCommonRelationRussianUnitTypeComboBox.Focus();
+        private void FocusEnglishUnitTypeComboBox() => App.GetService<EditCommonDictionaryPage>().newCommonRelationEnglishUnitTypeComboBox.Focus();
+        private void FocusCommentValueTextBox() => App.GetService<EditCommonDictionaryPage>().newCommonRelationCommentValueTextBox.Focus();
+        private void AddingNewCommonRelationButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().newCommonRelationAddingButton.SoftClick();
+        private void OpenNewCommonRelationAddingWindowButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().openNewCommonRelationAddingWindowButton.SoftClick();
+        private void NewCommonRelationAddingWindowCancelButtonSortClick() => App.GetService<EditCommonDictionaryPage>().newCommonRelationAddingWindowCancelButton.SoftClick();
     }
 }
