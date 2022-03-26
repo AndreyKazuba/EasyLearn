@@ -14,6 +14,7 @@ using EasyLearn.Infrastructure.Constants;
 using EasyLearn.Infrastructure.Enums;
 using System.Windows.Media;
 using EasyLearn.Data;
+using EasyLearn.UI.CustomControls;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -32,7 +33,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private IrregularVerbForm currentIrregularVerbForm;
         private CommonDictionary loadedCommonDictionary;
         private VerbPrepositionDictionnary loadedVerbPrepositionDictionary;
-        private CommonDictationManager? commonDictationManager;
+        private CoommonDictationManager? coolDictationManager;
         private VerbPrepositionDictationManager? verbPrepositionDictationManager;
         private IrregularVerbDictationManager? irregularVerbDictationManager;
         private DictionaryComboBoxItem selectedDictionaryComboBoxItem;
@@ -87,7 +88,8 @@ namespace EasyLearn.VM.ViewModels.Pages
                 SetCurrentDictationSection();
             }
         }
-        public Brush CommonDictationUnitTypeForegraundColor { get; set; } 
+        public Brush CommonDictationUnitTypeForegraundColor { get; set; }
+        public ObservableCollection<AvailableRelationView> AvailableRelationViews { get; set; }
         public int DictationLengthSliderMaxValue { get; set; }
         public int DictationLengthSliderMinValue { get; set; }
         public int DictationLengthSliderCurrentValue { get; set; }
@@ -206,7 +208,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void StopDictation()
         {
             SetDefaultPageState();
-            this.commonDictationManager = null;
+            this.coolDictationManager = null;
             this.verbPrepositionDictationManager = null;
             this.irregularVerbDictationManager = null;
         }
@@ -226,9 +228,9 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.isDictationStarted = true;
             this.CommonDictationTypeChipIsVisible = true;
             int countOfRelations = this.DictationLengthSliderCurrentValue;
-            List<CommonRelation> commonRelations = ShuffleCommonRelation(this.loadedCommonDictionary.Relations).Take(countOfRelations).ToList();
-            this.commonDictationManager = new CommonDictationManager(commonRelations);
-            CommonRelation firstCommonRelation = commonDictationManager.Start();
+            List<CommonRelation> commonRelations = this.loadedCommonDictionary.Relations;
+            this.coolDictationManager = new CoommonDictationManager(commonRelations, countOfRelations);
+            CommonRelation firstCommonRelation = coolDictationManager.Start();
             this.MainCommonDictationDisplayValue = firstCommonRelation.RussianUnit.Value.NormalizeRegister();
             this.CommentCommonDictationDisplayValue = firstCommonRelation.Comment.TryNormalizeRegister();
             this.UnitTypeCommonDictationDisplayValue = firstCommonRelation.RussianUnit.Type.GetRussianValue();
@@ -239,15 +241,17 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void CheckAnswerForCommonDictionary()
         {
-            if (!isDictationStarted || this.commonDictationManager is null)
+            if (!isDictationStarted || this.coolDictationManager is null)
                 return;
-            bool answerIsCorrect = this.commonDictationManager.IsAnswerCorrect(this.AnswerValue);
+            bool answerIsCorrect = this.coolDictationManager.AvailableRelations.Any(relation => StringHelper.Equals(relation.EnglishUnit.Value, this.AnswerValue));
             if (answerIsCorrect)
             {
                 ShowCommonDictationCorrectAnswerIcon();
                 IncreaseDictationProgressBarCurrentValue();
                 SwitchCheckAnswerAndNextButtons();
                 SetDefaultAnswerValue();
+                if (this.coolDictationManager.CurrentRelationHasSynonyms)
+                    ShowAvailableRelations(this.coolDictationManager.AvailableRelations);
             }
             else
             {
@@ -256,15 +260,16 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void TryGoNextForCommonDictionary()
         {
-            if (!this.isDictationStarted || this.commonDictationManager is null)
+            if (!this.isDictationStarted || this.coolDictationManager is null)
                 return;
-            if (this.commonDictationManager.GoNext())
+            if (this.coolDictationManager.GoNext())
             {
-                this.MainCommonDictationDisplayValue = commonDictationManager.CurrentCommonRelation.RussianUnit.Value.NormalizeRegister();
-                this.CommentCommonDictationDisplayValue = commonDictationManager.CurrentCommonRelation.Comment.TryNormalizeRegister();
-                this.UnitTypeCommonDictationDisplayValue = commonDictationManager.CurrentCommonRelation.RussianUnit.Type.GetRussianValue();
-                this.CommonDictationUnitTypeForegraundColor = commonDictationManager.CurrentCommonRelation.RussianUnit.Type.GetColor();
+                this.MainCommonDictationDisplayValue = coolDictationManager.CurrentRelation.RussianUnit.Value.NormalizeRegister();
+                this.CommentCommonDictationDisplayValue = coolDictationManager.CurrentRelation.Comment.TryNormalizeRegister();
+                this.UnitTypeCommonDictationDisplayValue = coolDictationManager.CurrentRelation.RussianUnit.Type.GetRussianValue();
+                this.CommonDictationUnitTypeForegraundColor = coolDictationManager.CurrentRelation.RussianUnit.Type.GetColor();
                 SetDefaultAnswerValue();
+                ResetAvailableRelations();
                 HideCommonDictationCorrectAndWrongAnswerIcons();
                 SwitchCheckAnswerAndNextButtons();
             }
@@ -278,7 +283,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             SetDefaultPageState();
             this.isDictationStarted = true;
             int countOfVerbPrepositions = this.DictationLengthSliderCurrentValue;
-            List<VerbPreposition> verbPrepositions = ShuffleVerbPrepositions(this.loadedVerbPrepositionDictionary.VerbPrepositions).Take(countOfVerbPrepositions).ToList();
+            List<VerbPreposition> verbPrepositions = DictationManagerHelper.Shuffle(this.loadedVerbPrepositionDictionary.VerbPrepositions).Take(countOfVerbPrepositions).ToList();
             this.verbPrepositionDictationManager = new VerbPrepositionDictationManager(verbPrepositions);
             VerbPreposition firstVerbPreposition = verbPrepositionDictationManager.Start();
             this.MainVerbPrepositionDictationDisplayValue = firstVerbPreposition.Verb.Value.NormalizeRegister();
@@ -330,7 +335,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             SetDefaultPageState();
             this.isDictationStarted = true;
             int countOfIrregularVerbs = this.DictationLengthSliderCurrentValue;
-            List<IrregularVerb> irregularVerbs = ShuffleIrregularVerbs(this.irregularVerbRepository.GetAllIrregularVerbs()).Take(countOfIrregularVerbs).ToList();
+            List<IrregularVerb> irregularVerbs = DictationManagerHelper.Shuffle(this.irregularVerbRepository.GetAllIrregularVerbs()).Take(countOfIrregularVerbs).ToList();
             this.irregularVerbDictationManager = new IrregularVerbDictationManager(irregularVerbs);
             IrregularVerb firstIrregularVerb = irregularVerbDictationManager.Start();
             this.MainIrregularVerbDictationDisplayValue = firstIrregularVerb.RussianUnit.Value.NormalizeRegister();
@@ -681,24 +686,11 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.IrregularVerbDictationSecondFormWrongAnswerIconIsVisible = false;
             this.IrregularVerbDictationThirdFormWrongAnswerIconIsVisible = false;
         }
-        #endregion
-
-        #region Helpers
-        private IEnumerable<CommonRelation> ShuffleCommonRelation(IEnumerable<CommonRelation> relations)
+        private void ShowAvailableRelations(IEnumerable<CommonRelation> commonRelations)
         {
-            Random random = new Random();
-            return relations.OrderBy(relation => random.Next());
+            this.AvailableRelationViews = new ObservableCollection<AvailableRelationView>(commonRelations.Select(relation => AvailableRelationView.Create(relation)));
         }
-        private IEnumerable<VerbPreposition> ShuffleVerbPrepositions(IEnumerable<VerbPreposition> verbPrepositions)
-        {
-            Random random = new Random();
-            return verbPrepositions.OrderBy(verbPrepositions => random.Next());
-        }
-        private IEnumerable<IrregularVerb> ShuffleIrregularVerbs(IEnumerable<IrregularVerb> irregularVerbs)
-        {
-            Random random = new Random();
-            return irregularVerbs.OrderBy(irregularVerb => random.Next());
-        }
+        private void ResetAvailableRelations() => this.AvailableRelationViews.Clear();
         #endregion
     }
 }
