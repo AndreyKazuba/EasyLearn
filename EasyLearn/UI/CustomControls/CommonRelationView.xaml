@@ -18,7 +18,7 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="45"/>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="35"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -33,8 +33,8 @@
                     Margin="{Binding VerticalExpanderMargin}"
                     Grid.Column="1"/>
 
-            <materialDesign:Chip VerticalAlignment="Top" Height="25" HorizontalAlignment="Center" Grid.Row="1" Foreground="Black" Content="{Binding RussianUnitType}" Margin="20 0"/>
-            <materialDesign:Chip VerticalAlignment="Top" Height="25" HorizontalAlignment="Center" Grid.Row="1" Foreground="Black" Content="{Binding EnglishUnitType}" Margin="20 0" Grid.Column="2"/>
+            <materialDesign:Chip VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" Foreground="Black" Content="{Binding RussianUnitType}" Margin="20 0"/>
+            <materialDesign:Chip VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" Foreground="Black" Content="{Binding EnglishUnitType}" Margin="20 0" Grid.Column="2"/>
 
             <Border BorderBrush="LightGray" 
                     BorderThickness="0.8" 
@@ -46,24 +46,23 @@
 
             <materialDesign:Chip Visibility="{Binding IsCommentVisible, Converter={converters:ReverseCollapseConverter}}" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="3" Margin="0 8" Content="{Binding Comment}" Icon="C"/>
 
-            <!--Кнопка перехода на заднюю сторону карточки (настройки аккаунта)-->
             <Button Style="{DynamicResource MaterialDesignFlatButton}"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top"
-                        Foreground="Black"
-                        Width="20"
-                        Height="20"
-                        Padding="1"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Foreground="Black"
+                    Width="15"
+                    Height="15"
+                    Padding="1"
                     Grid.Column="2"
-                        Margin="0 2 2 0"
-                        ToolTip="Настройки аккаунта">
+                    Margin="0 4 4 0"
+                    ToolTip="Настройки аккаунта">
 
-                <materialDesign:PackIcon Kind="Settings" 
-                                             Width="15" 
-                                             Height="15"
-                                         Foreground="IndianRed"
-                                             HorizontalAlignment="Center"
-                                             VerticalAlignment="Center"/>
+                <materialDesign:PackIcon Kind="Delete" 
+                                         Width="15" 
+                                         Height="15"
+                                         Foreground="Brown"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center"/>
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">

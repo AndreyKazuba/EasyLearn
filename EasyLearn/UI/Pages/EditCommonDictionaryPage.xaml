@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-      xmlns:valudationRules="clr-namespace:EasyLearn.Infrastructure.ValidationRules"
+      xmlns:valudationRules="clr-namespace:EasyLearn.Infrastructure.Validation"
       mc:Ignorable="d" 
       xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
       KeyDown="OnPageKeyDown"
@@ -81,8 +81,8 @@
                                 <TextBox.Text>
                                     <Binding Path="AddingWindowRussianValue" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <valudationRules:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
-                                            <valudationRules:MinAndMaxValidationRule Min="2" Max="15" ValidatesOnTargetUpdated="True"/>
+                                            <valudationRules:NotEmpty Group="AddCommonRelation" ValidatesOnTargetUpdated="True" />
+                                            <valudationRules:InRange Min="1" Max="30" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -130,8 +130,8 @@
                                 <TextBox.Text>
                                     <Binding Path="AddingWindowEnglishValue" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <valudationRules:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
-                                            <valudationRules:MinAndMaxValidationRule Min="2" Max="15" ValidatesOnTargetUpdated="True"/>
+                                            <valudationRules:NotEmpty Group="AddCommonRelation" ValidatesOnTargetUpdated="True" />
+                                            <valudationRules:InRange Min="1" Max="30" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -180,7 +180,7 @@
                                 <TextBox.Text>
                                     <Binding Path="AddingWindowCommentValue" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <valudationRules:MinAndMaxValidationRule Max="26" ValidatesOnTargetUpdated="True"/>
+                                            <valudationRules:InRange Max="26" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -211,7 +211,7 @@
                                 <Button Style="{DynamicResource MaterialDesignFlatButton}" 
                                         Content="Отмена"
                                         Margin="6"
-                                        Foreground="Red"
+                                        Foreground="DarkRed"
                                         Name="newCommonRelationAddingWindowCancelButton">
 
                                     <!--Действия кнопки при её нажатии-->
@@ -285,7 +285,18 @@
                         <TextBox FontSize="15"
                                  Margin="8 0 0 0"
                                  VerticalAlignment="Center"
-                                 materialDesign:HintAssist.Hint="Search"/>
+                                 materialDesign:HintAssist.Hint="Search"
+                                 Text="{Binding SearchStringValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                            
+
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="TextChanged">
+                                    <i:InvokeCommandAction Command="{Binding SearchCommonRelationsCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+
+                        </TextBox>
                     </DockPanel>
                 </materialDesign:ColorZone>
 

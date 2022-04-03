@@ -9,13 +9,14 @@
       xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
       mc:Ignorable="d" 
       d:DesignHeight="700" d:DesignWidth="1100"
-      Title="DictationPage">
+      Title="DictationPage"
+      Background="GhostWhite">
 
     <materialDesign:DialogHost>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.65*"/>
-                <RowDefinition Height="0.35*"/>
+                <RowDefinition Height="0.25*"/>
             </Grid.RowDefinitions>
 
             <!--Система отображения для обычного диктанта-->
@@ -28,37 +29,44 @@
                     <RowDefinition Height="1.7*"/>
                     <RowDefinition Height="2*"/>
                     <RowDefinition Height="0.5*"/>
+                    <RowDefinition Height="0.5*"/>
                 </Grid.RowDefinitions>
 
-                <ItemsControl ItemsSource="{Binding AvailableRelationViews}" 
-                              VerticalContentAlignment="Top"
-                              HorizontalContentAlignment="Left">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
+
 
                 <StackPanel Grid.Row="1">
-                    <Grid>
-                        <TextBlock FontSize="100"
+                    <StackPanel Orientation="Horizontal">
+                        <Grid>
+                            <TextBlock FontSize="100"
                                Text="{Binding MainCommonDictationDisplayValue}"
                                Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
                                d:Text="EasyLearn"/>
-                        <materialDesign:Chip Grid.Column="1" 
+                            <materialDesign:Chip Grid.Column="1" 
                                              HorizontalAlignment="Right" 
                                              VerticalAlignment="Top" 
                                              Foreground="{Binding CommonDictationUnitTypeForegraundColor}"
                                              Height="35"
                                              FontSize="20"
-                                             Margin="0 -10 -65 0"
+                                             Margin="0 -10 -40 0"
                                              d:Content="Глагол"
                                              Visibility="{Binding CommonDictationTypeChipIsVisible, Converter={converters:ReverseCollapseConverter}}" 
                                              Content="{Binding UnitTypeCommonDictationDisplayValue}"/>
-                    </Grid>
+                        </Grid>
+                        <TextBlock FontSize="100"
+                                   Visibility="{Binding PromtCommonDictationDisplayIsVisible, Converter={converters:ReverseCollapseConverter}}"
+                                   Text="{Binding PromtCommonDictationDisplayValue}"
+                                   Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   MouseEnter="OnPromtMouseEnter"
+                                   MouseLeave="OnPromtMouseLeave"
+                                   Name="promtTextBox"
+                                   Foreground="Gray"
+                                   Margin="30 0 0 0"
+                                   d:Text="(Легко)"/>
+                    </StackPanel>
                     <TextBlock FontSize="50"
                                Text="{Binding CommentCommonDictationDisplayValue}"
                                Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
@@ -90,6 +98,28 @@
                                          HorizontalAlignment="Center"
                                          VerticalAlignment="Bottom"
                                          Visibility="{Binding CommonDictationWrongAnswerIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
+
+
+                <StackPanel Visibility="{Binding AvailableRelationsSectionIsVisible, Converter={converters:ForwardVisibilityConverter}}" 
+                            Orientation="Horizontal" 
+                            Grid.Row="3" 
+                            HorizontalAlignment="Center">
+                    <TextBlock Style="{DynamicResource MaterialDesignHeadline1TextBlock}" 
+                               Text="Также верно:" 
+                               VerticalAlignment="Center"
+                               Margin="0 -4 0 0"
+                               FontSize="18"/>
+                    <ItemsControl ItemsSource="{Binding AvailableRelationViews}" 
+                              VerticalContentAlignment="Center"
+                              Grid.Row="3">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel VerticalAlignment="Center"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </StackPanel>
+
 
             </Grid>
 
@@ -145,7 +175,7 @@
                     </StackPanel>
                 </StackPanel>
 
-                
+
 
                 <!--Иконка правильного простого диктанта-->
                 <materialDesign:PackIcon Kind="Check" 

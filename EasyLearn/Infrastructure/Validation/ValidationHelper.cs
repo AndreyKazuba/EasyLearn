@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace EasyLearn.Infrastructure.ValidationRules
+namespace EasyLearn.Infrastructure.Validation
 {
     public static class ValidationHelper
     {

@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:validation="clr-namespace:EasyLearn.Infrastructure.Validation"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800" Background="GhostWhite">
@@ -43,88 +44,156 @@
 
                     <!--Диалоговое окно добавления нового VerbPreposition-->
                     <Button.CommandParameter>
-                        <Grid>
+                        <Grid Margin="15">
+
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
                                 <RowDefinition/>
+                                <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
 
-                            <!--Текстбокс для введения значения глагола в новом VerbPreposition-->
-                            <TextBox Grid.Row="0" Grid.Column="0"
-                                     Width="200"
-                                     Margin="5"
+                            <TextBlock Margin="0 0 0 10"
+                                       VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                       Style="{DynamicResource MaterialDesignHeadline6TextBlock}"
+                                       FontSize="17"
+                                       Text="Добавить глагол-предлог"/>
+
+                            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <!--Текстбокс для введения значения глагола в новом VerbPreposition-->
+                                <TextBox 
+                                     Width="150"
+                                     Margin="10 10 3 10"
                                      Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                                     materialDesign:HintAssist.Hint="Глагол"
-                                     Text="{Binding AddingWindowVerbValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            </TextBox>
+                                     materialDesign:HintAssist.Hint="Глагол">
 
-                            <!--Текстбокс для введения значения предлога в новом VerbPreposition-->
-                            <TextBox Grid.Row="0" Grid.Column="1"
-                                     Width="200" 
-                                     Margin="5"
+                                    <TextBox.Text>
+                                        <Binding Path="AddingWindowVerbValue" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                                            <Binding.ValidationRules>
+                                                <validation:InRange Min="1" Max="20" Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="TextChanged">
+                                            <i:InvokeCommandAction Command="{Binding CheckVerbPrepositionForExistingCommand}"/>
+                                            <i:InvokeCommandAction Command="{Binding UpdateConfirmVerbPrepositionAddingButtonAvailabilityCommand}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+
+                                </TextBox>
+
+                                <!--Текстбокс для введения значения предлога в новом VerbPreposition-->
+                                <TextBox 
+                                     Width="70" 
+                                     Margin="3 10 10 10"
                                      materialDesign:HintAssist.Hint="Предлог"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                                     Text="{Binding AddingWindowPrepositionValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            </TextBox>
+                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
 
-                            <!--Текстбокс для введения перевода нового VerbPreposition-->
-                            <TextBox Grid.Row="1" Grid.Column="0"
-                                     Width="200"
-                                     Margin="5"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                                     materialDesign:HintAssist.Hint="Перевод"
-                                     Text="{Binding AddingWindowTranslationValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            </TextBox>
+                                    <TextBox.Text>
+                                        <Binding Path="AddingWindowPrepositionValue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <validation:InRange Min="1" Max="10" Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
 
-                            <!--Текстбокс для введения комментария нового VerbPreposition-->
-                            <TextBox Grid.Row="1" Grid.Column="1"
-                                     Width="200"
-                                     Margin="5"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                                     materialDesign:HintAssist.Hint="Комментарий"
-                                     Text="{Binding AddingWindowCommentValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            </TextBox>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="TextChanged">
+                                            <i:InvokeCommandAction Command="{Binding CheckVerbPrepositionForExistingCommand}"/>
+                                            <i:InvokeCommandAction Command="{Binding UpdateConfirmVerbPrepositionAddingButtonAvailabilityCommand}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
 
-                            <!--Кнопка отмены добавления нового VerbPreposition-->
-                            <Button Grid.Row="2" Grid.Column="0"
-                                    Margin="10"
-                                    Style="{DynamicResource MaterialDesignFlatButton}" 
-                                    Content="Отмена">
+                                </TextBox>
+                            </StackPanel>
 
-                                <!--Действия кнопки при её нажатии-->
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                
-                            </Button>
 
-                            <!--Кнопка подтверждения добавления новой связи-->
-                            <Button Grid.Row="2" Grid.Column="1"
-                                    Margin="10"
-                                    Style="{DynamicResource MaterialDesignFlatButton}"  
-                                    HorizontalAlignment="Center"
-                                    Content="Добавить"
-                                    IsEnabled="{Binding ConfirmNewUserButtonIsEnabled}">
+                            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <!--Текстбокс для введения перевода нового VerbPreposition-->
+                                <TextBox Width="110"
+                                         Margin="10 10 3 10"
+                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                                         materialDesign:HintAssist.Hint="Перевод">
 
-                                <!--Действия кнопки при её нажатии-->
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding CreateVerbPrepositionCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                
-                            </Button>
+                                    <TextBox.Text>
+                                        <Binding Path="AddingWindowTranslationValue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <validation:InRange Min="1" Max="20" Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="TextChanged">
+                                            <i:InvokeCommandAction Command="{Binding UpdateConfirmVerbPrepositionAddingButtonAvailabilityCommand}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+
+                                </TextBox>
+
+                                <!--Текстбокс для введения комментария нового VerbPreposition-->
+                                <TextBox Width="110"
+                                         Margin="3 10 10 10"
+                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                                         materialDesign:HintAssist.Hint="Комментарий">
+
+                                    <TextBox.Text>
+                                        <Binding Path="AddingWindowCommentValue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <validation:InRange Min="1" Max="20" Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="TextChanged">
+                                            <i:InvokeCommandAction Command="{Binding UpdateConfirmVerbPrepositionAddingButtonAvailabilityCommand}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+
+                                </TextBox>
+                            </StackPanel>
+
+
+                            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
+                                <!--Кнопка отмены добавления нового VerbPreposition-->
+                                <Button Margin="10"
+                                        Style="{DynamicResource MaterialDesignFlatButton}" 
+                                        Content="Отмена"
+                                        Foreground="Red">
+
+                                    <!--Действия кнопки при её нажатии-->
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                                            <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    
+                                </Button>
+
+                                <!--Кнопка подтверждения добавления новой связи-->
+                                <Button Margin="10"
+                                        Style="{DynamicResource MaterialDesignFlatButton}"  
+                                        HorizontalAlignment="Center"
+                                        Content="Добавить"
+                                        Foreground="ForestGreen"
+                                        IsEnabled="{Binding IsConfirmVerbPrepositionAddingButtonEnabled}">
+
+                                    <!--Действия кнопки при её нажатии-->
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                                            <i:InvokeCommandAction Command="{Binding CreateVerbPrepositionCommand}"/>
+                                            <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+
+                                </Button>
+                            </StackPanel>
+                            
                             
                         </Grid>
                     </Button.CommandParameter>

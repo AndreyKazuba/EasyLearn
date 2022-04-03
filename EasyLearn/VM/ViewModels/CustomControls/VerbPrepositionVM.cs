@@ -16,7 +16,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public string Comment { get; set; }
         public VerbPrepositionVM(VerbPreposition verbPreposition)
         {
-            this.PrepositionValue = StringHelper.NormalizeRegister(verbPreposition.Preposition.Value);
+            this.PrepositionValue = verbPreposition.Preposition.Value.ToLower();
             this.VerbValue = StringHelper.NormalizeRegister(verbPreposition.Verb.Value);
             this.Comment = StringHelper.TryNormalizeRegister(verbPreposition.Comment);
         }

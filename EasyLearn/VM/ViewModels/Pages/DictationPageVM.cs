@@ -33,10 +33,11 @@ namespace EasyLearn.VM.ViewModels.Pages
         private IrregularVerbForm currentIrregularVerbForm;
         private CommonDictionary loadedCommonDictionary;
         private VerbPrepositionDictionnary loadedVerbPrepositionDictionary;
-        private CoommonDictationManager? coolDictationManager;
+        private CoommonDictationManager? commonDictationManager;
         private VerbPrepositionDictationManager? verbPrepositionDictationManager;
         private IrregularVerbDictationManager? irregularVerbDictationManager;
         private DictionaryComboBoxItem selectedDictionaryComboBoxItem;
+        private int wrongAnswers;
         #endregion
 
 #pragma warning disable CS8618
@@ -99,15 +100,16 @@ namespace EasyLearn.VM.ViewModels.Pages
         public string UnitTypeCommonDictationDisplayValue { get; set; }
         public string CommentCommonDictationDisplayValue { get; set; }
         public string MainVerbPrepositionDictationDisplayValue { get; set; }
-        public string UnitTypeVerbPrepositionDictationDisplayValue { get; set; }
-        public string CommentVerbPrepositionDictationDisplayValue { get; set; }
+        public string SecondVerbPrepositionDictationDisplayValue { get; set; }
         public string TranslationVerbPrepositionDictationDisplayValue { get; set; }
+        public string? CommentVerbPrepositionDictationDisplayValue { get; set; }
         public string MainIrregularVerbDictationDisplayValue { get; set; }
         public string CommentIrregularVerbDictationDisplayValue { get; set; }
         public string IrregularVerbDictationFirstFormFixedAnswerValue { get; set; }
         public string IrregularVerbDictationSecondFormFixedAnswerValue { get; set; }
         public string IrregularVerbDictationThirdFormFixedAnswerValue { get; set; }
         public string AnswerValue { get; set; }
+        public string PromtCommonDictationDisplayValue { get; set; }
         public bool CommonDictationCorrectAnswerIconIsVisible { get; set; }
         public bool CommonDictationWrongAnswerIconIsVisible { get; set; }
         public bool CommonDictationTypeChipIsVisible { get; set; }
@@ -130,6 +132,8 @@ namespace EasyLearn.VM.ViewModels.Pages
         public bool IrregularVerbDictationThirdFormGrayIconIsVisible { get; set; }
         public bool IrregularVerbDictationThirdFormCorrectAnswerIconIsVisible { get; set; }
         public bool IrregularVerbDictationThirdFormWrongAnswerIconIsVisible { get; set; }
+        public bool AvailableRelationsSectionIsVisible { get; set; }
+        public bool PromtCommonDictationDisplayIsVisible { get; set; }
         #endregion
 
         #region Commands 
@@ -208,7 +212,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void StopDictation()
         {
             SetDefaultPageState();
-            this.coolDictationManager = null;
+            this.commonDictationManager = null;
             this.verbPrepositionDictationManager = null;
             this.irregularVerbDictationManager = null;
         }
@@ -229,8 +233,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.CommonDictationTypeChipIsVisible = true;
             int countOfRelations = this.DictationLengthSliderCurrentValue;
             List<CommonRelation> commonRelations = this.loadedCommonDictionary.Relations;
-            this.coolDictationManager = new CoommonDictationManager(commonRelations, countOfRelations);
-            CommonRelation firstCommonRelation = coolDictationManager.Start();
+            this.commonDictationManager = new CoommonDictationManager(commonRelations, countOfRelations);
+            CommonRelation firstCommonRelation = commonDictationManager.Start();
             this.MainCommonDictationDisplayValue = firstCommonRelation.RussianUnit.Value.NormalizeRegister();
             this.CommentCommonDictationDisplayValue = firstCommonRelation.Comment.TryNormalizeRegister();
             this.UnitTypeCommonDictationDisplayValue = firstCommonRelation.RussianUnit.Type.GetRussianValue();
@@ -241,36 +245,40 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void CheckAnswerForCommonDictionary()
         {
-            if (!isDictationStarted || this.coolDictationManager is null)
+            if (!isDictationStarted || this.commonDictationManager is null)
                 return;
-            bool answerIsCorrect = this.coolDictationManager.AvailableRelations.Any(relation => StringHelper.Equals(relation.EnglishUnit.Value, this.AnswerValue));
+            bool answerIsCorrect = this.commonDictationManager.AvailableRelations.Any(relation => StringHelper.Equals(relation.EnglishUnit.Value, this.AnswerValue));
             if (answerIsCorrect)
             {
+                if (this.commonDictationManager.CurrentRelationHasSynonyms)
+                    ShowAvailableRelationsSection(this.commonDictationManager.AvailableRelations, this.AnswerValue);
                 ShowCommonDictationCorrectAnswerIcon();
                 IncreaseDictationProgressBarCurrentValue();
                 SwitchCheckAnswerAndNextButtons();
                 SetDefaultAnswerValue();
-                if (this.coolDictationManager.CurrentRelationHasSynonyms)
-                    ShowAvailableRelations(this.coolDictationManager.AvailableRelations);
+                wrongAnswers = 0;
             }
             else
             {
                 ShowCommonDictationWrongAnswerIcon();
+                if (wrongAnswers++ > 2)
+                    ShowCommonDictationPromt();
             }
         }
         private void TryGoNextForCommonDictionary()
         {
-            if (!this.isDictationStarted || this.coolDictationManager is null)
+            if (!this.isDictationStarted || this.commonDictationManager is null)
                 return;
-            if (this.coolDictationManager.GoNext())
+            if (this.commonDictationManager.GoNext())
             {
-                this.MainCommonDictationDisplayValue = coolDictationManager.CurrentRelation.RussianUnit.Value.NormalizeRegister();
-                this.CommentCommonDictationDisplayValue = coolDictationManager.CurrentRelation.Comment.TryNormalizeRegister();
-                this.UnitTypeCommonDictationDisplayValue = coolDictationManager.CurrentRelation.RussianUnit.Type.GetRussianValue();
-                this.CommonDictationUnitTypeForegraundColor = coolDictationManager.CurrentRelation.RussianUnit.Type.GetColor();
+                this.MainCommonDictationDisplayValue = commonDictationManager.CurrentRelation.RussianUnit.Value.NormalizeRegister();
+                this.CommentCommonDictationDisplayValue = commonDictationManager.CurrentRelation.Comment.TryNormalizeRegister();
+                this.UnitTypeCommonDictationDisplayValue = commonDictationManager.CurrentRelation.RussianUnit.Type.GetRussianValue();
+                this.CommonDictationUnitTypeForegraundColor = commonDictationManager.CurrentRelation.RussianUnit.Type.GetColor();
                 SetDefaultAnswerValue();
-                ResetAvailableRelations();
+                HideAvailableRelationsSection();
                 HideCommonDictationCorrectAndWrongAnswerIcons();
+                HideCommonDictationPromt();
                 SwitchCheckAnswerAndNextButtons();
             }
             else
@@ -287,9 +295,9 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.verbPrepositionDictationManager = new VerbPrepositionDictationManager(verbPrepositions);
             VerbPreposition firstVerbPreposition = verbPrepositionDictationManager.Start();
             this.MainVerbPrepositionDictationDisplayValue = firstVerbPreposition.Verb.Value.NormalizeRegister();
-            this.CommentVerbPrepositionDictationDisplayValue = firstVerbPreposition.Comment.TryNormalizeRegister();
+            this.SecondVerbPrepositionDictationDisplayValue = "...";
             this.TranslationVerbPrepositionDictationDisplayValue = firstVerbPreposition.Translation.NormalizeRegister();
-            this.UnitTypeVerbPrepositionDictationDisplayValue = firstVerbPreposition.Verb.Type.ToString().NormalizeRegister();
+            this.CommentVerbPrepositionDictationDisplayValue = firstVerbPreposition.Comment?.ToLower();
             SwitchStartAndStopButtons();
             FocusAnswerTextBox();
             SetDictationProgressBar();
@@ -317,10 +325,9 @@ namespace EasyLearn.VM.ViewModels.Pages
                 return;
             if (this.verbPrepositionDictationManager.GoNext())
             {
-                this.MainCommonDictationDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Verb.Value.NormalizeRegister();
-                this.CommentCommonDictationDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Comment.TryNormalizeRegister();
+                this.MainVerbPrepositionDictationDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Verb.Value.NormalizeRegister();
+                this.CommentVerbPrepositionDictationDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Comment?.ToLower();
                 this.TranslationVerbPrepositionDictationDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Translation.NormalizeRegister();
-                this.UnitTypeCommonDictationDisplayValue = verbPrepositionDictationManager.CurrentVerbPreposition.Verb.Type.ToString().NormalizeRegister();
                 SetDefaultAnswerValue();
                 HideVerbPrepositionDictationCorrectAndWrongAnswerIcons();
                 SwitchCheckAnswerAndNextButtons();
@@ -460,7 +467,9 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Event handling
         protected override void InitEvents()
         {
-            DictationPage.EnterClick += this.OnEnterClick;
+            DictationPage.EnterClick += OnEnterClick;
+            DictationPage.PromtMouseEnter += OnCommonDictationPromtMouseEnter;
+            DictationPage.PromtMouseLeave += OnCommonDictationPromtMouseLeave;
         }
         private void OnEnterClick()
         {
@@ -471,6 +480,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             else
                 TryGoNext();
         }
+        private void OnCommonDictationPromtMouseEnter() => SetCommonDictationPromtValue();
+        private void OnCommonDictationPromtMouseLeave() => SetMysteriousCommonDictationPromt();
         #endregion
 
         #region Display actions
@@ -479,6 +490,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.isDictationStarted = false;
             this.currentIrregularVerbForm = IrregularVerbForm.FirstForm;
             this.CommonDictationTypeChipIsVisible = false;
+            this.AvailableRelationsSectionIsVisible = false;
+            this.wrongAnswers = 0;
             SetDefaultMainDisplayValue();
             SetDefaultCommentDisplayValue();
             SetDefaultAnswerValue();
@@ -686,11 +699,40 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.IrregularVerbDictationSecondFormWrongAnswerIconIsVisible = false;
             this.IrregularVerbDictationThirdFormWrongAnswerIconIsVisible = false;
         }
-        private void ShowAvailableRelations(IEnumerable<CommonRelation> commonRelations)
+        private void ShowAvailableRelationsSection(IEnumerable<CommonRelation> commonRelations, string asnwerValue)
         {
-            this.AvailableRelationViews = new ObservableCollection<AvailableRelationView>(commonRelations.Select(relation => AvailableRelationView.Create(relation)));
+            this.AvailableRelationsSectionIsVisible = true;
+            IEnumerable<AvailableRelationView> availableRelationViews = commonRelations
+                .Where(relation => !StringHelper.Equals(relation.EnglishUnit.Value, asnwerValue))
+                .Select(relation => AvailableRelationView.Create(relation));
+            this.AvailableRelationViews = new ObservableCollection<AvailableRelationView>(availableRelationViews);
         }
-        private void ResetAvailableRelations() => this.AvailableRelationViews.Clear();
+        private void HideAvailableRelationsSection()
+        {
+            this.AvailableRelationsSectionIsVisible = false;
+            if (this.AvailableRelationViews is not null)
+                this.AvailableRelationViews.Clear();
+        }
+        private void ShowCommonDictationPromt()
+        {
+            SetMysteriousCommonDictationPromt();
+            this.PromtCommonDictationDisplayIsVisible = true;
+        }
+        private void HideCommonDictationPromt() => this.PromtCommonDictationDisplayIsVisible = false;
+        private void SetMysteriousCommonDictationPromt()
+        {
+            if (this.commonDictationManager is null)
+                return;
+            int symbolsCount = this.commonDictationManager.CurrentRelation.EnglishUnit.Value.Length;
+            string mysteriousString = new string('?', symbolsCount);
+            this.PromtCommonDictationDisplayValue = $"({mysteriousString})";
+        }
+        private void SetCommonDictationPromtValue()
+        {
+            if (this.commonDictationManager is null)
+                return;
+            this.PromtCommonDictationDisplayValue = $"({this.commonDictationManager.CurrentRelation.EnglishUnit.Value})";
+        }
         #endregion
     }
 }

@@ -27,6 +27,14 @@ namespace EasyLearn.Data.Repositories.Implementations
 
         #region Public members
         public bool IsVerbPrepositionExist(int verbId, int prepositionId, int dictionaryId) => context.VerbPrepositions.Any(verbPreposition => verbPreposition.VerbId == verbId && verbPreposition.PrepositionId == prepositionId && verbPreposition.VerbPrepositionDictionaryId == dictionaryId);
+        public bool IsVerbPrepositionExist(string verbValue, string prepositionValue, int dictionaryId)
+        {
+            EnglishUnit? verb = englishUnitRepository.TryGetUnit(verbValue, UnitType.Verb);
+            EnglishUnit? preposition = englishUnitRepository.TryGetUnit(prepositionValue, UnitType.Preposition);
+            if (verb is null || preposition is null)
+                return false;
+            return IsVerbPrepositionExist(verb.Id, preposition.Id, dictionaryId);
+        }
         public async Task<VerbPreposition> CreateVerbPreposition(string verbValue, string prepositionValue, int dictionaryId, string translation, string? comment)
         {
             EnglishUnit verb = await englishUnitRepository.GetOrCreateUnit(verbValue, UnitType.Verb);

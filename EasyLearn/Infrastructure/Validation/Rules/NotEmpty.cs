@@ -3,26 +3,30 @@ using System;
 using System.Globalization;
 using System.Windows.Controls;
 
-namespace EasyLearn.Infrastructure.ValidationRules
+namespace EasyLearn.Infrastructure.Validation
 {
-    class NotEmptyValidationRule : ValidationRule
+    class NotEmpty : ValidationRule
     {
-        private Guid validationRuleId;
-        public NotEmptyValidationRule()
+        private Guid currentRuleId;
+        private ValidationRulesGroup group;
+        public ValidationRulesGroup Group
         {
-            this.validationRuleId  = ValidationsPool.RegisterCommonRelationAddingWindowValidationRule(false);
+            set
+            {
+                this.group = value;
+                this.currentRuleId = ValidationPool.Register(value);
+            }
         }
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             if (value is null || StringHelper.IsEmptyOrWhiteSpace((string)value))
             {
-                ValidationsPool.SetCommonRelationAddingWindowValidationRule(validationRuleId, false);
+                ValidationPool.Set(group, currentRuleId, false);
                 return new ValidationResult(false, "Поле необходимо заполнить");
-
             }
             else
             {
-                ValidationsPool.SetCommonRelationAddingWindowValidationRule(validationRuleId, true);
+                ValidationPool.Set(group, currentRuleId, true);
                 return ValidationResult.ValidResult;
             }
         }
