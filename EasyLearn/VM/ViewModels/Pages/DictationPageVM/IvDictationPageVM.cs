@@ -24,6 +24,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public string IvThirdFormFixedAnswerValue { get; set; }
         public string IvMainDisplayValue { get; set; }
         public string IvCommentValue { get; set; }
+        public string IvPromtValue { get; set; }
         public bool IvSectionIsVisible { get; set; }
         public bool IvFirstFormGrayIconIsVisible { get; set; }
         public bool IvFirstFormCorrectIconIsVisible { get; set; }
@@ -34,6 +35,8 @@ namespace EasyLearn.VM.ViewModels.Pages
         public bool IvThirdFormGrayIconIsVisible { get; set; }
         public bool IThirdFormCorrectIconIsVisible { get; set; }
         public bool IvThirdFormWrongIconIsVisible { get; set; }
+        public bool IvPromtIsVisible { get; set; }
+
         #endregion
 
         private void IvShowSection()
@@ -42,11 +45,23 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.VpSectionIsVisible = false;
             this.IvSectionIsVisible = true;
         }
+        private void IvSetFixedAnswerValues(IrregularVerb irregularVerb)
+        {
+            this.IvFirstFormFixedAnswerValue = GetMysteriousString(irregularVerb.FirstForm.Value);
+            this.IvSecondFormFixedAnswerValue = GetMysteriousString(irregularVerb.SecondForm.Value);
+            this.IvThirdFormFixedAnswerValue = GetMysteriousString(irregularVerb.ThirdForm.Value);
+        }
         private void IvSetDefaultFixedAnswerValues()
         {
-            this.IvFirstFormFixedAnswerValue = "????";
-            this.IvSecondFormFixedAnswerValue = "????";
-            this.IvThirdFormFixedAnswerValue = "????";
+            string q = "????";
+            this.IvFirstFormFixedAnswerValue = q;
+            this.IvSecondFormFixedAnswerValue = q;
+            this.IvThirdFormFixedAnswerValue = q;
+        }
+        private string GetMysteriousString(string value)
+        {
+            int symbolsCount = value.Length;
+            return new string('?', symbolsCount);
         }
         private void IvSetDictationManager()
         {
@@ -87,13 +102,17 @@ namespace EasyLearn.VM.ViewModels.Pages
                     {
                         IvShowFirstFormCorrectIcon();
                         IncreaseDictationProgressBarValue();
+                        IvHidePromt();
                         this.IvFirstFormFixedAnswerValue = StringHelper.NormalizeRegister(this.AnswerValue);
                         this.currentIrregularVerbForm = IrregularVerbForm.SecondForm;
                         SetDefaultAnswerValue();
+                        wrongAnswers = 0;
                     }
                     else
                     {
                         IvShowFirstFormWrongIcon();
+                        if (++wrongAnswers > 2)
+                            IvShowPromt();
                     }
                     break;
                 case IrregularVerbForm.SecondForm:
@@ -102,13 +121,17 @@ namespace EasyLearn.VM.ViewModels.Pages
                     {
                         IvShowSecondFormCorrectIcon();
                         IncreaseDictationProgressBarValue();
+                        IvHidePromt();
                         this.IvSecondFormFixedAnswerValue = StringHelper.NormalizeRegister(this.AnswerValue);
                         this.currentIrregularVerbForm = IrregularVerbForm.ThirdForm;
                         SetDefaultAnswerValue();
+                        wrongAnswers = 0;
                     }
                     else
                     {
                         IvShowSecondFormWrongIcon();
+                        if (++wrongAnswers > 2)
+                            IvShowPromt();
                     }
                     break;
                 case IrregularVerbForm.ThirdForm:
@@ -118,13 +141,17 @@ namespace EasyLearn.VM.ViewModels.Pages
                         IvShowThirdFormCorrectIcon();
                         IncreaseDictationProgressBarValue();
                         SwitchCheckAndNextButtons();
+                        IvHidePromt();
                         this.IvThirdFormFixedAnswerValue = StringHelper.NormalizeRegister(this.AnswerValue);
                         SetDefaultAnswerValue();
                         this.currentIrregularVerbForm = IrregularVerbForm.FirstForm;
+                        wrongAnswers = 0;
                     }
                     else
                     {
                         IvShowThirdFormWrongIcon();
+                        if (++wrongAnswers > 2)
+                            IvShowPromt();
                     }
                     break;
             }
@@ -138,8 +165,9 @@ namespace EasyLearn.VM.ViewModels.Pages
                 IvSetIrregularVerb(ivDictationManager.CurrentIrregularVerb);
                 SetDefaultAnswerValue();
                 IvShowGrayIcons();
+                IvHidePromt();
                 SwitchCheckAndNextButtons();
-                IvSetDefaultFixedAnswerValues();
+                IvSetFixedAnswerValues(ivDictationManager.CurrentIrregularVerb);
             }
             else
             {
@@ -204,5 +232,38 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.IvThirdFormWrongIconIsVisible = false;
         }
         #endregion
+
+        #region Promt
+        private void IvShowPromt()
+        {
+            if (ivDictationManager is null)
+                return;
+            switch (currentIrregularVerbForm)
+            {
+                case IrregularVerbForm.FirstForm:
+                    IvSetMysteriousPromtValue(ivDictationManager.CurrentFirstFormValue);
+                    break;
+                case IrregularVerbForm.SecondForm:
+                    IvSetMysteriousPromtValue(ivDictationManager.CurrentSecondFormValue);
+                    break;
+                case IrregularVerbForm.ThirdForm:
+                    IvSetMysteriousPromtValue(ivDictationManager.CurrentThirdFormValue);
+                    break;
+            }
+            this.IvPromtIsVisible = true;
+        }
+        private void IvHidePromt() => this.IvPromtIsVisible = false;
+        private void IvSetMysteriousPromtValue(string value)
+        {
+            int symbolsCount = value.Length;
+            string mysteriousString = new string('?', symbolsCount);
+            this.IvPromtValue = $"({mysteriousString})";
+        }
+        private void IvSetPromtValue(string value)
+        {
+            this.IvPromtValue = $"({value})";
+        }
+        #endregion
+
     }
 }

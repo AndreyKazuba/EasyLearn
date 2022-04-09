@@ -124,7 +124,7 @@
             </Grid>
 
             <!--Система отображения для дикнтанта предлогов-->
-            <Grid d:Visibility="Visible" 
+            <Grid d:Visibility="Collapsed" 
                   VerticalAlignment="Stretch" 
                   HorizontalAlignment="Center"
                   Visibility="{Binding VpSectionIsVisible, Converter={converters:ReverseCollapseConverter}}">
@@ -211,26 +211,38 @@
             </Grid>
 
             <!--Система отображения для диктанта неправильных глаголов-->
-            <StackPanel d:Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 40 0 0" Visibility="{Binding IvSectionIsVisible, Converter={converters:ReverseCollapseConverter}}">
-                <TextBlock
-                       FontSize="90"
-                       Text="{Binding IvMainDisplayValue}"
-                       Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Margin="0 0 0 10"/>
+            <Grid d:Visibility="Visible" 
+                  VerticalAlignment="Stretch" HorizontalAlignment="Center" 
+                  Visibility="{Binding IvSectionIsVisible, Converter={converters:ReverseCollapseConverter}}">
 
-                <TextBlock
-                       FontSize="50"
-                       Text="{Binding IvCommentValue}"
-                       Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                    Foreground="Gray"/>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="0.5*"/>
+                </Grid.RowDefinitions>
 
-                <Grid>
+                <TextBlock FontSize="90"
+                           Grid.Row="1"
+                           Text="{Binding IvMainDisplayValue}"
+                           Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Bottom"
+                           d:Text="Идти"
+                           Margin="0 0 0 10"/>
+
+                <TextBlock FontSize="50"
+                           Grid.Row="2"
+                           Text="{Binding IvCommentValue}"
+                           Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Top"
+                           d:Text="Куда-то"
+                           Foreground="Gray"/>
+
+                <Grid Grid.Row="3">
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
@@ -321,12 +333,43 @@
                                              HorizontalAlignment="Center"
                                              Visibility="{Binding IvThirdFormWrongIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
 
-                    <TextBlock FontSize="30" Margin="10 0" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignHeadline1TextBlock}" Grid.Column="0" Grid.Row="1" Text="{Binding IvFirstFormFixedAnswerValue}"/>
-                    <TextBlock FontSize="30" Margin="10 0" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignHeadline1TextBlock}" Grid.Column="1" Grid.Row="1" Text="{Binding IvSecondFormFixedAnswerValue}"/>
-                    <TextBlock FontSize="30" Margin="10 0" HorizontalAlignment="Center" Style="{DynamicResource MaterialDesignHeadline1TextBlock}" Grid.Column="2" Grid.Row="1" Text="{Binding IvThirdFormFixedAnswerValue}"/>
+                    <TextBlock FontSize="30" 
+                               Margin="10 0" 
+                               HorizontalAlignment="Center" 
+                               Style="{DynamicResource MaterialDesignHeadline1TextBlock}" 
+                               Grid.Column="0" Grid.Row="1" 
+                               Text="{Binding IvFirstFormFixedAnswerValue}"
+                               d:Text="????"/>
+                    <TextBlock FontSize="30" 
+                               Margin="10 0" 
+                               HorizontalAlignment="Center" 
+                               Style="{DynamicResource MaterialDesignHeadline1TextBlock}" 
+                               Grid.Column="1" Grid.Row="1" 
+                               Text="{Binding IvSecondFormFixedAnswerValue}"
+                               d:Text="????"/>
+                    <TextBlock FontSize="30" 
+                               Margin="10 0" 
+                               HorizontalAlignment="Center" 
+                               Style="{DynamicResource MaterialDesignHeadline1TextBlock}" 
+                               Grid.Column="2" Grid.Row="1" Text="{Binding IvThirdFormFixedAnswerValue}"
+                               d:Text="????"/>
                 </Grid>
 
-            </StackPanel>
+                <TextBlock FontSize="20"
+                           Margin="0 12 0 0"
+                           Grid.Row="4"
+                           Visibility="{Binding IvPromtIsVisible, Converter={converters:ReverseCollapseConverter}}"
+                           Text="{Binding IvPromtValue}"
+                           Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Top"
+                           MouseEnter="OnPromtMouseEnter"
+                           MouseLeave="OnPromtMouseLeave"
+                           Name="ivPromtTextBox"
+                           Foreground="Gray"
+                           d:Text="(Легко)"/>
+
+            </Grid>
 
             <StackPanel Orientation="Horizontal" 
                         HorizontalAlignment="Center"

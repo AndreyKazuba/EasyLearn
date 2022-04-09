@@ -13,6 +13,9 @@ namespace EasyLearn.Infrastructure.DictationManagers
         private int maxCurrentIrregularVerbId;
         private List<IrregularVerb> irregularVerbs;
         public IrregularVerb CurrentIrregularVerb => irregularVerbs[currentIrregularVerbId];
+        public string CurrentFirstFormValue => CurrentIrregularVerb.FirstForm.Value;
+        public string CurrentSecondFormValue => CurrentIrregularVerb.SecondForm.Value;
+        public string CurrentThirdFormValue => CurrentIrregularVerb.ThirdForm.Value;
         public IrregularVerbDictationManager(List<IrregularVerb> irregularVerbs)
         {
             this.irregularVerbs = irregularVerbs;

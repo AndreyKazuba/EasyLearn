@@ -228,6 +228,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             DictationPage.PromtMouseLeave += OnCdPromtMouseLeave;
             DictationPage.PromtMouseEnter += OnVpPromtMouseEnter;
             DictationPage.PromtMouseLeave += OnVpPromtMouseLeave;
+            DictationPage.PromtMouseEnter += OnIvPromtMouseEnter;
+            DictationPage.PromtMouseLeave += OnIvPromtMouseLeave;
         }
         private void OnEnterClick()
         {
@@ -262,6 +264,41 @@ namespace EasyLearn.VM.ViewModels.Pages
                 return;
             VpSetMysteriousPromtValue(vpDictationManager.CurrentPrepositionValue);
         }
+        private void OnIvPromtMouseEnter()
+        {
+            if (ivDictationManager is null)
+                return;
+            switch (currentIrregularVerbForm)
+            {
+                case IrregularVerbForm.FirstForm:
+                    IvSetPromtValue(ivDictationManager.CurrentFirstFormValue);
+                    break;
+                case IrregularVerbForm.SecondForm:
+                    IvSetPromtValue(ivDictationManager.CurrentSecondFormValue);
+                    break;
+                case IrregularVerbForm.ThirdForm:
+                    IvSetPromtValue(ivDictationManager.CurrentThirdFormValue);
+                    break;
+            }
+
+        }
+        private void OnIvPromtMouseLeave()
+        {
+            if (ivDictationManager is null)
+                return;
+            switch (currentIrregularVerbForm)
+            {
+                case IrregularVerbForm.FirstForm:
+                    IvSetMysteriousPromtValue(ivDictationManager.CurrentFirstFormValue);
+                    break;
+                case IrregularVerbForm.SecondForm:
+                    IvSetMysteriousPromtValue(ivDictationManager.CurrentSecondFormValue);
+                    break;
+                case IrregularVerbForm.ThirdForm:
+                    IvSetMysteriousPromtValue(ivDictationManager.CurrentThirdFormValue);
+                    break;
+            }
+        }
         #endregion
 
         #region Display actions
@@ -284,6 +321,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             SetDictationProgressBarDefaultValue();
             ResetAllIcons();
             IvSetDefaultFixedAnswerValues();
+            IvHidePromt();
         }
         private void SetDefaultAnswerValue() => this.AnswerValue = String.Empty;
         private void SetDefaultMainDisplayValue()
