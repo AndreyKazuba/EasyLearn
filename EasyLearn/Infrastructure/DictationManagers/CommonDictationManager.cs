@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
 
 namespace EasyLearn.Infrastructure.DictationManagers
 {
-    public class CoommonDictationManager
+    public class CommonDictationManager
     {
         private bool isStarted;
         private int currentRelationId;
@@ -14,11 +15,13 @@ namespace EasyLearn.Infrastructure.DictationManagers
         private List<CommonRelation> selectedRelations;
         private List<CommonRelation> synonymRelations;
         public CommonRelation CurrentRelation => selectedRelations[currentRelationId];
+        public string CurrentRussianValue => CurrentRelation.RussianUnit.Value;
+        public string CurrentEnglishValue => CurrentRelation.EnglishUnit.Value;
         public List<CommonRelation> AvailableRelations => synonymRelations;
         public bool CurrentRelationHasSynonyms => synonymRelations.Count > 1;
 
 #pragma warning disable CS8618
-        public CoommonDictationManager(List<CommonRelation> commonRelations, int dictationLength)
+        public CommonDictationManager(List<CommonRelation> commonRelations, int dictationLength)
         {
             if (dictationLength <= 0 || dictationLength > commonRelations.Count)
                 throw new ArgumentOutOfRangeException(nameof(dictationLength));
@@ -49,6 +52,10 @@ namespace EasyLearn.Infrastructure.DictationManagers
             {
                 return false;
             }
+        }
+        public bool IsAnswerCorrect(string answer)
+        {
+            return this.AvailableRelations.Any(relation => StringHelper.Equals(relation.EnglishUnit.Value, answer));
         }
         private void SetSynonymRelations()
         {

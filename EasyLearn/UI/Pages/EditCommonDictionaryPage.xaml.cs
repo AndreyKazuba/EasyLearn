@@ -7,7 +7,6 @@ namespace EasyLearn.UI.Pages
 {
     public partial class EditCommonDictionaryPage : Page
     {
-        public static event Action? PageCtrlNDown;
         public static event Action? RussianValueTextBoxEnterDown;
         public static event Action? EnglishValueTextBoxEnterDown;
         public static event Action? RussianUnitTypeComboBoxEnterDown;
@@ -18,11 +17,6 @@ namespace EasyLearn.UI.Pages
         {
             this.DataContext = viewModel;
             InitializeComponent();
-        }
-        private void OnPageKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.N && (e.KeyboardDevice.IsKeyDown(Key.LeftCtrl) || e.KeyboardDevice.IsKeyDown(Key.RightCtrl)) && PageCtrlNDown is not null)
-                PageCtrlNDown();
         }
         private void OnRussianValueTextBoxKeyDown(object sender, KeyEventArgs e)
         {

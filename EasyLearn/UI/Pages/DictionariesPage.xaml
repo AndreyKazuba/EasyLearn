@@ -7,6 +7,7 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
+      xmlns:validation="clr-namespace:EasyLearn.Infrastructure.Validation"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ListsPage" Background="GhostWhite">
@@ -30,44 +31,70 @@
                 VerticalAlignment="Bottom"
                 Margin="30"
                 Style="{DynamicResource MaterialDesignFloatingActionButton}"
-                Background="ForestGreen"
-                BorderBrush="ForestGreen"
                 Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
 
-                <materialDesign:PackIcon Kind="Dictionary"
+                <materialDesign:PackIcon Kind="Plus"
                                          Height="30"
-                                         Width="30"
-                                         Margin="0 0 6 2"/>
+                                         Width="30"/>
 
 
                 <Button.CommandParameter>
-                    <StackPanel Margin="10 10 10 0">
+                    <StackPanel Margin="13 13 13 3">
 
                         <!--Имя словаря-->
                         <TextBox Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
                                  Width="200" 
-                                 materialDesign:HintAssist.Hint="Название"
-                                 Text="{Binding AddingWindowDictionaryNameValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                        </TextBox>
+                                 materialDesign:HintAssist.Hint="Название">
 
-                        <!--Описание списка слов-->
-                        <TextBox TextWrapping="Wrap"
-                                 VerticalAlignment="Stretch"
-                                 Width="200"
-                                 VerticalScrollBarVisibility="Auto"
-                                 materialDesign:HintAssist.Hint="Описание"
-                                 materialDesign:HintAssist.IsFloating="True"
-                                 Text="{Binding AddingWindowDictionaryDescriptionValue}"/>
+                            <TextBox.Text>
+                                <Binding Path="AddingWindowDictionaryNameValue" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                                    <Binding.ValidationRules>
+                                        <validation:InRange Min="2" Max="13" Group="AddNewDictionary" ValidatesOnTargetUpdated="True"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="TextChanged">
+                                    <i:InvokeCommandAction Command="{Binding UpdateConfirmDictionaryAddingButtonAvailabilityCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+
+                        </TextBox>
 
                         <!--Выбор "обычный список/список с предлогами"-->
                         <ComboBox Grid.Row="0" 
                                   materialDesign:HintAssist.Hint="Тип списка" 
                                   materialDesign:HintAssist.IsFloating="True"
                                   MaxDropDownHeight="200"
-                                  Margin="4 4 4 0"
+                                  Margin="4 14 4 4"
                                   ItemsSource="{Binding AddingWindowDictionaryTypes}"
                                   SelectedItem="{Binding AddingWindowSelectedDictionaryType}">
                         </ComboBox>
+
+                        <!--Описание списка слов-->
+                        <TextBox TextWrapping="Wrap"
+                                 VerticalAlignment="Stretch"
+                                 Width="202"
+                                 VerticalScrollBarVisibility="Auto"
+                                 materialDesign:HintAssist.Hint="Описание"
+                                 materialDesign:HintAssist.IsFloating="True">
+
+                            <TextBox.Text>
+                                <Binding Path="AddingWindowDictionaryDescriptionValue" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                                    <Binding.ValidationRules>
+                                        <validation:InRange Min="0" Max="100" Group="AddNewDictionary" ValidatesOnTargetUpdated="True"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                            
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="TextChanged">
+                                    <i:InvokeCommandAction Command="{Binding UpdateConfirmDictionaryAddingButtonAvailabilityCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+
+                        </TextBox>
 
                         <!--Кнопки отмены и подтверждения добавления-->
                         <StackPanel Orientation="Horizontal"
@@ -91,7 +118,8 @@
                             <Button Style="{DynamicResource MaterialDesignFlatButton}"  
                                     HorizontalAlignment="Center"
                                     Content="Добавить"
-                                    Margin="10">
+                                    Margin="10"
+                                    IsEnabled="{Binding IsConfirmDictionaryAddingButtonEnabled}">
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">

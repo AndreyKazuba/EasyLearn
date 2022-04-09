@@ -5,7 +5,13 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <PackageIcon>easy-learn.png</PackageIcon>
+    <ApplicationIcon>apple_fruit_food_icon_218349.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="apple_fruit_food_icon_218349.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Fody" Version="6.6.0">

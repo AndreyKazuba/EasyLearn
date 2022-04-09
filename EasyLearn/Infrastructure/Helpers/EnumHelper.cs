@@ -3,7 +3,7 @@ using EasyLearn.Infrastructure.Constants;
 using System;
 using System.Windows.Media;
 
-namespace EasyLearn.Infrastructure.Enums
+namespace EasyLearn.Infrastructure.Helpers
 {
     public static class EnumHelper
     {

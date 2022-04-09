@@ -33,12 +33,15 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         }
         #endregion
 
+#pragma warning disable CS8618
         public CommonDictionaryVM(CommonDictionary commonDictionary)
         {
             this.Name = StringHelper.NormalizeRegister(commonDictionary.Name);
-            this.Description = StringHelper.NormalizeRegister(commonDictionary.Description);
+            this.Description = commonDictionary.Description.TryNormalizeRegister().EmptyIfNull();
             this.Id = commonDictionary.Id;
         }
+#pragma warning restore CS8618
+
         private void RemoveCommonDictionary() => App.GetService<DictionariesPageVM>().DeleteCommonDictionaryCommand.Execute(Id);
         private async Task EditCommonDictionary()
         {
@@ -48,7 +51,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
                 return;
             this.Name = newDictionaryName;
             this.Description = newDictionaryDescription;
-            await App.GetService<ICommonDictionaryRepository>().EditCommonDictionary(this.Id, newDictionaryName, newDictionaryDescription);
+            await App.GetService<ICommonDictionaryRepository>().EditCommonDictionary(this.Id, newDictionaryName, StringHelper.NullIfEmptyOrWhiteSpace(newDictionaryDescription));
         }
 
         private void OpenCurrentCommonDictionary()

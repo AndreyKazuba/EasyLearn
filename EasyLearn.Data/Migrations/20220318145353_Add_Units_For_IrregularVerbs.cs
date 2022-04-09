@@ -15,7 +15,7 @@ namespace EasyLearn.Data.Migrations
             migrationBuilder.InsertData(
             table: "RussianUnits",
             columns: new[] { "Id", "Value", "Type", "CreationDateUtc" },
-            values: new object[] { id++, "Быть", (int)UnitType.Verb, DateTime.UtcNow });
+            values: new object[] { id++, "быть", (int)UnitType.Verb, DateTime.UtcNow });
 
             migrationBuilder.InsertData(
             table: "RussianUnits",

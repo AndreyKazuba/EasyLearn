@@ -6,7 +6,7 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:validation="clr-namespace:EasyLearn.Infrastructure.Validation"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-      mc:Ignorable="d" 
+      mc:Ignorable="d"
       d:DesignHeight="450" d:DesignWidth="800" Background="GhostWhite">
     <materialDesign:DialogHost>
         <Grid>
@@ -39,8 +39,15 @@
                         Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
                         Foreground="ForestGreen"
                         Content="Добавить"
+                        Name="openNewVerbPrepositionAddingWindowButton"
                         DockPanel.Dock="Left"
                         Margin="5 0">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
 
                     <!--Диалоговое окно добавления нового VerbPreposition-->
                     <Button.CommandParameter>
@@ -61,16 +68,19 @@
 
                             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                                 <!--Текстбокс для введения значения глагола в новом VerbPreposition-->
-                                <TextBox 
-                                     Width="150"
-                                     Margin="10 10 3 10"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                                     materialDesign:HintAssist.Hint="Глагол">
+                                <TextBox Width="150"
+                                         Margin="10 10 3 10"
+                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                                         materialDesign:HintAssist.Hint="Глагол*"
+                                         Name="newVerbPrepositionVerbValueTextBox"
+                                         InputLanguageManager.InputLanguage="en-US"
+                                         KeyDown="OnVerbValueTextBoxKeyDown">
 
                                     <TextBox.Text>
                                         <Binding Path="AddingWindowVerbValue" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
                                             <Binding.ValidationRules>
-                                                <validation:InRange Min="1" Max="20" Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
+                                                <validation:NotEmpty Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
+                                                <validation:InRange Max="20" Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
                                             </Binding.ValidationRules>
                                         </Binding>
                                     </TextBox.Text>
@@ -85,16 +95,19 @@
                                 </TextBox>
 
                                 <!--Текстбокс для введения значения предлога в новом VerbPreposition-->
-                                <TextBox 
-                                     Width="70" 
-                                     Margin="3 10 10 10"
-                                     materialDesign:HintAssist.Hint="Предлог"
-                                     Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                <TextBox Width="70" 
+                                         Margin="3 10 10 10"
+                                         materialDesign:HintAssist.Hint="Предлог*"
+                                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                                         InputLanguageManager.InputLanguage="en-US"
+                                         Name="newVerbPrepositionPrepositionValueTextBox"
+                                         KeyDown="OnPrepositionValueTextBoxKeyDown">
 
                                     <TextBox.Text>
                                         <Binding Path="AddingWindowPrepositionValue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                             <Binding.ValidationRules>
-                                                <validation:InRange Min="1" Max="10" Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
+                                                <validation:NotEmpty Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
+                                                <validation:InRange Max="10" Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
                                             </Binding.ValidationRules>
                                         </Binding>
                                     </TextBox.Text>
@@ -115,12 +128,16 @@
                                 <TextBox Width="110"
                                          Margin="10 10 3 10"
                                          Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                                         materialDesign:HintAssist.Hint="Перевод">
+                                         materialDesign:HintAssist.Hint="Перевод*"
+                                         InputLanguageManager.InputLanguage="ru-RU"
+                                         Name="newVerbPrepositionTranslationValueTextBox"
+                                         KeyDown="OnTranslationValueKeyDown">
 
                                     <TextBox.Text>
                                         <Binding Path="AddingWindowTranslationValue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                             <Binding.ValidationRules>
-                                                <validation:InRange Min="1" Max="20" Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
+                                                <validation:NotEmpty Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
+                                                <validation:InRange Max="20" Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
                                             </Binding.ValidationRules>
                                         </Binding>
                                     </TextBox.Text>
@@ -137,12 +154,15 @@
                                 <TextBox Width="110"
                                          Margin="3 10 10 10"
                                          Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                                         materialDesign:HintAssist.Hint="Комментарий">
+                                         materialDesign:HintAssist.Hint="Комментарий"
+                                         InputLanguageManager.InputLanguage="ru-RU"
+                                         Name="newVerbPrepositionCommentValueTextBox"
+                                         KeyDown="OnCommentValueTextBoxKeyDown">
 
                                     <TextBox.Text>
                                         <Binding Path="AddingWindowCommentValue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                             <Binding.ValidationRules>
-                                                <validation:InRange Min="1" Max="20" Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
+                                                <validation:InRange Min="0" Max="20" Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
                                             </Binding.ValidationRules>
                                         </Binding>
                                     </TextBox.Text>
@@ -162,6 +182,7 @@
                                 <Button Margin="10"
                                         Style="{DynamicResource MaterialDesignFlatButton}" 
                                         Content="Отмена"
+                                        Name="newVerbPrepositionAddingWindowCancelButton"
                                         Foreground="Red">
 
                                     <!--Действия кнопки при её нажатии-->
@@ -180,6 +201,7 @@
                                         HorizontalAlignment="Center"
                                         Content="Добавить"
                                         Foreground="ForestGreen"
+                                        Name="newVerbPrepositionAddingButton"
                                         IsEnabled="{Binding IsConfirmVerbPrepositionAddingButtonEnabled}">
 
                                     <!--Действия кнопки при её нажатии-->
@@ -187,7 +209,6 @@
                                         <i:EventTrigger EventName="Click">
                                             <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                             <i:InvokeCommandAction Command="{Binding CreateVerbPrepositionCommand}"/>
-                                            <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
 

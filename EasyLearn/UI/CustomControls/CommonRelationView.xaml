@@ -7,9 +7,8 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="300">
-    <materialDesign:Card UniformCornerRadius="16" Margin="6" materialDesign:ShadowAssist.ShadowDepth="Depth1" Height="{Binding CardHeight}" VerticalAlignment="Top">
+             mc:Ignorable="d">
+    <materialDesign:Card UniformCornerRadius="15" Margin="6" materialDesign:ShadowAssist.ShadowDepth="Depth1" Height="{Binding CardHeight}" VerticalAlignment="Top">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MinWidth="100" Width="Auto"/>
@@ -18,13 +17,25 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="45"/>
-                <RowDefinition Height="35"/>
+                <RowDefinition Height="45"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Style="{DynamicResource MaterialDesignHeadline5TextBlock}" FontSize="19" Text="{Binding RussianValue}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20 8"/>
-            <TextBlock Grid.Row="0" Grid.Column="2" Style="{DynamicResource MaterialDesignHeadline5TextBlock}" FontSize="19" Text="{Binding EnglishValue}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20 8"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" 
+                       Style="{DynamicResource MaterialDesignHeadline5TextBlock}" 
+                       FontSize="19" 
+                       Text="{Binding RussianValue}" 
+                       HorizontalAlignment="Center" VerticalAlignment="Center" 
+                       Margin="20 8"
+                       d:Text="Проверять"/>
+            <TextBlock Grid.Row="0" Grid.Column="2" 
+                       Style="{DynamicResource MaterialDesignHeadline5TextBlock}" 
+                       FontSize="19" 
+                       Text="{Binding EnglishValue}" 
+                       HorizontalAlignment="Center" VerticalAlignment="Center" 
+                       Margin="20 8"
+                       d:Text="Check"/>
 
             <!--Разделитель-->
             <Border BorderBrush="LightGray" 
@@ -33,8 +44,16 @@
                     Margin="{Binding VerticalExpanderMargin}"
                     Grid.Column="1"/>
 
-            <materialDesign:Chip VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" Foreground="Black" Content="{Binding RussianUnitType}" Margin="20 0"/>
-            <materialDesign:Chip VerticalAlignment="Top" HorizontalAlignment="Center" Grid.Row="1" Foreground="Black" Content="{Binding EnglishUnitType}" Margin="20 0" Grid.Column="2"/>
+            <materialDesign:Chip VerticalAlignment="Top" HorizontalAlignment="Center" 
+                                 Grid.Row="1"
+                                 Content="{Binding RussianUnitType}" 
+                                 Margin="20 3 20 0"
+                                 d:Content="Глагол"/>
+            <materialDesign:Chip VerticalAlignment="Top" HorizontalAlignment="Center" 
+                                 Grid.Row="1"
+                                 Content="{Binding EnglishUnitType}" 
+                                 Margin="20 3 20 0" Grid.Column="2"
+                                 d:Content="Глагол"/>
 
             <Border BorderBrush="LightGray" 
                     BorderThickness="0.8" 
@@ -44,12 +63,19 @@
                     Grid.Row="2"
                     Visibility="{Binding IsCommentVisible, Converter={converters:ReverseCollapseConverter}}"/>
 
-            <materialDesign:Chip Visibility="{Binding IsCommentVisible, Converter={converters:ReverseCollapseConverter}}" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="3" Margin="0 8" Content="{Binding Comment}" Icon="C"/>
+            <materialDesign:Chip Visibility="{Binding IsCommentVisible, Converter={converters:ReverseCollapseConverter}}" 
+                                 Grid.Row="3"
+                                 VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                 Grid.ColumnSpan="3" 
+                                 Margin="0 8" 
+                                 Content="{Binding Comment}" 
+                                 Icon="К"
+                                 d:Content="Проверять что-то"/>
 
             <Button Style="{DynamicResource MaterialDesignFlatButton}"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
-                    Foreground="Black"
+                    Foreground="Gray"
                     Width="15"
                     Height="15"
                     Padding="1"
@@ -57,10 +83,9 @@
                     Margin="0 4 4 0"
                     ToolTip="Настройки аккаунта">
 
-                <materialDesign:PackIcon Kind="Delete" 
+                <materialDesign:PackIcon Kind="Close" 
                                          Width="15" 
                                          Height="15"
-                                         Foreground="Brown"
                                          HorizontalAlignment="Center"
                                          VerticalAlignment="Center"/>
 

@@ -73,7 +73,7 @@
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 Grid.Row="0">
-                        <TextBlock Text="{Binding Name}" FontSize="13"/>
+                        <TextBlock Text="{Binding Name}" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" FontSize="14"/>
                     </StackPanel>
 
                     <!--Кнопка авторизации на аккаунте-->

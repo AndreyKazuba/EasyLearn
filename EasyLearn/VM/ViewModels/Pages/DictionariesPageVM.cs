@@ -12,6 +12,8 @@ using EasyLearn.UI.CustomControls;
 using EasyLearn.VM.ViewModels.ExpandedElements;
 using EasyLearn.Infrastructure.Constants;
 using EasyLearn.VM.Windows;
+using EasyLearn.Data.Helpers;
+using EasyLearn.Infrastructure.Validation;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -50,6 +52,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public string AddingWindowDictionaryDescriptionValue { get; set; }
         public ObservableCollection<DictionaryTypeComboBoxItem> AddingWindowDictionaryTypes { get; set; }
         public DictionaryTypeComboBoxItem AddingWindowSelectedDictionaryType { get; set; }
+        public bool IsConfirmDictionaryAddingButtonEnabled { get; set; }
 
         #endregion
 
@@ -60,6 +63,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command<int> DeleteVerbPrepositionDictionaryCommand { get; private set; }
         public Command FlipBackAllCardsCommand { get; private set; }
         public Command UpdatePageForNewUserCommand { get; private set; }
+        public Command UpdateConfirmDictionaryAddingButtonAvailabilityCommand { get; private set; }
         protected override void InitCommands()
         {
             this.ClearAddingWindowCommand = new Command(ClearAddingWindow);
@@ -68,6 +72,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.DeleteVerbPrepositionDictionaryCommand = new Command<int>(async dictionaryId => await DeleteVerbPrepositionDictionary(dictionaryId));
             this.FlipBackAllCardsCommand = new Command(FlipBackAllCards);
             this.UpdatePageForNewUserCommand = new Command(UpdatePageForNewUser);
+            this.UpdateConfirmDictionaryAddingButtonAvailabilityCommand = new Command(UpdateConfirmDictionaryAddingButtonAvailability);
         }
         #endregion
 
@@ -77,6 +82,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.AddingWindowDictionaryNameValue = String.Empty;
             this.AddingWindowDictionaryDescriptionValue = String.Empty;
             this.AddingWindowSelectedDictionaryType = this.AddingWindowDictionaryTypes[0];
+            this.IsConfirmDictionaryAddingButtonEnabled = false;
         }
         private async Task CreateDictionary()
         {
@@ -118,13 +124,14 @@ namespace EasyLearn.VM.ViewModels.Pages
             SetCurrentUserId();
             LoadDictionaries();
         }
+        private void UpdateConfirmDictionaryAddingButtonAvailability() => this.IsConfirmDictionaryAddingButtonEnabled = ValidationPool.IsValid(ValidationRulesGroup.AddNewDictionary);
         #endregion
 
         #region Other private methods
         private async Task CreateCommonDictionary()
         {
             string name = this.AddingWindowDictionaryNameValue;
-            string description = this.AddingWindowDictionaryDescriptionValue;
+            string? description = StringHelper.NullIfEmptyOrWhiteSpace(this.AddingWindowDictionaryDescriptionValue);
             int userId = this.currentUserId;
             CommonDictionary newCommonDictionary = await commonDictionaryRepository.CreateCommonDictionary(name, description, userId);
             AddCommonDictionaryToUI(newCommonDictionary);
@@ -132,7 +139,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private async Task CreateVerbPrepositionDictionary()
         {
             string name = this.AddingWindowDictionaryNameValue;
-            string description = this.AddingWindowDictionaryDescriptionValue;
+            string? description = StringHelper.NullIfEmptyOrWhiteSpace(this.AddingWindowDictionaryDescriptionValue);
             int userId = this.currentUserId;
             VerbPrepositionDictionnary newVerbPrepositionDictionary = await verbPrepositionDictionaryRepository.CreateVerbPrepositionDictionary(name, description, userId);
             AddVerbPrepositionDictionaryToUI(newVerbPrepositionDictionary);

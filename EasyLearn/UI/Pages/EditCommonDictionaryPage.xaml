@@ -8,7 +8,6 @@
       xmlns:valudationRules="clr-namespace:EasyLearn.Infrastructure.Validation"
       mc:Ignorable="d" 
       xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
-      KeyDown="OnPageKeyDown"
       d:DesignHeight="450" d:DesignWidth="800" Background="GhostWhite">
     <materialDesign:DialogHost>
         <Grid >
@@ -97,9 +96,7 @@
                             </TextBox>
 
                             <!--Комбобокс для выбора типа RussianUnit в новом CommonRelation-->
-                            <ComboBox materialDesign:HintAssist.Hint="Тип русского перевода" 
-                                      materialDesign:HintAssist.IsFloating="True"
-                                      MaxDropDownHeight="200"
+                            <ComboBox MaxDropDownHeight="200"
                                       Margin="10 20 10 0"
                                       Grid.Row="1"
                                       Grid.Column="0"
@@ -146,9 +143,7 @@
                             </TextBox>
 
                             <!--Комбобокс для выбора типа EnglishUnit в новом CommonRelation-->
-                            <ComboBox materialDesign:HintAssist.Hint="Тип английского перевода" 
-                                      materialDesign:HintAssist.IsFloating="True"
-                                      MaxDropDownHeight="200"
+                            <ComboBox MaxDropDownHeight="200"
                                       Margin="10 20 10 0"
                                       Grid.Row="1"
                                       Grid.Column="1"
@@ -303,9 +298,10 @@
             </DockPanel>
 
             <!--Контейнер для содержания всех CommonRelations-->
-            <ScrollViewer Grid.Row="1" >
+            <ScrollViewer Grid.Row="1" ScrollViewer.CanContentScroll="False">
                 <ItemsControl ItemsSource="{Binding CommonRelationViews}" 
                   VerticalContentAlignment="Top"
+                              ScrollViewer.CanContentScroll="False"
                   HorizontalContentAlignment="Left">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>

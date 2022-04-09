@@ -86,7 +86,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void OnEnglishUnitTypeComboBoxEnterDown() => FocusCommentValueTextBox();
         private void OnCommentValueTextBoxEnterDown()
         {
-            if (!ValidationPool.IsValid(ValidationRulesGroup.AddCommonRelation))
+            if (ValidationPool.IsValid(ValidationRulesGroup.AddCommonRelation))
                 AddingNewCommonRelationButtonSoftClick();
         }
         private void OnWindowCtrlNDown()
@@ -100,7 +100,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void OnWindowEscDown()
         {
             if (App.GetService<AppWindowVM>().CurrentPage == Page.EditCommonWordListPage)
-                NewCommonRelationAddingWindowCancelButtonSortClick();
+                NewCommonRelationAddingWindowCancelButtonSoftClick();
         }
         #endregion
 
@@ -247,6 +247,6 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void FocusCommentValueTextBox() => App.GetService<EditCommonDictionaryPage>().newCommonRelationCommentValueTextBox.Focus();
         private void AddingNewCommonRelationButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().newCommonRelationAddingButton.SoftClick();
         private void OpenNewCommonRelationAddingWindowButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().openNewCommonRelationAddingWindowButton.SoftClick();
-        private void NewCommonRelationAddingWindowCancelButtonSortClick() => App.GetService<EditCommonDictionaryPage>().newCommonRelationAddingWindowCancelButton.SoftClick();
+        private void NewCommonRelationAddingWindowCancelButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().newCommonRelationAddingWindowCancelButton.SoftClick();
     }
 }

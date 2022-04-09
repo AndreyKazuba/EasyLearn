@@ -6,9 +6,8 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <materialDesign:Card UniformCornerRadius="16" Margin="6" materialDesign:ShadowAssist.ShadowDepth="Depth1" Height="{Binding CardHeight}" VerticalAlignment="Top">
+             mc:Ignorable="d">
+    <materialDesign:Card UniformCornerRadius="12" Margin="6" materialDesign:ShadowAssist.ShadowDepth="Depth1" Height="{Binding CardHeight}" VerticalAlignment="Top">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="45"/>
@@ -16,24 +15,49 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Margin="15 10" Grid.Row="0" Orientation="Horizontal">
-                <TextBlock Style="{DynamicResource MaterialDesignHeadline5TextBlock}" FontSize="19" Text="{Binding VerbValue}" VerticalAlignment="Center"/>
-                <TextBlock Style="{DynamicResource MaterialDesignHeadline5TextBlock}" FontSize="19" VerticalAlignment="Center" Text=" "></TextBlock>
-                <TextBlock Style="{DynamicResource MaterialDesignHeadline5TextBlock}" FontSize="19" Text="{Binding PrepositionValue}" VerticalAlignment="Center" Foreground="ForestGreen"/>
+            <StackPanel Margin="16 10 20 10" Grid.Row="0" HorizontalAlignment="Center" Orientation="Horizontal">
+                <TextBlock Style="{DynamicResource MaterialDesignHeadline5TextBlock}" 
+                           FontSize="19" 
+                           Text="{Binding VerbValue}" 
+                           VerticalAlignment="Center"
+                           d:Text="Depends"/>
+                <TextBlock Style="{DynamicResource MaterialDesignHeadline5TextBlock}" 
+                           FontSize="19" 
+                           Text="{Binding PrepositionValue}"
+                           Margin="6 0 0 0"
+                           VerticalAlignment="Center" 
+                           Foreground="ForestGreen"
+                           d:Text="on"/>
             </StackPanel>
 
             <Border BorderBrush="LightGray" 
-                    BorderThickness="0.8" 
-                    Grid.ColumnSpan="3"
+                    BorderThickness="0.8"
                     Margin="5 0.3"
-                    Grid.Column="0"
-                    Grid.Row="2"
+                    Grid.Row="1"
                     Visibility="{Binding IsCommentVisible, Converter={converters:ReverseCollapseConverter}}"/>
+
+            <StackPanel Margin="10 5" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Style="{DynamicResource MaterialDesignHeadline5TextBlock}" 
+                           FontSize="14" 
+                           Text="{Binding TranslationValue}" 
+                           VerticalAlignment="Center"
+                           FontStyle="Italic"
+                           d:Text="Зависеть"
+                           Margin="0 0 4 4"/>
+                <TextBlock Style="{DynamicResource MaterialDesignHeadline5TextBlock}" 
+                           FontSize="14" 
+                           Foreground="Gray"
+                           Text="{Binding CommentValue}" 
+                           VerticalAlignment="Center"
+                           FontStyle="Italic"
+                           d:Text="от кого-то/чего-то"
+                           Margin="0 0 0 4"/>
+            </StackPanel>
 
             <Button Style="{DynamicResource MaterialDesignFlatButton}"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
-                    Foreground="Black"
+                    Foreground="Gray"
                     Width="15"
                     Height="15"
                     Padding="1"
@@ -41,10 +65,9 @@
                     Margin="0 4 4 0"
                     ToolTip="Настройки аккаунта">
 
-                <materialDesign:PackIcon Kind="Delete" 
+                <materialDesign:PackIcon Kind="Close" 
                                          Width="15" 
                                          Height="15"
-                                         Foreground="Brown"
                                          HorizontalAlignment="Center"
                                          VerticalAlignment="Center"/>
 

@@ -36,6 +36,7 @@ namespace EasyLearn.Data.Repositories.Implementations
             };
             context.RussianUnits.Add(newUnit);
             await context.SaveChangesAsync();
+            context.ChangeTracker.Clear();
             return newUnit;
         }
         public async Task<RussianUnit> GetOrCreateUnit(string value, UnitType type)

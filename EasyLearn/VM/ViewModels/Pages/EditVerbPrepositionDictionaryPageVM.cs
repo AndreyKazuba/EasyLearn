@@ -10,6 +10,10 @@ using EasyLearn.UI.CustomControls;
 using EasyLearn.VM.Core;
 using EasyLearn.VM.Windows;
 using EasyLearn.Infrastructure.Validation;
+using EasyLearn.UI.Pages;
+using EasyLearn.Infrastructure.Helpers;
+using EasyLearn.UI;
+using EasyLearn.Infrastructure.Enums;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -49,6 +53,39 @@ namespace EasyLearn.VM.ViewModels.Pages
         public string AddingWindowTranslationValue { get; set; }
         public string AddingWindowCommentValue { get; set; }
         public bool IsConfirmVerbPrepositionAddingButtonEnabled { get; set; }
+        #endregion
+
+        #region Events
+        protected override void InitEvents()
+        {
+            EditVerbPrepositionDictionaryPage.VerbValueTextBoxEnterDown += OnVerbValueTextBoxEnterDown;
+            EditVerbPrepositionDictionaryPage.PrepositionValueTextBoxEnterDown += OnPrepositionValueTextBoxEnterDown;
+            EditVerbPrepositionDictionaryPage.TranslationValueTextBoxEnterDown += OnTranslationValueTextBoxEnterDown;
+            EditVerbPrepositionDictionaryPage.CommentValueTextBoxEnterDown += OnCommentValueTextBoxEnterDown;
+            AppWindow.WindowCtrlNDown += OnWindowCtrlNDown;
+            AppWindow.WindowEscDown += OnWindowEscDown;
+        }
+        private void OnVerbValueTextBoxEnterDown() => FocusPrepositionValueTextBox();
+        private void OnPrepositionValueTextBoxEnterDown() => FocusTranslationValueTextBox();
+        private void OnTranslationValueTextBoxEnterDown() => FocusCommentValueTextBox();
+        private void OnCommentValueTextBoxEnterDown()
+        {
+            if (ValidationPool.IsValid(ValidationRulesGroup.AddVerbPreposition))
+                AddingNewVerbPrepositionButtonSoftClick();
+        }
+        private void OnWindowCtrlNDown()
+        {
+            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditVerbPrepositionListPage)
+            {
+                FocusVerbValueTextBox();
+                OpenNewVerbPrepositionAddingWindowButtonSoftClick();
+            }
+        }
+        private void OnWindowEscDown()
+        {
+            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditVerbPrepositionListPage)
+                NewVerbPrepositionAddingWindowCancelButtonSoftClick();
+        }
         #endregion
 
         #region Commands 
@@ -106,6 +143,13 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         #region Other private methods
         private void AddVerbPrepositionToUI(VerbPreposition verbPreposition) => this.VerbPrepositionViews.Add(VerbPrepositionView.Create(verbPreposition));
+        private void FocusVerbValueTextBox() => App.GetService<EditVerbPrepositionDictionaryPage>().newVerbPrepositionVerbValueTextBox.Focus();
+        private void FocusPrepositionValueTextBox() => App.GetService<EditVerbPrepositionDictionaryPage>().newVerbPrepositionPrepositionValueTextBox.Focus();
+        private void FocusTranslationValueTextBox() => App.GetService<EditVerbPrepositionDictionaryPage>().newVerbPrepositionTranslationValueTextBox.Focus();
+        private void FocusCommentValueTextBox() => App.GetService<EditVerbPrepositionDictionaryPage>().newVerbPrepositionCommentValueTextBox.Focus();
+        private void AddingNewVerbPrepositionButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().newVerbPrepositionAddingButton.SoftClick();
+        private void OpenNewVerbPrepositionAddingWindowButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().openNewVerbPrepositionAddingWindowButton.SoftClick();
+        private void NewVerbPrepositionAddingWindowCancelButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().newVerbPrepositionAddingWindowCancelButton.SoftClick();
         #endregion
     }
 }

@@ -4,5 +4,7 @@
     {
         AddCommonRelation,
         AddVerbPreposition,
+        AddNewUser,
+        AddNewDictionary,
     }
 }

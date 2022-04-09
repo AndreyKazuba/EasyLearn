@@ -8,6 +8,11 @@ using EasyLearn.Data.Repositories.Interfaces;
 using EasyLearn.Data.Models;
 using EasyLearn.UI.CustomControls;
 using EasyLearn.VM.Windows;
+using EasyLearn.Infrastructure.Validation;
+using EasyLearn.UI.Pages;
+using EasyLearn.UI;
+using EasyLearn.Infrastructure.Enums;
+using EasyLearn.Infrastructure.Helpers;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -28,12 +33,31 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Props for binding
         public ObservableCollection<UserView> UserViews { get; set; }
         public string AddingWindowUserNameValue { get; set; }
+        public bool ConfirmUserAddingButtonIsEnabled { get; set; }
         #endregion
 
         #region Events
         protected override void InitEvents()
         {
             App.GetService<AppWindowVM>().CurrentPageChanged += () => FlipBackAllCards();
+            UsersPage.UserNameValueTextBoxEnterDown += OnUserNameValueTextBoxEnterDown;
+            AppWindow.WindowCtrlNDown += OnWindowCtrlNDown;
+            AppWindow.WindowEscDown += OnWindowEscDown;
+        }
+        private void OnUserNameValueTextBoxEnterDown()
+        {
+            if (ValidationPool.IsValid(ValidationRulesGroup.AddNewUser))
+                AddingNewUserButtonSoftClick();
+        }
+        private void OnWindowCtrlNDown()
+        {
+            if (App.GetService<AppWindowVM>().CurrentPage == Page.Users)
+                OpenNewUserAddingWindowButtonSoftClick();
+        }
+        private void OnWindowEscDown()
+        {
+            if (App.GetService<AppWindowVM>().CurrentPage == Page.Users)
+                NewUserAddingWindowCancelButtonSoftClick();
         }
         #endregion
 
@@ -43,6 +67,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command<int> SetUserAsCurrentCommand { get; private set; }
         public Command ClearAddingWindowCommand { get; private set; }
         public Command FlipBackAllCardsCommand { get; private set; }
+        public Command UpdateConfirmUserAddingButtonAvailabilityCommand { get; private set; }
         protected override void InitCommands()
         {
             this.CreateUserCommand = new Command(async () => await CreateUser());
@@ -50,6 +75,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.SetUserAsCurrentCommand = new Command<int>(async userId => await SetUserAsCurrent(userId));
             this.ClearAddingWindowCommand = new Command(ClearAddingWindow);
             this.FlipBackAllCardsCommand = new Command(FlipBackAllCards);
+            this.UpdateConfirmUserAddingButtonAvailabilityCommand = new Command(UpdateConfirmUserAddingButtonAvailability);
         }
         #endregion
 
@@ -79,12 +105,17 @@ namespace EasyLearn.VM.ViewModels.Pages
             await userRerository.SetUserAsCurrent(userId);
             UpdatePagesForNewUser();
         }
-        private void ClearAddingWindow() => this.AddingWindowUserNameValue = String.Empty;
+        private void ClearAddingWindow()
+        {
+            this.AddingWindowUserNameValue = String.Empty;
+            this.ConfirmUserAddingButtonIsEnabled = false;
+        }
         private void FlipBackAllCards()
         {
             foreach (UserView userView in this.UserViews)
                 userView.IsCardFlipped = false;
         }
+        private void UpdateConfirmUserAddingButtonAvailability() => this.ConfirmUserAddingButtonIsEnabled = ValidationPool.IsValid(ValidationRulesGroup.AddNewUser);
         #endregion
 
         #region Other private methods
@@ -102,6 +133,9 @@ namespace EasyLearn.VM.ViewModels.Pages
             App.GetService<DictionariesPageVM>().UpdatePageForNewUserCommand.Execute();
             App.GetService<DictationPageVM>().UpdatePageForNewUserCommand.Execute();
         }
+        private void AddingNewUserButtonSoftClick() => App.GetService<UsersPage>().confirmUserAddingButton.SoftClick();
+        private void OpenNewUserAddingWindowButtonSoftClick() => App.GetService<UsersPage>().addNewUserButton.SoftClick();
+        private void NewUserAddingWindowCancelButtonSoftClick() => App.GetService<UsersPage>().cancelUserAddingButton.SoftClick();
         #endregion
     }
 }

@@ -4,11 +4,6 @@ using EasyLearn.Data.Repositories.Interfaces;
 using EasyLearn.VM.Core;
 using EasyLearn.VM.ViewModels.Pages;
 using EasyLearn.VM.Windows;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EasyLearn.VM.ViewModels.CustomControls
@@ -21,7 +16,6 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public string EditNameFieldValue { get; set; }
         public string EditDescriptionFieldValue { get; set; }
         public bool IsCardFlipped { get; set; }
-
 
         #region Commands
         public Command OpenCurrentVerbPrepositionDictionaryCommand { get; private set; }
@@ -42,25 +36,12 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public VerbPrepositionDictionaryVM(VerbPrepositionDictionnary verbPrepositionDictionnary)
         {
             this.Name = StringHelper.NormalizeRegister(verbPrepositionDictionnary.Name);
-            this.Description = StringHelper.NormalizeRegister(verbPrepositionDictionnary.Description);
+            this.Description = verbPrepositionDictionnary.Description.TryNormalizeRegister().EmptyIfNull();
             this.Id = verbPrepositionDictionnary.Id;
         }
 
         private void FlipBackAllAnotherCards() => App.GetService<DictionariesPageVM>().FlipBackAllCardsCommand.Execute();
-        private void RemoveVerbPrepositionDictionary()
-        {
-            DictionariesPageVM? dictionariesPageVM = App.ServiceProvider.GetService<DictionariesPageVM>();
-
-            if (dictionariesPageVM is not null)
-            {
-                dictionariesPageVM.DeleteVerbPrepositionDictionaryCommand.Execute(Id);
-            }
-            else
-            {
-                throw new Exception("Something went wrong :(");
-            }
-        }
-
+        private void RemoveVerbPrepositionDictionary() => App.GetService<DictionariesPageVM>().DeleteVerbPrepositionDictionaryCommand.Execute(Id);
         private void OpenCurrentVerbPrepositionDictionary()
         {
             SetCurrentDictionary();
@@ -70,13 +51,11 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         {
             string newDictionaryName = this.EditNameFieldValue;
             string newDictionaryDescription = this.EditDescriptionFieldValue;
-            if (string.IsNullOrWhiteSpace(newDictionaryName) || string.IsNullOrWhiteSpace(newDictionaryDescription))
-                throw new Exception("Stomething went wrong");
             if (StringHelper.Equals(this.Name, newDictionaryName) && StringHelper.Equals(this.Description, newDictionaryDescription))
                 return;
             this.Name = newDictionaryName;
             this.Description = newDictionaryDescription;
-            await App.GetService<IVerbPrepositionDictionaryRepository>().EditVerbPrepositionDictionary(this.Id, newDictionaryName, newDictionaryDescription);
+            await App.GetService<IVerbPrepositionDictionaryRepository>().EditVerbPrepositionDictionary(this.Id, newDictionaryName,StringHelper.NullIfEmptyOrWhiteSpace(newDictionaryDescription));
         }
 
         private void SetCurrentDictionary() => App.GetService<EditVerbPrepositionDictionaryPageVM>().SetDictionaryAsCurrentCommand.Execute(Id);

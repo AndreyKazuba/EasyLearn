@@ -13,6 +13,8 @@ namespace EasyLearn.Infrastructure.DictationManagers
         private int maxCurrentVerbPrepositionId;
         private List<VerbPreposition> verbPrepositions;
         public VerbPreposition CurrentVerbPreposition => verbPrepositions[currentVerbPrepositionId];
+        public string CurrentPrepositionValue => CurrentVerbPreposition.Preposition.Value;
+        public string CurrentVerbValue => CurrentVerbPreposition.Verb.Value;
         public VerbPrepositionDictationManager(List<VerbPreposition> verbPrepositions)
         {
             this.verbPrepositions = verbPrepositions;

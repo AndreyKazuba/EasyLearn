@@ -28,7 +28,7 @@ namespace EasyLearn.Infrastructure.Validation
                 ValidationPool.Set(group, currentRuleId, false);
                 return new ValidationResult(false, $"Минимум {Min} {ValidationHelper.GetCharactersSubString(Min)}");
             }
-            if (@string.Length > Max)
+            else if (@string.Length > Max)
             {
                 ValidationPool.Set(group, currentRuleId, false);
                 return new ValidationResult(false, $"Максимум {Max} {ValidationHelper.GetCharactersSubString(Max)}");

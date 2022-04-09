@@ -10,8 +10,8 @@ namespace EasyLearn.Data.Repositories.Interfaces
         CommonDictionary GetCommonDictionary(int dictionaryId);
         Task<CommonDictionary> GetCommonDictionaryAsync(int dictionaryId);
         IEnumerable<CommonDictionary> GetUsersCommonDictionaries(int userId);
-        Task<CommonDictionary> CreateCommonDictionary(string name, string description, int userId);
+        Task<CommonDictionary> CreateCommonDictionary(string name, string? description, int userId);
         Task DeleteCommonDictionary(int dictionaryId);
-        Task EditCommonDictionary(int dictionaryId, string name, string description);
+        Task EditCommonDictionary(int dictionaryId, string name, string? description);
     }
 }

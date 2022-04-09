@@ -22,7 +22,7 @@ namespace EasyLearn.Infrastructure.Validation
             if (value is null || StringHelper.IsEmptyOrWhiteSpace((string)value))
             {
                 ValidationPool.Set(group, currentRuleId, false);
-                return new ValidationResult(false, "Поле необходимо заполнить");
+                return new ValidationResult(false, "Необходимо заполнить");
             }
             else
             {
