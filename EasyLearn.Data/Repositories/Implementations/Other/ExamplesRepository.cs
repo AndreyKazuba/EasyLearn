@@ -2,100 +2,65 @@
 using EasyLearn.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Enums;
+using EasyLearn.Data.Exceptions;
 
 namespace EasyLearn.Data.Repositories.Implementations
 {
     public class ExamplesRepository : IExamplesRepository
     {
         private readonly EasyLearnContext context;
-        private readonly IRussianUnitRepository russianUnitsRepository;
-        private readonly IEnglishUnitRepository englishUnitsRepository;
+        private readonly IRussianUnitRepository russianUnitRepository;
+        private readonly IEnglishUnitRepository englishUnitRepository;
 
-        public ExamplesRepository(EasyLearnContext context, IRussianUnitRepository russianUnitsRepository, IEnglishUnitRepository englishUnitsRepository)
+        public ExamplesRepository(EasyLearnContext context, IRussianUnitRepository russianUnitRepository, IEnglishUnitRepository englishUnitRepository)
         {
             this.context = context;
-            this.russianUnitsRepository = russianUnitsRepository;
-            this.englishUnitsRepository = englishUnitsRepository;
+            this.russianUnitRepository = russianUnitRepository;
+            this.englishUnitRepository = englishUnitRepository;
         }
-
-        public bool IsExampleExist(int exampleId)
+        public bool IsExampleExist(int exampleId) => context.Examples.Any(example => example.Id == exampleId);
+        public bool IsExampleExist(int russianTranslationId, int englishTranslationId) => context.Examples.Any(example => example.RussianTranslationId == russianTranslationId && example.EnglishTranslationId == englishTranslationId);
+        public async Task<bool> IsExampleExistAsync(int exampleId) => await context.Examples.AnyAsync(example => example.Id == exampleId);
+        public async Task<bool> IsExampleExistAsync(int russianTranslationId, int englishTranslationId) => await context.Examples.AnyAsync(example => example.RussianTranslationId == russianTranslationId && example.EnglishTranslationId == englishTranslationId);
+        public Example GetExample(int exampleId) => context.Examples.AsNoTracking().First(example => example.Id == exampleId);
+        public Example GetExample(int russianTranslationId, int englishTranslationId) => context.Examples.AsNoTracking().First(example => example.RussianTranslationId == russianTranslationId && example.EnglishTranslationId == englishTranslationId);
+        public async Task<Example> GetExampleAsync(int exampleId) => await context.Examples.AsNoTracking().FirstAsync(example => example.Id == exampleId);
+        public async Task<Example> GetExampleAsync(int russianTranslationId, int englishTranslationId) => await context.Examples.AsNoTracking().FirstAsync(example => example.RussianTranslationId == russianTranslationId && example.EnglishTranslationId == englishTranslationId);
+        public Example? TryGetExample(int exampleId) => context.Examples.AsNoTracking().FirstOrDefault(example => example.Id == exampleId);
+        public Example? TryGetExample(int russianTranslationId, int englishTranslationId) => context.Examples.AsNoTracking().FirstOrDefault(example => example.RussianTranslationId == russianTranslationId && example.EnglishTranslationId == englishTranslationId);
+        public async Task<Example> CreateExample(string russianTranslationValue, UnitType russianTranslationType, string englishTranslationValue, UnitType englishTranslationType)
         {
-            return context.Examples.Any(example => example.Id == exampleId);
-        }
-
-        public async Task<bool> IsExampleExistAsync(int exampleId)
-        {
-            return await context.Examples.AnyAsync(example => example.Id == exampleId);
-        }
-
-        public bool IsExampleExist(string rusTranslation, string engTranslation)
-        {
-            if (string.IsNullOrEmpty(rusTranslation) || string.IsNullOrEmpty(engTranslation))
+            RussianUnit russianTranslation = await russianUnitRepository.GetOrCreateUnit(russianTranslationValue, russianTranslationType);
+            EnglishUnit englishTranslation = await englishUnitRepository.GetOrCreateUnit(englishTranslationValue, englishTranslationType);
+            ThrowIfAddingAttemptIncorrect(russianTranslation.Id, englishTranslation.Id);
+            Example newExample = new Example
             {
-                return false;
-            }
-
-            RussianUnit russianTranslation = russianUnitsRepository.GetUnit(rusTranslation, UnitType.Sentence);
-            EnglishUnit englishTranslation = englishUnitsRepository.GetUnit(engTranslation, UnitType.Sentence);
-
-            if (russianTranslation == null || englishTranslation == null)
-            {
-                return false;
-            }
-
-            return context.Examples.Any(example => example.RussianTranslationId == russianTranslation.Id && example.EnglishTranslationId == englishTranslation.Id);
+                RussianTranslationId = russianTranslation.Id,
+                EnglishTranslationId = englishTranslation.Id,
+                CreationDateUtc = DateTime.UtcNow,
+            };
+            context.Examples.Add(newExample);
+            await context.SaveChangesAsync();
+            newExample.RussianTranslation = russianTranslation;
+            newExample.EnglishTranslation = englishTranslation;
+            return newExample;
         }
-
-        public async Task<bool> IsExampleExistAsync(string rusTranslation, string engTranslation)
+        public async Task<Example> GetOrCreateExample(string russianTranslationValue, UnitType russianTranslationType, string englishTranslationValue, UnitType englishTranslationType)
         {
-            if (string.IsNullOrEmpty(rusTranslation) || string.IsNullOrEmpty(engTranslation))
-            {
-                return false;
-            }
-
-            RussianUnit russianTranslation = await russianUnitsRepository.GetUnitAsync(rusTranslation, UnitType.Sentence);
-            EnglishUnit englishTranslation = await englishUnitsRepository.GetUnitAsync(engTranslation, UnitType.Sentence);
-
-            if (russianTranslation == null || englishTranslation == null)
-            {
-                return false;
-            }
-
-            return await context.Examples.AnyAsync(example => example.RussianTranslationId == russianTranslation.Id && example.EnglishTranslationId == englishTranslation.Id);
+            RussianUnit russianTranslation = await russianUnitRepository.GetOrCreateUnit(russianTranslationValue, russianTranslationType);
+            EnglishUnit englishTranslation = await englishUnitRepository.GetOrCreateUnit(englishTranslationValue, englishTranslationType);
+            Example? example = TryGetExample(russianTranslation.Id, englishTranslation.Id);
+            return example is not null ? example : await CreateExample(russianTranslationValue, russianTranslationType, englishTranslationValue, englishTranslationType);
         }
-
-        public Example GetExampleById(int exampleId)
+        #region Private members
+        private void ThrowIfAddingAttemptIncorrect(int russianTranslationId, int englishTranslationId)
         {
-            return context.Examples.FirstOrDefault(example => example.Id == exampleId);
+            if (IsExampleExist(russianTranslationId, englishTranslationId))
+                throw new InvalidDbOperationException($"Попытка добавить уже существующий {nameof(Example)}");
         }
-
-        public async Task<Example> GetExampleByIdAsync(int exampleId)
-        {
-            return await context.Examples.FirstOrDefaultAsync(example => example.Id == exampleId);
-        }
-
-        //public async Task<bool> AddExample(RussianUnit rusTranslation, EnglishUnit engTranslation)
-        //{
-        //    if (rusTranslation == null || engTranslation == null)
-        //    {
-        //        return false;
-        //    }
-
-        //    if (!await russianUnitsRepository.IsUnitExistAsync(rusTranslation.Id) && !await englishUnitsRepository.IsUnitExistAsync(engTranslation.Id))
-        //    {
-        //        return false;
-        //    }
-
-        //    if (await IsExampleExistAsync(rusTranslation.Value, engTranslation.Value))
-        //    {
-        //        return false;
-        //    }
-        //}
+        #endregion
     }
 }
