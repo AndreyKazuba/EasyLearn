@@ -10,7 +10,7 @@ using EasyLearn.Data.Models;
 using EasyLearn.Data.Enums;
 using EasyLearn.UI.CustomControls;
 using EasyLearn.VM.ViewModels.ExpandedElements;
-using EasyLearn.Infrastructure.Constants;
+using EasyLearn.Data.Constants;
 using EasyLearn.Data.Helpers;
 using EasyLearn.UI.Pages;
 using EasyLearn.Infrastructure.Helpers;

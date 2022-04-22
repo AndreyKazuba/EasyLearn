@@ -1,4 +1,4 @@
-﻿namespace EasyLearn.Infrastructure.Enums
+﻿namespace EasyLearn.Data.Enums
 {
     public enum IrregularVerbForm
     {

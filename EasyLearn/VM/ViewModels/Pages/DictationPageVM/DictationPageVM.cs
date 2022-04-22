@@ -9,9 +9,7 @@ using System.Linq;
 using EasyLearn.Data.Enums;
 using EasyLearn.Data.Helpers;
 using EasyLearn.UI.Pages;
-using EasyLearn.Infrastructure.Constants;
-using EasyLearn.Infrastructure.Enums;
-using EasyLearn.Data;
+using EasyLearn.Data.Constants;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {

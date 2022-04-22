@@ -7,6 +7,7 @@ using EasyLearn.Data.Exceptions;
 using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
 using EasyLearn.Data.Repositories.Interfaces;
+using EasyLearn.Data.Constants;
 
 namespace EasyLearn.Data.Repositories.Implementations
 {

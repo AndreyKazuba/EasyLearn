@@ -1,4 +1,5 @@
-﻿using EasyLearn.Data.Enums;
+﻿using EasyLearn.Data.Constants;
+using EasyLearn.Data.Enums;
 using EasyLearn.Data.Exceptions;
 using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;

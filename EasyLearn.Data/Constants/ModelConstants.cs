@@ -1,4 +1,4 @@
-﻿namespace EasyLearn.Data
+﻿namespace EasyLearn.Data.Constants
 {
     public static class ModelConstants
     {

@@ -1,4 +1,4 @@
-﻿namespace EasyLearn.Infrastructure.Constants
+﻿namespace EasyLearn.Data.Constants
 {
     public static class UnitTypeEnglishNames
     {
@@ -13,5 +13,7 @@
         public const string Pronoun = "Pronoun";
         public const string Numeral = "Numeral";
         public const string Adverb = "Adverb";
+        public const string Conjunction = "Conjunction";
+        public const string Particle = "Particle";
     }
 }

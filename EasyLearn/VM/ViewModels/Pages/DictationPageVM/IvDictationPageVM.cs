@@ -3,7 +3,7 @@ using System.Linq;
 using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
 using EasyLearn.Infrastructure.DictationManagers;
-using EasyLearn.Infrastructure.Enums;
+using EasyLearn.Data.Enums;
 
 
 namespace EasyLearn.VM.ViewModels.Pages

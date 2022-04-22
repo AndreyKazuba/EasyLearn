@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using EasyLearn.Data.Constants;
 using EasyLearn.Data.Enums;
 
 #pragma warning disable CS8618

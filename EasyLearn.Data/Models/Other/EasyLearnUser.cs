@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using EasyLearn.Data.Constants;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 #pragma warning disable CS8618

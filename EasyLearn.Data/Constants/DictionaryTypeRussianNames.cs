@@ -1,4 +1,4 @@
-﻿namespace EasyLearn.Infrastructure.Constants
+﻿namespace EasyLearn.Data.Constants
 {
     public static class DictionaryTypeRussianNames
     {
