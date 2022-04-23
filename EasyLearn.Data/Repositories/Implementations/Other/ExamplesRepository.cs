@@ -59,7 +59,7 @@ namespace EasyLearn.Data.Repositories.Implementations
         private void ThrowIfAddingAttemptIncorrect(int russianTranslationId, int englishTranslationId)
         {
             if (IsExampleExist(russianTranslationId, englishTranslationId))
-                throw new InvalidDbOperationException($"Попытка добавить уже существующий {nameof(Example)}");
+                throw new InvalidDbOperationException(DbExceptionMessagesHelper.AttemptToAddExistingEntity(nameof(Example), nameof(Example.RussianTranslationId), russianTranslationId.ToString(), nameof(Example.EnglishTranslationId), englishTranslationId.ToString()));
         }
         #endregion
     }

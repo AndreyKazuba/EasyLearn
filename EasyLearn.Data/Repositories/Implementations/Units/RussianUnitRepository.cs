@@ -51,10 +51,10 @@ namespace EasyLearn.Data.Repositories.Implementations
         protected void ThrowIfAddingAttemptIncorrect(string value, UnitType unitType)
         {
             if (string.IsNullOrWhiteSpace(value) || value.Length < ModelConstants.UnitValueMinLength || value.Length > ModelConstants.UnitValueMaxLength)
-                throw new InvalidDbOperationException(ExceptionMessagesHelper.PropertyInvalidValue(nameof(RussianUnit.Value), nameof(RussianUnit), value));
+                throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(RussianUnit.Value), nameof(RussianUnit), value));
 
             if (IsUnitExist(value, unitType))
-                throw new InvalidDbOperationException($"Попытка добавить уже существующий {nameof(RussianUnit)}: '{nameof(RussianUnit.Value)} = {value}, {nameof(RussianUnit.Type)} = {unitType}'");
+                throw new InvalidDbOperationException(DbExceptionMessagesHelper.AttemptToAddExistingEntity(nameof(RussianUnit), nameof(RussianUnit.Value), value, nameof(RussianUnit.Type), unitType.ToString()));
         }
         #endregion
     }

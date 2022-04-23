@@ -83,19 +83,19 @@ namespace EasyLearn.Data.Repositories.Implementations
             ThrowIfDictionaryNameInvalid(name);
             ThrowIfDictionaryDescriptionInvalid(description);
             if (!userRepository.IsUserExist(userId))
-                throw new InvalidDbOperationException($"Попытка добавить {nameof(VerbPrepositionDictionnary)} несуществующему {nameof(EasyLearnUser)} с {nameof(EasyLearnUser.Id)} = '{userId}'");
+                throw new InvalidDbOperationException(DbExceptionMessagesHelper.AddingForNonExistingEntity(nameof(VerbPrepositionDictionnary), nameof(EasyLearnUser), userId.ToString()));
         }
         private void ThrowIfDictionaryNameInvalid(string name)
         {
             if (string.IsNullOrWhiteSpace(name) || name.Length < ModelConstants.DictionaryNameMinLength || name.Length > ModelConstants.DictionaryNameMaxLength)
-                throw new InvalidDbOperationException(ExceptionMessagesHelper.PropertyInvalidValue(nameof(VerbPrepositionDictionnary.Name), nameof(VerbPrepositionDictionnary), name));
+                throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(VerbPrepositionDictionnary.Name), nameof(VerbPrepositionDictionnary), name));
         }
         private void ThrowIfDictionaryDescriptionInvalid(string? description)
         {
             if (description is null)
                 return;
             if (StringHelper.IsEmptyOrWhiteSpace(description) || description.Length < ModelConstants.DictionaryDescriptionMinLength || description.Length > ModelConstants.DictionaryDescriptionMaxLength)
-                throw new InvalidDbOperationException(ExceptionMessagesHelper.PropertyInvalidValue(nameof(VerbPrepositionDictionnary.Description), nameof(VerbPrepositionDictionnary), description));
+                throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(VerbPrepositionDictionnary.Description), nameof(VerbPrepositionDictionnary), description));
         }
         #endregion
     }

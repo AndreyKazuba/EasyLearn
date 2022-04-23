@@ -69,7 +69,7 @@ namespace EasyLearn.Data.Repositories.Implementations
         private void ThrowIfUserNameIsInvalid(string userName)
         {
             if (string.IsNullOrWhiteSpace(userName) || userName.Length < ModelConstants.UserNameMinLength || userName.Length > ModelConstants.UserNameMaxLength)
-                throw new InvalidDbOperationException($"Попытка задать в качестве {nameof(EasyLearnUser.Name)} для {nameof(EasyLearn)} невалидное значение: '{userName}'");
+                throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(EasyLearnUser.Name), nameof(EasyLearn), userName));
         }
         #endregion
     }

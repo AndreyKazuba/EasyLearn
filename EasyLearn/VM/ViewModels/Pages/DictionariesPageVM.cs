@@ -14,6 +14,7 @@ using EasyLearn.Data.Constants;
 using EasyLearn.VM.Windows;
 using EasyLearn.Data.Helpers;
 using EasyLearn.Infrastructure.Validation;
+using EasyLearn.Infrastructure.Exceptions;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -155,7 +156,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                     if (dictionaryView.Id == commonDictionaryId)
                         return dictionaryView;
                 }
-            throw new Exception($"На UI нет {nameof(CommonDictionary)} с Id = {commonDictionaryId}");
+            throw new Exception(ExceptionMessagesHelper.NoSuchDictionaryOnUI(nameof(CommonDictionary), commonDictionaryId));
         }
         private VerbPrepositionDictionaryView FindVerbPrepositionDictionaryView(int verbPrepositionDictionaryId)
         {
@@ -166,7 +167,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                     if (dictionaryView.Id == verbPrepositionDictionaryId)
                         return dictionaryView;
                 }
-            throw new Exception($"На UI нет {nameof(VerbPrepositionDictionnary)} с Id = {verbPrepositionDictionaryId}");
+            throw new Exception(ExceptionMessagesHelper.NoSuchDictionaryOnUI(nameof(VerbPrepositionDictionnary), verbPrepositionDictionaryId));
         }
         private void SetAddingWindowDictionaryTypes()
         {
@@ -183,7 +184,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             int? currentUserId = userRepository.TryGetCurrentUser()?.Id;
             if (!currentUserId.HasValue)
-                throw new Exception("Не удалось получить из базы текущего пользователя");
+                throw new Exception(ExceptionMessagesHelper.FailedToGetCurrentUserId);
             this.currentUserId = currentUserId.Value;
         }
         private void LoadDictionaries()

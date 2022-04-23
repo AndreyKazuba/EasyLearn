@@ -14,6 +14,7 @@ using EasyLearn.Data.Repositories.Implementations;
 using Microsoft.EntityFrameworkCore;
 using EasyLearn.Data;
 using EasyLearn.VM.ViewModels.Pages;
+using EasyLearn.Infrastructure.Exceptions;
 
 #pragma warning disable CS8602
 #pragma warning disable CS8618
@@ -30,7 +31,7 @@ namespace EasyLearn
             if (service is not null)
                 return service;
             else
-                throw new Exception("There is no such service");
+                throw new Exception(ExceptionMessagesHelper.ThereIsNoSuchService);
         }
 
         public App()

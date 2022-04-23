@@ -70,21 +70,21 @@ namespace EasyLearn.Data.Repositories.Implementations
             ThrowIfCommentInvalid(comment);
             ThrowIfTranslationInvalid(translation);
             if (IsVerbPrepositionExist(dictionaryId, verbId, prepositionId))
-                throw new InvalidDbOperationException($"Попытка добавить уже существующий {nameof(VerbPreposition)}");
+                throw new InvalidDbOperationException(DbExceptionMessagesHelper.AttemptToAddExistingEntity(nameof(VerbPreposition), nameof(VerbPreposition.PrepositionId), prepositionId.ToString(), nameof(VerbPreposition.VerbId), verbId.ToString(), nameof(VerbPreposition.VerbPrepositionDictionaryId), dictionaryId.ToString()));
             if (!verbPrepositionDictionaryRepository.IsVerbPrepositionDictionaryExist(dictionaryId))
-                throw new InvalidDbOperationException($"Попытка добавить {nameof(VerbPreposition)} в несуществующий {nameof(VerbPrepositionDictionnary)} c {nameof(VerbPrepositionDictionnary.Id)} = '{dictionaryId}'");
+                throw new InvalidDbOperationException(DbExceptionMessagesHelper.AddingForNonExistingEntity(nameof(VerbPreposition), nameof(VerbPrepositionDictionnary), dictionaryId.ToString()));
         }
         private void ThrowIfTranslationInvalid(string translation)
         {
             if (string.IsNullOrEmpty(translation) || StringHelper.IsEmptyOrWhiteSpace(translation) || translation.Length > ModelConstants.VerbPrepositiontranslationMaxLength || translation.Length < ModelConstants.VerbPrepositiontranslationMinLength)
-                throw new InvalidDbOperationException(ExceptionMessagesHelper.PropertyInvalidValue(nameof(VerbPreposition.Translation), nameof(VerbPreposition), translation));
+                throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(VerbPreposition.Translation), nameof(VerbPreposition), translation));
         }
         private void ThrowIfCommentInvalid(string? comment)
         {
             if (comment is null)
                 return;
             if (StringHelper.IsEmptyOrWhiteSpace(comment) || comment.Length < ModelConstants.RelationCommentMinLength || comment.Length > ModelConstants.RelationCommentMaxLength)
-                throw new InvalidDbOperationException(ExceptionMessagesHelper.PropertyInvalidValue(nameof(VerbPreposition.Comment), nameof(VerbPreposition), comment));
+                throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(VerbPreposition.Comment), nameof(VerbPreposition), comment));
         }
         #endregion
     }

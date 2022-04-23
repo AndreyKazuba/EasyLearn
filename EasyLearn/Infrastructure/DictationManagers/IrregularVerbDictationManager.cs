@@ -1,5 +1,6 @@
 ﻿using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
+using EasyLearn.Infrastructure.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,52 +9,66 @@ namespace EasyLearn.Infrastructure.DictationManagers
 {
     public class IrregularVerbDictationManager
     {
+        #region Private fields
         private bool isStarted;
         private int currentIrregularVerbId;
         private int maxCurrentIrregularVerbId;
         private List<IrregularVerb> irregularVerbs;
+        #endregion
+
+        #region Public props
         public IrregularVerb CurrentIrregularVerb => irregularVerbs[currentIrregularVerbId];
-        public string CurrentFirstFormValue => CurrentIrregularVerb.FirstForm.Value;
-        public string CurrentSecondFormValue => CurrentIrregularVerb.SecondForm.Value;
-        public string CurrentThirdFormValue => CurrentIrregularVerb.ThirdForm.Value;
+        public string CurrentV1Value => CurrentIrregularVerb.FirstForm.Value;
+        public string CurrentV2Value => CurrentIrregularVerb.SecondForm.Value;
+        public string CurrentV3Value => CurrentIrregularVerb.ThirdForm.Value;
+        #endregion
+
         public IrregularVerbDictationManager(List<IrregularVerb> irregularVerbs)
         {
             this.irregularVerbs = irregularVerbs;
             this.maxCurrentIrregularVerbId = irregularVerbs.Count - 1;
         }
+
+        #region Public methods
         public IrregularVerb Start()
         {
-            if (this.irregularVerbs is null || !this.irregularVerbs.Any())
-                throw new Exception("Нельзя начать диктант без слов");
+            ThrowIfItImpossibleToStart();
             this.isStarted = true;
             return this.irregularVerbs[currentIrregularVerbId];
         }
         public bool GoNext()
         {
-            if (!this.isStarted)
-                throw new Exception("Сначала нужно стартовать диктант");
-            else if (++currentIrregularVerbId <= maxCurrentIrregularVerbId)
-                return true;
-            else
-                return false;
+            ThrowIfDictationIsNotStarted();
+            return ++currentIrregularVerbId <= maxCurrentIrregularVerbId;
         }
-        public bool IsFirstFormAnswerCorrect(string answer)
+        public bool IsV1AnswerCorrect(string answer)
         {
-            if (!this.isStarted)
-                throw new Exception("Сначала нужно стартовать диктант");
+            ThrowIfDictationIsNotStarted();
             return StringHelper.Equals(this.irregularVerbs[currentIrregularVerbId].FirstForm.Value, answer);
         }
-        public bool IsSecondFormAnswerCorrect(string answer)
+        public bool IsV2AnswerCorrect(string answer)
         {
-            if (!this.isStarted)
-                throw new Exception("Сначала нужно стартовать диктант");
+            ThrowIfDictationIsNotStarted();
             return StringHelper.Equals(this.irregularVerbs[currentIrregularVerbId].SecondForm.Value, answer);
         }
-        public bool IsThirdFormAnswerCorrect(string answer)
+        public bool IsV3AnswerCorrect(string answer)
         {
-            if (!this.isStarted)
-                throw new Exception("Сначала нужно стартовать диктант");
+            ThrowIfDictationIsNotStarted();
             return StringHelper.Equals(this.irregularVerbs[currentIrregularVerbId].ThirdForm.Value, answer);
         }
+        #endregion
+
+        #region Provate methods
+        private void ThrowIfItImpossibleToStart()
+        {
+            if (this.irregularVerbs is null || !this.irregularVerbs.Any())
+                throw new Exception(ExceptionMessagesHelper.CannotStartDictationWithoutWords);
+        }
+        private void ThrowIfDictationIsNotStarted()
+        {
+            if (!this.isStarted)
+                throw new Exception(ExceptionMessagesHelper.NeedsToStarDictationFirst);
+        }
+        #endregion
     }
 }

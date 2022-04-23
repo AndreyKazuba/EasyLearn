@@ -10,6 +10,7 @@ using EasyLearn.Data.Enums;
 using EasyLearn.Data.Helpers;
 using EasyLearn.UI.Pages;
 using EasyLearn.Data.Constants;
+using EasyLearn.Infrastructure.Exceptions;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -59,7 +60,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                     case DictionaryType.IrregularVerbDictionary:
                         return ModelConstants.IrregularVerbsCount;
                     default:
-                        throw new Exception("Нет такого типа");
+                        throw new Exception(ExceptionMessagesHelper.NoSuchDictationType);
                 }
             }
         }
@@ -185,7 +186,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             int? currentUserId = userRepository.TryGetCurrentUser()?.Id;
             if (!currentUserId.HasValue)
-                throw new Exception("Не удалось получить из базы текущего пользователя");
+                throw new Exception(ExceptionMessagesHelper.FailedToGetCurrentUserId);
             this.currentUserId = currentUserId.Value;
         }
         private void UpdateDictionaryComboBoxItems()
@@ -269,13 +270,13 @@ namespace EasyLearn.VM.ViewModels.Pages
             switch (currentIrregularVerbForm)
             {
                 case IrregularVerbForm.FirstForm:
-                    IvSetPromtValue(ivDictationManager.CurrentFirstFormValue);
+                    IvSetPromtValue(ivDictationManager.CurrentV1Value);
                     break;
                 case IrregularVerbForm.SecondForm:
-                    IvSetPromtValue(ivDictationManager.CurrentSecondFormValue);
+                    IvSetPromtValue(ivDictationManager.CurrentV2Value);
                     break;
                 case IrregularVerbForm.ThirdForm:
-                    IvSetPromtValue(ivDictationManager.CurrentThirdFormValue);
+                    IvSetPromtValue(ivDictationManager.CurrentV3Value);
                     break;
             }
 
@@ -287,13 +288,13 @@ namespace EasyLearn.VM.ViewModels.Pages
             switch (currentIrregularVerbForm)
             {
                 case IrregularVerbForm.FirstForm:
-                    IvSetMysteriousPromtValue(ivDictationManager.CurrentFirstFormValue);
+                    IvSetMysteriousPromtValue(ivDictationManager.CurrentV1Value);
                     break;
                 case IrregularVerbForm.SecondForm:
-                    IvSetMysteriousPromtValue(ivDictationManager.CurrentSecondFormValue);
+                    IvSetMysteriousPromtValue(ivDictationManager.CurrentV2Value);
                     break;
                 case IrregularVerbForm.ThirdForm:
-                    IvSetMysteriousPromtValue(ivDictationManager.CurrentThirdFormValue);
+                    IvSetMysteriousPromtValue(ivDictationManager.CurrentV3Value);
                     break;
             }
         }

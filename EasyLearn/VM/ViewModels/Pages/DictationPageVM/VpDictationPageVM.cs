@@ -49,7 +49,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void VpSetDictationManager()
         {
             int countOfVerbPrepositions = this.DictationLengthSliderValue;
-            List<VerbPreposition> verbPrepositions = DictationManagerHelper.Shuffle(this.vpLoadedDictionary.VerbPrepositions).Take(countOfVerbPrepositions).ToList();
+            List<VerbPreposition> verbPrepositions = UniversalHelper.Shuffle(this.vpLoadedDictionary.VerbPrepositions).Take(countOfVerbPrepositions).ToList();
             this.vpDictationManager = new VerbPrepositionDictationManager(verbPrepositions);
         }
 

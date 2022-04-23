@@ -78,16 +78,16 @@ namespace EasyLearn.Data.Repositories.Implementations
         {
             ThrowIfCommentInvalid(comment);
             if (IsCommonRelationExist(russianUnitId, englishUnitId, dictionaryId))
-                throw new InvalidDbOperationException($"Попытка добавить уже существующий {nameof(CommonRelation)}");
+                throw new InvalidDbOperationException(DbExceptionMessagesHelper.AttemptToAddExistingEntity(nameof(CommonRelation), nameof(CommonRelation.RussianUnitId), russianUnitId.ToString(), nameof(CommonRelation.EnglishUnitId), englishUnitId.ToString(), nameof(CommonRelation.CommonDictionaryId), dictionaryId.ToString()));
             if (!commonDictionaryRepository.IsCommonDictionaryExist(dictionaryId))
-                throw new InvalidDbOperationException($"Попытка добавить {nameof(CommonRelation)} в несуществующий {nameof(CommonDictionary)} c {nameof(CommonDictionary.Id)} = '{dictionaryId}'");
+                throw new InvalidDbOperationException(DbExceptionMessagesHelper.AddingForNonExistingEntity(nameof(CommonRelation), nameof(CommonDictionary), dictionaryId.ToString()));
         }
         private void ThrowIfCommentInvalid(string? comment)
         {
             if (comment is null)
                 return;
             if (StringHelper.IsEmptyOrWhiteSpace(comment) || comment.Length < ModelConstants.RelationCommentMinLength || comment.Length > ModelConstants.RelationCommentMaxLength)
-                throw new InvalidDbOperationException(ExceptionMessagesHelper.PropertyInvalidValue(nameof(CommonRelation.Comment), nameof(CommonRelation), comment));
+                throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(CommonRelation.Comment), nameof(CommonRelation), comment));
         }
         #endregion
     }

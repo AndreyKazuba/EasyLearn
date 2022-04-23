@@ -66,7 +66,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void IvSetDictationManager()
         {
             int countOfIrregularVerbs = this.DictationLengthSliderValue;
-            List<IrregularVerb> irregularVerbs = DictationManagerHelper.Shuffle(this.irregularVerbRepository.GetAllIrregularVerbs()).Take(countOfIrregularVerbs).ToList();
+            List<IrregularVerb> irregularVerbs = UniversalHelper.Shuffle(this.irregularVerbRepository.GetAllIrregularVerbs()).Take(countOfIrregularVerbs).ToList();
             this.ivDictationManager = new IrregularVerbDictationManager(irregularVerbs);
         }
         private void IvSetIrregularVerb(IrregularVerb irregularVerb)
@@ -97,7 +97,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             switch (currentIrregularVerbForm)
             {
                 case IrregularVerbForm.FirstForm:
-                    bool firstFormIsCorrect = this.ivDictationManager.IsFirstFormAnswerCorrect(this.AnswerValue);
+                    bool firstFormIsCorrect = this.ivDictationManager.IsV1AnswerCorrect(this.AnswerValue);
                     if (firstFormIsCorrect)
                     {
                         IvShowFirstFormCorrectIcon();
@@ -116,7 +116,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                     }
                     break;
                 case IrregularVerbForm.SecondForm:
-                    bool secondFormIsCorrect = ivDictationManager.IsSecondFormAnswerCorrect(this.AnswerValue);
+                    bool secondFormIsCorrect = ivDictationManager.IsV2AnswerCorrect(this.AnswerValue);
                     if (secondFormIsCorrect)
                     {
                         IvShowSecondFormCorrectIcon();
@@ -135,7 +135,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                     }
                     break;
                 case IrregularVerbForm.ThirdForm:
-                    bool thirdFormIsCorrect = ivDictationManager.IsThirdFormAnswerCorrect(this.AnswerValue);
+                    bool thirdFormIsCorrect = ivDictationManager.IsV3AnswerCorrect(this.AnswerValue);
                     if (thirdFormIsCorrect)
                     {
                         IvShowThirdFormCorrectIcon();
@@ -241,13 +241,13 @@ namespace EasyLearn.VM.ViewModels.Pages
             switch (currentIrregularVerbForm)
             {
                 case IrregularVerbForm.FirstForm:
-                    IvSetMysteriousPromtValue(ivDictationManager.CurrentFirstFormValue);
+                    IvSetMysteriousPromtValue(ivDictationManager.CurrentV1Value);
                     break;
                 case IrregularVerbForm.SecondForm:
-                    IvSetMysteriousPromtValue(ivDictationManager.CurrentSecondFormValue);
+                    IvSetMysteriousPromtValue(ivDictationManager.CurrentV2Value);
                     break;
                 case IrregularVerbForm.ThirdForm:
-                    IvSetMysteriousPromtValue(ivDictationManager.CurrentThirdFormValue);
+                    IvSetMysteriousPromtValue(ivDictationManager.CurrentV3Value);
                     break;
             }
             this.IvPromtIsVisible = true;

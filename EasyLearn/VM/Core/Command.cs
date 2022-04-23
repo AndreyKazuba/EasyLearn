@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyLearn.Infrastructure.Exceptions;
+using System;
 using System.Windows.Input;
 
 namespace EasyLearn.VM.Core
@@ -28,7 +29,7 @@ namespace EasyLearn.VM.Core
         public void Execute(object? parameter = null)
         {
             if (parameter is not TArgument)
-                throw new ArgumentException($"Аргумент {nameof(parameter)} должен быть типа {nameof(TArgument)}");
+                throw new ArgumentException(ExceptionMessagesHelper.InvalidArgumentType(nameof(parameter), nameof(TArgument)));
             this.action((TArgument)parameter);
         }
     }

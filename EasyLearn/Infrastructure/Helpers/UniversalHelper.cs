@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EasyLearn.Infrastructure.DictationManagers
+namespace EasyLearn.Infrastructure.Helpers
 {
-    public static class DictationManagerHelper
+    public static class UniversalHelper
     {
         public static IEnumerable<T> Shuffle<T>(IEnumerable<T> items)
         {
