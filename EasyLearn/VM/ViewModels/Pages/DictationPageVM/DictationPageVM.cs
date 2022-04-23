@@ -243,13 +243,13 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             if (commonDictationManager is null)
                 return;
-            CdSetPromtValue(commonDictationManager.CurrentEnglishValue);
+            CdSetPromtValue(commonDictationManager.CurrentAnswerValue);
         }
         private void OnCdPromtMouseLeave()
         {
             if (commonDictationManager is null)
                 return;
-            CdSetMysteriousPromtValue(commonDictationManager.CurrentEnglishValue);
+            CdSetMysteriousPromtValue(commonDictationManager.CurrentAnswerValue);
         }
         private void OnVpPromtMouseEnter()
         {

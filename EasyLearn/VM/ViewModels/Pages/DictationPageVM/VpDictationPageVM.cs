@@ -5,6 +5,7 @@ using System.Windows.Media;
 using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
 using EasyLearn.Infrastructure.DictationManagers;
+using EasyLearn.Infrastructure.Helpers;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {

@@ -5,6 +5,7 @@ using System.Windows.Media;
 using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
 using EasyLearn.Infrastructure.DictationManagers;
+using EasyLearn.Infrastructure.Enums;
 using EasyLearn.Infrastructure.Helpers;
 using EasyLearn.UI.CustomControls;
 
@@ -46,7 +47,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             int countOfRelations = this.DictationLengthSliderValue;
             List<CommonRelation> commonRelations = this.cdLoadedDictionary.Relations;
-            this.commonDictationManager = new CommonDictationManager(commonRelations, countOfRelations);
+            this.commonDictationManager = CommonDictationManager.CreateManager(commonRelations, countOfRelations, DictationDirection.Directly);
         }
         private void CdShowSection()
         {
@@ -163,7 +164,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             if (this.commonDictationManager is null)
                 return;
-            CdSetMysteriousPromtValue(this.commonDictationManager.CurrentEnglishValue);
+            CdSetMysteriousPromtValue(this.commonDictationManager.CurrentAnswerValue);
             this.CdPromtIsVisible = true;
         }
         private void CdHidePromt() => this.CdPromtIsVisible = false;
