@@ -6,7 +6,7 @@ using System;
 
 namespace EasyLearn.Data.Migrations
 {
-    public partial class Add_Units_For_IrregularVerbs : Migration
+    public partial class Added_Units_For_IrregularVerbs : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

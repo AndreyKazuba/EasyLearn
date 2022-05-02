@@ -11,7 +11,8 @@
                             IsFlipped="{Binding IsCardFlipped, Mode=TwoWay}"
                             materialDesign:ShadowAssist.ShadowDepth="Depth2"
                             Margin="17 10 0 0"
-                            Height="256" Width="200">
+                            Height="256" Width="200"
+                            d:IsFlipped="True">
 
         <!--Лицевая часть карточки-->
         <materialDesign:Flipper.FrontContent>
@@ -70,8 +71,8 @@
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="2.4*"/>
+                    <RowDefinition Height="1.4*" />
+                    <RowDefinition Height="2*"/>
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
@@ -109,9 +110,10 @@
                 <TextBox materialDesign:HintAssist.Hint="Название" 
                          materialDesign:HintAssist.IsFloating="True"
                          Grid.Row="1"
-                         Margin="0 10 0 0"
+                         Margin="0 10 0 5"
                          Width="172"
                          HorizontalAlignment="Center" VerticalAlignment="Top"
+                         Style="{DynamicResource MaterialDesignOutlinedTextBox}"
                          Text="{Binding EditNameFieldValue, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="TextChanged">
@@ -123,12 +125,15 @@
                 <!--Поле для редактирования описания словаря-->
                 <TextBox TextWrapping="Wrap"
                          VerticalAlignment="Stretch"
-                         Width="172"         
+                         Width="172"
+                         MaxLength="40"
+                         Margin="0 0 0 10"
+                         Style="{DynamicResource MaterialDesignOutlinedTextBox}"
                          VerticalScrollBarVisibility="Auto"
                          materialDesign:HintAssist.Hint="Описание"
-                         materialDesign:HintAssist.IsFloating="True"
                          Grid.Row="2"
                          Text="{Binding EditDescriptionFieldValue}"/>
+
 
                 <!--Кнопки удаления и открытия словаря-->
                 <Grid Grid.Row="3" HorizontalAlignment="Stretch">

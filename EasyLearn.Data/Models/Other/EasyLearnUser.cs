@@ -1,9 +1,8 @@
-﻿using EasyLearn.Data.Constants;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using EasyLearn.Data.Constants;
 
 #pragma warning disable CS8618
-
 namespace EasyLearn.Data.Models
 {
     public class EasyLearnUser

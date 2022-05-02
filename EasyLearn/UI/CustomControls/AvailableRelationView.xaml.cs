@@ -1,4 +1,5 @@
 ﻿using EasyLearn.Data.Models;
+using EasyLearn.Infrastructure.Enums;
 using EasyLearn.VM.ViewModels.CustomControls;
 using System.Windows.Controls;
 
@@ -17,7 +18,8 @@ namespace EasyLearn.UI.CustomControls
         }
 
         #region Static members
-        public static AvailableRelationView Create(CommonRelation commonRelation) => new AvailableRelationView(new AvailableRelationVM(commonRelation));
+        public static AvailableRelationView Create(CommonRelation commonRelation, DictationDirection direction) 
+            => new AvailableRelationView(new AvailableRelationVM(commonRelation, direction));
         #endregion
     }
 }

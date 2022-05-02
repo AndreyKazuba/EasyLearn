@@ -1,11 +1,10 @@
-﻿using EasyLearn.Data.Constants;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using EasyLearn.Data.Constants;
 
 #pragma warning disable CS8618
-
 namespace EasyLearn.Data.Models
 {
     public class VerbPreposition
@@ -31,17 +30,16 @@ namespace EasyLearn.Data.Models
 
         public EnglishUnit Verb { get; set; }
 
-        [MinLength(ModelConstants.VerbPrepositiontranslationMinLength)]
-        [MaxLength(ModelConstants.VerbPrepositiontranslationMaxLength)]
+        [MinLength(ModelConstants.VerbPrepositionTranslationMinLength)]
+        [MaxLength(ModelConstants.VerbPrepositionTranslationMaxLength)]
         public string Translation { get; set; }
-
-        [MinLength(ModelConstants.RelationCommentMinLength)]
-        [MaxLength(ModelConstants.RelationCommentMaxLength)]
-        public string? Comment { get; set; }
 
         public List<Example> Examples { get; set; } = new List<Example>();
 
         [Required]
         public DateTime CreationDateUtc { get; set; }
+
+        [MaxLength(ModelConstants.VerbPrepositionCommentMaxLength)]
+        public string? Comment { get; set; }
     }
 }

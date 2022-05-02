@@ -1,27 +1,24 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using EasyLearn.Data.Constants;
 
 #pragma warning disable CS8618
-
 namespace EasyLearn.Data.Models
 {
     public class Example
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public int Id { get; set; }
 
         [Required]
-        [ForeignKey(nameof(RussianTranslation))]
-        public int RussianTranslationId { get; set; }
-
-        public RussianUnit RussianTranslation { get; set; }
+        [MaxLength(ModelConstants.ExampleValueMaxLength)]
+        [MinLength(ModelConstants.ExampleValueMinLength)]
+        public string RussianValue { get; set; }
 
         [Required]
-        [ForeignKey(nameof(EnglishTranslation))]
-        public int EnglishTranslationId { get; set; }
-
-        public EnglishUnit EnglishTranslation { get; set; }
+        [MaxLength(ModelConstants.ExampleValueMaxLength)]
+        [MinLength(ModelConstants.ExampleValueMinLength)]
+        public string EnglishValue { get; set; }
 
         [Required]
         public DateTime CreationDateUtc { get; set; }

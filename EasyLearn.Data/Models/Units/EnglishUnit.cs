@@ -4,7 +4,6 @@ using EasyLearn.Data.Constants;
 using EasyLearn.Data.Enums;
 
 #pragma warning disable CS8618
-
 namespace EasyLearn.Data.Models
 {
     public class EnglishUnit

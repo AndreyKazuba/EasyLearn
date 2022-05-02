@@ -1,8 +1,4 @@
-﻿using EasyLearn.Data.Models;
-using EasyLearn.VM.Core;
-using EasyLearn.VM.ViewModels.ExpandedElements;
-using EasyLearn.Data.Repositories.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,6 +7,10 @@ using EasyLearn.Data.Helpers;
 using EasyLearn.UI.Pages;
 using EasyLearn.Data.Constants;
 using EasyLearn.Infrastructure.Exceptions;
+using EasyLearn.Data.Models;
+using EasyLearn.VM.Core;
+using EasyLearn.VM.ViewModels.ExpandedElements;
+using EasyLearn.Data.Repositories.Interfaces;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -26,8 +26,8 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Private fields
         private bool dictationIsStarted;
         private int currentUserId;
-        private DictionaryComboBoxItem selectedDictionaryComboBoxItem;
         private int wrongAnswers;
+        private DictionaryComboBoxItem selectedDictionaryComboBoxItem;
         #endregion
 
 #pragma warning disable CS8618
@@ -48,22 +48,12 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Helper props
         private int ItemsInSelectedLoadedDictionary
         {
-            get
-            {
-                DictionaryType selectedDictionaryType = SelectedDictionaryComboBoxItem.DictionaryType;
-                switch (selectedDictionaryType)
-                {
-                    case DictionaryType.CommonDictionary:
-                        return cdLoadedDictionary.Relations.Count;
-                    case DictionaryType.VerbPrepositionDictionary:
-                        return vpLoadedDictionary.VerbPrepositions.Count;
-                    case DictionaryType.IrregularVerbDictionary:
-                        return ModelConstants.IrregularVerbsCount;
-                    default:
-                        throw new Exception(ExceptionMessagesHelper.NoSuchDictationType);
-                }
-            }
+            get => ExecuteForCurrentDictionaryType(
+                    () => cdLoadedDictionary.Relations.Count,
+                    () => vpLoadedDictionary.VerbPrepositions.Count,
+                    () => ModelConstants.IrregularVerbsCount);
         }
+        private DictionaryType CurrentDictionaryType => selectedDictionaryComboBoxItem.DictionaryType;
         #endregion
 
         #region Props for binding
@@ -77,6 +67,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 LoadSelectedDictionary();
                 UpdateDictationLengthSlider();
                 SetCurrentDictationSection();
+                SetDictationDirestionButtonsVisibility();
             }
         }
         public int DictationLengthSliderMaxValue { get; set; }
@@ -89,6 +80,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public bool StartButtonIsVisible { get; set; }
         public bool StartButtonIsEnabled { get; set; } = true;
         public bool StopButtonIsVisible { get; set; }
+        public bool DictationDirectionButtonsIsVisible { get; set; }
         public string AnswerValue { get; set; }
         #endregion
 
@@ -117,54 +109,9 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.DictationLengthSliderMaxValue = this.ItemsInSelectedLoadedDictionary;
             this.DictationLengthSliderValue = this.DictationLengthSliderMaxValue;
         }
-        private void StartDictation()
-        {
-            DictionaryType selectedDictionaryType = selectedDictionaryComboBoxItem.DictionaryType;
-            switch (selectedDictionaryType)
-            {
-                case DictionaryType.CommonDictionary:
-                    CdStart();
-                    break;
-                case DictionaryType.VerbPrepositionDictionary:
-                    VpStart();
-                    break;
-                case DictionaryType.IrregularVerbDictionary:
-                    IvStart();
-                    break;
-            }
-        }
-        private void CheckAnswer()
-        {
-            DictionaryType selectedDictionaryType = selectedDictionaryComboBoxItem.DictionaryType;
-            switch (selectedDictionaryType)
-            {
-                case DictionaryType.CommonDictionary:
-                    CdCheck();
-                    break;
-                case DictionaryType.VerbPrepositionDictionary:
-                    VpCheck();
-                    break;
-                case DictionaryType.IrregularVerbDictionary:
-                    IvCheck();
-                    break;
-            }
-        }
-        private void TryGoNext()
-        {
-            DictionaryType selectedDictionaryType = selectedDictionaryComboBoxItem.DictionaryType;
-            switch (selectedDictionaryType)
-            {
-                case DictionaryType.CommonDictionary:
-                    CdTryGoNext();
-                    break;
-                case DictionaryType.VerbPrepositionDictionary:
-                    VpTryGoNext();
-                    break;
-                case DictionaryType.IrregularVerbDictionary:
-                    IvTryGoNext();
-                    break;
-            }
-        }
+        private void StartDictation() => ExecuteForCurrentDictionaryType(CdStart, VpStart, IvStart);
+        private void CheckAnswer() => ExecuteForCurrentDictionaryType(CdCheck, VpCheck, IvCheck);
+        private void TryGoNext() => ExecuteForCurrentDictionaryType(CdTryGoNext, VpTryGoNext, IvTryGoNext);
         private void StopDictation()
         {
             SetDefaultPageState();
@@ -206,16 +153,10 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void LoadSelectedDictionary()
         {
             int selectedDictionaryId = this.SelectedDictionaryComboBoxItem.DictionaryId;
-            DictionaryType selectedDictionaryType = this.SelectedDictionaryComboBoxItem.DictionaryType;
-            switch (selectedDictionaryType)
-            {
-                case DictionaryType.CommonDictionary:
-                    this.cdLoadedDictionary = commonDictionaryRepository.GetCommonDictionary(selectedDictionaryId);
-                    break;
-                case DictionaryType.VerbPrepositionDictionary:
-                    this.vpLoadedDictionary = verbPrepositionDictionaryRepository.GetVerbPrepositionDictionary(selectedDictionaryId);
-                    break;
-            }
+            ExecuteForCurrentDictionaryType(
+                () => this.cdLoadedDictionary = commonDictionaryRepository.GetCommonDictionary(selectedDictionaryId),
+                () => this.vpLoadedDictionary = verbPrepositionDictionaryRepository.GetVerbPrepositionDictionary(selectedDictionaryId),
+                () => { });
         }
         #endregion
 
@@ -267,36 +208,19 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             if (ivDictationManager is null)
                 return;
-            switch (currentIrregularVerbForm)
-            {
-                case IrregularVerbForm.FirstForm:
-                    IvSetPromtValue(ivDictationManager.CurrentV1Value);
-                    break;
-                case IrregularVerbForm.SecondForm:
-                    IvSetPromtValue(ivDictationManager.CurrentV2Value);
-                    break;
-                case IrregularVerbForm.ThirdForm:
-                    IvSetPromtValue(ivDictationManager.CurrentV3Value);
-                    break;
-            }
-
+            ExecuteForCurrentIrregularVerbForm(
+                () => IvSetPromtValue(ivDictationManager.CurrentV1Value),
+                () => IvSetPromtValue(ivDictationManager.CurrentV2Value),
+                () => IvSetPromtValue(ivDictationManager.CurrentV3Value));
         }
         private void OnIvPromtMouseLeave()
         {
             if (ivDictationManager is null)
                 return;
-            switch (currentIrregularVerbForm)
-            {
-                case IrregularVerbForm.FirstForm:
-                    IvSetMysteriousPromtValue(ivDictationManager.CurrentV1Value);
-                    break;
-                case IrregularVerbForm.SecondForm:
-                    IvSetMysteriousPromtValue(ivDictationManager.CurrentV2Value);
-                    break;
-                case IrregularVerbForm.ThirdForm:
-                    IvSetMysteriousPromtValue(ivDictationManager.CurrentV3Value);
-                    break;
-            }
+            ExecuteForCurrentIrregularVerbForm(
+                () => IvSetMysteriousPromtValue(ivDictationManager.CurrentV1Value),
+                () => IvSetMysteriousPromtValue(ivDictationManager.CurrentV2Value),
+                () => IvSetMysteriousPromtValue(ivDictationManager.CurrentV3Value));
         }
         #endregion
 
@@ -343,21 +267,13 @@ namespace EasyLearn.VM.ViewModels.Pages
             IvShowGrayIcons();
         }
         private void FocusAnswerTextBox() => App.GetService<DictationPage>().dictationTextBox.Focus();
-        private void SetCurrentDictationSection()
+        private void SetCurrentDictationSection() => ExecuteForCurrentDictionaryType(CdShowSection, VpShowSection, IvShowSection);
+        private void SetDictationDirestionButtonsVisibility()
         {
-            DictionaryType currentDictionaryType = SelectedDictionaryComboBoxItem.DictionaryType;
-            switch (currentDictionaryType)
-            {
-                case DictionaryType.CommonDictionary:
-                    CdShowSection();
-                    break;
-                case DictionaryType.VerbPrepositionDictionary:
-                    VpShowSection();
-                    break;
-                case DictionaryType.IrregularVerbDictionary:
-                    IvShowSection();
-                    break;
-            }
+            if (CurrentDictionaryType == DictionaryType.CommonDictionary)
+                this.DictationDirectionButtonsIsVisible = true;
+            else
+                this.DictationDirectionButtonsIsVisible = false;
         }
         #endregion
 
@@ -395,8 +311,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void SetDictationProgressBarMaxValue()
         {
-            DictionaryType currentDictionaryType = SelectedDictionaryComboBoxItem.DictionaryType;
-            if (currentDictionaryType == DictionaryType.IrregularVerbDictionary)
+            if (CurrentDictionaryType == DictionaryType.IrregularVerbDictionary)
                 this.DictationProgressBarMaxValue = this.DictationLengthSliderValue * 3;
             else
                 this.DictationProgressBarMaxValue = this.DictationLengthSliderValue;
@@ -404,5 +319,50 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void IncreaseDictationProgressBarValue() => this.DictationProgressBarValue++;
         private void SetDictationProgressBarDefaultValue() => this.DictationProgressBarValue = 0;
         #endregion
+
+        private void ExecuteForCurrentDictionaryType(Action commonAction, Action verbPrepositionAction, Action irregularVerbAction)
+        {
+            switch (CurrentDictionaryType)
+            {
+                case DictionaryType.CommonDictionary:
+                    commonAction();
+                    break;
+                case DictionaryType.VerbPrepositionDictionary:
+                    verbPrepositionAction();
+                    break;
+                case DictionaryType.IrregularVerbDictionary:
+                    irregularVerbAction();
+                    break;
+            }
+        }
+        private T ExecuteForCurrentDictionaryType<T>(Func<T> commonFunc, Func<T> verbPrepositionFunc, Func<T> irregularVerbFunc)
+        {
+            switch (CurrentDictionaryType)
+            {
+                case DictionaryType.CommonDictionary:
+                    return commonFunc();
+                case DictionaryType.VerbPrepositionDictionary:
+                    return verbPrepositionFunc();
+                case DictionaryType.IrregularVerbDictionary:
+                    return irregularVerbFunc();
+                default:
+                    throw new Exception(ExceptionMessagesHelper.NoSuchDictationType);
+            }
+        }
+        private void ExecuteForCurrentIrregularVerbForm(Action V1Action, Action V2Action, Action V3Action)
+        {
+            switch (currentIrregularVerbForm)
+            {
+                case IrregularVerbForm.FirstForm:
+                    V1Action();
+                    break;
+                case IrregularVerbForm.SecondForm:
+                    V2Action();
+                    break;
+                case IrregularVerbForm.ThirdForm:
+                    V3Action();
+                    break;
+            }
+        }
     }
 }

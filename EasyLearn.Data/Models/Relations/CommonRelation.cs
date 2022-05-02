@@ -1,11 +1,10 @@
-﻿using EasyLearn.Data.Constants;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using EasyLearn.Data.Constants;
 
 #pragma warning disable CS8618
-
 namespace EasyLearn.Data.Models
 {
     public class CommonRelation
@@ -36,8 +35,7 @@ namespace EasyLearn.Data.Models
         [Required]
         public DateTime CreationDateUtc { get; set; }
 
-        [MinLength(ModelConstants.RelationCommentMinLength)]
-        [MaxLength(ModelConstants.RelationCommentMaxLength)]
+        [MaxLength(ModelConstants.CommonRelationCommentMaxLength)]
         public string? Comment { get; set; }
     }
 }

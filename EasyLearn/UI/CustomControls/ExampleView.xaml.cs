@@ -4,17 +4,16 @@ using System.Windows.Controls;
 
 namespace EasyLearn.UI.CustomControls
 {
-    public partial class CommonRelationView : UserControl
+    public partial class ExampleView : UserControl
     {
         #region Private fields
-        private readonly CommonRelationVM viewModel;
+        private readonly ExampleVM viewModel;
         #endregion
 
         #region Public props
         public int Id => viewModel.Id;
         #endregion
-
-        public CommonRelationView(CommonRelationVM viewModel)
+        public ExampleView(ExampleVM viewModel)
         {
             this.viewModel = viewModel;
             this.DataContext = viewModel;
@@ -22,7 +21,8 @@ namespace EasyLearn.UI.CustomControls
         }
 
         #region Static members
-        public static CommonRelationView Create(CommonRelation commonRelation) => new CommonRelationView(new CommonRelationVM(commonRelation));
+        public static ExampleView Create(Example example) => new ExampleView(new ExampleVM(example));
+        public static ExampleView Create(string russianTranslation, string englishTranslation, int id) => new ExampleView(new ExampleVM(russianTranslation, englishTranslation, id));
         #endregion
     }
 }

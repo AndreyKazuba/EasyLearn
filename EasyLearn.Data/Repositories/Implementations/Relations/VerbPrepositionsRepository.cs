@@ -76,14 +76,14 @@ namespace EasyLearn.Data.Repositories.Implementations
         }
         private void ThrowIfTranslationInvalid(string translation)
         {
-            if (string.IsNullOrEmpty(translation) || StringHelper.IsEmptyOrWhiteSpace(translation) || translation.Length > ModelConstants.VerbPrepositiontranslationMaxLength || translation.Length < ModelConstants.VerbPrepositiontranslationMinLength)
+            if (string.IsNullOrEmpty(translation) || StringHelper.IsEmptyOrWhiteSpace(translation) || translation.Length > ModelConstants.VerbPrepositionTranslationMaxLength || translation.Length < ModelConstants.VerbPrepositionTranslationMinLength)
                 throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(VerbPreposition.Translation), nameof(VerbPreposition), translation));
         }
         private void ThrowIfCommentInvalid(string? comment)
         {
             if (comment is null)
                 return;
-            if (StringHelper.IsEmptyOrWhiteSpace(comment) || comment.Length < ModelConstants.RelationCommentMinLength || comment.Length > ModelConstants.RelationCommentMaxLength)
+            if (StringHelper.IsEmptyOrWhiteSpace(comment) || comment.Length > ModelConstants.CommonRelationCommentMaxLength)
                 throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(VerbPreposition.Comment), nameof(VerbPreposition), comment));
         }
         #endregion

@@ -9,7 +9,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 {
     public class CommonRelationVM : ViewModel
     {
-        public int Id { get; set; }
+        public int Id { get; private set; }
         public string RussianValue { get; set; }
         public string EnglishValue { get; set; }
         public string RussianUnitType { get; set; }

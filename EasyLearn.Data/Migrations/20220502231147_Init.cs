@@ -15,7 +15,7 @@ namespace EasyLearn.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Value = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     CreationDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -30,7 +30,7 @@ namespace EasyLearn.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Value = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     CreationDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -45,7 +45,7 @@ namespace EasyLearn.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
                     IsCurrent = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -63,7 +63,7 @@ namespace EasyLearn.Data.Migrations
                     FirstFormId = table.Column<int>(type: "int", nullable: false),
                     SecondFormId = table.Column<int>(type: "int", nullable: false),
                     ThirdFormId = table.Column<int>(type: "int", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    Comment = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -100,8 +100,8 @@ namespace EasyLearn.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(85)", maxLength: 85, nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     CreationDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ChangeDateUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -123,8 +123,8 @@ namespace EasyLearn.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(85)", maxLength: 85, nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     CreationDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ChangeDateUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -150,7 +150,7 @@ namespace EasyLearn.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CreationDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    Comment = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -184,9 +184,9 @@ namespace EasyLearn.Data.Migrations
                     VerbId = table.Column<int>(type: "int", nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    CreationDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Translation = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
+                    CreationDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -215,10 +215,10 @@ namespace EasyLearn.Data.Migrations
                 name: "Examples",
                 columns: table => new
                 {
-                    RussianTranslationId = table.Column<int>(type: "int", nullable: false),
-                    EnglishTranslationId = table.Column<int>(type: "int", nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    RussianValue = table.Column<string>(type: "nvarchar(35)", maxLength: 35, nullable: false),
+                    EnglishValue = table.Column<string>(type: "nvarchar(35)", maxLength: 35, nullable: false),
                     CreationDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CommonRelationCommonDictionaryId = table.Column<int>(type: "int", nullable: true),
                     CommonRelationEnglishUnitId = table.Column<int>(type: "int", nullable: true),
@@ -230,29 +230,17 @@ namespace EasyLearn.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Examples", x => new { x.RussianTranslationId, x.EnglishTranslationId });
+                    table.PrimaryKey("PK_Examples", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Examples_CommonRelations_CommonRelationEnglishUnitId_CommonRelationRussianUnitId_CommonRelationCommonDictionaryId",
                         columns: x => new { x.CommonRelationEnglishUnitId, x.CommonRelationRussianUnitId, x.CommonRelationCommonDictionaryId },
                         principalTable: "CommonRelations",
                         principalColumns: new[] { "EnglishUnitId", "RussianUnitId", "CommonDictionaryId" });
                     table.ForeignKey(
-                        name: "FK_Examples_EnglishUnits_EnglishTranslationId",
-                        column: x => x.EnglishTranslationId,
-                        principalTable: "EnglishUnits",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                    table.ForeignKey(
                         name: "FK_Examples_IrregularVerbs_IrregularVerbId",
                         column: x => x.IrregularVerbId,
                         principalTable: "IrregularVerbs",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Examples_RussianUnits_RussianTranslationId",
-                        column: x => x.RussianTranslationId,
-                        principalTable: "RussianUnits",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Examples_VerbPrepositions_VerbPrepositionVerbId_VerbPrepositionPrepositionId_VerbPrepositionDictionaryId",
                         columns: x => new { x.VerbPrepositionVerbId, x.VerbPrepositionPrepositionId, x.VerbPrepositionDictionaryId },
@@ -279,11 +267,6 @@ namespace EasyLearn.Data.Migrations
                 name: "IX_Examples_CommonRelationEnglishUnitId_CommonRelationRussianUnitId_CommonRelationCommonDictionaryId",
                 table: "Examples",
                 columns: new[] { "CommonRelationEnglishUnitId", "CommonRelationRussianUnitId", "CommonRelationCommonDictionaryId" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Examples_EnglishTranslationId",
-                table: "Examples",
-                column: "EnglishTranslationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Examples_IrregularVerbId",

@@ -2,8 +2,7 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:EasyLearn.UI.Pages"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
@@ -374,7 +373,7 @@
             <StackPanel Orientation="Horizontal" 
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Margin="40 0 0 50"
+                        Margin="70 0 0 50"
                         Grid.Row="1">
 
                 <!--Текстбокс, в который нужно записывать перевод слова для проверки-->
@@ -382,19 +381,21 @@
                          Name="dictationTextBox"
                          HorizontalAlignment="Center"
                          VerticalAlignment="Center"
-                         Height="50"
+                         Height="55"
                          KeyDown="OnKeyDown"
                          Text="{Binding AnswerValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Width="300"
-                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                         Margin="0 0 10 0"
+                         Style="{DynamicResource MaterialDesignOutlinedTextBox}"
                          materialDesign:HintAssist.Hint="Перевод"                
-                         FontSize="16"/>
+                         FontSize="15"/>
 
                 <!--Кнопка "проверить слово"-->
                 <Button Grid.Row="1" 
-                        Style="{DynamicResource MaterialDesignFlatButton}"
+                        Style="{DynamicResource MaterialDesignIconButton}"
                         Command="{Binding CheckAnswerCommand}"
-                        ToolTip="Проверить слово"
+                        Height="70"
+                        Width="70"
                         Visibility="{Binding CheckAnswerButtonIsVisible, Converter={converters:ReverseCollapseConverter}}">
                     <materialDesign:PackIcon Kind="Eye"
                                              Height="25"
@@ -403,11 +404,12 @@
 
                 <!--Кнопка "двигаться дальше"-->
                 <Button Grid.Row="1" 
-                        Style="{DynamicResource MaterialDesignFlatButton}"
+                        Style="{DynamicResource MaterialDesignIconButton}"
                         Command="{Binding TryGoNextCommand}"
-                        ToolTip="Проверить слово и двигаться дальше"
+                        Height="70"
+                        Width="70"
                         Visibility="{Binding NextButtonIsVisible, Converter={converters:ReverseCollapseConverter}}">
-                    <materialDesign:PackIcon Kind="ArrowRightBold"
+                    <materialDesign:PackIcon Kind="Play"
                                              Height="25"
                                              Width="25"/>
                 </Button>
@@ -420,8 +422,8 @@
                     Width="130" 
                     Margin="0 70 0 0"
                     FontSize="18"
-                    ToolTip="Начать дикнтант"
                     Content="Начать"
+                    Style="{DynamicResource MaterialDesignRaisedButton}"  
                     IsEnabled="{Binding StartButtonIsEnabled}"
                     Visibility="{Binding StartButtonIsVisible, Converter={converters:ForwardVisibilityConverter}}"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
@@ -430,6 +432,13 @@
                 <Button.CommandParameter>
                     <StackPanel Margin="10">
 
+                        <ComboBox Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                                  materialDesign:HintAssist.Hint="Словарь"
+                                  MaxDropDownHeight="200"
+                                  Margin="10"
+                                  ItemsSource="{Binding DictionaryComboBoxItems}"
+                                  SelectedItem="{Binding SelectedDictionaryComboBoxItem}"/>
+                        
                         <!--Слайдер для указания кол-ва слов из словаря для диктанта-->
                         <Slider Grid.Row="1"
                                 Minimum="{Binding DictationLengthSliderMinValue}" 
@@ -437,20 +446,26 @@
                                 Style="{DynamicResource MaterialDesignDiscreteSlider}" 
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Center"
-                                ToolTip="Задать кол-во слов в диктанте"
+                                TickFrequency="1"
+                                TickPlacement="Both"
                                 Value="{Binding DictationLengthSliderValue, Mode=TwoWay}"
-                                Width="360"
-                                Margin="5 0"/>
+                                Width="400"
+                                Margin="10 20"/>
 
-                        <!--Комбобокс для выбора словаря-->
-                        <ComboBox Grid.Row="0" 
-                                  materialDesign:HintAssist.Hint="Словарь" 
-                                  materialDesign:HintAssist.IsFloating="True"
-                                  MaxDropDownHeight="200"
-                                  Margin="10"
-                                  ItemsSource="{Binding DictionaryComboBoxItems}"
-                                  SelectedItem="{Binding SelectedDictionaryComboBoxItem}">
-                        </ComboBox>
+                        <StackPanel HorizontalAlignment="Center" 
+                                    Orientation="Horizontal" 
+                                    Margin="0 0 0 12"
+                                    Visibility="{Binding DictationDirectionButtonsIsVisible, Converter={converters:ReverseCollapseConverter}}">
+                            <RadioButton Style="{StaticResource MaterialDesignChoiceChipPrimaryRadioButton}"
+                                         GroupName="DictationDirectionGroup"
+                                         IsChecked="True"
+                                         Content="С английского на русский" />
+                            <RadioButton Style="{StaticResource MaterialDesignChoiceChipPrimaryRadioButton}"
+                                         GroupName="DictationDirectionGroup"
+                                         Content="С русского на английский" 
+                                         IsChecked="{Binding SelectedDictationDirection, Converter={converters:DictationDirectionConverter}}"/>
+                        </StackPanel>
+                        
 
                         <!--Контейнер для кнопок отмены и подтверждения старта диктанта-->
                         <StackPanel Orientation="Horizontal"
@@ -470,7 +485,7 @@
                                 </i:Interaction.Triggers>
 
                             </Button>
-
+    
                             <!--Кнопка подтверждения старта диктанта-->
                             <Button Style="{DynamicResource MaterialDesignFlatButton}"  
                                     HorizontalAlignment="Center"
@@ -499,9 +514,9 @@
                     Width="130"                   
                     Margin="0 70 0 0"
                     FontSize="18"
+                    Style="{DynamicResource MaterialDesignFlatButton}" 
                     Content="Завершить"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
-                    ToolTip="Завершить диктант"
                     Visibility="{Binding StopButtonIsVisible, Converter={converters:ForwardVisibilityConverter}}">
 
 

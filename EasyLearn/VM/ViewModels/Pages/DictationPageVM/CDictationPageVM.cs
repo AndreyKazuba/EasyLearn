@@ -6,7 +6,6 @@ using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
 using EasyLearn.Infrastructure.DictationManagers;
 using EasyLearn.Infrastructure.Enums;
-using EasyLearn.Infrastructure.Helpers;
 using EasyLearn.UI.CustomControls;
 
 namespace EasyLearn.VM.ViewModels.Pages
@@ -24,6 +23,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Binding props
         public Brush CdUnitTypeColor { get; set; }
         public ObservableCollection<AvailableRelationView> CdAnotherAnswerViews { get; set; }
+        public DictationDirection SelectedDictationDirection { get; set; }
         public string CdMainDisplayValue { get; set; }
         public string CdUnitTypeValue { get; set; }
         public string CdCommentValue { get; set; }
@@ -34,20 +34,30 @@ namespace EasyLearn.VM.ViewModels.Pages
         public bool CdCorrectIconIsVisible { get; set; }
         public bool CdWrongIconIsVisible { get; set; }
         public bool CdAnotherAnswersIsVisible { get; set; }
+
         #endregion
 
         private void CdSetRelation(CommonRelation relation)
         {
-            this.CdMainDisplayValue = relation.RussianUnit.Value.NormalizeRegister();
+            if (SelectedDictationDirection == DictationDirection.Directly)
+            {
+                this.CdMainDisplayValue = relation.RussianUnit.Value.NormalizeRegister();
+                this.CdUnitTypeValue = relation.RussianUnit.Type.GetRussianValue();
+                this.CdUnitTypeColor = relation.RussianUnit.Type.GetColor();
+            }
+            else
+            {
+                this.CdMainDisplayValue = relation.EnglishUnit.Value.NormalizeRegister();;
+                this.CdUnitTypeValue = relation.EnglishUnit.Type.GetRussianValue();
+                this.CdUnitTypeColor = relation.EnglishUnit.Type.GetColor();
+            }
             this.CdCommentValue = relation.Comment.TryNormalizeRegister();
-            this.CdUnitTypeValue = relation.RussianUnit.Type.GetRussianValue();
-            this.CdUnitTypeColor = relation.RussianUnit.Type.GetColor();
         }
         private void CdSetDictationManager()
         {
             int countOfRelations = this.DictationLengthSliderValue;
             List<CommonRelation> commonRelations = this.cdLoadedDictionary.Relations;
-            this.commonDictationManager = CommonDictationManager.CreateManager(commonRelations, countOfRelations, DictationDirection.Directly);
+            this.commonDictationManager = CommonDictationManager.CreateManager(commonRelations, countOfRelations, SelectedDictationDirection);
         }
         private void CdShowSection()
         {
@@ -128,10 +138,23 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void CdShowAnotherAnswers(IEnumerable<CommonRelation> commonRelations, string asnwerValue)
         {
             this.CdAnotherAnswersIsVisible = true;
-            IEnumerable<AvailableRelationView> anotherAnswerViews = commonRelations
-                .Where(relation => !StringHelper.Equals(relation.EnglishUnit.Value, asnwerValue))
-                .Select(relation => AvailableRelationView.Create(relation));
+            IEnumerable<AvailableRelationView> anotherAnswerViews = GetAnotherAnswerViews(commonRelations, asnwerValue);
             this.CdAnotherAnswerViews = new ObservableCollection<AvailableRelationView>(anotherAnswerViews);
+        }
+        private IEnumerable<AvailableRelationView> GetAnotherAnswerViews(IEnumerable<CommonRelation> commonRelations, string asnwerValue)
+        {
+            if (SelectedDictationDirection == DictationDirection.Directly)
+            {
+                return commonRelations
+                .Where(relation => !StringHelper.Equals(relation.EnglishUnit.Value, asnwerValue))
+                .Select(relation => AvailableRelationView.Create(relation, SelectedDictationDirection));
+            }
+            else
+            {
+                return commonRelations
+                .Where(relation => !StringHelper.Equals(relation.RussianUnit.Value, asnwerValue))
+                .Select(relation => AvailableRelationView.Create(relation, SelectedDictationDirection));
+            }
         }
         private void CdHideAnotherAnswers()
         {

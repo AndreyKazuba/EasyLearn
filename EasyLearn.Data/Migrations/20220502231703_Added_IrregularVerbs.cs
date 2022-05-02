@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EasyLearn.Data.Migrations
 {
-    public partial class Add_IrregularVerbs : Migration
+    public partial class Added_IrregularVerbs : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

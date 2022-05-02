@@ -1,10 +1,9 @@
-﻿using EasyLearn.Data.Constants;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using EasyLearn.Data.Constants;
 
 #pragma warning disable CS8618
-
 namespace EasyLearn.Data.Models
 {
     public class IrregularVerb
@@ -38,8 +37,7 @@ namespace EasyLearn.Data.Models
 
         public List<Example> Examples { get; set; } = new List<Example>();
 
-        [MinLength(ModelConstants.RelationCommentMinLength)]
-        [MaxLength(ModelConstants.RelationCommentMaxLength)]
+        [MaxLength(ModelConstants.IrregularVerbCommentMaxLength)]
         public string? Comment { get; set; }
     }
 }

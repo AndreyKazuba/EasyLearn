@@ -1,11 +1,10 @@
-﻿using EasyLearn.Data.Constants;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using EasyLearn.Data.Constants;
 
 #pragma warning disable CS8618
-
 namespace EasyLearn.Data.Models
 {
     public class VerbPrepositionDictionnary
@@ -18,7 +17,6 @@ namespace EasyLearn.Data.Models
         [MaxLength(ModelConstants.DictionaryNameMaxLength)]
         public string Name { get; set; }
 
-        [MinLength(ModelConstants.DictionaryDescriptionMinLength)]
         [MaxLength(ModelConstants.DictionaryDescriptionMaxLength)]
         public string? Description { get; set; }
 

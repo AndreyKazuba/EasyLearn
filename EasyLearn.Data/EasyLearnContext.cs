@@ -20,7 +20,6 @@ namespace EasyLearn.Data
         {
             modelBuilder.Entity<CommonRelation>().HasKey(commonRelation => new { commonRelation.EnglishUnitId, commonRelation.RussianUnitId, commonRelation.CommonDictionaryId });
             modelBuilder.Entity<VerbPreposition>().HasKey(verbPreposition => new { verbPreposition.VerbId, verbPreposition.PrepositionId, verbPreposition.VerbPrepositionDictionaryId });
-            modelBuilder.Entity<Example>().HasKey(example => new { example.RussianTranslationId, example.EnglishTranslationId });
         }
 
         public DbSet<EnglishUnit> EnglishUnits { get; set; }

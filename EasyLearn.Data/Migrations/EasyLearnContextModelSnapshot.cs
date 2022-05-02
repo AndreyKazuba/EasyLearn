@@ -37,13 +37,13 @@ namespace EasyLearn.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(85)
+                        .HasColumnType("nvarchar(85)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -67,8 +67,8 @@ namespace EasyLearn.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<DateTime>("CreationDateUtc")
                         .HasColumnType("datetime2");
@@ -101,8 +101,8 @@ namespace EasyLearn.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(12)
-                        .HasColumnType("nvarchar(12)");
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
 
                     b.HasKey("Id");
 
@@ -125,8 +125,8 @@ namespace EasyLearn.Data.Migrations
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.HasKey("Id");
 
@@ -135,11 +135,11 @@ namespace EasyLearn.Data.Migrations
 
             modelBuilder.Entity("EasyLearn.Data.Models.Example", b =>
                 {
-                    b.Property<int>("RussianTranslationId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("EnglishTranslationId")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int?>("CommonRelationCommonDictionaryId")
                         .HasColumnType("int");
@@ -153,14 +153,18 @@ namespace EasyLearn.Data.Migrations
                     b.Property<DateTime>("CreationDateUtc")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<string>("EnglishValue")
+                        .IsRequired()
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
 
                     b.Property<int?>("IrregularVerbId")
                         .HasColumnType("int");
+
+                    b.Property<string>("RussianValue")
+                        .IsRequired()
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
 
                     b.Property<int?>("VerbPrepositionDictionaryId")
                         .HasColumnType("int");
@@ -171,9 +175,7 @@ namespace EasyLearn.Data.Migrations
                     b.Property<int?>("VerbPrepositionVerbId")
                         .HasColumnType("int");
 
-                    b.HasKey("RussianTranslationId", "EnglishTranslationId");
-
-                    b.HasIndex("EnglishTranslationId");
+                    b.HasKey("Id");
 
                     b.HasIndex("IrregularVerbId");
 
@@ -193,8 +195,8 @@ namespace EasyLearn.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Comment")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<int>("FirstFormId")
                         .HasColumnType("int");
@@ -237,8 +239,8 @@ namespace EasyLearn.Data.Migrations
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.HasKey("Id");
 
@@ -257,8 +259,8 @@ namespace EasyLearn.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
 
                     b.Property<DateTime>("CreationDateUtc")
                         .HasColumnType("datetime2");
@@ -271,8 +273,8 @@ namespace EasyLearn.Data.Migrations
 
                     b.Property<string>("Translation")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.HasKey("VerbId", "PrepositionId", "VerbPrepositionDictionaryId");
 
@@ -298,13 +300,13 @@ namespace EasyLearn.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(85)
+                        .HasColumnType("nvarchar(85)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -356,21 +358,9 @@ namespace EasyLearn.Data.Migrations
 
             modelBuilder.Entity("EasyLearn.Data.Models.Example", b =>
                 {
-                    b.HasOne("EasyLearn.Data.Models.EnglishUnit", "EnglishTranslation")
-                        .WithMany()
-                        .HasForeignKey("EnglishTranslationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("EasyLearn.Data.Models.IrregularVerb", null)
                         .WithMany("Examples")
                         .HasForeignKey("IrregularVerbId");
-
-                    b.HasOne("EasyLearn.Data.Models.RussianUnit", "RussianTranslation")
-                        .WithMany()
-                        .HasForeignKey("RussianTranslationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.HasOne("EasyLearn.Data.Models.CommonRelation", null)
                         .WithMany("Examples")
@@ -379,10 +369,6 @@ namespace EasyLearn.Data.Migrations
                     b.HasOne("EasyLearn.Data.Models.VerbPreposition", null)
                         .WithMany("Examples")
                         .HasForeignKey("VerbPrepositionVerbId", "VerbPrepositionPrepositionId", "VerbPrepositionDictionaryId");
-
-                    b.Navigation("EnglishTranslation");
-
-                    b.Navigation("RussianTranslation");
                 });
 
             modelBuilder.Entity("EasyLearn.Data.Models.IrregularVerb", b =>

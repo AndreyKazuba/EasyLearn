@@ -39,10 +39,10 @@
 
 
                 <Button.CommandParameter>
-                    <StackPanel Margin="13 13 13 3">
+                    <StackPanel Margin="20 20 20 10">
 
                         <!--Имя словаря-->
-                        <TextBox Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                        <TextBox Style="{DynamicResource MaterialDesignOutlinedTextBox}"
                                  Width="200" 
                                  materialDesign:HintAssist.Hint="Название">
 
@@ -67,7 +67,8 @@
                                   materialDesign:HintAssist.Hint="Тип списка" 
                                   materialDesign:HintAssist.IsFloating="True"
                                   MaxDropDownHeight="200"
-                                  Margin="4 14 4 4"
+                                  Margin="5 25"
+                                  Style="{DynamicResource MaterialDesignOutlinedComboBox}"
                                   ItemsSource="{Binding AddingWindowDictionaryTypes}"
                                   SelectedItem="{Binding AddingWindowSelectedDictionaryType}">
                         </ComboBox>
@@ -78,7 +79,9 @@
                                  Width="202"
                                  VerticalScrollBarVisibility="Auto"
                                  materialDesign:HintAssist.Hint="Описание"
-                                 materialDesign:HintAssist.IsFloating="True">
+                                 materialDesign:HintAssist.IsFloating="True"
+                                 MaxLength="65"
+                                 Style="{DynamicResource MaterialDesignOutlinedTextBox}">
 
                             <TextBox.Text>
                                 <Binding Path="AddingWindowDictionaryDescriptionValue" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">

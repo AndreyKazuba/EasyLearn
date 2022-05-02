@@ -94,7 +94,7 @@ namespace EasyLearn.Data.Repositories.Implementations
         {
             if (description is null)
                 return;
-            if (StringHelper.IsEmptyOrWhiteSpace(description) || description.Length < ModelConstants.DictionaryDescriptionMinLength || description.Length > ModelConstants.DictionaryDescriptionMaxLength)
+            if (StringHelper.IsEmptyOrWhiteSpace(description) || description.Length > ModelConstants.DictionaryDescriptionMaxLength)
                 throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(CommonDictionary.Description), nameof(CommonDictionary), description));
         }
         #endregion

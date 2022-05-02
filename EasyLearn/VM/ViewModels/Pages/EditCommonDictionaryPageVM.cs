@@ -17,6 +17,7 @@ using EasyLearn.Infrastructure.Helpers;
 using EasyLearn.UI;
 using EasyLearn.Infrastructure.Enums;
 using EasyLearn.Infrastructure.Validation;
+using System.Windows.Media;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -28,6 +29,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         #endregion
 
         #region Private fields
+        private int exampleIdsCount;
         private int dictionaryId;
         private Guid relationExistValidationRuleId;
         private List<CommonRelation> allCommonRelations;
@@ -55,12 +57,16 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         #region Props for binding
         public ObservableCollection<CommonRelationView> CommonRelationViews { get; set; }
+        public ObservableCollection<ExampleView> ExampleViews { get; set; } = new ObservableCollection<ExampleView>();
+        public SolidColorBrush HorisonralSeporatorColor => this.CommonRelationHasExistLableIsVisible ? new BrushConverter().ConvertFrom("#FFA70404") as SolidColorBrush ?? Brushes.Red : Brushes.LightGray;
         public string DictionaryName { get; set; }
         public string DictionaryDescription { get; set; }
         public string AddingWindowEnglishValue { get; set; }
         public string AddingWindowRussianValue { get; set; }
         public string AddingWindowCommentValue { get; set; }
         public string SearchStringValue { get; set; }
+        public string ExampleRussianTranslationValue { get; set; }
+        public string ExampleEnglishTranslationValue { get; set; }
         public bool IsConfirmCommonRelationAddingButtonEnabled { get; set; }
         public bool CommonRelationHasExistLableIsVisible { get; set; }
         public ObservableCollection<UnitTypeComboBoxItem> AddingWindowRussianUnitTypes { get; set; }
@@ -114,6 +120,10 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command UpdateConfirmCommonRelationAddingButtonAvailabilityCommand { get; private set; }
         public Command CheckCommonRelationForExistingCommand { get; private set; }
         public Command SearchCommonRelationsCommand { get; private set; }
+        public Command AddExampleViewCommand { get; private set; }
+        public Command<int> RemoveExampleViewCommand { get; private set; }
+        public Command ClearExampleAddingFieldsCommand { get; private set; }
+        public Command FocusExampleRussianTranslationFieldCommand { get; private set; }
         protected override void InitCommands()
         {
             this.GoBackCommand = new Command(GoBack);
@@ -125,6 +135,10 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.UpdateConfirmCommonRelationAddingButtonAvailabilityCommand = new Command(UpdateConfirmCommonRelationAddingButtonAvailability);
             this.CheckCommonRelationForExistingCommand = new Command(CheckCommonRelationForExisting);
             this.SearchCommonRelationsCommand = new Command(SearchCommonRelations);
+            this.AddExampleViewCommand = new Command(AddExampleView);
+            this.RemoveExampleViewCommand = new Command<int>(exampleId => RemoveExampleView(exampleId));
+            this.ClearExampleAddingFieldsCommand = new Command(ClearExampleAddingFields);
+            this.FocusExampleRussianTranslationFieldCommand = new Command(FocusExampleRussianTranslationField);
         }
         #endregion
 
@@ -192,9 +206,18 @@ namespace EasyLearn.VM.ViewModels.Pages
             IEnumerable<CommonRelationView> commonRelationViews = selectedRelations.Select(selectedRelation => CommonRelationView.Create(selectedRelation));
             this.CommonRelationViews = new ObservableCollection<CommonRelationView>(commonRelationViews);
         }
+        private void AddExampleView() => this.ExampleViews.Add(ExampleView.Create(this.ExampleRussianTranslationValue, this.ExampleEnglishTranslationValue, ++exampleIdsCount));
+        private void RemoveExampleView(int exampleId) => this.ExampleViews.Remove(FindExampleView(exampleId));
+        private void ClearExampleAddingFields()
+        {
+            this.ExampleRussianTranslationValue = String.Empty;
+            this.ExampleEnglishTranslationValue = String.Empty;
+        }
+        private void FocusExampleRussianTranslationField() => App.GetService<EditCommonDictionaryPage>().exampleRussianTranslationField.Focus();
         #endregion
 
         #region Other private members
+        private ExampleView FindExampleView(int exampleId) => this.ExampleViews.First(exampleView => exampleView.Id == exampleId);
         private CommonRelationView FindCommonRelationView(int commonRelationId) => this.CommonRelationViews.First(commonRelationView => commonRelationView.Id == commonRelationId);
         private void AddCommonRelationToUI(CommonRelation commonRelation) => this.CommonRelationViews.Add(CommonRelationView.Create(commonRelation));
         private void SetAddingWindowRussianUnitTypes()
@@ -238,7 +261,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.AddingWidnowEnglishUnitTypes = englishUnitTypes;
             this.AddingWindowSelectedEnglishUnitType = selectedEnglishUnitType;
         }
-       
+
         #endregion
         private void FocusRussianValueTextBox() => App.GetService<EditCommonDictionaryPage>().newCommonRelationRussianValueTextBox.Focus();
         private void FocusEnglishValueTextBox() => App.GetService<EditCommonDictionaryPage>().newCommonRelationEnglishValueTextBox.Focus();

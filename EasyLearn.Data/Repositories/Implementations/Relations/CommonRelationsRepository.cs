@@ -86,7 +86,7 @@ namespace EasyLearn.Data.Repositories.Implementations
         {
             if (comment is null)
                 return;
-            if (StringHelper.IsEmptyOrWhiteSpace(comment) || comment.Length < ModelConstants.RelationCommentMinLength || comment.Length > ModelConstants.RelationCommentMaxLength)
+            if (StringHelper.IsEmptyOrWhiteSpace(comment) || comment.Length > ModelConstants.CommonRelationCommentMaxLength)
                 throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(CommonRelation.Comment), nameof(CommonRelation), comment));
         }
         #endregion

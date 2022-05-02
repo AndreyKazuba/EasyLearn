@@ -57,20 +57,26 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition/>
                                 <RowDefinition/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
                             <!--Текстбокс для введения русского значения в новом CommonRelation-->
-                            <TextBox Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                                     Width="200" 
+                            <TextBox Style="{DynamicResource MaterialDesignOutlinedTextBox}"
+                                     HorizontalAlignment="Stretch"
                                      Grid.Column="0"
                                      Grid.Row="0"
+                                     MaxLength="10"
                                      InputLanguageManager.InputLanguage="ru-RU"
                                      Margin="10"
                                      KeyDown="OnRussianValueTextBoxKeyDown"
@@ -97,28 +103,36 @@
 
                             <!--Комбобокс для выбора типа RussianUnit в новом CommonRelation-->
                             <ComboBox MaxDropDownHeight="200"
-                                      Margin="10 20 10 0"
+                                      Margin="10 14 10 10"
                                       Grid.Row="1"
                                       Grid.Column="0"
                                       KeyDown="OnRussianUnitTypeComboBoxKeyDown"
                                       Name="newCommonRelationRussianUnitTypeComboBox"
                                       ItemsSource="{Binding AddingWindowRussianUnitTypes}"
-                                      SelectedItem="{Binding AddingWindowSelectedRussianUnitType, Mode=TwoWay}">
-                                
+                                      SelectedItem="{Binding AddingWindowSelectedRussianUnitType, Mode=TwoWay}"
+                                      Style="{DynamicResource MaterialDesignOutlinedComboBox}">
+
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
                                         <i:InvokeCommandAction Command="{Binding CheckCommonRelationForExistingCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
-                                
+
                             </ComboBox>
 
+                            <Border BorderBrush="LightGray" 
+                                    BorderThickness="0.8" 
+                                    Margin="0 0 0 6"
+                                    Grid.RowSpan="2"
+                                    Grid.Column="1"/>
+
                             <!--Текстбокс для введения английского значения в новом CommonRelation-->
-                            <TextBox Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                                     Width="200" 
+                            <TextBox Style="{DynamicResource MaterialDesignOutlinedTextBox}"
+                                     HorizontalAlignment="Stretch"
                                      Grid.Row="0"
-                                     Grid.Column="1"
+                                     Grid.Column="2"
                                      Margin="10"
+                                     MaxLength="10" 
                                      InputLanguageManager.InputLanguage="en-US"
                                      KeyDown="OnEnglishValueTextBoxKeyDown"
                                      Name="newCommonRelationEnglishValueTextBox"
@@ -144,13 +158,14 @@
 
                             <!--Комбобокс для выбора типа EnglishUnit в новом CommonRelation-->
                             <ComboBox MaxDropDownHeight="200"
-                                      Margin="10 20 10 0"
+                                      Margin="10 14 10 10"
                                       Grid.Row="1"
-                                      Grid.Column="1"
+                                      Grid.Column="2"
                                       KeyDown="OnEnglishUnitTypeComboBoxKeyDown"
                                       Name="newCommonRelationEnglishUnitTypeComboBox"
                                       ItemsSource="{Binding AddingWidnowEnglishUnitTypes}"
-                                      SelectedItem="{Binding AddingWindowSelectedEnglishUnitType, Mode=TwoWay}">
+                                      SelectedItem="{Binding AddingWindowSelectedEnglishUnitType, Mode=TwoWay}"
+                                      Style="{DynamicResource MaterialDesignOutlinedComboBox}">
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
@@ -160,18 +175,106 @@
 
                             </ComboBox>
 
+                            <StackPanel VerticalAlignment="Center" 
+                                        HorizontalAlignment="Center" 
+                                        Grid.Row="2" Grid.ColumnSpan="3" 
+                                        Orientation="Horizontal" 
+                                        Visibility="{Binding CommonRelationHasExistLableIsVisible, Converter={converters:ReverseCollapseConverter}}"
+                                        Margin="0 2 0 5">
+                                <materialDesign:PackIcon Kind="AlertCircleOutline" Foreground="#FFA70404" Margin="2"/>
+                                <TextBlock VerticalAlignment="Center"
+                                           Margin="2 0 0 2"
+                                           Text="Такая запись уже есть" 
+                                           Foreground="#FFA70404"
+                                           Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"/>
+                                <TextBlock/>
+                            </StackPanel>
+
+                            <Border BorderBrush="{Binding HorisonralSeporatorColor}" 
+                                    BorderThickness="0.8" 
+                                    Grid.ColumnSpan="3"
+                                    Grid.Row="3"
+                                    Grid.Column="0"/>
+
+                            <!--Строка с добавлением примеров-->
+                            <Grid Grid.Row="4"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="3"
+                                  Margin="0 10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="0.12*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Style="{DynamicResource MaterialDesignOutlinedTextBox}"
+                                         Margin="10"
+                                         Width="180"
+                                         MaxLength="10" 
+                                         Text="{Binding ExampleRussianTranslationValue}"
+                                         InputLanguageManager.InputLanguage="ru-RU"
+                                         Name="exampleRussianTranslationField"
+                                         materialDesign:HintAssist.Hint="Пример на русском">
+                                </TextBox>
+
+                                <TextBox Style="{DynamicResource MaterialDesignOutlinedTextBox}"
+                                         Width="180"
+                                         Grid.Column="1"
+                                         Margin="10"
+                                         MaxLength="10"
+                                         Text="{Binding ExampleEnglishTranslationValue}"
+                                         InputLanguageManager.InputLanguage="en-US"
+                                         materialDesign:HintAssist.Hint="Пример на английском">
+                                </TextBox>
+
+                                <Button Style="{DynamicResource MaterialDesignIconButton}"  
+                                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                                        Grid.Column="2">
+                                    <materialDesign:PackIcon Kind="Play" />
+
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Click">
+                                            <i:InvokeCommandAction Command="{Binding AddExampleViewCommand}"/>
+                                            <i:InvokeCommandAction Command="{Binding ClearExampleAddingFieldsCommand}"/>
+                                            <i:InvokeCommandAction Command="{Binding FocusExampleRussianTranslationFieldCommand}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
+
+                            </Grid>
+
+                            <ItemsControl ItemsSource="{Binding ExampleViews}" 
+                                          VerticalContentAlignment="Top"
+                                          HorizontalContentAlignment="Center"
+                                          Grid.Row="5"
+                                          Grid.Column="0"
+                                          Width="470"
+                                          Grid.ColumnSpan="3">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+
+                            <Border BorderBrush="LightGray" 
+                                    BorderThickness="0.8" 
+                                    Grid.ColumnSpan="3"
+                                    Grid.Row="6"
+                                    Grid.Column="0"/>
+
                             <!--Текстбокс для введения комментария к новому CommonRelation-->
-                            <TextBox Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                            <TextBox Style="{DynamicResource MaterialDesignOutlinedTextBox}"
                                      Width="200" 
-                                     Grid.Row="2"
+                                     Grid.Row="7"
                                      Grid.Column="0"
-                                     Grid.ColumnSpan="2"
+                                     Grid.ColumnSpan="3"
                                      InputLanguageManager.InputLanguage="ru-RU"
                                      Name="newCommonRelationCommentValueTextBox"
-                                     Margin="10"
+                                     Margin="0 10 0 4"
                                      KeyDown="OnCommentValueTextBoxKeyDown"
                                      materialDesign:HintAssist.Hint="Комментарий">
-                                
+
                                 <TextBox.Text>
                                     <Binding Path="AddingWindowCommentValue" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
@@ -188,12 +291,10 @@
 
                             </TextBox>
 
-
                             <!--Кнопки отмены и подтверждения добавления нового CommonRelation-->
-                            <Grid Margin="0 10 0 0"
-                                  Grid.Row="3"
+                            <Grid Grid.Row="8"
                                   Grid.Column="0"
-                                  Grid.ColumnSpan="2"
+                                  Grid.ColumnSpan="3"
                                   HorizontalAlignment="Center"
                                   VerticalAlignment="Center">
 
@@ -206,7 +307,7 @@
                                 <Button Style="{DynamicResource MaterialDesignFlatButton}" 
                                         Content="Отмена"
                                         Margin="6"
-                                        Foreground="DarkRed"
+                                        Foreground="#FFF34D4D"
                                         Name="newCommonRelationAddingWindowCancelButton">
 
                                     <!--Действия кнопки при её нажатии-->
@@ -225,7 +326,6 @@
                                         Content="Добавить"
                                         Margin="10"
                                         Grid.Column="1"
-                                        Foreground="ForestGreen"
                                         Name="newCommonRelationAddingButton"
                                         IsEnabled="{Binding IsConfirmCommonRelationAddingButtonEnabled}">
 
@@ -241,14 +341,6 @@
 
                             </Grid>
 
-                            <TextBlock Grid.Row="4" Grid.ColumnSpan="2" 
-                                       VerticalAlignment="Center" HorizontalAlignment="Center" 
-                                       Foreground="Brown" 
-                                       Text="Такая запись уже есть в словаре" 
-                                       Style="{DynamicResource MaterialDesignHeadline6TextBlock}"
-                                       Visibility="{Binding CommonRelationHasExistLableIsVisible, Converter={converters:ReverseCollapseConverter}}"/>
-
-
                         </Grid>
 
                     </Button.CommandParameter>
@@ -261,7 +353,7 @@
                         Style="{DynamicResource MaterialDesignFlatButton}"
                         Content="Очистить"
                         DockPanel.Dock="Right"
-                        Foreground="Red"
+                        Foreground="#FFA70404"
                         Margin="5 0"/>
 
                 <!--Поисковая строка-->
@@ -283,7 +375,7 @@
                                  materialDesign:HintAssist.Hint="Search"
                                  Text="{Binding SearchStringValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
-                            
+
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TextChanged">
