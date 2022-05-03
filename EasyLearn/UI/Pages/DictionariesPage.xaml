@@ -7,6 +7,7 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
+      xmlns:constants="clr-namespace:EasyLearn.Data.Constants;assembly=EasyLearn.Data"
       xmlns:validation="clr-namespace:EasyLearn.Infrastructure.Validation"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
@@ -26,30 +27,31 @@
             </ItemsControl>
 
             <Button Height="50"
-                Width="50"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                Margin="30"
-                Style="{DynamicResource MaterialDesignFloatingActionButton}"
-                Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
+                    Width="50"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Margin="30"
+                    Style="{DynamicResource MaterialDesignFloatingActionButton}"
+                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
 
                 <materialDesign:PackIcon Kind="Plus"
                                          Height="30"
                                          Width="30"/>
 
-
                 <Button.CommandParameter>
-                    <StackPanel Margin="20 20 20 10">
+                    <StackPanel Margin="14">
 
                         <!--Имя словаря-->
-                        <TextBox Style="{DynamicResource MaterialDesignOutlinedTextBox}"
-                                 Width="200" 
-                                 materialDesign:HintAssist.Hint="Название">
+                        <TextBox Style="{DynamicResource EasyTextBox}"
+                                 materialDesign:HintAssist.Hint="Название"
+                                 Padding="14 11"
+                                 Width="202">
 
                             <TextBox.Text>
                                 <Binding Path="AddingWindowDictionaryNameValue" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
                                     <Binding.ValidationRules>
-                                        <validation:InRange Min="2" Max="13" Group="AddNewDictionary" ValidatesOnTargetUpdated="True"/>
+                                        <validation:NotEmpty Group="AddNewDictionary" ValidatesOnTargetUpdated="True"/>
+                                        <validation:InRange Max="{x:Static constants:ModelConstants.DictionaryNameMaxLength}" Group="AddNewDictionary" ValidatesOnTargetUpdated="True"/>
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox.Text>
@@ -62,51 +64,51 @@
 
                         </TextBox>
 
-                        <!--Выбор "обычный список/список с предлогами"-->
-                        <ComboBox Grid.Row="0" 
-                                  materialDesign:HintAssist.Hint="Тип списка" 
+                        <!--Описание списка слов-->
+                        <TextBox Width="202"
+                                 Padding="14 11"
+                                 materialDesign:HintAssist.Hint="Описание"
+                                 materialDesign:HintAssist.IsFloating="True"  
+                                 Style="{DynamicResource EasyTextArea}">
+
+                            <TextBox.Text>
+                                <Binding Path="AddingWindowDictionaryDescriptionValue" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                                    <Binding.ValidationRules>
+                                        <validation:InRange Max="{x:Static constants:ModelConstants.DictionaryDescriptionMaxLength}" Group="AddNewDictionary" ValidatesOnTargetUpdated="True"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="TextChanged">
+                                    <i:InvokeCommandAction Command="{Binding UpdateConfirmDictionaryAddingButtonAvailabilityCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+
+                        </TextBox>
+
+                        <!--Выбор "обычный словарь/словарь с предлогами"-->
+                        <ComboBox materialDesign:HintAssist.Hint="Тип словаря" 
                                   materialDesign:HintAssist.IsFloating="True"
                                   MaxDropDownHeight="200"
-                                  Margin="5 25"
+                                  Margin="0 0 0 14"
+                                  Padding="14 11"
                                   Style="{DynamicResource MaterialDesignOutlinedComboBox}"
                                   ItemsSource="{Binding AddingWindowDictionaryTypes}"
                                   SelectedItem="{Binding AddingWindowSelectedDictionaryType}">
                         </ComboBox>
 
-                        <!--Описание списка слов-->
-                        <TextBox TextWrapping="Wrap"
-                                 VerticalAlignment="Stretch"
-                                 Width="202"
-                                 VerticalScrollBarVisibility="Auto"
-                                 materialDesign:HintAssist.Hint="Описание"
-                                 materialDesign:HintAssist.IsFloating="True"
-                                 MaxLength="65"
-                                 Style="{DynamicResource MaterialDesignOutlinedTextBox}">
-
-                            <TextBox.Text>
-                                <Binding Path="AddingWindowDictionaryDescriptionValue" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
-                                    <Binding.ValidationRules>
-                                        <validation:InRange Min="0" Max="100" Group="AddNewDictionary" ValidatesOnTargetUpdated="True"/>
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox.Text>
-                            
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="TextChanged">
-                                    <i:InvokeCommandAction Command="{Binding UpdateConfirmDictionaryAddingButtonAvailabilityCommand}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-
-                        </TextBox>
-
                         <!--Кнопки отмены и подтверждения добавления-->
-                        <StackPanel Orientation="Horizontal"
-                                    Margin="0 10 0 0">
+                        <Grid>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
 
                             <!--Кнопка отмены добавления нового списка-->
-                            <Button Style="{DynamicResource MaterialDesignFlatButton}" 
-                                    Content="Отмена"
-                                    Margin="6">
+                            <Button Style="{DynamicResource EasyCancelButton}" 
+                                    Content="Отмена">
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
@@ -118,10 +120,9 @@
                             </Button>
 
                             <!--Кнопка подтверждения добавления нового аккаунта-->
-                            <Button Style="{DynamicResource MaterialDesignFlatButton}"  
-                                    HorizontalAlignment="Center"
+                            <Button Style="{DynamicResource EasyConfirmButton}"
                                     Content="Добавить"
-                                    Margin="10"
+                                    Grid.Column="1"
                                     IsEnabled="{Binding IsConfirmDictionaryAddingButtonEnabled}">
 
                                 <i:Interaction.Triggers>
@@ -132,7 +133,7 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
-                        </StackPanel>
+                        </Grid>
                     </StackPanel>
                 </Button.CommandParameter>
             </Button>

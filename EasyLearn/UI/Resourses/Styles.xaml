@@ -1,0 +1,42 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="EasyCancelButton" TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+        <Setter Property="Button.Background" Value="{DynamicResource error}"/>
+        <Setter Property="Button.BorderBrush" Value="{DynamicResource cancelButtonBorder}"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="Margin" Value="0 0 7 0"/>
+    </Style>
+    <Style x:Key="EasyConfirmButton" TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+        <Setter Property="Button.Background" Value="#FF0E7F04"/>
+        <Setter Property="Button.BorderBrush" Value="#FF0C6704"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="Margin" Value="7 0 0 0"/>
+    </Style>
+    <Style x:Key="EasyTextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="True">
+                <Setter Property="Margin" Value="0 0 0 26" />
+            </Trigger>
+            <Trigger Property="Validation.HasError" Value="False">
+                <Setter Property="Margin" Value="0 0 0 14" />
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="MaxHeight" Value="40"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+    </Style>
+    <Style x:Key="EasyTextArea" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Hidden"/>
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="True">
+                <Setter Property="Margin" Value="0 0 0 26" />
+            </Trigger>
+            <Trigger Property="Validation.HasError" Value="False">
+                <Setter Property="Margin" Value="0 0 0 14" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

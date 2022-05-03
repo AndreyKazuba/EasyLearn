@@ -18,6 +18,8 @@ using EasyLearn.UI;
 using EasyLearn.Infrastructure.Enums;
 using EasyLearn.Infrastructure.Validation;
 using System.Windows.Media;
+using System.Windows;
+using Controls = System.Windows.Controls;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -29,6 +31,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         #endregion
 
         #region Private fields
+        private bool exampleInvalid;
         private int exampleIdsCount;
         private int dictionaryId;
         private Guid relationExistValidationRuleId;
@@ -41,6 +44,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             {
                 ValidationPool.Set(ValidationRulesGroup.AddCommonRelation, relationExistValidationRuleId, !value);
                 this.CommonRelationHasExistLableIsVisible = value;
+                this.AddingWidnowTopVerticalExpanderMargin = value ? new Thickness(7, 0, 7, 12) : new Thickness(7, 0, 7, 0);
             }
         }
 
@@ -58,17 +62,20 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Props for binding
         public ObservableCollection<CommonRelationView> CommonRelationViews { get; set; }
         public ObservableCollection<ExampleView> ExampleViews { get; set; } = new ObservableCollection<ExampleView>();
-        public SolidColorBrush HorisonralSeporatorColor => this.CommonRelationHasExistLableIsVisible ? new BrushConverter().ConvertFrom("#FFA70404") as SolidColorBrush ?? Brushes.Red : Brushes.LightGray;
+        public SolidColorBrush HorisontalSeporatorColor => this.CommonRelationHasExistLableIsVisible ? new BrushConverter().ConvertFrom("#FFA70404") as SolidColorBrush ?? Brushes.Red : Brushes.LightGray;
         public string DictionaryName { get; set; }
         public string DictionaryDescription { get; set; }
         public string AddingWindowEnglishValue { get; set; }
         public string AddingWindowRussianValue { get; set; }
         public string AddingWindowCommentValue { get; set; }
         public string SearchStringValue { get; set; }
-        public string ExampleRussianTranslationValue { get; set; }
-        public string ExampleEnglishTranslationValue { get; set; }
+        public string ExampleRussianValue { get; set; }
+        public string ExampleEnglishValue { get; set; }
         public bool IsConfirmCommonRelationAddingButtonEnabled { get; set; }
         public bool CommonRelationHasExistLableIsVisible { get; set; }
+        public bool AddExampleButtonIsVisible { get; set; }
+        public bool ExamleWarningIconIsVisible { get; set; }
+        public Thickness AddingWidnowTopVerticalExpanderMargin { get; set; } = new Thickness(7, 0, 7, 0);
         public ObservableCollection<UnitTypeComboBoxItem> AddingWindowRussianUnitTypes { get; set; }
         public ObservableCollection<UnitTypeComboBoxItem> AddingWidnowEnglishUnitTypes { get; set; }
         public UnitTypeComboBoxItem AddingWindowSelectedRussianUnitType { get; set; }
@@ -83,6 +90,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             EditCommonDictionaryPage.RussianUnitTypeComboBoxEnterDown += OnRussianUnitTypeComboBoxEnterDown;
             EditCommonDictionaryPage.EnglishUnitTypeComboBoxEnterDown += OnEnglishUnitTypeComboBoxEnterDown;
             EditCommonDictionaryPage.CommentValueTextBoxEnterDown += OnCommentValueTextBoxEnterDown;
+            EditCommonDictionaryPage.ExampleRussianValueTextBoxEnterDown += OnExampleRussianValueTextBoxEnterDown;
+            EditCommonDictionaryPage.ExampleEnglishValueTextBoxEnterDown += OnExampleEnglishValueTextBoxEnterDown;
             AppWindow.WindowCtrlNDown += OnWindowCtrlNDown;
             AppWindow.WindowEscDown += OnWindowEscDown;
         }
@@ -90,6 +99,8 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void OnEnglishValueTextBoxEnterDown() => FocusRussianUnitTypeComboBox();
         private void OnRussianUnitTypeComboBoxEnterDown() => FocusEnglishUnitTypeComboBox();
         private void OnEnglishUnitTypeComboBoxEnterDown() => FocusCommentValueTextBox();
+        private void OnExampleRussianValueTextBoxEnterDown() => FocusExampleEnglishValueField();
+        private void OnExampleEnglishValueTextBoxEnterDown() => AddExampleButtonSoftClick();
         private void OnCommentValueTextBoxEnterDown()
         {
             if (ValidationPool.IsValid(ValidationRulesGroup.AddCommonRelation))
@@ -123,7 +134,9 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command AddExampleViewCommand { get; private set; }
         public Command<int> RemoveExampleViewCommand { get; private set; }
         public Command ClearExampleAddingFieldsCommand { get; private set; }
-        public Command FocusExampleRussianTranslationFieldCommand { get; private set; }
+        public Command FocusExampleRussianValueFieldCommand { get; private set; }
+        public Command ValidateExampleSectionCommand { get; private set; }
+        public Command CheckExampleFieldsMaxLengthVisibilityCommand { get; private set; }
         protected override void InitCommands()
         {
             this.GoBackCommand = new Command(GoBack);
@@ -138,7 +151,9 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.AddExampleViewCommand = new Command(AddExampleView);
             this.RemoveExampleViewCommand = new Command<int>(exampleId => RemoveExampleView(exampleId));
             this.ClearExampleAddingFieldsCommand = new Command(ClearExampleAddingFields);
-            this.FocusExampleRussianTranslationFieldCommand = new Command(FocusExampleRussianTranslationField);
+            this.FocusExampleRussianValueFieldCommand = new Command(FocusExampleRussianValueField);
+            this.ValidateExampleSectionCommand = new Command(ValidateExampleSection);
+            this.CheckExampleFieldsMaxLengthVisibilityCommand = new Command(CheckExampleFieldsMaxLengthVisibility);
         }
         #endregion
 
@@ -171,8 +186,11 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.AddingWindowEnglishValue = String.Empty;
             this.AddingWindowRussianValue = String.Empty;
             this.AddingWindowCommentValue = String.Empty;
+            this.ExampleRussianValue = String.Empty;
+            this.ExampleEnglishValue = String.Empty;
             this.AddingWindowSelectedRussianUnitType = AddingWindowRussianUnitTypes[0];
             this.AddingWindowSelectedEnglishUnitType = AddingWidnowEnglishUnitTypes[0];
+            ShowExampleWarningIcon();
         }
         private async Task SetDictionaryAsCurrent(int commonDictionaryId)
         {
@@ -206,14 +224,36 @@ namespace EasyLearn.VM.ViewModels.Pages
             IEnumerable<CommonRelationView> commonRelationViews = selectedRelations.Select(selectedRelation => CommonRelationView.Create(selectedRelation));
             this.CommonRelationViews = new ObservableCollection<CommonRelationView>(commonRelationViews);
         }
-        private void AddExampleView() => this.ExampleViews.Add(ExampleView.Create(this.ExampleRussianTranslationValue, this.ExampleEnglishTranslationValue, ++exampleIdsCount));
+        private void AddExampleView() => this.ExampleViews.Add(ExampleView.Create(this.ExampleRussianValue, this.ExampleEnglishValue, ++exampleIdsCount));
         private void RemoveExampleView(int exampleId) => this.ExampleViews.Remove(FindExampleView(exampleId));
         private void ClearExampleAddingFields()
         {
-            this.ExampleRussianTranslationValue = String.Empty;
-            this.ExampleEnglishTranslationValue = String.Empty;
+            this.ExampleRussianValue = String.Empty;
+            this.ExampleEnglishValue = String.Empty;
         }
-        private void FocusExampleRussianTranslationField() => App.GetService<EditCommonDictionaryPage>().exampleRussianTranslationField.Focus();
+        private void FocusExampleRussianValueField() => App.GetService<EditCommonDictionaryPage>().exampleRussianValueField.Focus();
+        private void ValidateExampleSection()
+        {
+            bool empty = String.IsNullOrWhiteSpace(this.ExampleEnglishValue) || String.IsNullOrWhiteSpace(this.ExampleRussianValue);
+
+            if (empty)
+            {
+                this.exampleInvalid = true;
+                ShowExampleWarningIcon();
+                return;
+            }
+            this.exampleInvalid = false;
+            ShowAddExampleButton();
+        }
+        private void CheckExampleFieldsMaxLengthVisibility()
+        {
+            bool inRange = (!String.IsNullOrWhiteSpace(this.ExampleEnglishValue) && this.ExampleEnglishValue.Length > 20)
+                        || (!String.IsNullOrWhiteSpace(this.ExampleRussianValue) && this.ExampleRussianValue.Length > 20);
+            if (inRange)
+                ShowExampleFieldsMaxLength();
+            else
+                HideExampleFieldsMaxLength();
+        }
         #endregion
 
         #region Other private members
@@ -263,13 +303,43 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
 
         #endregion
+        private void ShowAddExampleButton()
+        {
+            this.AddExampleButtonIsVisible = true;
+            this.ExamleWarningIconIsVisible = false;
+        }
+        private void ShowExampleWarningIcon()
+        {
+            this.AddExampleButtonIsVisible = false;
+            this.ExamleWarningIconIsVisible = true;
+        }
+        private void ShowExampleFieldsMaxLength()
+        {
+            Controls.TextBox exampleRussianValueField = App.GetService<EditCommonDictionaryPage>().exampleRussianValueField;
+            Controls.TextBox exampleEnglishValueField = App.GetService<EditCommonDictionaryPage>().exampleEnglishValueField;
+            exampleRussianValueField.MaxLength = ModelConstants.ExampleValueMaxLength;
+            exampleEnglishValueField.MaxLength = ModelConstants.ExampleValueMaxLength;
+            exampleRussianValueField.Margin = new Thickness(0, 0, 7, 7);
+            exampleEnglishValueField.Margin = new Thickness(7, 0, 0, 7);
+        }
+        private void HideExampleFieldsMaxLength()
+        {
+            Controls.TextBox exampleRussianValueField = App.GetService<EditCommonDictionaryPage>().exampleRussianValueField;
+            Controls.TextBox exampleEnglishValueField = App.GetService<EditCommonDictionaryPage>().exampleEnglishValueField;
+            exampleRussianValueField.MaxLength = 0;
+            exampleEnglishValueField.MaxLength = 0;
+            exampleRussianValueField.Margin = new Thickness(0, 0, 7, 0);
+            exampleEnglishValueField.Margin = new Thickness(7, 0, 0, 0);
+        }
         private void FocusRussianValueTextBox() => App.GetService<EditCommonDictionaryPage>().newCommonRelationRussianValueTextBox.Focus();
         private void FocusEnglishValueTextBox() => App.GetService<EditCommonDictionaryPage>().newCommonRelationEnglishValueTextBox.Focus();
         private void FocusRussianUnitTypeComboBox() => App.GetService<EditCommonDictionaryPage>().newCommonRelationRussianUnitTypeComboBox.Focus();
         private void FocusEnglishUnitTypeComboBox() => App.GetService<EditCommonDictionaryPage>().newCommonRelationEnglishUnitTypeComboBox.Focus();
         private void FocusCommentValueTextBox() => App.GetService<EditCommonDictionaryPage>().newCommonRelationCommentValueTextBox.Focus();
+        private void FocusExampleEnglishValueField() => App.GetService<EditCommonDictionaryPage>().exampleEnglishValueField.Focus();
         private void AddingNewCommonRelationButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().newCommonRelationAddingButton.SoftClick();
         private void OpenNewCommonRelationAddingWindowButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().openNewCommonRelationAddingWindowButton.SoftClick();
         private void NewCommonRelationAddingWindowCancelButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().newCommonRelationAddingWindowCancelButton.SoftClick();
+        private void AddExampleButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().addExampleButton.SoftClick();
     }
 }

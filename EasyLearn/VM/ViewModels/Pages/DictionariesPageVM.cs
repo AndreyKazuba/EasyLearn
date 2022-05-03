@@ -54,6 +54,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public ObservableCollection<DictionaryTypeComboBoxItem> AddingWindowDictionaryTypes { get; set; }
         public DictionaryTypeComboBoxItem AddingWindowSelectedDictionaryType { get; set; }
         public bool IsConfirmDictionaryAddingButtonEnabled { get; set; }
+        public bool DictionaryNameTextBoxHasError { get; set; }
 
         #endregion
 

@@ -1,0 +1,7 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="cancelButtonBorder" Color="#FFD00505"/>
+    <SolidColorBrush x:Key="error" Color="#FFA70404" />
+    <SolidColorBrush x:Key="pageBackground" Color="GhostWhite"/>
+    <SolidColorBrush x:Key="green" Color="ForestGreen"/>
+</ResourceDictionary>

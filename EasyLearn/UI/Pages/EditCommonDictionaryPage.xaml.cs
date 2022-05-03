@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using EasyLearn.VM.ViewModels.Pages;
 
 namespace EasyLearn.UI.Pages
@@ -12,6 +13,8 @@ namespace EasyLearn.UI.Pages
         public static event Action? RussianUnitTypeComboBoxEnterDown;
         public static event Action? EnglishUnitTypeComboBoxEnterDown;
         public static event Action? CommentValueTextBoxEnterDown;
+        public static event Action? ExampleRussianValueTextBoxEnterDown;
+        public static event Action? ExampleEnglishValueTextBoxEnterDown;
 
         public EditCommonDictionaryPage(EditCommonDictionaryPageVM viewModel)
         {
@@ -43,5 +46,17 @@ namespace EasyLearn.UI.Pages
             if (e.Key == Key.Enter && CommentValueTextBoxEnterDown is not null)
                 CommentValueTextBoxEnterDown();
         }
+        private void OnExampleRussianValueTextBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && ExampleRussianValueTextBoxEnterDown is not null)
+                ExampleRussianValueTextBoxEnterDown();
+        }
+        private void OnExampleEnglishValueTextBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && ExampleEnglishValueTextBoxEnterDown is not null)
+                ExampleEnglishValueTextBoxEnterDown();
+        }
+        private void WarningIcon_MouseEnter(object sender, MouseEventArgs e) => this.warningIcon.Foreground = Brushes.OrangeRed;
+        private void WarningIcon_MouseLeave(object sender, MouseEventArgs e) => this.warningIcon.Foreground = Brushes.Orange;
     }
 }

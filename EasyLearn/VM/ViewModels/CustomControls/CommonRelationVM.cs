@@ -27,8 +27,8 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             this.EnglishUnitType = commonRelation.EnglishUnit.Type.GetRussianValue();
             this.Comment = StringHelper.TryNormalizeRegister(commonRelation.Comment);
             this.IsCommentVisible = !string.IsNullOrEmpty(this.Comment);
-            this.CardHeight = string.IsNullOrEmpty(this.Comment) ? 90 : 140;
-            this.VerticalExpanderMargin = string.IsNullOrEmpty(this.Comment) ? new Thickness(0.3, 6, 0.3, 6) : new Thickness(0.3, 6, 0.3, 0);
+            this.CardHeight = IsCommentVisible ? 140 : 90;
+            this.VerticalExpanderMargin = IsCommentVisible ? new Thickness(0.3, 6, 0.3, 0) : new Thickness(0.3, 6, 0.3, 6);
         }
 
         #region Commands
