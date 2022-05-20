@@ -132,7 +132,8 @@
                                      Padding="14 11"
                                      Grid.Column="2"
                                      InputLanguageManager.InputLanguage="en-US"
-                                     KeyDown="OnEnglishValueTextBoxKeyDown"
+                                     KeyDown="OnEnglishValueTextBoxKeyDown"  
+                                     materialDesign:ValidationAssist.PopupPlacement="AbsolutePoint"
                                      Name="newCommonRelationEnglishValueTextBox"
                                      materialDesign:HintAssist.Hint="Английский перевод">
 
@@ -213,15 +214,22 @@
                                          Padding="14 11"
                                          Margin="0 0 7 0"
                                          KeyDown="OnExampleRussianValueTextBoxKeyDown"
-                                         Text="{Binding ExampleRussianValue, UpdateSourceTrigger=PropertyChanged}"
                                          InputLanguageManager.InputLanguage="ru-RU"
                                          Name="exampleRussianValueField"
                                          materialDesign:HintAssist.Hint="Пример на русском">
 
+                                    <TextBox.Text>
+                                        <Binding Path="ExampleRussianValue" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+
                                     <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="SelectionChanged">
-                                            <i:InvokeCommandAction Command="{Binding CheckExampleFieldsMaxLengthVisibilityCommand}"/>
+                                        <i:EventTrigger EventName="TextChanged">
                                             <i:InvokeCommandAction Command="{Binding ValidateExampleSectionCommand}"/>
+                                            <i:InvokeCommandAction Command="{Binding CheckExampleFieldsMaxLengthVisibilityCommand}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </TextBox>
@@ -234,12 +242,19 @@
                                          Padding="14 11"
                                          KeyDown="OnExampleEnglishValueTextBoxKeyDown"
                                          Name="exampleEnglishValueField"
-                                         Text="{Binding ExampleEnglishValue, UpdateSourceTrigger=PropertyChanged}"
                                          InputLanguageManager.InputLanguage="en-US"
                                          materialDesign:HintAssist.Hint="Пример на английском">
 
+                                    <TextBox.Text>
+                                        <Binding Path="ExampleEnglishValue" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+
                                     <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="SelectionChanged">
+                                        <i:EventTrigger EventName="TextChanged">
                                             <i:InvokeCommandAction Command="{Binding ValidateExampleSectionCommand}"/>
                                             <i:InvokeCommandAction Command="{Binding CheckExampleFieldsMaxLengthVisibilityCommand}"/>
                                         </i:EventTrigger>

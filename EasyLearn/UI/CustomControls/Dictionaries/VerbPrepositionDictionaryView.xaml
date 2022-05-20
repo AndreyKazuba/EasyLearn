@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:valudationRules="clr-namespace:EasyLearn.Infrastructure.Validation"
+             xmlns:constants="clr-namespace:EasyLearn.Data.Constants;assembly=EasyLearn.Data"
              xmlns:local="clr-namespace:EasyLearn.UI.CustomControls"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
@@ -14,6 +16,7 @@
                             Margin="17 10 0 0"
                             Height="256"
                             Width="200"
+                            d:IsFlipped="True"
                             IsFlipped="{Binding IsCardFlipped, Mode=TwoWay}">
 
         <materialDesign:Flipper.FrontContent>
@@ -92,7 +95,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="0.8*" />
                     <RowDefinition Height="2*"/>
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <!--Шапка-->
@@ -143,12 +146,20 @@
                 <TextBox TextWrapping="Wrap"
                          VerticalAlignment="Stretch"
                          HorizontalAlignment="Stretch"
-                         MaxLength="85"
                          Style="{DynamicResource MaterialDesignFilledTextBox}"
                          materialDesign:HintAssist.Hint="Описание"
                          materialDesign:HintAssist.IsFloating="True"
-                         Grid.Row="2"
-                         Text="{Binding EditDescriptionFieldValue}"/>
+                         materialDesign:ValidationAssist.UsePopup="False"
+                         Grid.Row="2">
+
+                    <TextBox.Text>
+                        <Binding Path="EditDescriptionFieldValue" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <valudationRules:InRange Max="{x:Static constants:ModelConstants.DictionaryDescriptionMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
 
                 <Grid Grid.Row="3" HorizontalAlignment="Stretch">
                     <Grid.ColumnDefinitions>
@@ -158,30 +169,25 @@
 
                     <!--Кнопка удаления словаря-->
                     <Button Command="{Binding RemoveVerbPrepositionDictionaryCommand}"
-                            Foreground="Red"
+                            Foreground="{DynamicResource error}"
+                            Height="40"
                             Style="{DynamicResource MaterialDesignFlatButton}"
-                            VerticalAlignment="Center" HorizontalAlignment="Center"
-                            Grid.Column="0"
-                            Margin="3 0 0 0"
-                            Padding="10 0 6 0">
-                        <StackPanel Orientation="Horizontal" Margin="-3 0 0 0">
+                            HorizontalAlignment="Stretch"
+                            Grid.Column="0">
+                        <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Удалить" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <materialDesign:PackIcon Kind="Trash" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </Button>
 
                     <!--Кнопка открытия словаря-->
-                    <Button HorizontalAlignment="Center" VerticalAlignment="Center"
+                    <Button HorizontalAlignment="Stretch"
                             Command="{Binding OpenCurrentVerbPrepositionDictionaryCommand}"
-                            Foreground="ForestGreen"
+                            Height="40"
+                            Foreground="{DynamicResource green}"
                             Style="{DynamicResource MaterialDesignFlatButton}"
                             Grid.Column="1"
-                            Padding="14 0 6 0"
-                            Margin="0 0 8 0">
-                        <StackPanel Orientation="Horizontal" Margin="-7 0 0 0">
-                            <TextBlock Text="Открыть" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <materialDesign:PackIcon Kind="Pencil" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                        </StackPanel>
+                            Content="Открыть">
                     </Button>
                 </Grid>
             </Grid>

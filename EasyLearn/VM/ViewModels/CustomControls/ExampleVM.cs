@@ -6,15 +6,12 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 {
     public class ExampleVM : ViewModel
     {
-        #region Private fields
-        private string russianTranslation;
-        private string englishTranslation;
-        #endregion
-
-        #region Public fields
+        #region Public props
         public int Id { get; private set; }
+        public string RussianValue { get; private set; }
+        public string EnglishValue { get; private set; }
+        public string Content => $"{RussianValue} - {EnglishValue}";
         #endregion
-        public string Content => $"{russianTranslation} - {englishTranslation}";
 
         #region Commands
         public Command RemoveCommand { get; private set; }
@@ -33,14 +30,14 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public ExampleVM(Example example)
         {
             this.Id = example.Id;
-            russianTranslation = example.RussianValue;
-            englishTranslation = example.EnglishValue;
+            RussianValue = example.RussianValue;
+            EnglishValue = example.EnglishValue;
         }
         public ExampleVM(string russianTranslation, string englishTranslation, int id)
         {
             this.Id = id;
-            this.russianTranslation = russianTranslation;
-            this.englishTranslation = englishTranslation;
+            this.RussianValue = russianTranslation;
+            this.EnglishValue = englishTranslation;
         }
     }
 }

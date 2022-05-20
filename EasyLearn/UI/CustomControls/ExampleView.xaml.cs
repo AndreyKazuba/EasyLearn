@@ -12,6 +12,8 @@ namespace EasyLearn.UI.CustomControls
 
         #region Public props
         public int Id => viewModel.Id;
+        public string RussianValue => viewModel.RussianValue;
+        public string EnglishValue => viewModel.EnglishValue;
         #endregion
         public ExampleView(ExampleVM viewModel)
         {

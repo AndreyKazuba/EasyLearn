@@ -10,7 +10,7 @@ namespace EasyLearn.Data.Enums
         /// </summary>
         [RussianTranslaton(UnitTypeRussianNames.Noun)]
         [EnglishTranslation(UnitTypeEnglishNames.Noun)]
-        [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
+        [UnitTypeColorCode(UnitTypeColorCodes.Noun)]
         Noun = 1,
 
         /// <summary>
@@ -18,7 +18,7 @@ namespace EasyLearn.Data.Enums
         /// </summary>
         [RussianTranslaton(UnitTypeRussianNames.Verb)]
         [EnglishTranslation(UnitTypeEnglishNames.Verb)]
-        [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
+        [UnitTypeColorCode(UnitTypeColorCodes.Verb)]
         Verb = 2,
 
         /// <summary>

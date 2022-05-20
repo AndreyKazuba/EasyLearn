@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Media;
 using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
 using EasyLearn.Infrastructure.Helpers;
@@ -14,6 +15,8 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public string EnglishValue { get; set; }
         public string RussianUnitType { get; set; }
         public string EnglishUnitType { get; set; }
+        public Brush RussianUnitTypeColor { get; set; }
+        public Brush EnglishUnitTypeColor { get; set; }
         public string? Comment { get; set; }
         public bool IsCommentVisible { get; set; }
         public int CardHeight { get; set; }
@@ -25,9 +28,11 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             this.EnglishValue = StringHelper.NormalizeRegister(commonRelation.EnglishUnit.Value);
             this.RussianUnitType = commonRelation.RussianUnit.Type.GetRussianValue();
             this.EnglishUnitType = commonRelation.EnglishUnit.Type.GetRussianValue();
+            this.RussianUnitTypeColor = commonRelation.RussianUnit.Type.GetColor();
+            this.EnglishUnitTypeColor = commonRelation.EnglishUnit.Type.GetColor();
             this.Comment = StringHelper.TryNormalizeRegister(commonRelation.Comment);
             this.IsCommentVisible = !string.IsNullOrEmpty(this.Comment);
-            this.CardHeight = IsCommentVisible ? 140 : 90;
+            this.CardHeight = IsCommentVisible ? 240 : 75;
             this.VerticalExpanderMargin = IsCommentVisible ? new Thickness(0.3, 6, 0.3, 0) : new Thickness(0.3, 6, 0.3, 6);
         }
 

@@ -28,10 +28,11 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Repositories
         private readonly ICommonDictionaryRepository commonDictionaryRepository;
         private readonly ICommonRelationRepository commonRelationRepository;
+        private readonly IExamplesRepository examplesRepository;
         #endregion
 
         #region Private fields
-        private bool exampleInvalid;
+        private bool exampleInvalid = true;
         private int exampleIdsCount;
         private int dictionaryId;
         private Guid relationExistValidationRuleId;
@@ -49,10 +50,11 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
 
 #pragma warning disable CS8618
-        public EditCommonDictionaryPageVM(ICommonDictionaryRepository commonDictionaryRepository, ICommonRelationRepository commonRelationRepository)
+        public EditCommonDictionaryPageVM(ICommonDictionaryRepository commonDictionaryRepository, ICommonRelationRepository commonRelationRepository, IExamplesRepository examplesRepository)
         {
             this.commonDictionaryRepository = commonDictionaryRepository;
             this.commonRelationRepository = commonRelationRepository;
+            this.examplesRepository = examplesRepository;
             SetAddingWindowRussianUnitTypes();
             SetAddingWidnowEnglishUnitTypes();
             this.relationExistValidationRuleId = ValidationPool.Register(ValidationRulesGroup.AddCommonRelation);
@@ -100,7 +102,12 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void OnRussianUnitTypeComboBoxEnterDown() => FocusEnglishUnitTypeComboBox();
         private void OnEnglishUnitTypeComboBoxEnterDown() => FocusCommentValueTextBox();
         private void OnExampleRussianValueTextBoxEnterDown() => FocusExampleEnglishValueField();
-        private void OnExampleEnglishValueTextBoxEnterDown() => AddExampleButtonSoftClick();
+        private void OnExampleEnglishValueTextBoxEnterDown()
+        {
+            if (this.exampleInvalid)
+                return;
+            AddExampleButtonSoftClick();
+        }
         private void OnCommentValueTextBoxEnterDown()
         {
             if (ValidationPool.IsValid(ValidationRulesGroup.AddCommonRelation))
@@ -168,6 +175,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             string? comment = StringHelper.NullIfEmptyOrWhiteSpace(this.AddingWindowCommentValue);
             int commonDictionaryId = this.dictionaryId;
             CommonRelation newCommonRelation = await commonRelationRepository.CreateCommonRelation(russianUnitValue, russianUnitType, englishUnitValue, englishUnitType, commonDictionaryId, comment);
+            AddExaplesToCommonRelation(newCommonRelation.Id);
             AddCommonRelationToUI(newCommonRelation);
         }
         private async Task DeleteCommonRelation(int commonRelationId)
@@ -224,7 +232,12 @@ namespace EasyLearn.VM.ViewModels.Pages
             IEnumerable<CommonRelationView> commonRelationViews = selectedRelations.Select(selectedRelation => CommonRelationView.Create(selectedRelation));
             this.CommonRelationViews = new ObservableCollection<CommonRelationView>(commonRelationViews);
         }
-        private void AddExampleView() => this.ExampleViews.Add(ExampleView.Create(this.ExampleRussianValue, this.ExampleEnglishValue, ++exampleIdsCount));
+        private void AddExampleView()
+        {
+            if (this.exampleInvalid)
+                return;
+            this.ExampleViews.Add(ExampleView.Create(this.ExampleRussianValue, this.ExampleEnglishValue, ++exampleIdsCount));
+        }
         private void RemoveExampleView(int exampleId) => this.ExampleViews.Remove(FindExampleView(exampleId));
         private void ClearExampleAddingFields()
         {
@@ -260,6 +273,13 @@ namespace EasyLearn.VM.ViewModels.Pages
         private ExampleView FindExampleView(int exampleId) => this.ExampleViews.First(exampleView => exampleView.Id == exampleId);
         private CommonRelationView FindCommonRelationView(int commonRelationId) => this.CommonRelationViews.First(commonRelationView => commonRelationView.Id == commonRelationId);
         private void AddCommonRelationToUI(CommonRelation commonRelation) => this.CommonRelationViews.Add(CommonRelationView.Create(commonRelation));
+        private async void AddExaplesToCommonRelation(int commonRelationId)
+        {
+            List<Example> examples = new List<Example>();
+            foreach (ExampleView exampleView in this.ExampleViews)
+                examples.Add(await examplesRepository.CreateExample(exampleView.RussianValue, exampleView.EnglishValue));
+            await commonRelationRepository.AddExamples(commonRelationId, examples);
+        }
         private void SetAddingWindowRussianUnitTypes()
         {
             ObservableCollection<UnitTypeComboBoxItem> russianUnitTypes = new ObservableCollection<UnitTypeComboBoxItem>(

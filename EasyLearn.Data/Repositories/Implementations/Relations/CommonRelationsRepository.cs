@@ -40,6 +40,7 @@ namespace EasyLearn.Data.Repositories.Implementations
                 return false;
             return IsCommonRelationExist(russianUnit.Id, englishUnit.Id, dictionaryId);
         }
+        public async Task<CommonRelation> GetCommonRelation(int commonRelationId) => await context.CommonRelations.FirstAsync(commonRelation => commonRelation.Id == commonRelationId);
         public async Task<CommonRelation> CreateCommonRelation(string russianUnitValue, UnitType russianUnitType, string englishUnitValue, UnitType englishUnitType, int dictionaryId, string? comment)
         {
             EnglishUnit englishUnit = await englishUnitRepository.GetOrCreateUnit(englishUnitValue, englishUnitType);
@@ -69,6 +70,12 @@ namespace EasyLearn.Data.Repositories.Implementations
         {
             CommonRelation commonRelation = await context.CommonRelations.FirstAsync(commonRelation => commonRelation.Id == commonRelationId);
             context.CommonRelations.Remove(commonRelation);
+            await context.SaveChangesAsync();
+        }
+        public async Task AddExamples(int commonRelationId, List<Example> examples)
+        {
+            CommonRelation commonRelation = await GetCommonRelation(commonRelationId);
+            commonRelation.Examples = examples;
             await context.SaveChangesAsync();
         }
         #endregion

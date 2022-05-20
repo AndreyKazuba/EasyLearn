@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EasyLearn.Data.Enums;
 using EasyLearn.Data.Exceptions;
+using EasyLearn.Data.Helpers;
 
 namespace EasyLearn.Data.Repositories.Implementations
 {
@@ -27,8 +28,8 @@ namespace EasyLearn.Data.Repositories.Implementations
             ThrowIfAddingAttemptIncorrect(russianValue, englishValue);
             Example newExample = new Example
             {
-                RussianValue = russianValue,
-                EnglishValue = englishValue,
+                RussianValue = StringHelper.Prepare(russianValue),
+                EnglishValue = StringHelper.Prepare(englishValue),
                 CreationDateUtc = DateTime.UtcNow,
             };
             context.Examples.Add(newExample);
