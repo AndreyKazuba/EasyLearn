@@ -14,5 +14,6 @@
         public const string Adverb = "Наречие";
         public const string Conjunction = "Союз";
         public const string Particle = "Частица";
+        public const string ModalVerb = "Модальный глагол";
     }
 }

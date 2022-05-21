@@ -2,7 +2,6 @@
 using System.Windows.Media;
 using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
-using EasyLearn.Infrastructure.Helpers;
 using EasyLearn.VM.Core;
 using EasyLearn.VM.ViewModels.Pages;
 
@@ -21,6 +20,13 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public bool IsCommentVisible { get; set; }
         public int CardHeight { get; set; }
         public Thickness VerticalExpanderMargin { get; set; }
+        public bool IsFirstExampleVisible { get; set; }
+        public bool IsSecondExampleVisible { get; set; }
+        public string FirstExampleRussianValue { get; set; }
+        public string FirstExampleEnglishValue { get; set; }
+        public string SecondExampleRussianValue { get; set; }
+        public string SecondExampleEnglishValue { get; set; }
+        public bool IsSeporatorVisible { get; set; }
         public CommonRelationVM(CommonRelation commonRelation)
         {
             this.Id = commonRelation.Id;
@@ -32,8 +38,29 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             this.EnglishUnitTypeColor = commonRelation.EnglishUnit.Type.GetColor();
             this.Comment = StringHelper.TryNormalizeRegister(commonRelation.Comment);
             this.IsCommentVisible = !string.IsNullOrEmpty(this.Comment);
-            this.CardHeight = IsCommentVisible ? 240 : 75;
-            this.VerticalExpanderMargin = IsCommentVisible ? new Thickness(0.3, 6, 0.3, 0) : new Thickness(0.3, 6, 0.3, 6);
+            this.CardHeight = 75;
+            if (this.IsCommentVisible)
+                this.CardHeight += 48;
+            bool firstExampleExist = commonRelation.Examples.Count > 0;
+            bool secondExampleExist = commonRelation.Examples.Count > 1;
+            if (firstExampleExist)
+                this.CardHeight += 63;
+            if (secondExampleExist)
+                this.CardHeight += 50;
+            this.VerticalExpanderMargin = IsCommentVisible || firstExampleExist ? new Thickness(0.3, 6, 0.3, 0) : new Thickness(0.3, 6, 0.3, 6);
+            this.IsSeporatorVisible = IsCommentVisible || firstExampleExist;
+            this.IsFirstExampleVisible = firstExampleExist;
+            this.IsSecondExampleVisible = secondExampleExist;
+            if (firstExampleExist)
+            {
+                this.FirstExampleRussianValue = commonRelation.Examples.ToArray()[0].RussianValue;
+                this.FirstExampleEnglishValue = commonRelation.Examples.ToArray()[0].EnglishValue;
+            }
+            if (secondExampleExist)
+            {
+                this.FirstExampleRussianValue = commonRelation.Examples.ToArray()[1].RussianValue;
+                this.FirstExampleEnglishValue = commonRelation.Examples.ToArray()[1].EnglishValue;
+            }
         }
 
         #region Commands

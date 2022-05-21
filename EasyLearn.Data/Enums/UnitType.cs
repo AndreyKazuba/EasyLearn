@@ -8,7 +8,7 @@ namespace EasyLearn.Data.Enums
         /// <summary>
         /// Существительное
         /// </summary>
-        [RussianTranslaton(UnitTypeRussianNames.Noun)]
+        [RussianTranslation(UnitTypeRussianNames.Noun)]
         [EnglishTranslation(UnitTypeEnglishNames.Noun)]
         [UnitTypeColorCode(UnitTypeColorCodes.Noun)]
         Noun = 1,
@@ -16,7 +16,7 @@ namespace EasyLearn.Data.Enums
         /// <summary>
         /// Глагол
         /// </summary>
-        [RussianTranslaton(UnitTypeRussianNames.Verb)]
+        [RussianTranslation(UnitTypeRussianNames.Verb)]
         [EnglishTranslation(UnitTypeEnglishNames.Verb)]
         [UnitTypeColorCode(UnitTypeColorCodes.Verb)]
         Verb = 2,
@@ -24,22 +24,23 @@ namespace EasyLearn.Data.Enums
         /// <summary>
         /// Прилагательное
         /// </summary>
-        [RussianTranslaton(UnitTypeRussianNames.Adjective)]
+        [RussianTranslation(UnitTypeRussianNames.Adjective)]
         [EnglishTranslation(UnitTypeEnglishNames.Adjective)]
-        [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
+        [UnitTypeColorCode(UnitTypeColorCodes.Adjective)]
         Adjective = 3,
 
         /// <summary>
         /// Модальный глагол
         /// </summary>
         [EnglishTranslation(UnitTypeEnglishNames.ModalVerb)]
-        [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
+        [RussianTranslation(UnitTypeRussianNames.ModalVerb)]
+        [UnitTypeColorCode(UnitTypeColorCodes.ModalVerb)]
         ModalVerb = 4,
 
         /// <summary>
         /// Предлог
         /// </summary>
-        [RussianTranslaton(UnitTypeRussianNames.Preposition)]
+        [RussianTranslation(UnitTypeRussianNames.Preposition)]
         [EnglishTranslation(UnitTypeEnglishNames.Preposition)]
         [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
         Preposition = 5,
@@ -47,7 +48,7 @@ namespace EasyLearn.Data.Enums
         /// <summary>
         /// Предложение
         /// </summary>
-        [RussianTranslaton(UnitTypeRussianNames.Sentence)]
+        [RussianTranslation(UnitTypeRussianNames.Sentence)]
         [EnglishTranslation(UnitTypeEnglishNames.Sentence)]
         [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
         Sentence = 6,
@@ -55,7 +56,7 @@ namespace EasyLearn.Data.Enums
         /// <summary>
         /// Фраза
         /// </summary>
-        [RussianTranslaton(UnitTypeRussianNames.Phrase)]
+        [RussianTranslation(UnitTypeRussianNames.Phrase)]
         [EnglishTranslation(UnitTypeEnglishNames.Phrase)]
         [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
         Phrase = 7,
@@ -81,7 +82,7 @@ namespace EasyLearn.Data.Enums
         /// <summary>
         /// Словосочетание
         /// </summary>
-        [RussianTranslaton(UnitTypeRussianNames.CombinationOfWords)]
+        [RussianTranslation(UnitTypeRussianNames.CombinationOfWords)]
         [EnglishTranslation(UnitTypeEnglishNames.CombinationOfWords)]
         [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
         CombinationOfWords = 11,
@@ -89,7 +90,7 @@ namespace EasyLearn.Data.Enums
         /// <summary>
         /// Союз
         /// </summary>
-        [RussianTranslaton(UnitTypeRussianNames.Conjunction)]
+        [RussianTranslation(UnitTypeRussianNames.Conjunction)]
         [EnglishTranslation(UnitTypeEnglishNames.Conjunction)]
         [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
         Conjunction = 12,
@@ -97,7 +98,7 @@ namespace EasyLearn.Data.Enums
         /// <summary>
         /// Местоимение
         /// </summary>
-        [RussianTranslaton(UnitTypeRussianNames.Pronoun)]
+        [RussianTranslation(UnitTypeRussianNames.Pronoun)]
         [EnglishTranslation(UnitTypeEnglishNames.Pronoun)]
         [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
         Pronoun = 13,
@@ -105,15 +106,15 @@ namespace EasyLearn.Data.Enums
         /// <summary>
         /// Числительное
         /// </summary>
-        [RussianTranslaton(UnitTypeRussianNames.Numeral)]
+        [RussianTranslation(UnitTypeRussianNames.Numeral)]
         [EnglishTranslation(UnitTypeEnglishNames.Numeral)]
-        [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
+        [UnitTypeColorCode(UnitTypeColorCodes.Numeral)]
         Numeral = 14,
 
         /// <summary>
         /// Частица
         /// </summary>
-        [RussianTranslaton(UnitTypeRussianNames.Particle)]
+        [RussianTranslation(UnitTypeRussianNames.Particle)]
         [EnglishTranslation(UnitTypeEnglishNames.Particle)]
         [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
         Particle = 15,
@@ -121,9 +122,9 @@ namespace EasyLearn.Data.Enums
         /// <summary>
         /// Наречие
         /// </summary>
-        [RussianTranslaton(UnitTypeRussianNames.Adverb)]
+        [RussianTranslation(UnitTypeRussianNames.Adverb)]
         [EnglishTranslation(UnitTypeEnglishNames.Adverb)]
-        [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
+        [UnitTypeColorCode(UnitTypeColorCodes.Adverb)]
         Adverb = 16,
     }
 }

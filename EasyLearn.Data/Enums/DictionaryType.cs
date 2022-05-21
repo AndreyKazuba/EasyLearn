@@ -8,19 +8,19 @@ namespace EasyLearn.Data.Enums
         /// <summary>
         /// Словарь неправильных глаголов
         /// </summary>
-        [RussianTranslaton(DictionaryTypeRussianNames.IrregularVerbDictionary)]
+        [RussianTranslation(DictionaryTypeRussianNames.IrregularVerbDictionary)]
         IrregularVerbDictionary = 0,
 
         /// <summary>
         /// Словарь глагол-предлогов
         /// </summary>
-        [RussianTranslaton(DictionaryTypeRussianNames.VerbPrepositionDictionary)]
+        [RussianTranslation(DictionaryTypeRussianNames.VerbPrepositionDictionary)]
         VerbPrepositionDictionary = 1,
 
         /// <summary>
         /// Обычный словарь
         /// </summary>
-        [RussianTranslaton(DictionaryTypeRussianNames.CommonDictionary)]
+        [RussianTranslation(DictionaryTypeRussianNames.CommonDictionary)]
         CommonDictionary = 2,
     }
 }

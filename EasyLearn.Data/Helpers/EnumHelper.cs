@@ -8,9 +8,9 @@ namespace EasyLearn.Data.Helpers
 {
     public static class EnumHelper
     {
-        public static string GetRussianValue(this UnitType unitType) => unitType.GetValue<UnitType, RussianTranslatonAttribute>();
+        public static string GetRussianValue(this UnitType unitType) => unitType.GetValue<UnitType, RussianTranslationAttribute>();
         public static string GetEnglishValue(this UnitType unitType) => unitType.GetValue<UnitType, EnglishTranslationAttribute>();
-        public static string GetRussianValue(this DictionaryType dictionaryType) => dictionaryType.GetValue<DictionaryType, RussianTranslatonAttribute>();
+        public static string GetRussianValue(this DictionaryType dictionaryType) => dictionaryType.GetValue<DictionaryType, RussianTranslationAttribute>();
         public static Brush GetColor(this UnitType unitType)
         {
             string hex = unitType.GetValue<UnitType, UnitTypeColorCodeAttribute>();

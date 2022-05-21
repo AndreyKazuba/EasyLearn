@@ -22,7 +22,6 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" 
@@ -81,9 +80,9 @@
                     Margin="5 0.3"
                     Grid.Column="0"
                     Grid.Row="2"
-                    Visibility="{Binding IsCommentVisible, Converter={converters:ReverseCollapseConverter}}"/>
+                    Visibility="{Binding IsSeporatorVisible, Converter={converters:ReverseCollapseConverter}}"/>
 
-            <Grid Width="Auto" Margin="10 6 10 0" Grid.Row="3" VerticalAlignment="Center" 
+            <Grid Width="Auto" Margin="10 7 10 0" Grid.Row="3" VerticalAlignment="Center" 
                   HorizontalAlignment="Center" Grid.ColumnSpan="3"
                   Visibility="{Binding IsCommentVisible, Converter={converters:ReverseCollapseConverter}}">
                 <Border Grid.Row="1" Background="#e6e6e6" CornerRadius="15" Height="30"></Border>
@@ -93,13 +92,13 @@
                            Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Border>
                 <TextBlock Text="{Binding Comment}" FontSize="13" 
-                           FontFamily="Arial"
-                           Foreground="#030303" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="118 0 16 0"/>
+                           FontFamily="Arial" FontWeight="DemiBold"
+                           Foreground="#333333" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="118 0 16 0"/>
             </Grid>
 
-            <Grid Width="Auto" Margin="10 6 10 0" Grid.Row="4" VerticalAlignment="Center" 
+            <Grid Width="Auto" Margin="10 7 10 0" Grid.Row="4" VerticalAlignment="Center" 
                   HorizontalAlignment="Center" Grid.ColumnSpan="3"
-                  Visibility="{Binding IsCommentVisible, Converter={converters:ReverseCollapseConverter}}">
+                  Visibility="{Binding IsFirstExampleVisible, Converter={converters:ReverseCollapseConverter}}">
                 <Border Grid.Row="1" Background="#e6e6e6" CornerRadius="15" Height="45"></Border>
                 <Border Background="#667fcc"  CornerRadius="15" Height="45" Width="80" HorizontalAlignment="Left">
                     <TextBlock Text="Пример" FontSize="13" 
@@ -107,42 +106,33 @@
                            Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Border>
                 <StackPanel Margin="88 0 16 0" VerticalAlignment="Center" HorizontalAlignment="Left">
-                    <TextBlock Text="Папа ел хлеб целый день" FontSize="13" 
-                           FontFamily="Arial"
-                           Foreground="#030303" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0 0 0 4"/>
-                    <TextBlock Text="Father was eating bread all day" FontSize="13" 
-                           FontFamily="Arial"
-                           Foreground="#030303" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                    <TextBlock Text="{Binding FirstExampleRussianValue}" FontSize="13" 
+                           FontFamily="Arial" FontWeight="DemiBold"
+                           Foreground="#333333" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 4"/>
+                    <TextBlock Text="{Binding FirstExampleEnglishValue}" FontSize="13" 
+                           FontFamily="Arial" FontWeight="DemiBold"
+                           Foreground="#333333" VerticalAlignment="Center" HorizontalAlignment="Center" />
                 </StackPanel>
                 
             </Grid>
 
-            <Grid Width="Auto" Margin="10 6 10 0" Grid.Row="5" VerticalAlignment="Center" 
+            <Grid Width="Auto" Margin="10 7 10 0" Grid.Row="5" VerticalAlignment="Center" 
                   HorizontalAlignment="Center" Grid.ColumnSpan="3"
-                  Visibility="{Binding IsCommentVisible, Converter={converters:ReverseCollapseConverter}}">
-                <Border Grid.Row="1" Background="#e6e6e6" CornerRadius="15" Height="30"></Border>
-                <Border Background="#667fcc"  CornerRadius="15" Height="30" Width="80" HorizontalAlignment="Left">
+                  Visibility="{Binding IsSecondExampleVisible, Converter={converters:ReverseCollapseConverter}}">
+                <Border Grid.Row="1" Background="#e6e6e6" CornerRadius="15" Height="45"></Border>
+                <Border Background="#667fcc"  CornerRadius="15" Height="45" Width="80" HorizontalAlignment="Left">
                     <TextBlock Text="Пример" FontSize="13" 
                            FontFamily="Arial" FontWeight="Bold"
                            Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Border>
-                <TextBlock Text="Папа ел кашу - father eats pourage" FontSize="13" 
-                           FontFamily="Arial"
-                           Foreground="#030303" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="88 0 16 0"/>
-            </Grid>
-
-            <Grid Width="Auto" Margin="10 6 10 0" Grid.Row="6" VerticalAlignment="Center" 
-                  HorizontalAlignment="Center" Grid.ColumnSpan="3"
-                  Visibility="{Binding IsCommentVisible, Converter={converters:ReverseCollapseConverter}}">
-                <Border Grid.Row="1" Background="#e6e6e6" CornerRadius="15" Height="30"></Border>
-                <Border Background="#667fcc"  CornerRadius="15" Height="30" Width="80" HorizontalAlignment="Left">
-                    <TextBlock Text="Пример" FontSize="13" 
-                           FontFamily="Arial" FontWeight="Bold"
-                           Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                </Border>
-                <TextBlock Text="Папа ел кашу - father eats pourage" FontSize="13" 
-                           FontFamily="Arial"
-                           Foreground="#030303" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="88 0 16 0"/>
+                <StackPanel Margin="88 0 16 0" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <TextBlock Text="{Binding SecondExampleRussianValue}" FontSize="13" 
+                           FontFamily="Arial" FontWeight="DemiBold"
+                           Foreground="#333333" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 4"/>
+                    <TextBlock Text="{Binding SecondExampleEnglishValue}" FontSize="13" 
+                           FontFamily="Arial" FontWeight="DemiBold"
+                           Foreground="#333333" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                </StackPanel>
             </Grid>
 
             <Button Style="{DynamicResource MaterialDesignFlatButton}"
