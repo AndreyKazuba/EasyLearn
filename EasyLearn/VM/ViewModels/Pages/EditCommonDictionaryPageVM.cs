@@ -28,7 +28,6 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Repositories
         private readonly ICommonDictionaryRepository commonDictionaryRepository;
         private readonly ICommonRelationRepository commonRelationRepository;
-        private readonly IExamplesRepository examplesRepository;
         #endregion
 
         #region Private fields
@@ -50,11 +49,10 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
 
 #pragma warning disable CS8618
-        public EditCommonDictionaryPageVM(ICommonDictionaryRepository commonDictionaryRepository, ICommonRelationRepository commonRelationRepository, IExamplesRepository examplesRepository)
+        public EditCommonDictionaryPageVM(ICommonDictionaryRepository commonDictionaryRepository, ICommonRelationRepository commonRelationRepository)
         {
             this.commonDictionaryRepository = commonDictionaryRepository;
             this.commonRelationRepository = commonRelationRepository;
-            this.examplesRepository = examplesRepository;
             SetAddingWindowRussianUnitTypes();
             SetAddingWidnowEnglishUnitTypes();
             this.relationExistValidationRuleId = ValidationPool.Register(ValidationRulesGroup.AddCommonRelation);
@@ -174,8 +172,43 @@ namespace EasyLearn.VM.ViewModels.Pages
             UnitType russianUnitType = this.AddingWindowSelectedRussianUnitType.UnitType;
             string? comment = StringHelper.NullIfEmptyOrWhiteSpace(this.AddingWindowCommentValue);
             int commonDictionaryId = this.dictionaryId;
-            CommonRelation newCommonRelation = await commonRelationRepository.CreateCommonRelation(russianUnitValue, russianUnitType, englishUnitValue, englishUnitType, commonDictionaryId, comment);
-            AddExaplesToCommonRelation(newCommonRelation.Id);
+            string? firstExampleRussianValue = null;
+            string? firstExampleEnglishValue = null;
+            string? secondExampleRussianValue = null;
+            string? secondExampleEnglishValue = null;
+
+            // remove 
+            bool firstExampleExist = false;
+            bool secondExampleExist = false;
+
+            if (this.ExampleViews.Count > 0)
+                firstExampleExist = true;
+            if (this.ExampleViews.Count > 1)
+                secondExampleExist = true;
+
+            if (firstExampleExist)
+            {
+                firstExampleRussianValue = this.ExampleViews.ToArray()[0].RussianValue;
+                firstExampleEnglishValue = this.ExampleViews.ToArray()[0].EnglishValue;
+            }
+            if (secondExampleExist)
+            {
+                secondExampleRussianValue = this.ExampleViews.ToArray()[1].RussianValue;
+                secondExampleEnglishValue = this.ExampleViews.ToArray()[1].EnglishValue;
+            }
+            //
+
+            CommonRelation newCommonRelation = await commonRelationRepository.CreateCommonRelation(
+                russianUnitValue,
+                russianUnitType,
+                englishUnitValue,
+                englishUnitType,
+                commonDictionaryId,
+                comment,
+                firstExampleRussianValue,
+                firstExampleEnglishValue,
+                secondExampleRussianValue,
+                secondExampleEnglishValue);
             AddCommonRelationToUI(newCommonRelation);
         }
         private async Task DeleteCommonRelation(int commonRelationId)
@@ -207,8 +240,12 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.DictionaryName = commonDictionary.Name;
             this.DictionaryDescription = StringHelper.EmptyIfNull(commonDictionary.Description);
             this.allCommonRelations = commonDictionary.Relations;
-            IEnumerable<CommonRelationView> commonRelationViews = commonDictionary.Relations.Select(commonRelation => CommonRelationView.Create(commonRelation));
-            this.CommonRelationViews = new ObservableCollection<CommonRelationView>(commonRelationViews);
+            IEnumerable<CommonRelationView> commonRelationViews = commonDictionary.Relations
+                .Select(commonRelation => CommonRelationView.Create(commonRelation))
+                .OrderBy(commonRelationView => commonRelationView.Order);
+            this.CommonRelationViews = new ObservableCollection<CommonRelationView>();
+            foreach (CommonRelationView commonRelationView in commonRelationViews)
+                this.CommonRelationViews.Add(commonRelationView);
         }
         private void UpdateConfirmCommonRelationAddingButtonAvailability() => IsConfirmCommonRelationAddingButtonEnabled = ValidationPool.IsValid(ValidationRulesGroup.AddCommonRelation);
         private void CheckCommonRelationForExisting()
@@ -273,13 +310,6 @@ namespace EasyLearn.VM.ViewModels.Pages
         private ExampleView FindExampleView(int exampleId) => this.ExampleViews.First(exampleView => exampleView.Id == exampleId);
         private CommonRelationView FindCommonRelationView(int commonRelationId) => this.CommonRelationViews.First(commonRelationView => commonRelationView.Id == commonRelationId);
         private void AddCommonRelationToUI(CommonRelation commonRelation) => this.CommonRelationViews.Add(CommonRelationView.Create(commonRelation));
-        private async void AddExaplesToCommonRelation(int commonRelationId)
-        {
-            List<Example> examples = new List<Example>();
-            foreach (ExampleView exampleView in this.ExampleViews)
-                examples.Add(await examplesRepository.CreateExample(exampleView.RussianValue, exampleView.EnglishValue));
-            await commonRelationRepository.AddExamples(commonRelationId, examples);
-        }
         private void SetAddingWindowRussianUnitTypes()
         {
             ObservableCollection<UnitTypeComboBoxItem> russianUnitTypes = new ObservableCollection<UnitTypeComboBoxItem>(

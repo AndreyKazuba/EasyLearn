@@ -15,6 +15,8 @@ using EasyLearn.VM.Windows;
 using EasyLearn.Data.Helpers;
 using EasyLearn.Infrastructure.Validation;
 using EasyLearn.Infrastructure.Exceptions;
+using EasyLearn.UI.Pages;
+using EasyLearn.Infrastructure.Helpers;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -66,6 +68,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command FlipBackAllCardsCommand { get; private set; }
         public Command UpdatePageForNewUserCommand { get; private set; }
         public Command UpdateConfirmDictionaryAddingButtonAvailabilityCommand { get; private set; }
+        public Command OpenAddingDictionaryWindowCommand { get; private set; }
         protected override void InitCommands()
         {
             this.ClearAddingWindowCommand = new Command(ClearAddingWindow);
@@ -75,6 +78,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.FlipBackAllCardsCommand = new Command(FlipBackAllCards);
             this.UpdatePageForNewUserCommand = new Command(UpdatePageForNewUser);
             this.UpdateConfirmDictionaryAddingButtonAvailabilityCommand = new Command(UpdateConfirmDictionaryAddingButtonAvailability);
+            this.OpenAddingDictionaryWindowCommand = new Command(OpenAddingDictionaryWindow);
         }
         #endregion
 
@@ -127,6 +131,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             LoadDictionaries();
         }
         private void UpdateConfirmDictionaryAddingButtonAvailability() => this.IsConfirmDictionaryAddingButtonEnabled = ValidationPool.IsValid(ValidationRulesGroup.AddNewDictionary);
+        private void OpenAddingDictionaryWindow() => AddNewDictionaryButtonSoftClick();
         #endregion
 
         #region Other private methods
@@ -146,7 +151,12 @@ namespace EasyLearn.VM.ViewModels.Pages
             VerbPrepositionDictionnary newVerbPrepositionDictionary = await verbPrepositionDictionaryRepository.CreateVerbPrepositionDictionary(name, description, userId);
             AddVerbPrepositionDictionaryToUI(newVerbPrepositionDictionary);
         }
-        private void AddCommonDictionaryToUI(CommonDictionary dictionary) => this.DictionaryViews.Add(CommonDictionaryView.Create(dictionary));
+        private void AddCommonDictionaryToUI(CommonDictionary dictionary)
+        {
+            RemoveShadowDictionaryView();
+            this.DictionaryViews.Add(CommonDictionaryView.Create(dictionary));
+            AddShadowDictionaryView();
+        }
         private void AddVerbPrepositionDictionaryToUI(VerbPrepositionDictionnary dictionnary) => this.DictionaryViews.Add(VerbPrepositionDictionaryView.Create(dictionnary));
         private CommonDictionaryView FindCommonDictionaryView(int commonDictionaryId)
         {
@@ -200,8 +210,12 @@ namespace EasyLearn.VM.ViewModels.Pages
             List<UserControl> allCurrentUserDictionariesViews = commonDictionaryViews.Union(verbPrepositionDictionaryViews).ToList();
             allCurrentUserDictionariesViews.Add(irregularVerbDictionaryView);
             this.DictionaryViews = new ObservableCollection<UserControl>(allCurrentUserDictionariesViews);
+            AddShadowDictionaryView();
         }
+        private void AddShadowDictionaryView() => this.DictionaryViews.Add(ShadowDictionaryView.Create());
+        private void RemoveShadowDictionaryView() => this.DictionaryViews.RemoveAt(DictionaryViews.Count - 1);
         private void SubscribeToEvents() => App.GetService<AppWindowVM>().CurrentPageChanged += () => FlipBackAllCards();
+        private void AddNewDictionaryButtonSoftClick() => App.GetService<DictionariesPage>().addNewDictionaryButton.SoftClick();
         #endregion
     }
 }

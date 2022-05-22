@@ -9,7 +9,10 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 {
     public class CommonRelationVM : ViewModel
     {
+        private CardState state;
+
         public int Id { get; private set; }
+        public int OrderValue { get; private set; }
         public string RussianValue { get; set; }
         public string EnglishValue { get; set; }
         public string RussianUnitType { get; set; }
@@ -22,10 +25,10 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public Thickness VerticalExpanderMargin { get; set; }
         public bool IsFirstExampleVisible { get; set; }
         public bool IsSecondExampleVisible { get; set; }
-        public string FirstExampleRussianValue { get; set; }
-        public string FirstExampleEnglishValue { get; set; }
-        public string SecondExampleRussianValue { get; set; }
-        public string SecondExampleEnglishValue { get; set; }
+        public string? FirstExampleRussianValue { get; set; }
+        public string? FirstExampleEnglishValue { get; set; }
+        public string? SecondExampleRussianValue { get; set; }
+        public string? SecondExampleEnglishValue { get; set; }
         public bool IsSeporatorVisible { get; set; }
         public CommonRelationVM(CommonRelation commonRelation)
         {
@@ -38,29 +41,16 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             this.EnglishUnitTypeColor = commonRelation.EnglishUnit.Type.GetColor();
             this.Comment = StringHelper.TryNormalizeRegister(commonRelation.Comment);
             this.IsCommentVisible = !string.IsNullOrEmpty(this.Comment);
-            this.CardHeight = 75;
-            if (this.IsCommentVisible)
-                this.CardHeight += 48;
-            bool firstExampleExist = commonRelation.Examples.Count > 0;
-            bool secondExampleExist = commonRelation.Examples.Count > 1;
-            if (firstExampleExist)
-                this.CardHeight += 63;
-            if (secondExampleExist)
-                this.CardHeight += 50;
-            this.VerticalExpanderMargin = IsCommentVisible || firstExampleExist ? new Thickness(0.3, 6, 0.3, 0) : new Thickness(0.3, 6, 0.3, 6);
-            this.IsSeporatorVisible = IsCommentVisible || firstExampleExist;
-            this.IsFirstExampleVisible = firstExampleExist;
-            this.IsSecondExampleVisible = secondExampleExist;
-            if (firstExampleExist)
-            {
-                this.FirstExampleRussianValue = commonRelation.Examples.ToArray()[0].RussianValue;
-                this.FirstExampleEnglishValue = commonRelation.Examples.ToArray()[0].EnglishValue;
-            }
-            if (secondExampleExist)
-            {
-                this.FirstExampleRussianValue = commonRelation.Examples.ToArray()[1].RussianValue;
-                this.FirstExampleEnglishValue = commonRelation.Examples.ToArray()[1].EnglishValue;
-            }
+            this.IsFirstExampleVisible = commonRelation.IsFirstExampleExist;
+            this.IsSecondExampleVisible = commonRelation.IsSecondExampleExist;
+            this.FirstExampleRussianValue = commonRelation.FirstExampleRussianValue;
+            this.FirstExampleEnglishValue = commonRelation.FirstExampleEnglishValue;
+            this.SecondExampleRussianValue = commonRelation.SecondExampleRussianValue;
+            this.SecondExampleEnglishValue = commonRelation.SecondExampleEnglishValue;
+            SetState(commonRelation);
+            SetHeight();
+            SetOrder();
+            SetVerticalExpanderMargin(commonRelation);
         }
 
         #region Commands
@@ -70,10 +60,70 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             this.DeleteRelationCommand = new Command(DeleteRelation);
         }
         #endregion
-
+        private void SetVerticalExpanderMargin(CommonRelation commonRelation)
+        {
+            bool shouldBeExpanded = IsCommentVisible || commonRelation.IsFirstExampleExist || commonRelation.IsSecondExampleExist;
+            this.VerticalExpanderMargin = shouldBeExpanded ? new Thickness(0.3, 6, 0.3, 0) : new Thickness(0.3, 6, 0.3, 6);
+            this.IsSeporatorVisible = shouldBeExpanded;
+        }
         private void DeleteRelation()
         {
             App.GetService<EditCommonDictionaryPageVM>().DeleteCommonRelationCommand.Execute(Id);
+        }
+        private void SetState(CommonRelation commonRelation)
+        {
+            bool firstExampleExist = commonRelation.IsFirstExampleExist;
+            bool secondExampleExist = commonRelation.IsSecondExampleExist;
+            bool isCommentExist = this.IsCommentVisible;
+            if (!isCommentExist && !firstExampleExist)
+                this.state = CardState.Without;
+            else if (isCommentExist && !firstExampleExist)
+                this.state = CardState.JustComment;
+            else if (!isCommentExist && firstExampleExist && !secondExampleExist)
+                this.state = CardState.JustOneExample;
+            else if (!isCommentExist && secondExampleExist)
+                this.state = CardState.JustTwoExamples;
+            else if (isCommentExist && firstExampleExist && !secondExampleExist)
+                this.state = CardState.CommentAndOneExample;
+            else
+                this.state = CardState.CommentAndTwoExamples;
+        }
+        private void SetOrder()
+        {
+            this.OrderValue = (int)this.state;
+        }
+        private void SetHeight()
+        {
+            switch (this.state)
+            {
+                case CardState.Without:
+                    this.CardHeight = 75;
+                    break;
+                case CardState.JustComment:
+                    this.CardHeight = 75 + 48;
+                    break;
+                case CardState.JustOneExample:
+                    this.CardHeight = 75 + 63;
+                    break;
+                case CardState.JustTwoExamples:
+                    this.CardHeight = 75 + 63 + 52;
+                    break;
+                case CardState.CommentAndOneExample:
+                    this.CardHeight = 75 + 48 + 52;
+                    break;
+                case CardState.CommentAndTwoExamples:
+                    this.CardHeight = 75 + 48 + 52 + 52;
+                    break;
+            }
+        }
+        private enum CardState
+        {
+            Without = 0,
+            JustComment = 1,
+            JustOneExample = 2,
+            JustTwoExamples = 4,
+            CommentAndOneExample = 3,
+            CommentAndTwoExamples = 5,
         }
     }
 }

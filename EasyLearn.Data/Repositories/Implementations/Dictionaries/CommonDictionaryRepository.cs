@@ -29,7 +29,6 @@ namespace EasyLearn.Data.Repositories.Implementations
             return context.CommonDictionaries
                 .Include(dictionary => dictionary.Relations).ThenInclude(commonRelation => commonRelation.EnglishUnit)
                 .Include(dictionary => dictionary.Relations).ThenInclude(commonRelatiob => commonRelatiob.RussianUnit)
-                .Include(dictionary => dictionary.Relations).ThenInclude(commonRelatiob => commonRelatiob.Examples)
                 .AsNoTracking()
                 .First(dictionary => dictionary.Id == dictionaryId);
         }
@@ -38,7 +37,6 @@ namespace EasyLearn.Data.Repositories.Implementations
             return await context.CommonDictionaries
                 .Include(dictionary => dictionary.Relations).ThenInclude(commonRelation => commonRelation.EnglishUnit)
                 .Include(dictionary => dictionary.Relations).ThenInclude(commonRelatiob => commonRelatiob.RussianUnit)
-                .Include(dictionary => dictionary.Relations).ThenInclude(commonRelatiob => commonRelatiob.Examples)
                 .AsNoTracking()
                 .FirstAsync(dictionary => dictionary.Id == dictionaryId);
         }

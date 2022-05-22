@@ -63,7 +63,7 @@ namespace EasyLearn.Data.Migrations
                     FirstFormId = table.Column<int>(type: "int", nullable: false),
                     SecondFormId = table.Column<int>(type: "int", nullable: false),
                     ThirdFormId = table.Column<int>(type: "int", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true)
+                    Comment = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -91,7 +91,7 @@ namespace EasyLearn.Data.Migrations
                         column: x => x.RussianUnitId,
                         principalTable: "RussianUnits",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -150,7 +150,11 @@ namespace EasyLearn.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CreationDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true)
+                    Comment = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
+                    FirstExampleRussianValue = table.Column<string>(type: "nvarchar(35)", maxLength: 35, nullable: true),
+                    FirstExampleEnglishValue = table.Column<string>(type: "nvarchar(35)", maxLength: 35, nullable: true),
+                    SecondExampleRussianValue = table.Column<string>(type: "nvarchar(35)", maxLength: 35, nullable: true),
+                    SecondExampleEnglishValue = table.Column<string>(type: "nvarchar(35)", maxLength: 35, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -184,9 +188,13 @@ namespace EasyLearn.Data.Migrations
                     VerbId = table.Column<int>(type: "int", nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Translation = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
+                    Translation = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     CreationDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: true)
+                    Comment = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: true),
+                    FirstExampleRussianValue = table.Column<string>(type: "nvarchar(35)", maxLength: 35, nullable: true),
+                    FirstExampleEnglishValue = table.Column<string>(type: "nvarchar(35)", maxLength: 35, nullable: true),
+                    SecondExampleRussianValue = table.Column<string>(type: "nvarchar(35)", maxLength: 35, nullable: true),
+                    SecondExampleEnglishValue = table.Column<string>(type: "nvarchar(35)", maxLength: 35, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -211,43 +219,6 @@ namespace EasyLearn.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Examples",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RussianValue = table.Column<string>(type: "nvarchar(35)", maxLength: 35, nullable: false),
-                    EnglishValue = table.Column<string>(type: "nvarchar(35)", maxLength: 35, nullable: false),
-                    CreationDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CommonRelationCommonDictionaryId = table.Column<int>(type: "int", nullable: true),
-                    CommonRelationEnglishUnitId = table.Column<int>(type: "int", nullable: true),
-                    CommonRelationRussianUnitId = table.Column<int>(type: "int", nullable: true),
-                    IrregularVerbId = table.Column<int>(type: "int", nullable: true),
-                    VerbPrepositionDictionaryId = table.Column<int>(type: "int", nullable: true),
-                    VerbPrepositionPrepositionId = table.Column<int>(type: "int", nullable: true),
-                    VerbPrepositionVerbId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Examples", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Examples_CommonRelations_CommonRelationEnglishUnitId_CommonRelationRussianUnitId_CommonRelationCommonDictionaryId",
-                        columns: x => new { x.CommonRelationEnglishUnitId, x.CommonRelationRussianUnitId, x.CommonRelationCommonDictionaryId },
-                        principalTable: "CommonRelations",
-                        principalColumns: new[] { "EnglishUnitId", "RussianUnitId", "CommonDictionaryId" });
-                    table.ForeignKey(
-                        name: "FK_Examples_IrregularVerbs_IrregularVerbId",
-                        column: x => x.IrregularVerbId,
-                        principalTable: "IrregularVerbs",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Examples_VerbPrepositions_VerbPrepositionVerbId_VerbPrepositionPrepositionId_VerbPrepositionDictionaryId",
-                        columns: x => new { x.VerbPrepositionVerbId, x.VerbPrepositionPrepositionId, x.VerbPrepositionDictionaryId },
-                        principalTable: "VerbPrepositions",
-                        principalColumns: new[] { "VerbId", "PrepositionId", "VerbPrepositionDictionaryId" });
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_CommonDictionaries_UserId",
                 table: "CommonDictionaries",
@@ -262,21 +233,6 @@ namespace EasyLearn.Data.Migrations
                 name: "IX_CommonRelations_RussianUnitId",
                 table: "CommonRelations",
                 column: "RussianUnitId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Examples_CommonRelationEnglishUnitId_CommonRelationRussianUnitId_CommonRelationCommonDictionaryId",
-                table: "Examples",
-                columns: new[] { "CommonRelationEnglishUnitId", "CommonRelationRussianUnitId", "CommonRelationCommonDictionaryId" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Examples_IrregularVerbId",
-                table: "Examples",
-                column: "IrregularVerbId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Examples_VerbPrepositionVerbId_VerbPrepositionPrepositionId_VerbPrepositionDictionaryId",
-                table: "Examples",
-                columns: new[] { "VerbPrepositionVerbId", "VerbPrepositionPrepositionId", "VerbPrepositionDictionaryId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_IrregularVerbs_FirstFormId",
@@ -316,9 +272,6 @@ namespace EasyLearn.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Examples");
-
             migrationBuilder.DropTable(
                 name: "CommonRelations");
 

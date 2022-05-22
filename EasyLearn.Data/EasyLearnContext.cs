@@ -25,8 +25,6 @@ namespace EasyLearn.Data
         public DbSet<EnglishUnit> EnglishUnits { get; set; }
         public DbSet<RussianUnit> RussianUnits { get; set; }
 
-        public DbSet<Example> Examples { get; set; }
-
         public DbSet<CommonRelation> CommonRelations { get; set; }
         public DbSet<VerbPreposition> VerbPrepositions { get; set; }
         public DbSet<IrregularVerb> IrregularVerbs { get; set; }

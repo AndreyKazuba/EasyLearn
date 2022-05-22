@@ -93,7 +93,7 @@
                 </Border>
                 <TextBlock Text="{Binding Comment}" FontSize="13" 
                            FontFamily="Arial" FontWeight="DemiBold"
-                           Foreground="#333333" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="118 0 16 0"/>
+                           Foreground="#737373" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="118 0 16 0"/>
             </Grid>
 
             <Grid Width="Auto" Margin="10 7 10 0" Grid.Row="4" VerticalAlignment="Center" 
@@ -108,10 +108,10 @@
                 <StackPanel Margin="88 0 16 0" VerticalAlignment="Center" HorizontalAlignment="Left">
                     <TextBlock Text="{Binding FirstExampleRussianValue}" FontSize="13" 
                            FontFamily="Arial" FontWeight="DemiBold"
-                           Foreground="#333333" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 4"/>
+                           Foreground="#737373" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 4"/>
                     <TextBlock Text="{Binding FirstExampleEnglishValue}" FontSize="13" 
                            FontFamily="Arial" FontWeight="DemiBold"
-                           Foreground="#333333" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                           Foreground="#737373" VerticalAlignment="Center" HorizontalAlignment="Center" />
                 </StackPanel>
                 
             </Grid>
@@ -128,10 +128,10 @@
                 <StackPanel Margin="88 0 16 0" VerticalAlignment="Center" HorizontalAlignment="Left">
                     <TextBlock Text="{Binding SecondExampleRussianValue}" FontSize="13" 
                            FontFamily="Arial" FontWeight="DemiBold"
-                           Foreground="#333333" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 4"/>
+                           Foreground="#737373" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 4"/>
                     <TextBlock Text="{Binding SecondExampleEnglishValue}" FontSize="13" 
                            FontFamily="Arial" FontWeight="DemiBold"
-                           Foreground="#333333" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                           Foreground="#737373" VerticalAlignment="Center" HorizontalAlignment="Center" />
                 </StackPanel>
             </Grid>
 

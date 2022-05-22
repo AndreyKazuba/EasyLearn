@@ -8,8 +8,7 @@
       xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
       mc:Ignorable="d" 
       d:DesignHeight="700" d:DesignWidth="1100"
-      Title="DictationPage"
-      Background="GhostWhite">
+      Title="DictationPage">
 
     <materialDesign:DialogHost>
         <Grid>

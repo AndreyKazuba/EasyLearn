@@ -27,12 +27,6 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             App.GetService<EditCommonDictionaryPageVM>().RemoveExampleViewCommand.Execute(Id);
         }
         #endregion
-        public ExampleVM(Example example)
-        {
-            this.Id = example.Id;
-            RussianValue = example.RussianValue;
-            EnglishValue = example.EnglishValue;
-        }
         public ExampleVM(string russianTranslation, string englishTranslation, int id)
         {
             this.Id = id;

@@ -11,8 +11,9 @@ using EasyLearn.VM.Windows;
 using EasyLearn.Infrastructure.Validation;
 using EasyLearn.UI.Pages;
 using EasyLearn.UI;
-using EasyLearn.Infrastructure.Enums;
 using EasyLearn.Infrastructure.Helpers;
+using System.Windows.Controls;
+using Page = EasyLearn.Infrastructure.Enums.Page;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -31,7 +32,7 @@ namespace EasyLearn.VM.ViewModels.Pages
 #pragma warning restore CS8618
 
         #region Props for binding
-        public ObservableCollection<UserView> UserViews { get; set; }
+        public ObservableCollection<UserControl> UserViews { get; set; }
         public string AddingWindowUserNameValue { get; set; }
         public bool ConfirmUserAddingButtonIsEnabled { get; set; }
         #endregion
@@ -68,6 +69,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command ClearAddingWindowCommand { get; private set; }
         public Command FlipBackAllCardsCommand { get; private set; }
         public Command UpdateConfirmUserAddingButtonAvailabilityCommand { get; private set; }
+        public Command OpenAddingUserWindowCommand { get; private set; }
         protected override void InitCommands()
         {
             this.CreateUserCommand = new Command(async () => await CreateUser());
@@ -76,6 +78,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.ClearAddingWindowCommand = new Command(ClearAddingWindow);
             this.FlipBackAllCardsCommand = new Command(FlipBackAllCards);
             this.UpdateConfirmUserAddingButtonAvailabilityCommand = new Command(UpdateConfirmUserAddingButtonAvailability);
+            this.OpenAddingUserWindowCommand = new Command(OpenAddingUserWindow);
         }
         #endregion
 
@@ -93,7 +96,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             bool wasCurrent = userView.IsCurrent;
             this.UserViews.Remove(userView);
             if (wasCurrent && this.UserViews.Any())
-                await SetUserAsCurrent(this.UserViews[0].Id);
+                await SetUserAsCurrent(((UserView)this.UserViews[0]).Id);
             await userRerository.DeleteUser(userId);
         }
         private async Task SetUserAsCurrent(int userId)
@@ -112,10 +115,15 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void FlipBackAllCards()
         {
-            foreach (UserView userView in this.UserViews)
-                userView.IsCardFlipped = false;
+            foreach (UserControl userView in this.UserViews)
+            {
+                UserView? user = userView as UserView;
+                if (user is not null)
+                    user.IsCardFlipped = false;
+            }
         }
         private void UpdateConfirmUserAddingButtonAvailability() => this.ConfirmUserAddingButtonIsEnabled = ValidationPool.IsValid(ValidationRulesGroup.AddNewUser);
+        private void OpenAddingUserWindow() => AddNewUserButtonSoftClick();
         #endregion
 
         #region Other private methods
@@ -123,11 +131,23 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             IEnumerable<EasyLearnUser> easyLearnUsers = userRerository.GetAllUsers();
             IEnumerable<UserView> userViews = easyLearnUsers.Select(easyLearnUser => UserView.Create(easyLearnUser));
-            this.UserViews = new ObservableCollection<UserView>(userViews);
+            this.UserViews = new ObservableCollection<UserControl>(userViews);
+            AddShadowUserView();
         }
-        private void AddUserToUI(EasyLearnUser user) => this.UserViews.Add(UserView.Create(user));
-        private UserView FindUserView(int userId) => this.UserViews.First(userView => userView.Id == userId);
-        private UserView? TryFindCurrentUserView() => this.UserViews.FirstOrDefault(userView => userView.IsCurrent);
+        private void AddUserToUI(EasyLearnUser user)
+        {
+            RemoveShadowUserView();
+            this.UserViews.Add(UserView.Create(user));
+            AddShadowUserView();
+        }
+        private void AddShadowUserView() => this.UserViews.Add(ShadowUserView.Create());
+        private void RemoveShadowUserView() => this.UserViews.RemoveAt(UserViews.Count - 1);
+        private UserView FindUserView(int userId) => (UserView)this.UserViews.First(userView => userView is UserView && ((UserView)userView).Id == userId);
+        private UserView? TryFindCurrentUserView()
+        {
+            UserControl? currentUser = this.UserViews.FirstOrDefault(userView => userView is UserView && ((UserView)userView).IsCurrent);
+            return currentUser is null ? null : (UserView?)currentUser;
+        }
         private void UpdatePagesForNewUser()
         {
             App.GetService<DictionariesPageVM>().UpdatePageForNewUserCommand.Execute();
@@ -136,6 +156,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void AddingNewUserButtonSoftClick() => App.GetService<UsersPage>().confirmUserAddingButton.SoftClick();
         private void OpenNewUserAddingWindowButtonSoftClick() => App.GetService<UsersPage>().addNewUserButton.SoftClick();
         private void NewUserAddingWindowCancelButtonSoftClick() => App.GetService<UsersPage>().cancelUserAddingButton.SoftClick();
+        private void AddNewUserButtonSoftClick() => App.GetService<UsersPage>().addNewUserButton.SoftClick();
         #endregion
     }
 }

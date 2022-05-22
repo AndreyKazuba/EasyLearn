@@ -68,8 +68,6 @@ namespace EasyLearn
             services.AddTransient<IRussianUnitRepository, RussianUnitRepository>();
             services.AddTransient<IEnglishUnitRepository, EnglishUnitRepository>();
 
-            services.AddTransient<IExamplesRepository, ExamplesRepository>();
-
             services.AddTransient<ICommonRelationRepository, CommonRelationsRepository>();
             services.AddTransient<IVerbPrepositionRepository, VerbPrepositionsRepository>();
             services.AddTransient<IIrregularVerbRepository, IrregularVerbsRepository>();

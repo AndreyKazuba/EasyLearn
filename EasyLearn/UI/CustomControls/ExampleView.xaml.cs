@@ -23,7 +23,6 @@ namespace EasyLearn.UI.CustomControls
         }
 
         #region Static members
-        public static ExampleView Create(Example example) => new ExampleView(new ExampleVM(example));
         public static ExampleView Create(string russianTranslation, string englishTranslation, int id) => new ExampleView(new ExampleVM(russianTranslation, englishTranslation, id));
         #endregion
     }

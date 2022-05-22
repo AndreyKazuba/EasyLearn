@@ -9,54 +9,58 @@
              d:DesignHeight="300" d:DesignWidth="300">
 
     <materialDesign:Flipper Style="{DynamicResource MaterialDesignCardFlipper}" 
-                            materialDesign:ShadowAssist.ShadowDepth="Depth2"
-                            Margin="17 10 0 0"
+                            materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                            Margin="18 18 0 0"
                             Height="256"
                             Width="200">
 
         <materialDesign:Flipper.FrontContent>
 
-            <Grid Height="256" Width="200">
+            <Border BorderThickness="0.6" BorderBrush="#99bbff" Background="GhostWhite">
+                <Grid Height="256" Width="200">
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="160" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="160" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
 
-                <!--Пространство с картинкой и закрашенным фоном-->
-                <materialDesign:ColorZone Mode="PrimaryDark" VerticalAlignment="Stretch">
+                    <!--Пространство с картинкой и закрашенным фоном-->
+                    <materialDesign:ColorZone Background="{DynamicResource MainColorLight}" VerticalAlignment="Stretch">
 
-                    <materialDesign:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center" 
+                        <materialDesign:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center" 
                                              Height="128" Width="128"
                                              Kind="Yahoo"/>
 
-                </materialDesign:ColorZone>
+                    </materialDesign:ColorZone>
 
-                <materialDesign:PackIcon HorizontalAlignment="Right" VerticalAlignment="Top"
+                    <materialDesign:PackIcon HorizontalAlignment="Right" VerticalAlignment="Top"
                                          Kind="Star" 
                                          Foreground="Gold"
                                          Width="30" Height="30"
                                          Padding="1"
                                          Margin="0 6 6 0"/>
 
-                <!--Пространство под картинкой аккаунта-->
-                <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <!--Пространство под картинкой аккаунта-->
+                    <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
 
-                    <!--Имя пользователя-->
-                    <StackPanel Orientation="Horizontal"
+                        <!--Имя пользователя-->
+                        <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 Grid.Row="0">
-                        <TextBlock Style="{DynamicResource MaterialDesignHeadline6TextBlock}" 
+                            <TextBlock Style="{DynamicResource MaterialDesignHeadline6TextBlock}" 
                                    Text="Неправильные глаоголы" 
                                    FontSize="15"/>
-                    </StackPanel>
+                        </StackPanel>
+                    </Grid>
                 </Grid>
-            </Grid>
+            </Border>
+
+            
         </materialDesign:Flipper.FrontContent>
 
         <!--Задняя сторона карточки-->
@@ -70,7 +74,7 @@
                 </Grid.RowDefinitions>
 
                 <!--Шапка-->
-                <materialDesign:ColorZone Mode="PrimaryMid" Padding="6">
+                <materialDesign:ColorZone Background="{DynamicResource MainColorLight}" Padding="6">
 
                     <StackPanel Orientation="Horizontal">
 

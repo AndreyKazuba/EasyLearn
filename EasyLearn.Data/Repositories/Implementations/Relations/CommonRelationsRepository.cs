@@ -41,11 +41,21 @@ namespace EasyLearn.Data.Repositories.Implementations
             return IsCommonRelationExist(russianUnit.Id, englishUnit.Id, dictionaryId);
         }
         public async Task<CommonRelation> GetCommonRelation(int commonRelationId) => await context.CommonRelations.FirstAsync(commonRelation => commonRelation.Id == commonRelationId);
-        public async Task<CommonRelation> CreateCommonRelation(string russianUnitValue, UnitType russianUnitType, string englishUnitValue, UnitType englishUnitType, int dictionaryId, string? comment)
+        public async Task<CommonRelation> CreateCommonRelation(
+            string russianUnitValue,
+            UnitType russianUnitType,
+            string englishUnitValue,
+            UnitType englishUnitType,
+            int dictionaryId,
+            string? comment,
+            string? firstExampleRussianValue,
+            string? firstExampleEnglishValue,
+            string? secondExampleRussianValue,
+            string? secondExampleEnglishValue)
         {
             EnglishUnit englishUnit = await englishUnitRepository.GetOrCreateUnit(englishUnitValue, englishUnitType);
             RussianUnit russianUnit = await russianUnitRepository.GetOrCreateUnit(russianUnitValue, russianUnitType);
-            ThrowIfAddingAttemptIncorrect(dictionaryId, comment, russianUnit.Id, englishUnit.Id);
+            ThrowIfAddingAttemptIncorrect(dictionaryId, comment, russianUnit.Id, englishUnit.Id, firstExampleRussianValue, firstExampleEnglishValue, secondExampleRussianValue, secondExampleEnglishValue); ;
             CommonRelation newCommonRelation = new CommonRelation
             {
                 EnglishUnitId = englishUnit.Id,
@@ -53,6 +63,10 @@ namespace EasyLearn.Data.Repositories.Implementations
                 CreationDateUtc = DateTime.UtcNow,
                 CommonDictionaryId = dictionaryId,
                 Comment = StringHelper.TryPrepare(comment),
+                FirstExampleRussianValue = StringHelper.TryPrepare(firstExampleRussianValue),
+                FirstExampleEnglishValue = StringHelper.TryPrepare(firstExampleEnglishValue),
+                SecondExampleRussianValue = StringHelper.TryPrepare(secondExampleRussianValue),
+                SecondExampleEnglishValue = StringHelper.TryPrepare(secondExampleEnglishValue),
             };
             context.CommonRelations.Add(newCommonRelation);
             await context.SaveChangesAsync();
@@ -72,17 +86,23 @@ namespace EasyLearn.Data.Repositories.Implementations
             context.CommonRelations.Remove(commonRelation);
             await context.SaveChangesAsync();
         }
-        public async Task AddExamples(int commonRelationId, List<Example> examples)
-        {
-            CommonRelation commonRelation = await GetCommonRelation(commonRelationId);
-            commonRelation.Examples = examples;
-            await context.SaveChangesAsync();
-        }
         #endregion
 
         #region Private members
-        private void ThrowIfAddingAttemptIncorrect(int dictionaryId, string? comment, int russianUnitId, int englishUnitId)
+        private void ThrowIfAddingAttemptIncorrect(
+            int dictionaryId,
+            string? comment,
+            int russianUnitId,
+            int englishUnitId,
+            string? firstExampleRussianValue,
+            string? firstExampleEnglishValue,
+            string? secondExampleRussianValue,
+            string? secondExampleEnglishValue)
         {
+            ThrowIfExampleValueInvalid(firstExampleEnglishValue, nameof(CommonRelation.FirstExampleEnglishValue));
+            ThrowIfExampleValueInvalid(firstExampleRussianValue, nameof(CommonRelation.FirstExampleRussianValue));
+            ThrowIfExampleValueInvalid(secondExampleEnglishValue, nameof(CommonRelation.SecondExampleEnglishValue));
+            ThrowIfExampleValueInvalid(secondExampleEnglishValue, nameof(CommonRelation.SecondExampleEnglishValue));
             ThrowIfCommentInvalid(comment);
             if (IsCommonRelationExist(russianUnitId, englishUnitId, dictionaryId))
                 throw new InvalidDbOperationException(DbExceptionMessagesHelper.AttemptToAddExistingEntity(nameof(CommonRelation), nameof(CommonRelation.RussianUnitId), russianUnitId.ToString(), nameof(CommonRelation.EnglishUnitId), englishUnitId.ToString(), nameof(CommonRelation.CommonDictionaryId), dictionaryId.ToString()));
@@ -95,6 +115,13 @@ namespace EasyLearn.Data.Repositories.Implementations
                 return;
             if (StringHelper.IsEmptyOrWhiteSpace(comment) || comment.Length > ModelConstants.CommonRelationCommentMaxLength)
                 throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(CommonRelation.Comment), nameof(CommonRelation), comment));
+        }
+        private void ThrowIfExampleValueInvalid(string? exampleValue, string propName)
+        {
+            if (exampleValue is null)
+                return;
+            if (StringHelper.IsEmptyOrWhiteSpace(exampleValue) || exampleValue.Length > ModelConstants.ExampleValueMaxLength)
+                throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(propName, nameof(CommonRelation), exampleValue));
         }
         #endregion
     }

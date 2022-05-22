@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using EasyLearn.Data.Constants;
@@ -30,12 +29,29 @@ namespace EasyLearn.Data.Models
 
         public EnglishUnit EnglishUnit { get; set; }
 
-        public List<Example> Examples { get; set; } = new List<Example>();
-
         [Required]
         public DateTime CreationDateUtc { get; set; }
 
         [MaxLength(ModelConstants.CommonRelationCommentMaxLength)]
         public string? Comment { get; set; }
+        public bool IsFirstExampleExist => !string.IsNullOrEmpty(this.FirstExampleRussianValue) && !string.IsNullOrEmpty(this.FirstExampleEnglishValue);
+
+        [MinLength(ModelConstants.ExampleValueMinLength)]
+        [MaxLength(ModelConstants.ExampleValueMaxLength)]
+        public string? FirstExampleRussianValue { get; set; }
+
+        [MinLength(ModelConstants.ExampleValueMinLength)]
+        [MaxLength(ModelConstants.ExampleValueMaxLength)]
+        public string? FirstExampleEnglishValue { get; set; }
+
+        public bool IsSecondExampleExist => !string.IsNullOrEmpty(this.SecondExampleRussianValue) && !string.IsNullOrEmpty(this.SecondExampleEnglishValue);
+
+        [MinLength(ModelConstants.ExampleValueMinLength)]
+        [MaxLength(ModelConstants.ExampleValueMaxLength)]
+        public string? SecondExampleRussianValue { get; set; }
+
+        [MinLength(ModelConstants.ExampleValueMinLength)]
+        [MaxLength(ModelConstants.ExampleValueMaxLength)]
+        public string? SecondExampleEnglishValue { get; set; }
     }
 }

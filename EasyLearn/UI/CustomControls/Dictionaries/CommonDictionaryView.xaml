@@ -4,34 +4,38 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:valudationRules="clr-namespace:EasyLearn.Infrastructure.Validation"
+             xmlns:constants="clr-namespace:EasyLearn.Data.Constants;assembly=EasyLearn.Data"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <materialDesign:Flipper Style="{DynamicResource MaterialDesignCardFlipper}" 
                             IsFlipped="{Binding IsCardFlipped, Mode=TwoWay}"
-                            materialDesign:ShadowAssist.ShadowDepth="Depth2"
-                            Margin="17 10 0 0"
+                            materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                            Margin="18 18 0 0"
                             Height="256" Width="200"
                             d:IsFlipped="True">
 
         <!--Лицевая часть карточки-->
         <materialDesign:Flipper.FrontContent>
-            <Grid Height="256" Width="200">
-                
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="160"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
 
-                <!--Пространство с картинкой и закрашенным фоном-->
-                <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch">
-                    <materialDesign:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center"
+            <Border BorderThickness="0.6" BorderBrush="#99bbff" Background="GhostWhite">
+                <Grid Height="256" Width="200">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="160"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <!--Пространство с картинкой и закрашенным фоном-->
+                    <materialDesign:ColorZone Background="{DynamicResource MainColorLight}" VerticalAlignment="Stretch">
+                        <materialDesign:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center"
                                              Height="128" Width="128"
                                              Kind="Star"/>
-                </materialDesign:ColorZone>
+                    </materialDesign:ColorZone>
 
-                <!--Кнопка перехода на заднюю сторону карточки (настройки словаря)-->
-                <Button Style="{DynamicResource MaterialDesignFlatButton}"
+                    <!--Кнопка перехода на заднюю сторону карточки (настройки словаря)-->
+                    <Button Style="{DynamicResource MaterialDesignFlatButton}"
                         HorizontalAlignment="Right" VerticalAlignment="Top"
                         Foreground="Black"
                         Width="30" Height="30"
@@ -39,140 +43,149 @@
                         Margin="0 6 6 0"
                         ToolTip="Настройки словаря">
 
-                    <!--Изображение-->
-                    <materialDesign:PackIcon HorizontalAlignment="Center" VerticalAlignment="Center"
+                        <!--Изображение-->
+                        <materialDesign:PackIcon HorizontalAlignment="Center" VerticalAlignment="Center"
                                              Kind="AccountDetails" 
                                              Width="22" Height="22"/>
 
-                    <!--Действия кнопки при нажатии-->
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <i:InvokeCommandAction Command="{Binding FlipBackAllAnotherCardsCommand}"/>
-                            <i:InvokeCommandAction Command="{Binding SetEditFieldsValueCommand}"/>
-                            <i:InvokeCommandAction Command="{x:Static materialDesign:Flipper.FlipCommand}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                    
-                </Button>
+                        <!--Действия кнопки при нажатии-->
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <i:InvokeCommandAction Command="{Binding FlipBackAllAnotherCardsCommand}"/>
+                                <i:InvokeCommandAction Command="{Binding SetEditFieldsValueCommand}"/>
+                                <i:InvokeCommandAction Command="{x:Static materialDesign:Flipper.FlipCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
 
-                <!--Имя словаря-->
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                    </Button>
+
+                    <!--Имя словаря-->
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                                    Style="{DynamicResource MaterialDesignHeadline6TextBlock}" 
                                    Text="{Binding Name}" 
                                    FontSize="15"
                                    Grid.Row="1"/>
 
-            </Grid>
+                </Grid>
+            </Border>
+
+            
         </materialDesign:Flipper.FrontContent>
 
         <!--Задняя сторона карточки-->
         <materialDesign:Flipper.BackContent>
-            <Grid Height="256" Width="200">
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="1.4*" />
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+            <Border BorderThickness="0.6" BorderBrush="#99bbff" Background="GhostWhite">
+                <Grid Height="256" Width="200">
 
-                <!--Шапка задней части карточки-->
-                <materialDesign:ColorZone Mode="PrimaryMid" Padding="6">
-                    <StackPanel Orientation="Horizontal">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="0.8*" />
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                        <!--Кнопка возвращающая на лицевую сторону карточки-->
-                        <Button Style="{DynamicResource MaterialDesignToolForegroundButton}"
+                    <!--Шапка задней части карточки-->
+                    <materialDesign:ColorZone Background="{DynamicResource MainColorLight}" Padding="6">
+                        <StackPanel Orientation="Horizontal">
+
+                            <!--Кнопка возвращающая на лицевую сторону карточки-->
+                            <Button Style="{DynamicResource MaterialDesignToolForegroundButton}"
                                 HorizontalAlignment="Left"
                                 IsEnabled="{Binding BackButtonIsEnabled}"
                                 ToolTip="Подтвердить изменения и вернуться">
 
-                            <!--Изображение кнопки-->
-                            <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" />
+                                <!--Изображение кнопки-->
+                                <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" />
 
-                            <!--Действия кнопки при её нажатии-->
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Click">
-                                    <i:InvokeCommandAction Command="{x:Static materialDesign:Flipper.FlipCommand}"/>
-                                    <i:InvokeCommandAction Command="{Binding EditCommonDictionaryCommand}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </Button>
+                                <!--Действия кнопки при её нажатии-->
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{x:Static materialDesign:Flipper.FlipCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EditCommonDictionaryCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
 
-                        <!--Надпись в шапке "настройки словаря"-->
-                        <TextBlock Margin="8 0 0 0" 
+                            <!--Надпись в шапке "настройки словаря"-->
+                            <TextBlock Margin="8 0 0 0" 
                                    VerticalAlignment="Center"
                                    Text="Настройки словаря"/>
 
-                    </StackPanel>
-                </materialDesign:ColorZone>
+                        </StackPanel>
+                    </materialDesign:ColorZone>
 
-                <!--Поле для редактирования названия словаря-->
-                <TextBox materialDesign:HintAssist.Hint="Название" 
+                    <!--Редактировать название словаря-->
+                    <TextBox materialDesign:HintAssist.Hint="Название" 
                          materialDesign:HintAssist.IsFloating="True"
-                         Grid.Row="1"
-                         Margin="0 10 0 5"
-                         Width="172"
-                         HorizontalAlignment="Center" VerticalAlignment="Top"
-                         Style="{DynamicResource MaterialDesignOutlinedTextBox}"
-                         Text="{Binding EditNameFieldValue, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="TextChanged">
-                            <i:InvokeCommandAction Command="{Binding UpdateGoBackButtonIsEnabledCommand}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </TextBox>
-
-                <!--Поле для редактирования описания словаря-->
-                <TextBox TextWrapping="Wrap"
+                         Grid.Row="1"         
+                         
+                         HorizontalAlignment="Stretch"
                          VerticalAlignment="Stretch"
-                         Width="172"
-                         MaxLength="40"
-                         Margin="0 0 0 10"
-                         Style="{DynamicResource MaterialDesignOutlinedTextBox}"
-                         VerticalScrollBarVisibility="Auto"
+                         Style="{DynamicResource MaterialDesignFilledTextBox}"
+                         Text="{Binding EditNameFieldValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="TextChanged">
+                                <i:InvokeCommandAction Command="{Binding UpdateGoBackButtonIsEnabledCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBox>
+
+                    <!--Редактировать описание словаря-->
+                    <TextBox TextWrapping="Wrap"
+                         VerticalAlignment="Stretch"
+                         HorizontalAlignment="Stretch"
+                         Style="{DynamicResource MaterialDesignFilledTextBox}"
                          materialDesign:HintAssist.Hint="Описание"
-                         Grid.Row="2"
-                         Text="{Binding EditDescriptionFieldValue}"/>
+                         materialDesign:HintAssist.IsFloating="True"
+                         materialDesign:ValidationAssist.UsePopup="False"
+                         Grid.Row="2">
+
+                        <TextBox.Text>
+                            <Binding Path="EditDescriptionFieldValue" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <valudationRules:InRange Max="{x:Static constants:ModelConstants.DictionaryDescriptionMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
 
 
-                <!--Кнопки удаления и открытия словаря-->
-                <Grid Grid.Row="3" HorizontalAlignment="Stretch">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="3" HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
 
-                    <!--Кнопка удаления словаря-->
-                    <Button Command="{Binding RemoveCommonDictionaryCommand}"
-                            Foreground="Red"
+                        <!--Кнопка удаления словаря-->
+                        <Button Command="{Binding RemoveCommonDictionaryCommand}"
+                            Foreground="{DynamicResource error}"
+                            Height="40"
                             Style="{DynamicResource MaterialDesignFlatButton}"
-                            VerticalAlignment="Center" HorizontalAlignment="Center"
-                            Margin="3 0 0 0"
-                            Padding="10 0 6 0">
-                        <StackPanel Orientation="Horizontal" Margin="-3 0 0 0">
-                            <TextBlock Text="Удалить" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <materialDesign:PackIcon Kind="Trash" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                        </StackPanel>
-                    </Button>
+                            HorizontalAlignment="Stretch"
+                            Grid.Column="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Удалить" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <materialDesign:PackIcon Kind="Trash" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                        </Button>
 
-                    <!--Кнопка открытия словаря-->
-                    <Button HorizontalAlignment="Center"
+                        <!--Кнопка открытия словаря-->
+                        <Button HorizontalAlignment="Stretch"
                             Command="{Binding OpenCurrentCommonDictionaryCommand}"
-                            Foreground="ForestGreen"
+                            Height="40"
+                            Foreground="{DynamicResource green}"
                             Style="{DynamicResource MaterialDesignFlatButton}"
-                            VerticalAlignment="Center"
                             Grid.Column="1"
-                            Padding="14 0 6 0"
-                            Margin="0 0 8 0">
-                        <StackPanel Orientation="Horizontal" Margin="-7 0 0 0">
-                            <TextBlock Text="Открыть" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <materialDesign:PackIcon Kind="Pencil" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                        </StackPanel>
-                    </Button>
+                            Content="Открыть">
+                        </Button>
+                    </Grid>
 
                 </Grid>
+            </Border>
 
-            </Grid>
+            
         </materialDesign:Flipper.BackContent>
     </materialDesign:Flipper>
 </UserControl>

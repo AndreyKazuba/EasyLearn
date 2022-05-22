@@ -12,6 +12,7 @@ namespace EasyLearn.UI.CustomControls
 
         #region Public props
         public int Id => viewModel.Id;
+        public int Order => viewModel.OrderValue;
         #endregion
 
         public CommonRelationView(CommonRelationVM viewModel)

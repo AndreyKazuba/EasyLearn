@@ -4,4 +4,8 @@
     <SolidColorBrush x:Key="error" Color="#FFA70404" />
     <SolidColorBrush x:Key="pageBackground" Color="GhostWhite"/>
     <SolidColorBrush x:Key="green" Color="ForestGreen"/>
+
+    <SolidColorBrush x:Key="MainColor" Color="#4d79ff"/>
+    <SolidColorBrush x:Key="MainColorMouseOver" Color="#3366ff"/>
+    <SolidColorBrush x:Key="MainColorLight" Color="#99bbff"/>
 </ResourceDictionary>

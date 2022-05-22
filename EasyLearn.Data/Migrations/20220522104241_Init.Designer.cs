@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EasyLearn.Data.Migrations
 {
     [DbContext(typeof(EasyLearnContext))]
-    [Migration("20220502231415_Added_Units_For_IrregularVerbs")]
-    partial class Added_Units_For_IrregularVerbs
+    [Migration("20220522104241_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -75,11 +75,27 @@ namespace EasyLearn.Data.Migrations
                     b.Property<DateTime>("CreationDateUtc")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("FirstExampleEnglishValue")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
+                    b.Property<string>("FirstExampleRussianValue")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("SecondExampleEnglishValue")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
+                    b.Property<string>("SecondExampleRussianValue")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
 
                     b.HasKey("EnglishUnitId", "RussianUnitId", "CommonDictionaryId");
 
@@ -127,65 +143,12 @@ namespace EasyLearn.Data.Migrations
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.HasKey("Id");
 
                     b.ToTable("EnglishUnits");
-                });
-
-            modelBuilder.Entity("EasyLearn.Data.Models.Example", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("CommonRelationCommonDictionaryId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CommonRelationEnglishUnitId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CommonRelationRussianUnitId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreationDateUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EnglishValue")
-                        .IsRequired()
-                        .HasMaxLength(35)
-                        .HasColumnType("nvarchar(35)");
-
-                    b.Property<int?>("IrregularVerbId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RussianValue")
-                        .IsRequired()
-                        .HasMaxLength(35)
-                        .HasColumnType("nvarchar(35)");
-
-                    b.Property<int?>("VerbPrepositionDictionaryId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("VerbPrepositionPrepositionId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("VerbPrepositionVerbId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IrregularVerbId");
-
-                    b.HasIndex("CommonRelationEnglishUnitId", "CommonRelationRussianUnitId", "CommonRelationCommonDictionaryId");
-
-                    b.HasIndex("VerbPrepositionVerbId", "VerbPrepositionPrepositionId", "VerbPrepositionDictionaryId");
-
-                    b.ToTable("Examples");
                 });
 
             modelBuilder.Entity("EasyLearn.Data.Models.IrregularVerb", b =>
@@ -241,8 +204,8 @@ namespace EasyLearn.Data.Migrations
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.HasKey("Id");
 
@@ -267,16 +230,32 @@ namespace EasyLearn.Data.Migrations
                     b.Property<DateTime>("CreationDateUtc")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("FirstExampleEnglishValue")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
+                    b.Property<string>("FirstExampleRussianValue")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("SecondExampleEnglishValue")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
+                    b.Property<string>("SecondExampleRussianValue")
+                        .HasMaxLength(35)
+                        .HasColumnType("nvarchar(35)");
+
                     b.Property<string>("Translation")
                         .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("VerbId", "PrepositionId", "VerbPrepositionDictionaryId");
 
@@ -358,21 +337,6 @@ namespace EasyLearn.Data.Migrations
                     b.Navigation("RussianUnit");
                 });
 
-            modelBuilder.Entity("EasyLearn.Data.Models.Example", b =>
-                {
-                    b.HasOne("EasyLearn.Data.Models.IrregularVerb", null)
-                        .WithMany("Examples")
-                        .HasForeignKey("IrregularVerbId");
-
-                    b.HasOne("EasyLearn.Data.Models.CommonRelation", null)
-                        .WithMany("Examples")
-                        .HasForeignKey("CommonRelationEnglishUnitId", "CommonRelationRussianUnitId", "CommonRelationCommonDictionaryId");
-
-                    b.HasOne("EasyLearn.Data.Models.VerbPreposition", null)
-                        .WithMany("Examples")
-                        .HasForeignKey("VerbPrepositionVerbId", "VerbPrepositionPrepositionId", "VerbPrepositionDictionaryId");
-                });
-
             modelBuilder.Entity("EasyLearn.Data.Models.IrregularVerb", b =>
                 {
                     b.HasOne("EasyLearn.Data.Models.EnglishUnit", "FirstForm")
@@ -451,26 +415,11 @@ namespace EasyLearn.Data.Migrations
                     b.Navigation("Relations");
                 });
 
-            modelBuilder.Entity("EasyLearn.Data.Models.CommonRelation", b =>
-                {
-                    b.Navigation("Examples");
-                });
-
             modelBuilder.Entity("EasyLearn.Data.Models.EasyLearnUser", b =>
                 {
                     b.Navigation("CommonDictionaries");
 
                     b.Navigation("VerbPrepositionDictionaries");
-                });
-
-            modelBuilder.Entity("EasyLearn.Data.Models.IrregularVerb", b =>
-                {
-                    b.Navigation("Examples");
-                });
-
-            modelBuilder.Entity("EasyLearn.Data.Models.VerbPreposition", b =>
-                {
-                    b.Navigation("Examples");
                 });
 
             modelBuilder.Entity("EasyLearn.Data.Models.VerbPrepositionDictionnary", b =>

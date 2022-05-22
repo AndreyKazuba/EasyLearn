@@ -23,6 +23,6 @@
 
         public const int ExampleValueMaxLength = 35;
         public const int ExampleValueMinLength = 1;
-        public const int MaxExamplesCount = 3;
+        public const int MaxExamplesCount = 2;
     }
 }

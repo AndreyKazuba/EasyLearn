@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
+using EasyLearn.Helpers;
 using EasyLearn.VM.Windows;
 
 namespace EasyLearn.UI
@@ -9,11 +10,13 @@ namespace EasyLearn.UI
     {
         public static event Action? WindowCtrlNDown;
         public static event Action? WindowEscDown;
+        public static event Action? DrawerButtonClick;
 
         public AppWindow(AppWindowVM viewModel)
         {
             InitializeComponent();
             this.DataContext = viewModel;
+            new WindowResizer(this);
         }
         private void OnWindowKeyDown(object sender, KeyEventArgs e)
         {
@@ -21,6 +24,12 @@ namespace EasyLearn.UI
                 WindowCtrlNDown();
             if (e.Key == Key.Escape && WindowEscDown is not null)
                 WindowEscDown();
+        }
+
+        private void OnDrawerButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (DrawerButtonClick is not null)
+                DrawerButtonClick();
         }
     }
 }

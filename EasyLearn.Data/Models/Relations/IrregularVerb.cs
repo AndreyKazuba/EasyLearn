@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using EasyLearn.Data.Constants;
 
@@ -34,8 +33,6 @@ namespace EasyLearn.Data.Models
         public int ThirdFormId { get; set; }
 
         public EnglishUnit ThirdForm { get; set; }
-
-        public List<Example> Examples { get; set; } = new List<Example>();
 
         [MaxLength(ModelConstants.IrregularVerbCommentMaxLength)]
         public string? Comment { get; set; }

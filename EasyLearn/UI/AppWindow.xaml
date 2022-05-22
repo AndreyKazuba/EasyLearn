@@ -8,17 +8,31 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
+        WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         KeyDown="OnWindowKeyDown"
-        Title="EasyLearn" Height="600" Width="950"
-        WindowState="Maximized">
+        Title="EasyLearn" Height="605" Width="890">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="36"/>
+    </WindowChrome.WindowChrome>
+
     <Grid>
-        <materialDesign:DrawerHost>
+        <materialDesign:DrawerHost OpenMode="Standard" materialDesign:ShadowAssist.ShadowDepth="Depth0" BorderThickness="0" LeftDrawerBackground="GhostWhite"><!--#ebeef9-->
             <materialDesign:DrawerHost.LeftDrawerContent>
                 <StackPanel>
+
+                    <Border Background="{DynamicResource MainColor}" Height="38" Margin="0 0 0 10" BorderBrush="{DynamicResource MainColor}">
+                        <TextBlock Style="{DynamicResource MaterialDesignHeadline5TextBlock}"
+                               Text="Easy Learn" Margin="18 1 0 0" FontWeight="Bold" Foreground="White" />
+                    </Border>
+                    
                     <Button Margin="4" HorizontalAlignment="Left"
                             Style="{DynamicResource MaterialDesignFlatButton}"
-                            Width="135"
+                            Width="155"
+                            Click="OnDrawerButtonClick"
+                            Foreground="{DynamicResource MainColor}"
+                            WindowChrome.IsHitTestVisibleInChrome="True"
                             HorizontalContentAlignment="Left">
 
                         <i:Interaction.Triggers>
@@ -30,12 +44,14 @@
 
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                             <materialDesign:PackIcon Kind="Pencil" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                            <TextBlock Text="Dictation" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10 0 0 0"/>
+                            <TextBlock Text="Диктант" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10 0 0 0"/>
                         </StackPanel>
                     </Button>
                     <Button Margin="4" HorizontalAlignment="Left"
                             Style="{DynamicResource MaterialDesignFlatButton}"
-                            Width="135"
+                            Width="155"
+                            Click="OnDrawerButtonClick"
+                            Foreground="{DynamicResource MainColor}"
                             HorizontalContentAlignment="Left">
 
                         <i:Interaction.Triggers>
@@ -47,12 +63,14 @@
 
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                             <materialDesign:PackIcon Kind="Dictionary" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                            <TextBlock Text="Dictionaries" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10 0 0 0"/>
+                            <TextBlock Text="Словари" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10 0 0 0"/>
                         </StackPanel>
                     </Button>
                     <Button Margin="4" HorizontalAlignment="Left"
                             Style="{DynamicResource MaterialDesignFlatButton}"
-                            Width="135"
+                            Width="155"
+                            Click="OnDrawerButtonClick"
+                            Foreground="{DynamicResource MainColor}"
                             HorizontalContentAlignment="Left">
 
                         <i:Interaction.Triggers>
@@ -64,7 +82,7 @@
 
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                             <materialDesign:PackIcon Kind="User" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                            <TextBlock Text="Users" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10 0 0 0"/>
+                            <TextBlock Text="Пользователи" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10 0 0 0"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -76,35 +94,190 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <materialDesign:ColorZone Mode="PrimaryDark" 
-                                          Padding="8" 
-                                          materialDesign:ShadowAssist.ShadowDepth="Depth3"
-                                          Grid.Row="0"
-                                          ToolTip="Меню">
+                <materialDesign:ColorZone Mode="PrimaryDark"
+                                          materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                                          Grid.Row="0" Background="{DynamicResource MainColor}">
 
-                    <StackPanel Orientation="Horizontal">
-
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="38"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="38"/>
+                            <ColumnDefinition Width="38"/>
+                            <ColumnDefinition Width="38"/>
+                        </Grid.ColumnDefinitions>
                         <!--Кнопка активация главного меню слева-->
-                        <Button Style="{DynamicResource MaterialDesignFlatButton}"
+
+                        <Button Height="38" Width="38"
+                                WindowChrome.IsHitTestVisibleInChrome="True"
+                                Padding="0"
+                                Visibility="{Binding ShowMenuButtonIsVisible, Converter={converters:ReverseCollapseConverter}}"
                                 Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
-                                CommandParameter="{x:Static Dock.Left}"
-                                Height="40"
-                                Width="40"
-                                Margin="0"
-                                Padding="1">
-                            <materialDesign:PackIcon Kind="Menu" Height="30" Width="30" Foreground="Black"
+                                CommandParameter="{x:Static Dock.Left}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding SetCloseMenuButtonCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}">
+                                                    <materialDesign:PackIcon Kind="Menu" Height="33" Width="33" Foreground="White"
                                                      VerticalAlignment="Center"
                                                      HorizontalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource MainColorMouseOver}"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="False">
+                                            <Setter Property="Background" Value="{DynamicResource MainColor}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
                         </Button>
 
-                        <!--Просто название приложения в шапке-->
-                        <TextBlock VerticalAlignment="Center" Margin="16 0 0 0" FontSize="24" Text="EasyLearn"/>
+                        <Button Height="38" Width="38"
+                                WindowChrome.IsHitTestVisibleInChrome="True"
+                                Padding="0"
+                                Visibility="{Binding ShowMenuButtonIsVisible, Converter={converters:ForwardCollapseConverter}}"
+                                Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
+                                CommandParameter="{x:Static Dock.Left}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding SetShowMenuButtonCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}">
+                                                    <materialDesign:PackIcon Kind="Menu" Height="33" Width="33" Foreground="White"
+                                                     VerticalAlignment="Center"
+                                                     HorizontalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource MainColorMouseOver}"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="False">
+                                            <Setter Property="Background" Value="{DynamicResource MainColor}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
 
-                    </StackPanel>
+                        <Button Height="38" Width="38"
+                                WindowChrome.IsHitTestVisibleInChrome="True"
+                                Grid.Column="2"
+                                Padding="0"
+                                Command="{Binding MinimizeCommand}">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}">
+                                                    <materialDesign:PackIcon Kind="WindowMinimize" Height="20" Width="20" Foreground="White"
+                                                     VerticalAlignment="Center"
+                                                     HorizontalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource MainColorMouseOver}"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="False">
+                                            <Setter Property="Background" Value="{DynamicResource MainColor}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <Button Height="38" Width="38"
+                                WindowChrome.IsHitTestVisibleInChrome="True"
+                                Grid.Column="3"
+                                Padding="0"
+                                Command="{Binding MaximizeCommand}">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}">
+                                                    <materialDesign:PackIcon Kind="CropSquare" Height="20" Width="20" Foreground="White"
+                                                     VerticalAlignment="Center"
+                                                     HorizontalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource MainColorMouseOver}"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="False">
+                                            <Setter Property="Background" Value="{DynamicResource MainColor}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <Button Height="38" Width="38"
+                                WindowChrome.IsHitTestVisibleInChrome="True"
+                                Grid.Column="5"
+                                Padding="0"
+                                Command="{Binding CloseCommand}">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}">
+                                                    <materialDesign:PackIcon Kind="Close" Height="20" Width="20" Foreground="White"
+                                                     VerticalAlignment="Center"
+                                                     HorizontalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#ff3333"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="False">
+                                            <Setter Property="Background" Value="{DynamicResource MainColor}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                    </Grid>
 
                 </materialDesign:ColorZone>
                 <Frame JournalOwnership="UsesParentJournal" Grid.Row="1" Content="{Binding CurrentPage, Converter={converters:AppPageConverter}}"/>
             </Grid>
         </materialDesign:DrawerHost>
     </Grid>
+
+
+
 </Window>
