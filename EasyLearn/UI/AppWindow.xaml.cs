@@ -11,6 +11,8 @@ namespace EasyLearn.UI
         public static event Action? WindowCtrlNDown;
         public static event Action? WindowEscDown;
         public static event Action? DrawerButtonClick;
+        public static event Action? GoBackButtonClick;
+        public static event Action? OpenMenuButtonClick;
 
         public AppWindow(AppWindowVM viewModel)
         {
@@ -30,6 +32,16 @@ namespace EasyLearn.UI
         {
             if (DrawerButtonClick is not null)
                 DrawerButtonClick();
+        }
+        private void OnGoBackButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (GoBackButtonClick is not null)
+                GoBackButtonClick();
+        }
+        private void OnOpenMenuButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (OpenMenuButtonClick is not null)
+                OpenMenuButtonClick();
         }
     }
 }

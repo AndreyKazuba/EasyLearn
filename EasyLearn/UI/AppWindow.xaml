@@ -101,6 +101,8 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="38"/>
+                            <ColumnDefinition Width="38"/>
+                            <ColumnDefinition Width="38"/>
                             <ColumnDefinition/>
                             <ColumnDefinition Width="38"/>
                             <ColumnDefinition Width="38"/>
@@ -147,7 +149,7 @@
                         <Button Height="38" Width="38"
                                 WindowChrome.IsHitTestVisibleInChrome="True"
                                 Padding="0"
-                                Visibility="{Binding ShowMenuButtonIsVisible, Converter={converters:ForwardCollapseConverter}}"
+                                Visibility="{Binding CloseMenuButtonIsVisible, Converter={converters:ReverseCollapseConverter}}"
                                 Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
                                 CommandParameter="{x:Static Dock.Left}">
                             <i:Interaction.Triggers>
@@ -182,7 +184,72 @@
 
                         <Button Height="38" Width="38"
                                 WindowChrome.IsHitTestVisibleInChrome="True"
+                                Padding="0"
+                                Grid.Column="1"
+                                Click="OnGoBackButtonClick"
+                                Visibility="{Binding GoBackButtonIsVisible, Converter={converters:ReverseCollapseConverter}}">
+
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}">
+                                                    <materialDesign:PackIcon Kind="ArrowBottomLeftThin" Height="33" Width="33" Foreground="White"
+                                                     VerticalAlignment="Center"
+                                                     HorizontalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource MainColorMouseOver}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="False">
+                                        <Setter Property="Background" Value="{DynamicResource MainColor}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        </Button>
+
+                        <Button Height="38" Width="38"
+                                WindowChrome.IsHitTestVisibleInChrome="True"
+                                Padding="0"
                                 Grid.Column="2"
+                                Click="OnOpenMenuButtonClick"
+                                Visibility="{Binding GoBackButtonIsVisible, Converter={converters:ReverseCollapseConverter}}">
+
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}">
+                                                    <materialDesign:PackIcon Kind="DockBottom" Height="28" Width="28" Foreground="White"
+                                                     VerticalAlignment="Center"
+                                                     HorizontalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{DynamicResource MainColorMouseOver}"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="False">
+                                            <Setter Property="Background" Value="{DynamicResource MainColor}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+
+                        <Button Height="38" Width="38"
+                                WindowChrome.IsHitTestVisibleInChrome="True"
+                                Grid.Column="4"
                                 Padding="0"
                                 Command="{Binding MinimizeCommand}">
                             <Button.Style>
@@ -212,7 +279,7 @@
 
                         <Button Height="38" Width="38"
                                 WindowChrome.IsHitTestVisibleInChrome="True"
-                                Grid.Column="3"
+                                Grid.Column="5"
                                 Padding="0"
                                 Command="{Binding MaximizeCommand}">
                             <Button.Style>
@@ -242,7 +309,7 @@
 
                         <Button Height="38" Width="38"
                                 WindowChrome.IsHitTestVisibleInChrome="True"
-                                Grid.Column="5"
+                                Grid.Column="6"
                                 Padding="0"
                                 Command="{Binding CloseCommand}">
                             <Button.Style>
@@ -273,7 +340,9 @@
                     </Grid>
 
                 </materialDesign:ColorZone>
-                <Frame JournalOwnership="UsesParentJournal" Grid.Row="1" Content="{Binding CurrentPage, Converter={converters:AppPageConverter}}"/>
+                <Border Grid.Row="1" BorderBrush="{DynamicResource MainColor}" BorderThickness="0.6 0 0.6 0.6">
+                    <Frame JournalOwnership="UsesParentJournal"  Content="{Binding CurrentPage, Converter={converters:AppPageConverter}}"/>
+                </Border>
             </Grid>
         </materialDesign:DrawerHost>
     </Grid>

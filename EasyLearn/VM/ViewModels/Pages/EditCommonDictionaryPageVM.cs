@@ -20,6 +20,8 @@ using EasyLearn.Infrastructure.Validation;
 using System.Windows.Media;
 using System.Windows;
 using Controls = System.Windows.Controls;
+using System.Windows.Controls;
+using Page = EasyLearn.Infrastructure.Enums.Page;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -34,6 +36,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private bool exampleInvalid = true;
         private int exampleIdsCount;
         private int dictionaryId;
+        private bool bottomMenuIsOpened = false;
         private Guid relationExistValidationRuleId;
         private List<CommonRelation> allCommonRelations;
         #endregion
@@ -60,7 +63,7 @@ namespace EasyLearn.VM.ViewModels.Pages
 #pragma warning restore CS8618
 
         #region Props for binding
-        public ObservableCollection<CommonRelationView> CommonRelationViews { get; set; }
+        public ObservableCollection<UserControl> CommonRelationViews { get; set; }
         public ObservableCollection<ExampleView> ExampleViews { get; set; } = new ObservableCollection<ExampleView>();
         public SolidColorBrush HorisontalSeporatorColor => this.CommonRelationHasExistLableIsVisible ? new BrushConverter().ConvertFrom("#FFA70404") as SolidColorBrush ?? Brushes.Red : Brushes.LightGray;
         public string DictionaryName { get; set; }
@@ -94,6 +97,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             EditCommonDictionaryPage.ExampleEnglishValueTextBoxEnterDown += OnExampleEnglishValueTextBoxEnterDown;
             AppWindow.WindowCtrlNDown += OnWindowCtrlNDown;
             AppWindow.WindowEscDown += OnWindowEscDown;
+            AppWindow.GoBackButtonClick += OnGoBackButtonClick;
+            AppWindow.OpenMenuButtonClick += OnOpenMenuButtonClick;
         }
         private void OnRussianValueTextBoxEnterDown() => FocusEnglishValueTextBox();
         private void OnEnglishValueTextBoxEnterDown() => FocusRussianUnitTypeComboBox();
@@ -124,6 +129,24 @@ namespace EasyLearn.VM.ViewModels.Pages
             if (App.GetService<AppWindowVM>().CurrentPage == Page.EditCommonWordListPage)
                 NewCommonRelationAddingWindowCancelButtonSoftClick();
         }
+        private void OnGoBackButtonClick()
+        {
+            App.GetService<AppWindowVM>().SetShowMenuButtonCommand.Execute();
+            GoBack();
+        }
+        private void OnOpenMenuButtonClick()
+        {
+            if (bottomMenuIsOpened)
+            {
+                CloseMenuButtonSoftClick();
+                bottomMenuIsOpened = false;
+            }
+            else
+            {
+                OpenMenuButtonSoftClick();
+                bottomMenuIsOpened = true;
+            }
+        }
         #endregion
 
         #region Commands
@@ -142,6 +165,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command FocusExampleRussianValueFieldCommand { get; private set; }
         public Command ValidateExampleSectionCommand { get; private set; }
         public Command CheckExampleFieldsMaxLengthVisibilityCommand { get; private set; }
+        public Command OpenCommonRelationAddingWindowCommand { get; private set; }
         protected override void InitCommands()
         {
             this.GoBackCommand = new Command(GoBack);
@@ -159,6 +183,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.FocusExampleRussianValueFieldCommand = new Command(FocusExampleRussianValueField);
             this.ValidateExampleSectionCommand = new Command(ValidateExampleSection);
             this.CheckExampleFieldsMaxLengthVisibilityCommand = new Command(CheckExampleFieldsMaxLengthVisibility);
+            this.OpenCommonRelationAddingWindowCommand = new Command(OpenCommonRelationAddingWindow);
         }
         #endregion
 
@@ -243,9 +268,11 @@ namespace EasyLearn.VM.ViewModels.Pages
             IEnumerable<CommonRelationView> commonRelationViews = commonDictionary.Relations
                 .Select(commonRelation => CommonRelationView.Create(commonRelation))
                 .OrderBy(commonRelationView => commonRelationView.Order);
-            this.CommonRelationViews = new ObservableCollection<CommonRelationView>();
+            this.CommonRelationViews = new ObservableCollection<UserControl>();
+            AddShadowRelationView();
             foreach (CommonRelationView commonRelationView in commonRelationViews)
                 this.CommonRelationViews.Add(commonRelationView);
+           
         }
         private void UpdateConfirmCommonRelationAddingButtonAvailability() => IsConfirmCommonRelationAddingButtonEnabled = ValidationPool.IsValid(ValidationRulesGroup.AddCommonRelation);
         private void CheckCommonRelationForExisting()
@@ -261,13 +288,14 @@ namespace EasyLearn.VM.ViewModels.Pages
             string searchingString = this.SearchStringValue;
             if (searchingString is null || StringHelper.IsEmptyOrWhiteSpace(searchingString))
             {
-                this.CommonRelationViews = new ObservableCollection<CommonRelationView>(allCommonRelations.Select(relation => CommonRelationView.Create(relation)));
+                this.CommonRelationViews = new ObservableCollection<UserControl>(allCommonRelations.Select(relation => CommonRelationView.Create(relation)));
                 return;
             }
             IEnumerable<CommonRelation> selectedRelations = this.allCommonRelations
                 .Where(relation => $"{relation.RussianUnit.Value.Prepare()}{relation.EnglishUnit.Value.Prepare()}".Contains(searchingString.Prepare()));
             IEnumerable<CommonRelationView> commonRelationViews = selectedRelations.Select(selectedRelation => CommonRelationView.Create(selectedRelation));
-            this.CommonRelationViews = new ObservableCollection<CommonRelationView>(commonRelationViews);
+            this.CommonRelationViews = new ObservableCollection<UserControl>(commonRelationViews);
+            AddShadowRelationView();
         }
         private void AddExampleView()
         {
@@ -304,12 +332,17 @@ namespace EasyLearn.VM.ViewModels.Pages
             else
                 HideExampleFieldsMaxLength();
         }
+        private void OpenCommonRelationAddingWindow() => OpenNewCommonRelationAddingWindowButtonSoftClick();
         #endregion
 
         #region Other private members
         private ExampleView FindExampleView(int exampleId) => this.ExampleViews.First(exampleView => exampleView.Id == exampleId);
-        private CommonRelationView FindCommonRelationView(int commonRelationId) => this.CommonRelationViews.First(commonRelationView => commonRelationView.Id == commonRelationId);
-        private void AddCommonRelationToUI(CommonRelation commonRelation) => this.CommonRelationViews.Add(CommonRelationView.Create(commonRelation));
+        private CommonRelationView FindCommonRelationView(int commonRelationId) => (CommonRelationView)this.CommonRelationViews.First(commonRelationView => ((CommonRelationView)commonRelationView).Id == commonRelationId);
+
+        private void AddCommonRelationToUI(CommonRelation commonRelation)
+        {
+            this.CommonRelationViews.Add(CommonRelationView.Create(commonRelation));
+        }
         private void SetAddingWindowRussianUnitTypes()
         {
             ObservableCollection<UnitTypeComboBoxItem> russianUnitTypes = new ObservableCollection<UnitTypeComboBoxItem>(
@@ -391,5 +424,8 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void OpenNewCommonRelationAddingWindowButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().openNewCommonRelationAddingWindowButton.SoftClick();
         private void NewCommonRelationAddingWindowCancelButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().newCommonRelationAddingWindowCancelButton.SoftClick();
         private void AddExampleButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().addExampleButton.SoftClick();
+        private void AddShadowRelationView() => this.CommonRelationViews.Add(ShadowCommonRelationView.Create());
+        private void OpenMenuButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().openMenuButton.SoftClick();
+        private void CloseMenuButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().closeMenuButton.SoftClick();
     }
 }

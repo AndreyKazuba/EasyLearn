@@ -58,6 +58,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         {
             SetCurrentDictionary();
             App.GetService<AppWindowVM>().OpenEditCommonDictionaryPageCommand.Execute();
+            App.GetService<AppWindowVM>().SetGoBackButtonCommand.Execute();
         }
         private void FlipBackAllAnotherCards() => App.GetService<DictionariesPageVM>().FlipBackAllCardsCommand.Execute();
         private void SetCurrentDictionary() => App.GetService<EditCommonDictionaryPageVM>().SetDictionaryAsCurrentCommand.Execute(Id);

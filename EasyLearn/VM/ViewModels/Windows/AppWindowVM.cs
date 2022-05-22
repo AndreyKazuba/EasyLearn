@@ -22,6 +22,8 @@ namespace EasyLearn.VM.Windows
             }
         }
         public bool ShowMenuButtonIsVisible { get; set; } = true;
+        public bool CloseMenuButtonIsVisible { get; set; }
+        public bool GoBackButtonIsVisible { get; set; }
 
         public AppWindowVM()
         {
@@ -29,16 +31,17 @@ namespace EasyLearn.VM.Windows
         }
 
         #region Commands
-        public Command OpenDictationPage { get; set; }
-        public Command OpenUsersPage { get; set; }
-        public Command OpenDictionariesPageCommand { get; set; }
-        public Command OpenEditCommonDictionaryPageCommand { get; set; }
-        public Command OpenEditVerbPrepositionDictionaryPageCommand { get; set; }
-        public Command MinimizeCommand { get; set; }
-        public Command MaximizeCommand { get; set; }
-        public Command CloseCommand { get; set; }
-        public Command SetCloseMenuButtonCommand { get; set; }
-        public Command SetShowMenuButtonCommand { get; set; }
+        public Command OpenDictationPage { get; private set; }
+        public Command OpenUsersPage { get; private set; }
+        public Command OpenDictionariesPageCommand { get; private set; }
+        public Command OpenEditCommonDictionaryPageCommand { get; private set; }
+        public Command OpenEditVerbPrepositionDictionaryPageCommand { get; private set; }
+        public Command MinimizeCommand { get; private set; }
+        public Command MaximizeCommand { get; private set; }
+        public Command CloseCommand { get; private set; }
+        public Command SetCloseMenuButtonCommand { get; private set; }
+        public Command SetShowMenuButtonCommand { get; private set; }
+        public Command SetGoBackButtonCommand { get; private set; }
         protected override void InitCommands()
         {
             this.OpenDictationPage = new Command(() => this.CurrentPage = Page.Dictation);
@@ -51,6 +54,7 @@ namespace EasyLearn.VM.Windows
             this.CloseCommand = new Command(Close);
             this.SetCloseMenuButtonCommand = new Command(SetCloseMenuButton);
             this.SetShowMenuButtonCommand = new Command(SetShowMenuButton);
+            this.SetGoBackButtonCommand = new Command(SetGoBackButton);
         }
 
         protected override void InitEvents()
@@ -60,8 +64,24 @@ namespace EasyLearn.VM.Windows
         private void OnDrawerButtonClick() => SetShowMenuButton();
 
         #endregion
-        private void SetCloseMenuButton() => this.ShowMenuButtonIsVisible = false;
-        private void SetShowMenuButton() => this.ShowMenuButtonIsVisible = true;
+        private void SetCloseMenuButton()
+        {
+            this.ShowMenuButtonIsVisible = false;
+            this.CloseMenuButtonIsVisible = true;
+            //this.GoBackButtonIsVisible = false;
+        }
+        private void SetShowMenuButton()
+        {
+            this.CloseMenuButtonIsVisible = false;
+            this.ShowMenuButtonIsVisible = true;
+            //this.GoBackButtonIsVisible = false;
+        }
+        private void SetGoBackButton()
+        {
+            //this.CloseMenuButtonIsVisible = false;
+            //this.ShowMenuButtonIsVisible = false;
+            this.GoBackButtonIsVisible = true;
+        }
         private void SetStartPage() => this.CurrentPage = Page.Users;
         private void Minimize()
         {
