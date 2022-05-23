@@ -172,7 +172,7 @@
                                     </Setter>
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="{DynamicResource MainColorMouseOver}"/>
+                                            <Setter Property="Background" Value="{DynamicResource MainColorDark}"/>
                                         </Trigger>
                                         <Trigger Property="IsMouseOver" Value="False">
                                             <Setter Property="Background" Value="{DynamicResource MainColor}"/>
@@ -204,7 +204,7 @@
                                 </Setter>
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="{DynamicResource MainColorMouseOver}"/>
+                                            <Setter Property="Background" Value="{DynamicResource MainColorDark}"/>
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="False">
                                         <Setter Property="Background" Value="{DynamicResource MainColor}"/>
@@ -236,7 +236,7 @@
                                     </Setter>
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="{DynamicResource MainColorMouseOver}"/>
+                                            <Setter Property="Background" Value="{DynamicResource MainColorDark}"/>
                                         </Trigger>
                                         <Trigger Property="IsMouseOver" Value="False">
                                             <Setter Property="Background" Value="{DynamicResource MainColor}"/>
@@ -267,7 +267,7 @@
                                     </Setter>
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="{DynamicResource MainColorMouseOver}"/>
+                                            <Setter Property="Background" Value="{DynamicResource MainColorDark}"/>
                                         </Trigger>
                                         <Trigger Property="IsMouseOver" Value="False">
                                             <Setter Property="Background" Value="{DynamicResource MainColor}"/>
@@ -297,7 +297,7 @@
                                     </Setter>
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="{DynamicResource MainColorMouseOver}"/>
+                                            <Setter Property="Background" Value="{DynamicResource MainColorDark}"/>
                                         </Trigger>
                                         <Trigger Property="IsMouseOver" Value="False">
                                             <Setter Property="Background" Value="{DynamicResource MainColor}"/>

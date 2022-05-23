@@ -25,7 +25,7 @@
                     </Grid.RowDefinitions>
 
                     <!--Пространство с картинкой и закрашенным фоном-->
-                    <materialDesign:ColorZone Background="{DynamicResource MainColorLight}" VerticalAlignment="Stretch">
+                    <materialDesign:ColorZone Background="#ff9999" VerticalAlignment="Stretch">
 
                         <materialDesign:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center" 
                                              Height="128" Width="128"

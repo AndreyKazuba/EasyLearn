@@ -14,6 +14,8 @@ using EasyLearn.UI.Pages;
 using EasyLearn.Infrastructure.Helpers;
 using EasyLearn.UI;
 using EasyLearn.Infrastructure.Enums;
+using System.Windows.Controls;
+using Page = EasyLearn.Infrastructure.Enums.Page;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -47,7 +49,7 @@ namespace EasyLearn.VM.ViewModels.Pages
 #pragma warning restore CS8618
 
         #region Props for binding
-        public ObservableCollection<VerbPrepositionView> VerbPrepositionViews { get; set; }
+        public ObservableCollection<UserControl> VerbPrepositionViews { get; set; }
         public string AddingWindowVerbValue { get; set; }
         public string AddingWindowPrepositionValue { get; set; }
         public string AddingWindowTranslationValue { get; set; }
@@ -64,6 +66,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             EditVerbPrepositionDictionaryPage.CommentValueTextBoxEnterDown += OnCommentValueTextBoxEnterDown;
             AppWindow.WindowCtrlNDown += OnWindowCtrlNDown;
             AppWindow.WindowEscDown += OnWindowEscDown;
+            AppWindow.GoBackButtonClick += OnGoBackButtonClick;
+            AppWindow.DrawerButtonClick += OnDrawerButtonClick;
         }
         private void OnVerbValueTextBoxEnterDown() => FocusPrepositionValueTextBox();
         private void OnPrepositionValueTextBoxEnterDown() => FocusTranslationValueTextBox();
@@ -86,6 +90,12 @@ namespace EasyLearn.VM.ViewModels.Pages
             if (App.GetService<AppWindowVM>().CurrentPage == Page.EditVerbPrepositionListPage)
                 NewVerbPrepositionAddingWindowCancelButtonSoftClick();
         }
+        private void OnGoBackButtonClick()
+        {
+            App.GetService<AppWindowVM>().HideGoBackButtonCommand.Execute();
+            GoBack();
+        }
+        private void OnDrawerButtonClick() => App.GetService<AppWindowVM>().HideGoBackButtonCommand.Execute();
         #endregion
 
         #region Commands 
@@ -95,6 +105,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command<int> SetDictionaryAsCurrentCommand { get; private set; }
         public Command CheckVerbPrepositionForExistingCommand { get; private set; }
         public Command UpdateConfirmVerbPrepositionAddingButtonAvailabilityCommand { get; private set; }
+        public Command OpenNewVerbPrepositionAddingWindowCommand { get; private set; }
         protected override void InitCommands()
         {
             this.GoBackCommand = new Command(GoBack);
@@ -103,6 +114,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.SetDictionaryAsCurrentCommand = new Command<int>(async verbPrepositionDictionaryId => await SetDictionaryAsCurrent(verbPrepositionDictionaryId));
             this.CheckVerbPrepositionForExistingCommand = new Command(CheckVerbPrepositionForExisting);
             this.UpdateConfirmVerbPrepositionAddingButtonAvailabilityCommand = new Command(UpdateConfirmVerbPrepositionAddingButtonAvailability);
+            this.OpenNewVerbPrepositionAddingWindowCommand = new Command(OpenNewVerbPrepositionAddingWindow);
         }
         #endregion
 
@@ -130,7 +142,11 @@ namespace EasyLearn.VM.ViewModels.Pages
             VerbPrepositionDictionnary verbPrepositionDictionary = await verbPrepositionDictionaryRepository.GetVerbPrepositionDictionaryAsync(verbPrepositionDictionaryId);
             this.dictionaryId = verbPrepositionDictionaryId;
             IEnumerable<VerbPrepositionView> verbPrepositionViews = verbPrepositionDictionary.VerbPrepositions.Select(verbPreposition => VerbPrepositionView.Create(verbPreposition));
-            this.VerbPrepositionViews = new ObservableCollection<VerbPrepositionView>(verbPrepositionViews);
+            this.VerbPrepositionViews = new ObservableCollection<UserControl>();
+            AddShadowVerbPreposition();
+            foreach (VerbPrepositionView verbPrepositionView in verbPrepositionViews)
+                this.VerbPrepositionViews.Add(verbPrepositionView);
+            
         }
         private void CheckVerbPrepositionForExisting()
         {
@@ -139,9 +155,11 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.VerbPrepositionExist = this.verbPrepositionRepository.IsVerbPrepositionExist(verbValue, prepositionValue, dictionaryId);
         }
         private void UpdateConfirmVerbPrepositionAddingButtonAvailability() => IsConfirmVerbPrepositionAddingButtonEnabled = ValidationPool.IsValid(ValidationRulesGroup.AddVerbPreposition);
+        private void OpenNewVerbPrepositionAddingWindow() => OpenNewVerbPrepositionAddingWindowButtonSoftClick();
         #endregion
 
         #region Other private methods
+        private void AddShadowVerbPreposition() => this.VerbPrepositionViews.Add(ShadowVerbPrepositionView.Create());
         private void AddVerbPrepositionToUI(VerbPreposition verbPreposition) => this.VerbPrepositionViews.Add(VerbPrepositionView.Create(verbPreposition));
         private void FocusVerbValueTextBox() => App.GetService<EditVerbPrepositionDictionaryPage>().newVerbPrepositionVerbValueTextBox.Focus();
         private void FocusPrepositionValueTextBox() => App.GetService<EditVerbPrepositionDictionaryPage>().newVerbPrepositionPrepositionValueTextBox.Focus();

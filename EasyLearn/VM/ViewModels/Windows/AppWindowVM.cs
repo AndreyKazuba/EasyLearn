@@ -42,6 +42,7 @@ namespace EasyLearn.VM.Windows
         public Command SetCloseMenuButtonCommand { get; private set; }
         public Command SetShowMenuButtonCommand { get; private set; }
         public Command SetGoBackButtonCommand { get; private set; }
+        public Command HideGoBackButtonCommand { get; private set; }
         protected override void InitCommands()
         {
             this.OpenDictationPage = new Command(() => this.CurrentPage = Page.Dictation);
@@ -55,6 +56,7 @@ namespace EasyLearn.VM.Windows
             this.SetCloseMenuButtonCommand = new Command(SetCloseMenuButton);
             this.SetShowMenuButtonCommand = new Command(SetShowMenuButton);
             this.SetGoBackButtonCommand = new Command(SetGoBackButton);
+            this.HideGoBackButtonCommand = new Command(HideGoBackButton);
         }
 
         protected override void InitEvents()
@@ -68,21 +70,16 @@ namespace EasyLearn.VM.Windows
         {
             this.ShowMenuButtonIsVisible = false;
             this.CloseMenuButtonIsVisible = true;
-            //this.GoBackButtonIsVisible = false;
         }
         private void SetShowMenuButton()
         {
             this.CloseMenuButtonIsVisible = false;
             this.ShowMenuButtonIsVisible = true;
-            //this.GoBackButtonIsVisible = false;
         }
-        private void SetGoBackButton()
-        {
-            //this.CloseMenuButtonIsVisible = false;
-            //this.ShowMenuButtonIsVisible = false;
-            this.GoBackButtonIsVisible = true;
-        }
-        private void SetStartPage() => this.CurrentPage = Page.Users;
+        private void SetGoBackButton() => this.GoBackButtonIsVisible = true;
+        private void HideGoBackButton() => this.GoBackButtonIsVisible = false;
+
+        private void SetStartPage() => this.CurrentPage = Page.Dictionaries;
         private void Minimize()
         {
             AppWindow window = App.GetService<AppWindow>();

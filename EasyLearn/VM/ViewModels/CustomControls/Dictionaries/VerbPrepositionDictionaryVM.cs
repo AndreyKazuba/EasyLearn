@@ -46,6 +46,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         {
             SetCurrentDictionary();
             App.GetService<AppWindowVM>().OpenEditVerbPrepositionDictionaryPageCommand.Execute();
+            App.GetService<AppWindowVM>().SetGoBackButtonCommand.Execute();
         }
         private async Task EditVerbPrepositionDictionary()
         {

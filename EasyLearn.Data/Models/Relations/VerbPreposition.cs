@@ -36,8 +36,8 @@ namespace EasyLearn.Data.Models
         [Required]
         public DateTime CreationDateUtc { get; set; }
 
-        [MaxLength(ModelConstants.VerbPrepositionCommentMaxLength)]
-        public string? Comment { get; set; }
+        //[MaxLength(ModelConstants.VerbPrepositionCommentMaxLength)]
+        //public string? Comment { get; set; }
 
         public bool FirstExampleExist => !string.IsNullOrEmpty(this.FirstExampleRussianValue) && !string.IsNullOrEmpty(this.FirstExampleEnglishValue);
 

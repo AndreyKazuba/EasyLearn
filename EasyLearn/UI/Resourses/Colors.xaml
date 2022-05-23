@@ -6,6 +6,21 @@
     <SolidColorBrush x:Key="green" Color="ForestGreen"/>
 
     <SolidColorBrush x:Key="MainColor" Color="#4d79ff"/>
-    <SolidColorBrush x:Key="MainColorMouseOver" Color="#3366ff"/>
+    <SolidColorBrush x:Key="MainColorDark" Color="#3366ff"/>
     <SolidColorBrush x:Key="MainColorLight" Color="#99bbff"/>
+    <SolidColorBrush x:Key="MainColorSuperLight" Color="#e6ebff"/>
+
+    <SolidColorBrush x:Key="EasyRed" Color="#cf222e"/>
+    <SolidColorBrush x:Key="EastRedDark" Color="#a40e26"/>
+    <SolidColorBrush x:Key="EasyRedLight" Color="#ff3333"/>
+    <SolidColorBrush x:Key="EasyRedSuperLight" Color="#f6eeee"/>
+
+    <SolidColorBrush x:Key="EasyGreen" Color="#2da44e"/>
+    <SolidColorBrush x:Key="EastGreenDark" Color="#268c43"/>
+    <SolidColorBrush x:Key="EasyGreenLight" Color="#71da8d"/>
+    <SolidColorBrush x:Key="EasyGreenSuperLight" Color="#eff5f1"/>
+
+    <SolidColorBrush x:Key="EasyGray" Color="#bfbfbf"/>
+    <SolidColorBrush x:Key="EastGrayLight" Color="#f2f2f2"/>
+
 </ResourceDictionary>

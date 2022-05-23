@@ -14,7 +14,7 @@
                             materialDesign:ShadowAssist.ShadowDepth="Depth0"
                             Margin="18 18 0 0"
                             Height="256" Width="200"
-                            d:IsFlipped="True">
+                            d:IsFlipped="False">
 
         <!--Лицевая часть карточки-->
         <materialDesign:Flipper.FrontContent>
@@ -28,7 +28,7 @@
                     </Grid.RowDefinitions>
 
                     <!--Пространство с картинкой и закрашенным фоном-->
-                    <materialDesign:ColorZone Background="{DynamicResource MainColorLight}" VerticalAlignment="Stretch">
+                    <materialDesign:ColorZone Background="#bf80ff" VerticalAlignment="Stretch">
                         <materialDesign:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center"
                                              Height="128" Width="128"
                                              Kind="Star"/>
@@ -60,11 +60,38 @@
                     </Button>
 
                     <!--Имя словаря-->
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   Style="{DynamicResource MaterialDesignHeadline6TextBlock}" 
-                                   Text="{Binding Name}" 
-                                   FontSize="15"
-                                   Grid.Row="1"/>
+                    <Button Grid.Row="1"
+                            Padding="0"
+                            d:Content="Test"
+                            Command="{Binding OpenCurrentCommonDictionaryCommand}">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Border Background="{TemplateBinding Background}">
+                                                <TextBlock VerticalAlignment="Center" 
+                                                           HorizontalAlignment="Center"
+                                                           Text="{Binding Name}" 
+                                                           d:Text="Test"
+                                                           FontFamily="Arial"
+                                                           FontSize="15"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource MainColorSuperLight}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="False">
+                                        <Setter Property="Background" Value="GhostWhite"/>
+
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
 
                 </Grid>
             </Border>
@@ -96,7 +123,7 @@
                                 ToolTip="Подтвердить изменения и вернуться">
 
                                 <!--Изображение кнопки-->
-                                <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" />
+                                <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" Foreground="Black"/>
 
                                 <!--Действия кнопки при её нажатии-->
                                 <i:Interaction.Triggers>
@@ -109,8 +136,10 @@
 
                             <!--Надпись в шапке "настройки словаря"-->
                             <TextBlock Margin="8 0 0 0" 
-                                   VerticalAlignment="Center"
-                                   Text="Настройки словаря"/>
+                                       VerticalAlignment="Center"
+                                       FontFamily="Arial"
+                                       Foreground="Black"
+                                       Text="Настройки словаря"/>
 
                         </StackPanel>
                     </materialDesign:ColorZone>
@@ -119,7 +148,9 @@
                     <TextBox materialDesign:HintAssist.Hint="Название" 
                          materialDesign:HintAssist.IsFloating="True"
                          Grid.Row="1"         
-                         
+                         Background="{DynamicResource MainColorSuperLight}"
+                             BorderBrush="{DynamicResource MainColor}"
+                             
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Stretch"
                          Style="{DynamicResource MaterialDesignFilledTextBox}"
@@ -136,6 +167,8 @@
                     <TextBox TextWrapping="Wrap"
                          VerticalAlignment="Stretch"
                          HorizontalAlignment="Stretch"
+                             BorderBrush="{DynamicResource MainColor}"
+                             Background="{DynamicResource MainColorSuperLight}"
                          Style="{DynamicResource MaterialDesignFilledTextBox}"
                          materialDesign:HintAssist.Hint="Описание"
                          materialDesign:HintAssist.IsFloating="True"
@@ -151,36 +184,20 @@
                         </TextBox.Text>
                     </TextBox>
 
-
-                    <Grid Grid.Row="3" HorizontalAlignment="Stretch">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-
-                        <!--Кнопка удаления словаря-->
-                        <Button Command="{Binding RemoveCommonDictionaryCommand}"
-                            Foreground="{DynamicResource error}"
+                    <!--Кнопка удаления словаря-->
+                    <Button Command="{Binding RemoveCommonDictionaryCommand}"
+                            Foreground="#ff3333"
+                                Grid.Row="3"
                             Height="40"
                             Style="{DynamicResource MaterialDesignFlatButton}"
                             HorizontalAlignment="Stretch"
                             Grid.Column="0">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Удалить" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                <materialDesign:PackIcon Kind="Trash" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                            </StackPanel>
-                        </Button>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Удалить" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <materialDesign:PackIcon Kind="Trash" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </Button>
 
-                        <!--Кнопка открытия словаря-->
-                        <Button HorizontalAlignment="Stretch"
-                            Command="{Binding OpenCurrentCommonDictionaryCommand}"
-                            Height="40"
-                            Foreground="{DynamicResource green}"
-                            Style="{DynamicResource MaterialDesignFlatButton}"
-                            Grid.Column="1"
-                            Content="Открыть">
-                        </Button>
-                    </Grid>
 
                 </Grid>
             </Border>

@@ -45,7 +45,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             VpSetDefaultSecondValue();
             this.VpMainDisplayValue = verbPreposition.Verb.Value.NormalizeRegister();
             this.VpTranslationValue = verbPreposition.Translation.NormalizeRegister();
-            this.VpCommentValue = StringHelper.EmptyIfNull(verbPreposition.Comment);
+            //this.VpCommentValue = StringHelper.EmptyIfNull(verbPreposition.Comment);
         }
         private void VpSetDictationManager()
         {

@@ -99,6 +99,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             AppWindow.WindowEscDown += OnWindowEscDown;
             AppWindow.GoBackButtonClick += OnGoBackButtonClick;
             AppWindow.OpenMenuButtonClick += OnOpenMenuButtonClick;
+            AppWindow.DrawerButtonClick += OnDrawerButtonClick;
         }
         private void OnRussianValueTextBoxEnterDown() => FocusEnglishValueTextBox();
         private void OnEnglishValueTextBoxEnterDown() => FocusRussianUnitTypeComboBox();
@@ -131,7 +132,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void OnGoBackButtonClick()
         {
-            App.GetService<AppWindowVM>().SetShowMenuButtonCommand.Execute();
+            App.GetService<AppWindowVM>().HideGoBackButtonCommand.Execute();
             GoBack();
         }
         private void OnOpenMenuButtonClick()
@@ -147,6 +148,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 bottomMenuIsOpened = true;
             }
         }
+        private void OnDrawerButtonClick() => App.GetService<AppWindowVM>().HideGoBackButtonCommand.Execute();
         #endregion
 
         #region Commands
