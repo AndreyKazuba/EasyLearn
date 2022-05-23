@@ -31,9 +31,11 @@
                     <StackPanel Margin="14">
 
                         <!--Имя словаря-->
-                        <TextBox Style="{DynamicResource EasyTextBox}"
-                                 materialDesign:HintAssist.Hint="Название"
+                        <TextBox Style="{DynamicResource EasyValidationTextBox}"
+                                 materialDesign:HintAssist.Hint="Название*"
+                                 materialDesign:HintAssist.IsFloating="False"
                                  Padding="14 11"
+                                  materialDesign:ValidationAssist.Suppress="True"
                                  Width="202">
 
                             <TextBox.Text>
@@ -57,7 +59,8 @@
                         <TextBox Width="202"
                                  Padding="14 11"
                                  materialDesign:HintAssist.Hint="Описание"
-                                 materialDesign:HintAssist.IsFloating="True"  
+                                 materialDesign:HintAssist.IsFloating="False" 
+                                  materialDesign:ValidationAssist.Suppress="True"
                                  Style="{DynamicResource EasyTextArea}">
 
                             <TextBox.Text>
@@ -78,11 +81,11 @@
 
                         <!--Выбор "обычный словарь/словарь с предлогами"-->
                         <ComboBox materialDesign:HintAssist.Hint="Тип словаря" 
-                                  materialDesign:HintAssist.IsFloating="True"
+                                  materialDesign:HintAssist.IsFloating="False"
                                   MaxDropDownHeight="200"
                                   Margin="0 0 0 14"
                                   Padding="14 11"
-                                  Style="{DynamicResource MaterialDesignOutlinedComboBox}"
+                                  Style="{DynamicResource EasyComboBox}"
                                   ItemsSource="{Binding AddingWindowDictionaryTypes}"
                                   SelectedItem="{Binding AddingWindowSelectedDictionaryType}">
                         </ComboBox>
@@ -96,8 +99,9 @@
                             </Grid.ColumnDefinitions>
 
                             <!--Кнопка отмены добавления нового списка-->
-                            <Button Style="{DynamicResource EasyCancelButton}" 
-                                    Content="Отмена">
+                            <Button Style="{DynamicResource EasyCancelButton}">
+
+                                <TextBlock Text="Отмена" FontSize="14" FontFamily="Arial"/>
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
@@ -110,9 +114,10 @@
 
                             <!--Кнопка подтверждения добавления нового аккаунта-->
                             <Button Style="{DynamicResource EasyConfirmButton}"
-                                    Content="Добавить"
                                     Grid.Column="1"
                                     IsEnabled="{Binding IsConfirmDictionaryAddingButtonEnabled}">
+
+                                <TextBlock Text="Добавить" FontSize="14" FontFamily="Arial"/>
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">

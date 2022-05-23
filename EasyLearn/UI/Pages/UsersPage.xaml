@@ -32,10 +32,12 @@
                     <StackPanel Margin="14">
 
                         <!--Имя пользователя-->
-                        <TextBox Style="{DynamicResource EasyTextBox}"
+                        <TextBox Style="{DynamicResource EasyValidationTextBox}"
                                  Width="200"
                                  Padding="14 11"
-                                 materialDesign:HintAssist.Hint="Имя пользователя"
+                                 materialDesign:HintAssist.IsFloating="False" 
+                                  materialDesign:ValidationAssist.Suppress="True"
+                                 materialDesign:HintAssist.Hint="Имя пользователя*"
                                  KeyDown="OnUserNameValueTextBoxKeyDown">
 
                             <TextBox.Text>
@@ -64,10 +66,11 @@
                             </Grid.ColumnDefinitions>
                             
                             <!--Кнопка отмены добавления нового аккаунта-->
-                            <Button Style="{DynamicResource EasyCancelButton}" 
-                                    Content="Отмена"
+                            <Button Style="{DynamicResource EasyCancelButton}"
                                     Grid.Column="0"
                                     Name="cancelUserAddingButton">
+
+                                <TextBlock Text="Отмена" FontSize="14" FontFamily="Arial"/>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
@@ -78,10 +81,11 @@
 
                             <!--Кнопка подтверждения добавления нового аккаунта-->
                             <Button Style="{DynamicResource EasyConfirmButton}"
-                                    Content="Добавить"
                                     Grid.Column="1"
                                     Name="confirmUserAddingButton"
                                     IsEnabled="{Binding ConfirmUserAddingButtonIsEnabled}">
+
+                                <TextBlock Text="Добавить" FontSize="14" FontFamily="Arial"/>
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">

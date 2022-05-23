@@ -467,16 +467,15 @@
                         
 
                         <!--Контейнер для кнопок отмены и подтверждения старта диктанта-->
-                        <StackPanel Orientation="Horizontal"
+                        <!--<StackPanel Orientation="Horizontal"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Center">
 
-                            <!--Кнопка отмены старта диктанта-->
-                            <Button Style="{DynamicResource MaterialDesignFlatButton}" 
-                                    Content="Отмена"
+                            --><!--Кнопка отмены старта диктанта--><!--
+                            <Button Style="{DynamicResource EasyCancelButton}"
                                     Margin="6">
 
-                                <!--Действие кнопки при её нажатии-->
+                                --><!--Действие кнопки при её нажатии--><!--
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
@@ -485,13 +484,11 @@
 
                             </Button>
     
-                            <!--Кнопка подтверждения старта диктанта-->
-                            <Button Style="{DynamicResource MaterialDesignFlatButton}"  
-                                    HorizontalAlignment="Center"
-                                    Content="Начать"
+                            --><!--Кнопка подтверждения старта диктанта--><!--
+                            <Button Style="{DynamicResource EasyConfirmButton}"
                                     Margin="10">
 
-                                <!--Действие кнопки при её нажатии-->
+                                --><!--Действие кнопки при её нажатии--><!--
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
@@ -501,7 +498,47 @@
 
                             </Button>
 
-                        </StackPanel>
+                        </StackPanel>-->
+
+                        <Grid Width="230"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <!--Кнопка отмены добавления нового CommonRelation-->
+                            <Button Style="{DynamicResource EasyCancelButton}">
+
+                                <!--Действия кнопки при её нажатии-->
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
+                            </Button>
+
+                            <!--Кнопка подтверждения добавления нового CommonRalation-->
+                            <Button Style="{DynamicResource EasyConfirmButton}"
+                                    Grid.Column="1">
+
+                                <!--Действия кнопки при её нажатии-->
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding StartDictationCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
+                            </Button>
+
+                        </Grid>
+
+
+
                     </StackPanel>
                 </Button.CommandParameter>
             </Button>

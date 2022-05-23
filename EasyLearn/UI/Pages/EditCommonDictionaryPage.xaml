@@ -464,6 +464,9 @@
                             <Button Style="{DynamicResource EasyCancelButton}"
                                     Name="newCommonRelationAddingWindowCancelButton">
 
+
+                                <TextBlock Text="Отмена" FontSize="14" FontFamily="Arial"/>
+
                                 <!--Действия кнопки при её нажатии-->
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
@@ -479,6 +482,8 @@
                                     Grid.Column="1"
                                     Name="newCommonRelationAddingButton"
                                     IsEnabled="{Binding IsConfirmCommonRelationAddingButtonEnabled}">
+
+                                <TextBlock Text="Добавить" FontSize="14" FontFamily="Arial"/>
 
                                 <!--Действия кнопки при её нажатии-->
                                 <i:Interaction.Triggers>

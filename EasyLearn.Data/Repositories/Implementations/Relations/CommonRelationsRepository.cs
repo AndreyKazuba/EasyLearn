@@ -102,7 +102,7 @@ namespace EasyLearn.Data.Repositories.Implementations
             ThrowIfExampleValueInvalid(firstExampleEnglishValue, nameof(CommonRelation.FirstExampleEnglishValue));
             ThrowIfExampleValueInvalid(firstExampleRussianValue, nameof(CommonRelation.FirstExampleRussianValue));
             ThrowIfExampleValueInvalid(secondExampleEnglishValue, nameof(CommonRelation.SecondExampleEnglishValue));
-            ThrowIfExampleValueInvalid(secondExampleEnglishValue, nameof(CommonRelation.SecondExampleEnglishValue));
+            ThrowIfExampleValueInvalid(secondExampleRussianValue, nameof(CommonRelation.SecondExampleRussianValue));
             ThrowIfCommentInvalid(comment);
             if (IsCommonRelationExist(russianUnitId, englishUnitId, dictionaryId))
                 throw new InvalidDbOperationException(DbExceptionMessagesHelper.AttemptToAddExistingEntity(nameof(CommonRelation), nameof(CommonRelation.RussianUnitId), russianUnitId.ToString(), nameof(CommonRelation.EnglishUnitId), englishUnitId.ToString(), nameof(CommonRelation.CommonDictionaryId), dictionaryId.ToString()));

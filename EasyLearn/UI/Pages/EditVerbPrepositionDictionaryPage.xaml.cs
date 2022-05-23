@@ -2,6 +2,7 @@
 using System;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace EasyLearn.UI.Pages
 {
@@ -10,7 +11,8 @@ namespace EasyLearn.UI.Pages
         public static event Action? VerbValueTextBoxEnterDown;
         public static event Action? PrepositionValueTextBoxEnterDown;
         public static event Action? TranslationValueTextBoxEnterDown;
-        public static event Action? CommentValueTextBoxEnterDown;
+        public static event Action? ExampleRussianValueTextBoxEnterDown;
+        public static event Action? ExampleEnglishValueTextBoxEnterDown;
         public EditVerbPrepositionDictionaryPage(EditVerbPrepositionDictionaryPageVM viewModel)
         {
             this.DataContext = viewModel;
@@ -31,10 +33,17 @@ namespace EasyLearn.UI.Pages
             if (e.Key == Key.Enter && TranslationValueTextBoxEnterDown is not null)
                 TranslationValueTextBoxEnterDown();
         }
-        private void OnCommentValueTextBoxKeyDown(object sender, KeyEventArgs e)
+        private void OnExampleRussianValueTextBoxKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && CommentValueTextBoxEnterDown is not null)
-                CommentValueTextBoxEnterDown();
+            if (e.Key == Key.Enter && ExampleRussianValueTextBoxEnterDown is not null)
+                ExampleRussianValueTextBoxEnterDown();
         }
+        private void OnExampleEnglishValueTextBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && ExampleEnglishValueTextBoxEnterDown is not null)
+                ExampleEnglishValueTextBoxEnterDown();
+        }
+        private void WarningIcon_MouseEnter(object sender, MouseEventArgs e) => this.warningIcon.Foreground = Brushes.OrangeRed;
+        private void WarningIcon_MouseLeave(object sender, MouseEventArgs e) => this.warningIcon.Foreground = Brushes.Orange;
     }
 }

@@ -36,19 +36,30 @@ namespace EasyLearn.Data.Repositories.Implementations
                 return false;
             return IsVerbPrepositionExist(verb.Id, preposition.Id, dictionaryId);
         }
-        public async Task<VerbPreposition> CreateVerbPreposition(string verbValue, string prepositionValue, int dictionaryId, string translation, string? comment)
+        public async Task<VerbPreposition> CreateVerbPreposition(
+            string verbValue,
+            string prepositionValue,
+            int dictionaryId,
+            string translation,
+            string? firstExampleRussianValue,
+            string? firstExampleEnglshValue,
+            string? secondExampleRussianValue,
+            string? secondExampleEnglishValue)
         {
             EnglishUnit verb = await englishUnitRepository.GetOrCreateUnit(verbValue, UnitType.Verb);
             EnglishUnit preposition = await englishUnitRepository.GetOrCreateUnit(prepositionValue, UnitType.Preposition);
-            ThrowIfAddingAttemptIncorrect(dictionaryId, comment, verb.Id, preposition.Id, translation);
+            ThrowIfAddingAttemptIncorrect(dictionaryId, verb.Id, preposition.Id, translation, firstExampleRussianValue, firstExampleEnglshValue, secondExampleRussianValue, secondExampleEnglishValue);
             VerbPreposition newVerbPreposition = new VerbPreposition
             {
                 VerbId = verb.Id,
                 PrepositionId = preposition.Id,
-                //Comment = StringHelper.TryPrepare(comment),
                 Translation = StringHelper.Prepare(translation),
                 CreationDateUtc = DateTime.UtcNow,
                 VerbPrepositionDictionaryId = dictionaryId,
+                FirstExampleRussianValue = StringHelper.TryPrepare(firstExampleRussianValue),
+                FirstExampleEnglishValue = StringHelper.TryPrepare(firstExampleEnglshValue),
+                SecondExampleRussianValue = StringHelper.TryPrepare(secondExampleRussianValue),
+                SecondExampleEnglishValue = StringHelper.TryPrepare(secondExampleEnglishValue),
             };
             context.VerbPrepositions.Add(newVerbPreposition);
             await context.SaveChangesAsync();
@@ -65,9 +76,20 @@ namespace EasyLearn.Data.Repositories.Implementations
         #endregion
 
         #region Private members
-        private void ThrowIfAddingAttemptIncorrect(int dictionaryId, string? comment, int verbId, int prepositionId, string translation)
+        private void ThrowIfAddingAttemptIncorrect(
+            int dictionaryId,
+            int verbId,
+            int prepositionId,
+            string translation,
+            string? firstExampleRussianValue,
+            string? firstExampleEnglishValue,
+            string? secondExampleRussianValue,
+            string? secondExampleEnglishValue)
         {
-            //ThrowIfCommentInvalid(comment);
+            ThrowIfExampleValueInvalid(firstExampleEnglishValue, nameof(CommonRelation.FirstExampleEnglishValue));
+            ThrowIfExampleValueInvalid(firstExampleRussianValue, nameof(CommonRelation.FirstExampleRussianValue));
+            ThrowIfExampleValueInvalid(secondExampleEnglishValue, nameof(CommonRelation.SecondExampleEnglishValue));
+            ThrowIfExampleValueInvalid(secondExampleRussianValue, nameof(CommonRelation.SecondExampleRussianValue));
             ThrowIfTranslationInvalid(translation);
             if (IsVerbPrepositionExist(dictionaryId, verbId, prepositionId))
                 throw new InvalidDbOperationException(DbExceptionMessagesHelper.AttemptToAddExistingEntity(nameof(VerbPreposition), nameof(VerbPreposition.PrepositionId), prepositionId.ToString(), nameof(VerbPreposition.VerbId), verbId.ToString(), nameof(VerbPreposition.VerbPrepositionDictionaryId), dictionaryId.ToString()));
@@ -79,13 +101,13 @@ namespace EasyLearn.Data.Repositories.Implementations
             if (string.IsNullOrEmpty(translation) || StringHelper.IsEmptyOrWhiteSpace(translation) || translation.Length > ModelConstants.VerbPrepositionTranslationMaxLength || translation.Length < ModelConstants.VerbPrepositionTranslationMinLength)
                 throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(VerbPreposition.Translation), nameof(VerbPreposition), translation));
         }
-        //private void ThrowIfCommentInvalid(string? comment)
-        //{
-        //    if (comment is null)
-        //        return;
-        //    if (StringHelper.IsEmptyOrWhiteSpace(comment) || comment.Length > ModelConstants.CommonRelationCommentMaxLength)
-        //        throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(VerbPreposition.Comment), nameof(VerbPreposition), comment));
-        //}
+        private void ThrowIfExampleValueInvalid(string? exampleValue, string propName)
+        {
+            if (exampleValue is null)
+                return;
+            if (StringHelper.IsEmptyOrWhiteSpace(exampleValue) || exampleValue.Length > ModelConstants.ExampleValueMaxLength)
+                throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(propName, nameof(CommonRelation), exampleValue));
+        }
         #endregion
     }
 }
