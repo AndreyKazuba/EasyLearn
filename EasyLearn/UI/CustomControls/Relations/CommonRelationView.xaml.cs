@@ -15,6 +15,8 @@ namespace EasyLearn.UI.CustomControls
         public int Order => viewModel.OrderValue;
         #endregion
 
+        public void UpdateView(CommonRelation commonRelation) => this.viewModel.UpdateVM(commonRelation);
+
         public CommonRelationView(CommonRelationVM viewModel)
         {
             this.viewModel = viewModel;

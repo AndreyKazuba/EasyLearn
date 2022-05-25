@@ -13,8 +13,8 @@
     <materialDesign:DialogHost>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="0.65*"/>
-                <RowDefinition Height="0.25*"/>
+                <RowDefinition/>
+                <RowDefinition Height="130"/>
             </Grid.RowDefinitions>
 
             <!--Система отображения для обычного диктанта-->
@@ -24,74 +24,81 @@
                   d:Visibility="Collapsed">
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1.7*"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="0.5*"/>
-                    <RowDefinition Height="0.5*"/>
+                    <RowDefinition Height="1.75*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
 
 
 
                 <StackPanel Grid.Row="1">
-                    <Grid>
-                        <TextBlock FontSize="100"
+
+                    <Border Padding="50 0 50 0">
+                        <Grid>
+
+                            <TextBlock FontSize="100"
                                    Text="{Binding CdMainDisplayValue}"
                                    Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    d:Text="EasyLearn"/>
-                        <materialDesign:Chip Grid.Column="1" 
-                                             HorizontalAlignment="Right" 
-                                             VerticalAlignment="Top" 
-                                             Foreground="{Binding CdUnitTypeColor}"
-                                             Height="35"
-                                             FontSize="20"
-                                             Margin="0 -10 -40 0"
-                                             d:Content="Глагол"
-                                             Visibility="{Binding CdUnitTypeIsVisible, Converter={converters:ReverseCollapseConverter}}" 
-                                             Content="{Binding CdUnitTypeValue}"/>
-                    </Grid>
 
-                    <TextBlock FontSize="50"
+                            <Border HorizontalAlignment="Right" 
+                                    VerticalAlignment="Center" 
+                                    CornerRadius="4"
+                                    Margin="0 0 -25 70"
+                                    Visibility="{Binding CdUnitTypeIsVisible, Converter={converters:ReverseCollapseConverter}}" 
+                                    Padding="5 3"
+                                    Background="{Binding CdUnitTypeColor}">
+                                <TextBlock FontSize="13" 
+                                           FontFamily="Arial"
+                                           Foreground="#f2f2f2"
+                                           FontWeight="Bold"
+                                           Text="{Binding CdUnitTypeValue}"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+
+                    <TextBlock FontSize="40"
                                Text="{Binding CdCommentValue}"
                                Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
-                               Grid.Row="1"
                                d:Text="Comment"
                                Foreground="Gray"/>
+
+                    <TextBlock FontSize="20"
+                               Text="{Binding CdFirstExampleValue}"
+                               Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontFamily="Arial"
+                               FontStyle="Italic"
+                               d:Text="Comment"
+                               Foreground="{DynamicResource MainColor}"/>
+
+                    <TextBlock FontSize="20"
+                               Text="{Binding CdSecondExampleValue}"
+                               Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontFamily="Arial"
+                               FontStyle="Italic"
+                               d:Text="Comment"
+                               Foreground="{DynamicResource MainColor}"/>
+
+
                 </StackPanel>
 
-
-
-                <!--Иконка правильного простого диктанта-->
-                <materialDesign:PackIcon Kind="Check" 
-                                         Height="60" 
-                                         Width="60" 
-                                         Grid.Row="2"
-                                         Foreground="ForestGreen"
-                                         HorizontalAlignment="Center"
-                                         VerticalAlignment="Bottom"
-                                         Visibility="{Binding CdCorrectIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
-
-                <!--Иконка неправильного ответа сложного диктанта-->
-                <materialDesign:PackIcon Kind="Close" 
-                                         Height="60" 
-                                         Width="60" 
-                                         Grid.Row="2"
-                                         Foreground="Red"
-                                         HorizontalAlignment="Center"
-                                         VerticalAlignment="Bottom"
-                                         Visibility="{Binding CdWrongIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
-
-
                 <TextBlock FontSize="20"
-                           Grid.Row="3"
-                           Visibility="{Binding CdPromtIsVisible, Converter={converters:ReverseCollapseConverter}}"
+                           Grid.Row="2"
+                           Visibility="{Binding CdPromtIsVisible, Converter={converters:ForwardVisibilityConverter}}"
                            Text="{Binding CdPromtValue}"
                            Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
                            HorizontalAlignment="Center"
-                           VerticalAlignment="Top"
+                           VerticalAlignment="Bottom"
+                           Margin="0 0 0 12"
                            MouseEnter="OnPromtMouseEnter"
                            MouseLeave="OnPromtMouseLeave"
                            Name="promtTextBox"
@@ -99,9 +106,11 @@
                            d:Text="(Легко)"/>
 
                 <StackPanel Visibility="{Binding CdAnotherAnswersIsVisible, Converter={converters:ForwardVisibilityConverter}}" 
-                            Orientation="Horizontal" 
-                            Grid.Row="3" 
-                            HorizontalAlignment="Center">
+                            Orientation="Horizontal" Height="40"
+                            HorizontalAlignment="Center"
+                            Grid.Row="2"
+                            Margin="0 0 0 7"
+                            VerticalAlignment="Bottom">
                     <TextBlock Style="{DynamicResource MaterialDesignHeadline1TextBlock}" 
                                Text="Также верно:" 
                                VerticalAlignment="Center"
@@ -118,8 +127,36 @@
                     </ItemsControl>
                 </StackPanel>
 
+                <!--Иконка правильного простого диктанта-->
+                <!--<materialDesign:PackIcon Kind="Check" 
+                                         Height="60" 
+                                         Width="60" 
+                                         Grid.Row="2"
+                                         Foreground="ForestGreen"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Bottom"
+                                         Visibility="{Binding CdCorrectIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>-->
+
+                <!--Иконка неправильного ответа сложного диктанта-->
+                <!--<materialDesign:PackIcon Kind="Close" 
+                                         Height="60" 
+                                         Width="60" 
+                                         Grid.Row="2"
+                                         Foreground="Red"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Bottom"
+                                         Visibility="{Binding CdWrongIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>-->
+
+
+
+
 
             </Grid>
+
+
+
+
+
 
             <!--Система отображения для дикнтанта предлогов-->
             <Grid d:Visibility="Collapsed" 
@@ -193,7 +230,7 @@
                                          Foreground="Red"
                                          HorizontalAlignment="Center"
                                          Visibility="{Binding VpWrongIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>
-                
+
                 <TextBlock FontSize="20"
                            Grid.Row="3"
                            Visibility="{Binding VpPromtIsVisible, Converter={converters:ReverseCollapseConverter}}"
@@ -369,77 +406,62 @@
 
             </Grid>
 
-            <StackPanel Orientation="Horizontal" 
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Margin="70 0 0 50"
-                        Grid.Row="1">
 
-                <!--Текстбокс, в который нужно записывать перевод слова для проверки-->
-                <TextBox Grid.Row="2" 
-                         Name="dictationTextBox"
-                         HorizontalAlignment="Center"
-                         VerticalAlignment="Center"
-                         Height="55"
-                         KeyDown="OnKeyDown"
-                         Text="{Binding AnswerValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         Width="300"
-                         Margin="0 0 10 0"
-                         Style="{DynamicResource MaterialDesignOutlinedTextBox}"
-                         materialDesign:HintAssist.Hint="Перевод"                
-                         FontSize="15"/>
 
-                <!--Кнопка "проверить слово"-->
-                <Button Grid.Row="1" 
-                        Style="{DynamicResource MaterialDesignIconButton}"
-                        Command="{Binding CheckAnswerCommand}"
-                        Height="70"
-                        Width="70"
-                        Visibility="{Binding CheckAnswerButtonIsVisible, Converter={converters:ReverseCollapseConverter}}">
-                    <materialDesign:PackIcon Kind="Eye"
-                                             Height="25"
-                                             Width="25"/>
-                </Button>
 
-                <!--Кнопка "двигаться дальше"-->
-                <Button Grid.Row="1" 
-                        Style="{DynamicResource MaterialDesignIconButton}"
-                        Command="{Binding TryGoNextCommand}"
-                        Height="70"
-                        Width="70"
-                        Visibility="{Binding NextButtonIsVisible, Converter={converters:ReverseCollapseConverter}}">
-                    <materialDesign:PackIcon Kind="Play"
-                                             Height="25"
-                                             Width="25"/>
-                </Button>
 
-            </StackPanel>
+            <!--Текстбокс, в который нужно записывать перевод слова для проверки-->
+            <TextBox Grid.Row="1" 
+                     Name="dictationTextBox"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Top"
+                     Height="54"
+                     MaxHeight="54"
+                     Padding="14 15 14 0"
+                     KeyDown="OnKeyDown"
+                     materialDesign:HintAssist.IsFloating="False"
+                     Text="{Binding AnswerValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Width="300"
+                     Style="{DynamicResource EasyTextBox}"
+                     materialDesign:HintAssist.Hint="Перевод"                
+                     FontSize="16"/>
 
             <!--Кнопка "начать диктант"-->
             <Button Grid.Row="1"
                     Height="40" 
                     Width="130" 
-                    Margin="0 70 0 0"
+                    Margin="0 45 0 0"
                     FontSize="18"
-                    Content="Начать"
-                    Style="{DynamicResource MaterialDesignRaisedButton}"  
+                    Style="{DynamicResource EasyCommonButton}"  
                     IsEnabled="{Binding StartButtonIsEnabled}"
                     Visibility="{Binding StartButtonIsVisible, Converter={converters:ForwardVisibilityConverter}}"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
 
+                <TextBlock Text="Начать" FontSize="15" FontFamily="Arial"/>
+
                 <!--Диалоговое окно начала диктанта-->
                 <Button.CommandParameter>
-                    <StackPanel Margin="10">
+                    <Grid>
 
-                        <ComboBox Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto" MinHeight="0.8"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <ComboBox Style="{DynamicResource EasyComboBox}"
                                   materialDesign:HintAssist.Hint="Словарь"
+                                  Margin="14 14 14 0"
                                   MaxDropDownHeight="200"
-                                  Margin="10"
+                                  materialDesign:HintAssist.IsFloating="False"
                                   ItemsSource="{Binding DictionaryComboBoxItems}"
                                   SelectedItem="{Binding SelectedDictionaryComboBoxItem}"/>
-                        
+
                         <!--Слайдер для указания кол-ва слов из словаря для диктанта-->
                         <Slider Grid.Row="1"
+                                Margin="14"
                                 Minimum="{Binding DictationLengthSliderMinValue}" 
                                 Maximum="{Binding DictationLengthSliderMaxValue}" 
                                 Style="{DynamicResource MaterialDesignDiscreteSlider}" 
@@ -448,61 +470,34 @@
                                 TickFrequency="1"
                                 TickPlacement="Both"
                                 Value="{Binding DictationLengthSliderValue, Mode=TwoWay}"
-                                Width="400"
-                                Margin="10 20"/>
+                                Width="400"/>
 
-                        <StackPanel HorizontalAlignment="Center" 
-                                    Orientation="Horizontal" 
+                        <StackPanel HorizontalAlignment="Center"
+                                    Grid.Row="2"
                                     Margin="0 0 0 12"
+                                    Orientation="Horizontal"
                                     Visibility="{Binding DictationDirectionButtonsIsVisible, Converter={converters:ReverseCollapseConverter}}">
-                            <RadioButton Style="{StaticResource MaterialDesignChoiceChipPrimaryRadioButton}"
+                            <RadioButton Style="{DynamicResource EasyRadioButton}"
                                          GroupName="DictationDirectionGroup"
                                          IsChecked="True"
+                                         FontFamily="Arial"
                                          Content="С английского на русский" />
-                            <RadioButton Style="{StaticResource MaterialDesignChoiceChipPrimaryRadioButton}"
+                            <RadioButton Style="{DynamicResource EasyRadioButton}"
                                          GroupName="DictationDirectionGroup"
                                          Content="С русского на английский" 
+                                         FontFamily="Arial"
                                          IsChecked="{Binding SelectedDictationDirection, Converter={converters:DictationDirectionConverter}}"/>
                         </StackPanel>
-                        
 
-                        <!--Контейнер для кнопок отмены и подтверждения старта диктанта-->
-                        <!--<StackPanel Orientation="Horizontal"
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="Center">
-
-                            --><!--Кнопка отмены старта диктанта--><!--
-                            <Button Style="{DynamicResource EasyCancelButton}"
-                                    Margin="6">
-
-                                --><!--Действие кнопки при её нажатии--><!--
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-
-                            </Button>
-    
-                            --><!--Кнопка подтверждения старта диктанта--><!--
-                            <Button Style="{DynamicResource EasyConfirmButton}"
-                                    Margin="10">
-
-                                --><!--Действие кнопки при её нажатии--><!--
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding StartDictationCommand}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-
-                            </Button>
-
-                        </StackPanel>-->
+                        <Border BorderBrush="{DynamicResource EasyGray}" 
+                                    BorderThickness="0.4"
+                                    Grid.Row="3"/>
 
                         <Grid Width="230"
-                                  HorizontalAlignment="Center"
-                                  VerticalAlignment="Center">
+                              Grid.Row="4"
+                              Margin="0 12"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -511,6 +506,8 @@
 
                             <!--Кнопка отмены добавления нового CommonRelation-->
                             <Button Style="{DynamicResource EasyCancelButton}">
+
+                                <TextBlock Text="Отмена" FontSize="14" FontFamily="Arial"/>
 
                                 <!--Действия кнопки при её нажатии-->
                                 <i:Interaction.Triggers>
@@ -524,6 +521,9 @@
                             <!--Кнопка подтверждения добавления нового CommonRalation-->
                             <Button Style="{DynamicResource EasyConfirmButton}"
                                     Grid.Column="1">
+
+
+                                <TextBlock Text="Начать" FontSize="14" FontFamily="Arial"/>
 
                                 <!--Действия кнопки при её нажатии-->
                                 <i:Interaction.Triggers>
@@ -539,7 +539,7 @@
 
 
 
-                    </StackPanel>
+                    </Grid>
                 </Button.CommandParameter>
             </Button>
 
@@ -548,12 +548,13 @@
                     Height="40" 
                     Name="endButton"
                     Width="130"                   
-                    Margin="0 70 0 0"
+                    Margin="0 45 0 0"
                     FontSize="18"
-                    Style="{DynamicResource MaterialDesignFlatButton}" 
-                    Content="Завершить"
+                    Style="{DynamicResource EasyCancelButton}"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
                     Visibility="{Binding StopButtonIsVisible, Converter={converters:ForwardVisibilityConverter}}">
+
+                <TextBlock Text="Завершить" FontSize="15" FontFamily="Arial"/>
 
 
                 <!--View окошка результата диктанта-->
@@ -587,3 +588,34 @@
         </Grid>
     </materialDesign:DialogHost>
 </Page>
+
+
+<!--Кнопка "проверить слово"-->
+<!--<Button Grid.Row="1" 
+                        Style="{DynamicResource MaterialDesignIconButton}"
+                        Command="{Binding CheckAnswerCommand}"
+                        Height="70"
+                        Width="70"
+                        Visibility="Collapsed">
+                    -->
+<!--Visibility="{Binding CheckAnswerButtonIsVisible, Converter={converters:ReverseCollapseConverter}}"-->
+<!--
+                    <materialDesign:PackIcon Kind="Eye"
+                                             Height="25"
+                                             Width="25"/>
+                </Button>-->
+
+<!--Кнопка "двигаться дальше"-->
+<!--<Button Grid.Row="1" 
+                        Style="{DynamicResource MaterialDesignIconButton}"
+                        Command="{Binding TryGoNextCommand}"
+                        Height="70"
+                        Width="70"
+                        Visibility="Collapsed">
+                    -->
+<!--Visibility="{Binding NextButtonIsVisible, Converter={converters:ReverseCollapseConverter}}"-->
+<!--
+                    <materialDesign:PackIcon Kind="Play"
+                                             Height="25"
+                                             Width="25"/>
+                </Button>-->

@@ -34,19 +34,15 @@
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Background" Value="#d9d9d9"/>
+                <Setter Property="BorderThickness" Value="1.5"/>
             </Trigger>
         </Style.Triggers>
     </Style>
-    
-    
+
+
     <Style x:Key="EasyCancelButton" TargetType="Button" BasedOn="{StaticResource EasyButton}">
         <Setter Property="Button.Foreground" Value="{DynamicResource EasyRed}"/>
         <Setter Property="Margin" Value="0 0 7 0"/>
-        <!--<Setter Property="Content">
-            <Setter.Value>
-                <TextBlock Text="Отмена" FontSize="14" FontFamily="Arial"/>
-            </Setter.Value>
-        </Setter>-->
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Button.Background" Value="{DynamicResource EastRedDark}"/>
@@ -59,21 +55,31 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <Style x:Key="EasyConfirmButton" TargetType="Button" BasedOn="{StaticResource EasyButton}">
         <Setter Property="Button.Foreground" Value="{DynamicResource EasyGreen}"/>
         <Setter Property="Margin" Value="7 0 0 0"/>
-        <!--<Setter Property="Content">
-            <Setter.Value>
-                <TextBlock Text="Добавить" FontSize="14" FontFamily="Arial"/>
-            </Setter.Value>
-        </Setter>-->
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Button.Background" Value="{DynamicResource EastGreenDark}"/>
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
                 <Setter Property="Button.Background" Value="{DynamicResource EasyGreenLight}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="#616b61"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="EasyCommonButton" TargetType="Button" BasedOn="{StaticResource EasyButton}">
+        <Setter Property="Button.Foreground" Value="{DynamicResource MainColor}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Button.Background" Value="{DynamicResource MainColorDark}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Button.Background" Value="{DynamicResource MainColorLight}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Foreground" Value="#616b61"/>
@@ -150,6 +156,14 @@
             <Trigger Property="Validation.HasError" Value="False">
                 <Setter Property="BorderBrush" Value="{DynamicResource EasyGreen}"/>
                 <Setter Property="Background" Value="{DynamicResource EasyGreenSuperLight}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="EasyRadioButton" TargetType="RadioButton" BasedOn="{StaticResource MaterialDesignChoiceChipPrimaryOutlineRadioButton}">
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="False">
+                <Setter Property="Foreground" Value="#4d4d4d"/>
             </Trigger>
         </Style.Triggers>
     </Style>

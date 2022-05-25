@@ -6,8 +6,12 @@ namespace EasyLearn.UI.CustomControls
 {
     public partial class VerbPrepositionView : UserControl
     {
+        private readonly VerbPrepositionVM viewModel;
+        //public int Id => viewModel.Id;
+        public int Order => viewModel.OrderValue;
         public VerbPrepositionView(VerbPrepositionVM viewModel)
         {
+            this.viewModel = viewModel;
             this.DataContext = viewModel;
             InitializeComponent();
         }

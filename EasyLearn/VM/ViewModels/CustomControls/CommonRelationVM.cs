@@ -33,6 +33,10 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public CommonRelationVM(CommonRelation commonRelation)
         {
             this.Id = commonRelation.Id;
+            UpdateVM(commonRelation);
+        }
+        public void UpdateVM(CommonRelation commonRelation)
+        {
             this.RussianValue = StringHelper.NormalizeRegister(commonRelation.RussianUnit.Value);
             this.EnglishValue = StringHelper.NormalizeRegister(commonRelation.EnglishUnit.Value);
             this.RussianUnitType = commonRelation.RussianUnit.Type.GetRussianValue();
@@ -55,9 +59,11 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 
         #region Commands
         public Command DeleteRelationCommand { get; private set; }
+        public Command OpenSettingsCommand { get; private set; }
         protected override void InitCommands()
         {
             this.DeleteRelationCommand = new Command(DeleteRelation);
+            this.OpenSettingsCommand = new Command(OpenSettings);
         }
         #endregion
         private void SetVerticalExpanderMargin(CommonRelation commonRelation)
@@ -69,6 +75,10 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         private void DeleteRelation()
         {
             App.GetService<EditCommonDictionaryPageVM>().DeleteCommonRelationCommand.Execute(Id);
+        }
+        private void OpenSettings()
+        {
+            App.GetService<EditCommonDictionaryPageVM>().OpenCommonRelationSettingsWindowCommand.Execute(Id);
         }
         private void SetState(CommonRelation commonRelation)
         {

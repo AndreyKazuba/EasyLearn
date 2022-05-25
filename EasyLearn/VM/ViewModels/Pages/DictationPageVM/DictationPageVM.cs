@@ -11,6 +11,8 @@ using EasyLearn.Data.Models;
 using EasyLearn.VM.Core;
 using EasyLearn.VM.ViewModels.ExpandedElements;
 using EasyLearn.Data.Repositories.Interfaces;
+using System.Windows.Media;
+using System.Windows.Controls;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -25,6 +27,7 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         #region Private fields
         private bool dictationIsStarted;
+        private bool answerTextBoxIsOnDefaultState = true;
         private int currentUserId;
         private int wrongAnswers;
         private DictionaryComboBoxItem selectedDictionaryComboBoxItem;
@@ -233,6 +236,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             CdHideUnitType();
             CdHideAnotherAnswers();
             CdHidePromt();
+            CdHideExamples();
             VpHidePromt();
             VpHideSecondDisplay();
             SetDefaultMainDisplayValue();
@@ -243,6 +247,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             ShowCheckButton();
             SetDictationProgressBarDefaultValue();
             ResetAllIcons();
+            SetAnswerTextBoxAsDefault();
             IvSetDefaultFixedAnswerValues();
             IvHidePromt();
         }
@@ -320,6 +325,38 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void SetDictationProgressBarDefaultValue() => this.DictationProgressBarValue = 0;
         #endregion
 
+        private void SetAnswerTextBoxAsWrong()
+        {
+            TextBox answerTextBox = App.GetService<DictationPage>().dictationTextBox;
+            BrushConverter brushConverter = new BrushConverter();
+            SolidColorBrush background = brushConverter.ConvertFrom("#f6eeee") as SolidColorBrush ?? throw new Exception();
+            SolidColorBrush border = brushConverter.ConvertFrom("#cf222e") as SolidColorBrush ?? throw new Exception();
+            answerTextBox.Background = background;
+            answerTextBox.BorderBrush = border;
+            answerTextBoxIsOnDefaultState = false;
+        }
+        private void SetAnswerTextBoxAsCorrect()
+        {
+            TextBox answerTextBox = App.GetService<DictationPage>().dictationTextBox;
+            BrushConverter brushConverter = new BrushConverter();
+            SolidColorBrush background = brushConverter.ConvertFrom("#eff5f1") as SolidColorBrush ?? throw new Exception();
+            SolidColorBrush border = brushConverter.ConvertFrom("#2da44e") as SolidColorBrush ?? throw new Exception();
+            answerTextBox.Background = background;
+            answerTextBox.BorderBrush = border;
+            answerTextBoxIsOnDefaultState = false;
+        }
+        private void SetAnswerTextBoxAsDefault()
+        {
+            if (answerTextBoxIsOnDefaultState)
+                return;
+            TextBox answerTextBox = App.GetService<DictationPage>().dictationTextBox;
+            BrushConverter brushConverter = new BrushConverter();
+            SolidColorBrush background = brushConverter.ConvertFrom("#f2f2f2") as SolidColorBrush ?? throw new Exception();
+            SolidColorBrush border = brushConverter.ConvertFrom("#bfbfbf") as SolidColorBrush ?? throw new Exception();
+            answerTextBox.Background = background;
+            answerTextBox.BorderBrush = border;
+            answerTextBoxIsOnDefaultState = true;
+        }
         private void ExecuteForCurrentDictionaryType(Action commonAction, Action verbPrepositionAction, Action irregularVerbAction)
         {
             switch (CurrentDictionaryType)

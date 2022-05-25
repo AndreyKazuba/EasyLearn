@@ -7,6 +7,7 @@
 
     <SolidColorBrush x:Key="MainColor" Color="#4d79ff"/>
     <SolidColorBrush x:Key="MainColorDark" Color="#3366ff"/>
+    <SolidColorBrush x:Key="MainColorSuperDark" Color="#000d33"/>
     <SolidColorBrush x:Key="MainColorLight" Color="#99bbff"/>
     <SolidColorBrush x:Key="MainColorSuperLight" Color="#e6ebff"/>
 

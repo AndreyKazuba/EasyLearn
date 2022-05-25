@@ -28,6 +28,7 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         #region Private fields
         private bool exampleInvalid = true;
+        private bool bottomMenuIsOpened = false;
         private int exampleIdsCount;
         private int dictionaryId;
         private Guid verbPrepositionExistValidationRuleId;
@@ -71,10 +72,13 @@ namespace EasyLearn.VM.ViewModels.Pages
             EditVerbPrepositionDictionaryPage.VerbValueTextBoxEnterDown += OnVerbValueTextBoxEnterDown;
             EditVerbPrepositionDictionaryPage.PrepositionValueTextBoxEnterDown += OnPrepositionValueTextBoxEnterDown;
             EditVerbPrepositionDictionaryPage.TranslationValueTextBoxEnterDown += OnTranslationValueTextBoxEnterDown;
+            EditVerbPrepositionDictionaryPage.ExampleRussianValueTextBoxEnterDown += OnExampleRussianValueTextBoxEnterDown;
+            EditVerbPrepositionDictionaryPage.ExampleEnglishValueTextBoxEnterDown += OnExampleEnglishValueTextBoxEnterDown;
             AppWindow.WindowCtrlNDown += OnWindowCtrlNDown;
             AppWindow.WindowEscDown += OnWindowEscDown;
             AppWindow.GoBackButtonClick += OnGoBackButtonClick;
             AppWindow.DrawerButtonClick += OnDrawerButtonClick;
+            AppWindow.OpenMenuButtonClick += OnOpenMenuButtonClick;
         }
         private void OnVerbValueTextBoxEnterDown() => FocusPrepositionValueTextBox();
         private void OnPrepositionValueTextBoxEnterDown() => FocusTranslationValueTextBox();
@@ -102,6 +106,26 @@ namespace EasyLearn.VM.ViewModels.Pages
             GoBack();
         }
         private void OnDrawerButtonClick() => App.GetService<AppWindowVM>().HideGoBackButtonCommand.Execute();
+        private void OnExampleRussianValueTextBoxEnterDown() => FocusExampleEnglishValueField();
+        private void OnExampleEnglishValueTextBoxEnterDown()
+        {
+            if (this.exampleInvalid)
+                return;
+            AddExampleButtonSoftClick();
+        }
+        private void OnOpenMenuButtonClick()
+        {
+            if (bottomMenuIsOpened)
+            {
+                CloseMenuButtonSoftClick();
+                bottomMenuIsOpened = false;
+            }
+            else
+            {
+                OpenMenuButtonSoftClick();
+                bottomMenuIsOpened = true;
+            }
+        }
         #endregion
 
         #region Commands 
@@ -118,6 +142,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command FocusExampleRussianValueFieldCommand { get; private set; }
         public Command ValidateExampleSectionCommand { get; private set; }
         public Command CheckExampleFieldsMaxLengthVisibilityCommand { get; private set; }
+        public Command OpenVerbPrepositionSettingsWindowCommand { get; private set; }
         protected override void InitCommands()
         {
             this.GoBackCommand = new Command(GoBack);
@@ -133,6 +158,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.FocusExampleRussianValueFieldCommand = new Command(FocusExampleRussianValueField);
             this.ValidateExampleSectionCommand = new Command(ValidateExampleSection);
             this.CheckExampleFieldsMaxLengthVisibilityCommand = new Command(CheckExampleFieldsMaxLengthVisibility);
+            this.OpenVerbPrepositionSettingsWindowCommand = new Command(OpenVerbPrepositionSettingsWindow);
         }
         #endregion
 
@@ -175,7 +201,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 verbPrepositionDictionaryId,
                 translation,
                 firstExampleRussianValue,
-                firstExampleEnglishValue, 
+                firstExampleEnglishValue,
                 secondExampleRussianValue,
                 secondExampleEnglishValue);
             AddVerbPrepositionToUI(newVerbPreposition);
@@ -185,17 +211,20 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.AddingWindowVerbValue = String.Empty;
             this.AddingWindowPrepositionValue = String.Empty;
             this.AddingWindowTranslationValue = String.Empty;
+            this.ExampleViews.Clear();
+            ShowExampleWarningIcon();
         }
         private async Task SetDictionaryAsCurrent(int verbPrepositionDictionaryId)
         {
             VerbPrepositionDictionnary verbPrepositionDictionary = await verbPrepositionDictionaryRepository.GetVerbPrepositionDictionaryAsync(verbPrepositionDictionaryId);
             this.dictionaryId = verbPrepositionDictionaryId;
-            IEnumerable<VerbPrepositionView> verbPrepositionViews = verbPrepositionDictionary.VerbPrepositions.Select(verbPreposition => VerbPrepositionView.Create(verbPreposition));
+            IEnumerable<VerbPrepositionView> verbPrepositionViews = verbPrepositionDictionary.VerbPrepositions
+                .Select(verbPreposition => VerbPrepositionView.Create(verbPreposition))
+                .OrderBy(verbPrepositiinView => verbPrepositiinView.Order);
             this.VerbPrepositionViews = new ObservableCollection<UserControl>();
             AddShadowVerbPreposition();
             foreach (VerbPrepositionView verbPrepositionView in verbPrepositionViews)
                 this.VerbPrepositionViews.Add(verbPrepositionView);
-            
         }
         private void CheckVerbPrepositionForExisting()
         {
@@ -209,7 +238,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             if (this.exampleInvalid)
                 return;
-            this.ExampleViews.Add(ExampleView.Create(this.ExampleRussianValue, this.ExampleEnglishValue, ++exampleIdsCount));
+            this.ExampleViews.Add(ExampleView.Create(this.ExampleRussianValue, this.ExampleEnglishValue, ++exampleIdsCount, true));
         }
         private void RemoveExampleView(int exampleId) => this.ExampleViews.Remove(FindExampleView(exampleId));
         private void ClearExampleAddingFields()
@@ -217,7 +246,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.ExampleRussianValue = String.Empty;
             this.ExampleEnglishValue = String.Empty;
         }
-        private void FocusExampleRussianValueField() => App.GetService<EditCommonDictionaryPage>().exampleRussianValueField.Focus();
+        private void FocusExampleRussianValueField() => App.GetService<EditVerbPrepositionDictionaryPage>().exampleRussianValueField.Focus();
         private void ValidateExampleSection()
         {
             bool empty = String.IsNullOrWhiteSpace(this.ExampleEnglishValue) || String.IsNullOrWhiteSpace(this.ExampleRussianValue);
@@ -240,6 +269,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             else
                 HideExampleFieldsMaxLength();
         }
+        private void OpenVerbPrepositionSettingsWindow() => OpenVerbPrepositionSettingsWindowButtonSoftClick();
         #endregion
 
         #region Other private methods
@@ -279,7 +309,12 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void FocusTranslationValueTextBox() => App.GetService<EditVerbPrepositionDictionaryPage>().newVerbPrepositionTranslationValueTextBox.Focus();
         private void AddingNewVerbPrepositionButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().newVerbPrepositionAddingButton.SoftClick();
         private void OpenNewVerbPrepositionAddingWindowButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().openNewVerbPrepositionAddingWindowButton.SoftClick();
+        private void FocusExampleEnglishValueField() => App.GetService<EditVerbPrepositionDictionaryPage>().exampleEnglishValueField.Focus();
+        private void AddExampleButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().addExampleButton.SoftClick();
         private void NewVerbPrepositionAddingWindowCancelButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().newVerbPrepositionAddingWindowCancelButton.SoftClick();
+        private void OpenMenuButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().openMenuButton.SoftClick();
+        private void CloseMenuButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().closeMenuButton.SoftClick(); 
+            private void OpenVerbPrepositionSettingsWindowButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().openVerbPrepositionSettingsWindowButton.SoftClick(); 
         #endregion
     }
 }

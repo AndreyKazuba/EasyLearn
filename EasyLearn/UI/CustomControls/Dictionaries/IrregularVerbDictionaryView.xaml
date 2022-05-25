@@ -53,7 +53,8 @@
                                 HorizontalAlignment="Center"
                                 Grid.Row="0">
                             <TextBlock Style="{DynamicResource MaterialDesignHeadline6TextBlock}" 
-                                   Text="Неправильные глаоголы" 
+                                   Text="Неправильные глаголы" 
+                                       FontFamily="Arial"
                                    FontSize="15"/>
                         </StackPanel>
                     </Grid>

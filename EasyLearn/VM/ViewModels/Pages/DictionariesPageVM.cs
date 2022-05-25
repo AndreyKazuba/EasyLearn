@@ -17,6 +17,7 @@ using EasyLearn.Infrastructure.Validation;
 using EasyLearn.Infrastructure.Exceptions;
 using EasyLearn.UI.Pages;
 using EasyLearn.Infrastructure.Helpers;
+using System.Windows.Media;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {

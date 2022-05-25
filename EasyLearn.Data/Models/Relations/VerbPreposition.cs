@@ -36,10 +36,7 @@ namespace EasyLearn.Data.Models
         [Required]
         public DateTime CreationDateUtc { get; set; }
 
-        //[MaxLength(ModelConstants.VerbPrepositionCommentMaxLength)]
-        //public string? Comment { get; set; }
-
-        public bool FirstExampleExist => !string.IsNullOrEmpty(this.FirstExampleRussianValue) && !string.IsNullOrEmpty(this.FirstExampleEnglishValue);
+        public bool IsFirstExampleExist => !string.IsNullOrEmpty(this.FirstExampleRussianValue) && !string.IsNullOrEmpty(this.FirstExampleEnglishValue);
 
         [MinLength(ModelConstants.ExampleValueMinLength)]
         [MaxLength(ModelConstants.ExampleValueMaxLength)]
@@ -49,7 +46,7 @@ namespace EasyLearn.Data.Models
         [MaxLength(ModelConstants.ExampleValueMaxLength)]
         public string? FirstExampleEnglishValue { get; set; }
 
-        public bool SecondExampleExist => !string.IsNullOrEmpty(this.SecondExampleRussianValue) && !string.IsNullOrEmpty(this.SecondExampleEnglishValue);
+        public bool IsSecondExampleExist => !string.IsNullOrEmpty(this.SecondExampleRussianValue) && !string.IsNullOrEmpty(this.SecondExampleEnglishValue);
 
         [MinLength(ModelConstants.ExampleValueMinLength)]
         [MaxLength(ModelConstants.ExampleValueMaxLength)]

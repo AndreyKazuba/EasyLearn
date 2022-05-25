@@ -40,7 +40,14 @@ namespace EasyLearn.Data.Repositories.Implementations
                 return false;
             return IsCommonRelationExist(russianUnit.Id, englishUnit.Id, dictionaryId);
         }
-        public async Task<CommonRelation> GetCommonRelation(int commonRelationId) => await context.CommonRelations.FirstAsync(commonRelation => commonRelation.Id == commonRelationId);
+        public CommonRelation GetCommonRelation(int commonRelationId) => context.CommonRelations
+           .Include(commonRelation => commonRelation.RussianUnit)
+           .Include(commonRelation => commonRelation.EnglishUnit)
+           .First(commonRelation => commonRelation.Id == commonRelationId);
+        public async Task<CommonRelation> GetCommonRelationAsync(int commonRelationId) => await context.CommonRelations
+            .Include(commonRelation => commonRelation.RussianUnit)
+            .Include(commonRelation => commonRelation.EnglishUnit)
+            .FirstAsync(commonRelation => commonRelation.Id == commonRelationId);
         public async Task<CommonRelation> CreateCommonRelation(
             string russianUnitValue,
             UnitType russianUnitType,
@@ -55,7 +62,7 @@ namespace EasyLearn.Data.Repositories.Implementations
         {
             EnglishUnit englishUnit = await englishUnitRepository.GetOrCreateUnit(englishUnitValue, englishUnitType);
             RussianUnit russianUnit = await russianUnitRepository.GetOrCreateUnit(russianUnitValue, russianUnitType);
-            ThrowIfAddingAttemptIncorrect(dictionaryId, comment, russianUnit.Id, englishUnit.Id, firstExampleRussianValue, firstExampleEnglishValue, secondExampleRussianValue, secondExampleEnglishValue); ;
+            ThrowIfAddingAttemptIncorrect(dictionaryId, comment, russianUnit.Id, englishUnit.Id, firstExampleRussianValue, firstExampleEnglishValue, secondExampleRussianValue, secondExampleEnglishValue);
             CommonRelation newCommonRelation = new CommonRelation
             {
                 EnglishUnitId = englishUnit.Id,
@@ -72,7 +79,32 @@ namespace EasyLearn.Data.Repositories.Implementations
             await context.SaveChangesAsync();
             newCommonRelation.RussianUnit = russianUnit;
             newCommonRelation.EnglishUnit = englishUnit;
+            context.ChangeTracker.Clear();
             return newCommonRelation;
+        }
+        public async Task<CommonRelation> UpdateCommonRelation(
+            int commonRelationId,
+            string? comment,
+            string? firstExampleRussianValue,
+            string? firstExampleEnglishValue,
+            string? secondExampleRussianValue,
+            string? secondExampleEnglishValue)
+        {
+            ThrowIfExampleValueInvalid(firstExampleEnglishValue, nameof(CommonRelation.FirstExampleEnglishValue));
+            ThrowIfExampleValueInvalid(firstExampleRussianValue, nameof(CommonRelation.FirstExampleRussianValue));
+            ThrowIfExampleValueInvalid(secondExampleEnglishValue, nameof(CommonRelation.SecondExampleEnglishValue));
+            ThrowIfExampleValueInvalid(secondExampleRussianValue, nameof(CommonRelation.SecondExampleRussianValue));
+            ThrowIfCommentInvalid(comment);
+            CommonRelation updatedCommonRelation = GetCommonRelation(commonRelationId);
+            updatedCommonRelation.UpdateDateUtc = DateTime.UtcNow;
+            updatedCommonRelation.Comment = StringHelper.TryPrepare(comment);
+            updatedCommonRelation.FirstExampleRussianValue = StringHelper.TryPrepare(firstExampleRussianValue);
+            updatedCommonRelation.FirstExampleEnglishValue = StringHelper.TryPrepare(firstExampleEnglishValue);
+            updatedCommonRelation.SecondExampleRussianValue = StringHelper.TryPrepare(secondExampleRussianValue);
+            updatedCommonRelation.SecondExampleEnglishValue = StringHelper.TryPrepare(secondExampleEnglishValue);
+            await context.SaveChangesAsync();
+            context.ChangeTracker.Clear();
+            return updatedCommonRelation;
         }
         public async Task DeleteAllDictionaryRelations(int dictionaryId)
         {

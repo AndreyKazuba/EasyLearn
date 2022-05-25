@@ -14,7 +14,7 @@
                             materialDesign:ShadowAssist.ShadowDepth="Depth0"
                             Margin="18 18 0 0"
                             Height="256" Width="200"
-                            d:IsFlipped="False">
+                            d:IsFlipped="True">
 
         <!--Лицевая часть карточки-->
         <materialDesign:Flipper.FrontContent>
@@ -138,7 +138,6 @@
                             <TextBlock Margin="8 0 0 0" 
                                        VerticalAlignment="Center"
                                        FontFamily="Arial"
-                                       Foreground="Black"
                                        Text="Настройки словаря"/>
 
                         </StackPanel>

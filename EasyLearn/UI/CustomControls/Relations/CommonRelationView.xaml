@@ -135,28 +135,31 @@
                 </StackPanel>
             </Grid>
 
+           
+            
+            
+            
+
+
             <Button Style="{DynamicResource MaterialDesignFlatButton}"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
-                    Foreground="Gray"
+                    Foreground="DarkGray"
                     
-                    Width="15"
-                    Height="15"
+                    Width="18"
+                    Height="18"
                     Padding="1"
-                    Grid.Column="2"
-                    Margin="0 4 4 0"
-                    ToolTip="Настройки аккаунта">
+                    Grid.Column="2">
 
-                <materialDesign:PackIcon Kind="Close" 
-                                         Width="15" 
-                                         Height="15"
+                <materialDesign:PackIcon Kind="DotsVertical" 
+                                         Width="17" 
+                                         Height="17"
                                          HorizontalAlignment="Center"
                                          VerticalAlignment="Center"/>
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <i:InvokeCommandAction Command="{Binding DeleteRelationCommand}"/>
-                        <i:InvokeCommandAction Command="{x:Static materialDesign:Flipper.FlipCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding OpenSettingsCommand}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
 

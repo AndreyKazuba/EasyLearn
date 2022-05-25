@@ -10,22 +10,324 @@
       xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       mc:Ignorable="d"
+      
       d:DesignHeight="450" d:DesignWidth="800">
-    <materialDesign:DialogHost>
+    <materialDesign:DialogHost OverlayBackground="{DynamicResource MainColorSuperDark}">
         <Grid>
 
-            <!--Контейнер для содержания всех VerbPreposition-->
-            <ScrollViewer Grid.Row="1">
-                <ItemsControl ItemsSource="{Binding VerbPrepositionViews}" 
+            <materialDesign:DrawerHost OpenMode="Standard" materialDesign:ShadowAssist.ShadowDepth="Depth0">
+                <materialDesign:DrawerHost.TopDrawerContent>
+                    <Border Background="GhostWhite" Height="58" BorderBrush="{DynamicResource MainColor}" BorderThickness="0.6 0 0 0.6">
+                        <Grid VerticalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="245"/>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="60"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Style="{DynamicResource EasyTextBox}"
+                                     Width="245"
+                                     Grid.Column="1"
+                                     Padding="14 11"
+                                     VerticalAlignment="Center"
+                                     InputLanguageManager.InputLanguage="ru-RU"
+                                     materialDesign:HintAssist.Hint="Искать"
+                                     Margin="0"
+                                     materialDesign:HintAssist.IsFloating="False">
+
+                                <TextBox.Text>
+                                    <Binding Path="AddingWindowRussianValue" UpdateSourceTrigger="PropertyChanged">
+
+                                    </Binding>
+                                </TextBox.Text>
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TextChanged">
+                                        <i:InvokeCommandAction Command="{Binding CheckCommonRelationForExistingCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UpdateConfirmCommonRelationAddingButtonAvailabilityCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
+                            </TextBox>
+
+                            <Button Style="{StaticResource EasyCommonButton}" Margin="10 0 0 0" Height="38" Grid.Column="2">
+                                <TextBlock Text="Искать" FontSize="14" FontFamily="Arial"/>
+                            </Button>
+
+                            <Button Style="{StaticResource EasyCancelButton}" Margin="0 0 15 0" Height="38" Width="38"
+                                    Grid.Column="4"
+                                    Padding="0">
+                                <materialDesign:PackIcon Kind="TrashCanOutline" Height="28" Width="28" Foreground="{DynamicResource EasyRed}"
+                                                     VerticalAlignment="Center"
+                                                     HorizontalAlignment="Center"/>
+                            </Button>
+
+                        </Grid>
+                    </Border>
+                </materialDesign:DrawerHost.TopDrawerContent>
+
+                <Grid>
+                    <Button Visibility="Collapsed" Name="openMenuButton" Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"/>
+                    <Button Visibility="Collapsed" Name="closeMenuButton" Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"/>
+                    <!--Контейнер для содержания всех VerbPreposition-->
+                    <ScrollViewer Grid.Row="1">
+                        <ItemsControl ItemsSource="{Binding VerbPrepositionViews}" 
                   VerticalContentAlignment="Top"
                   HorizontalContentAlignment="Left">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </ScrollViewer>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+
+            </materialDesign:DrawerHost>
+
+
+
+            <Button Name="openVerbPrepositionSettingsWindowButton"
+                    Visibility="Collapsed"
+                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
+
+                <Button.CommandParameter>
+                    <Grid Margin="0 14">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto" MaxHeight="0.8"/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto" MaxHeight="0.8"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Margin="14 0">
+                            <!--Текстбокс для введения комментария к новому CommonRelation-->
+                            <TextBox Style="{DynamicResource EasyValidationTextBox}"
+                                     Width="260" 
+                                     Grid.Row="7"
+                                     HorizontalAlignment="Left"
+                                 materialDesign:HintAssist.IsFloating="False"
+                                 materialDesign:ValidationAssist.Suppress="True"
+                                     Padding="14 11"
+                                     Grid.ColumnSpan="3"
+                                     InputLanguageManager.InputLanguage="ru-RU"
+                                     
+                                     materialDesign:HintAssist.Hint="Комментарий">
+                                <!--KeyDown="OnCommentValueTextBoxKeyDown"-->
+
+                                <TextBox.Text>
+                                    <Binding Path="AddingWindowCommentValue" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.CommonRelationCommentMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TextChanged">
+                                        <i:InvokeCommandAction Command="{Binding UpdateConfirmCommonRelationAddingButtonAvailabilityCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
+                            </TextBox>
+
+                            <Button Style="{StaticResource EasyCancelButton}" Height="38" Width="38"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Margin="0 0 0 14"
+                                    Padding="0">
+                                <materialDesign:PackIcon Kind="TrashCanOutline" Height="28" Width="28" Foreground="{DynamicResource EasyRed}"
+                                                     VerticalAlignment="Center"
+                                                     HorizontalAlignment="Center"/>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding DeleteVerbPrepositionCommand}"/>
+                                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                        </Grid>
+
+                        <Border BorderBrush="{DynamicResource EasyGray}" 
+                                    BorderThickness="0.5"
+                                    Grid.Row="1"/>
+
+                        <Grid Grid.Row="2"
+                              Margin="14 12 14 0"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="0.12*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Style="{DynamicResource EasyTextBox}"
+                                         Width="192"
+                                         Padding="14 11"
+                                         Margin="0 0 7 0"
+                                 materialDesign:HintAssist.IsFloating="False"
+                                     
+                                         KeyDown="OnExampleRussianValueTextBoxKeyDown"
+                                         InputLanguageManager.InputLanguage="ru-RU"
+                                         Name="exampleRussianValueField1"
+                                         materialDesign:HintAssist.Hint="Пример на русском">
+
+                                <TextBox.Text>
+                                    <Binding Path="ExampleRussianValue" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TextChanged">
+                                        <i:InvokeCommandAction Command="{Binding ValidateExampleSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding CheckExampleFieldsMaxLengthVisibilityCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+
+                            <TextBox Style="{DynamicResource EasyTextBox}"
+                                         HorizontalAlignment="Stretch"
+                                         Width="192"
+                                         Grid.Column="1"
+                                         Margin="7 0 0 0"
+                                         Padding="14 11"
+                                 materialDesign:HintAssist.IsFloating="False"
+                                     
+                                         KeyDown="OnExampleEnglishValueTextBoxKeyDown"
+                                         Name="exampleEnglishValueField1"
+                                         InputLanguageManager.InputLanguage="en-US"
+                                         materialDesign:HintAssist.Hint="Пример на английском">
+
+                                <TextBox.Text>
+                                    <Binding Path="ExampleEnglishValue" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TextChanged">
+                                        <i:InvokeCommandAction Command="{Binding ValidateExampleSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding CheckExampleFieldsMaxLengthVisibilityCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+
+                            <Button Style="{DynamicResource MaterialDesignIconButton}"
+                                        Foreground="{DynamicResource green}"
+                                        Height="39"
+                                        Width="39"
+                                        Margin="5 0 0 0"
+                                        Visibility="{Binding AddExampleButtonIsVisible, Converter={converters:ReverseCollapseConverter}}"
+                                        Name="addExampleButton1"
+                                        HorizontalAlignment="Center" VerticalAlignment="Top"
+                                        Grid.Column="2">
+                                <materialDesign:PackIcon Kind="Add" />
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding AddExampleViewCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding ClearExampleAddingFieldsCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding FocusExampleRussianValueFieldCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+
+                            <Grid Height="39"
+                                      Width="39"
+                                      Visibility="{Binding ExamleWarningIconIsVisible, Converter={converters:ReverseCollapseConverter}}"
+                                      Margin="5 0 0 0"
+                                      HorizontalAlignment="Center" VerticalAlignment="Top"
+                                      ToolTip="Для добавления примера необходмо заполнить поля слева"
+                                      MouseEnter="WarningIcon_MouseEnter"
+                                      Background="Transparent"
+                                      MouseLeave="WarningIcon_MouseLeave"
+                                      Grid.Column="2" >
+
+                                <materialDesign:PackIcon Kind="AlertCircle" Height="20" Width="20" Foreground="Orange" Name="warningIcon" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Grid>
+
+
+                        </Grid>
+
+                        <ItemsControl ItemsSource="{Binding ExampleViews}" 
+                                          Grid.Row="3"
+                                          Grid.Column="0"
+                                          Margin="0 0 0 14"
+                                          Width="450"
+                                          Grid.ColumnSpan="3">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+
+
+                        <Border BorderBrush="{DynamicResource EasyGray}" 
+                                    BorderThickness="0.5"
+                                    Grid.Row="4"/>
+
+                        <!--Кнопки отмены и подтверждения добавления нового CommonRelation-->
+                        <Grid Grid.Row="5"
+                                  Width="230"
+                              Margin="14 12 14 0"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <!--Кнопка отмены-->
+                            <Button Style="{DynamicResource EasyCancelButton}"
+                                    Name="newVerbPrepositionAddingWindowCancelButton">
+
+                                <TextBlock Text="Отмена" FontSize="14" FontFamily="Arial"/>
+
+                                <!--Действия кнопки при её нажатии-->
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
+                            </Button>
+
+                            <!--Кнопка подтверждения-->
+                            <Button Style="{DynamicResource EasyConfirmButton}"
+                                    Grid.Column="1"
+                                    Name="newVerbPrepositionAddingButton1"
+                                    IsEnabled="{Binding IsConfirmVerbPrepositionAddingButtonEnabled}">
+
+                                <TextBlock Text="Сохранить" FontSize="14" FontFamily="Arial"/>
+
+                                <!--Действия кнопки при её нажатии-->
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UpdateVerbPrepositionCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
+                            </Button>
+
+                        </Grid>
+
+                    </Grid>
+                </Button.CommandParameter>
+
+            </Button>
 
 
             <!--Кнопка добавления нового VerbPreposition-->
@@ -41,18 +343,18 @@
 
                 <!--Диалоговое окно добавления нового VerbPreposition-->
                 <Button.CommandParameter>
-                    <Grid Margin="14">
+                    <Grid Margin="0 14">
 
                         <Grid.RowDefinitions>
                             <RowDefinition/>
+                            <RowDefinition MaxHeight="0.8"/>
                             <RowDefinition/>
                             <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition MaxHeight="0.8"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
 
-                        <Grid HorizontalAlignment="Left">
+                        <Grid HorizontalAlignment="Left" Margin="14 0">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="154"/>
@@ -124,7 +426,7 @@
                             <!--Текстбокс для введения перевода нового VerbPreposition-->
                             <TextBox Grid.Column="3"
                                      Padding="14 11"
-                                     Width="182"
+                                     Width="190"
                                          Style="{DynamicResource EasyValidationTextBox}"
                                          materialDesign:HintAssist.Hint="Перевод*"
                                      materialDesign:HintAssist.IsFloating="False"
@@ -151,13 +453,13 @@
                             </TextBox>
                         </Grid>
 
-                        <Border BorderBrush="LightGray" 
+                        <Border BorderBrush="{DynamicResource EasyGray}" 
                                     BorderThickness="0.55"
-                                    Grid.Row="1"
-                                    Margin="0 0 0 14"/>
+                                    Grid.Row="1"/>
 
                         <Grid Grid.Row="2"
                                   Grid.Column="0"
+                              Margin="13 12 14 0"
                                   Grid.ColumnSpan="3">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -173,7 +475,7 @@
                                      
                                          KeyDown="OnExampleRussianValueTextBoxKeyDown"
                                          InputLanguageManager.InputLanguage="ru-RU"
-                                         Name="exampleRussianValueField1"
+                                         Name="exampleRussianValueField"
                                          materialDesign:HintAssist.Hint="Пример на русском">
                                 
 
@@ -202,7 +504,7 @@
                                  materialDesign:HintAssist.IsFloating="False"
                                      
                                          KeyDown="OnExampleEnglishValueTextBoxKeyDown"
-                                         Name="exampleEnglishValueField1"
+                                         Name="exampleEnglishValueField"
                                          InputLanguageManager.InputLanguage="en-US"
                                          materialDesign:HintAssist.Hint="Пример на английском">
                                 
@@ -229,7 +531,7 @@
                                         Width="39"
                                         Margin="5 0 0 0"
                                         Visibility="{Binding AddExampleButtonIsVisible, Converter={converters:ReverseCollapseConverter}}"
-                                        Name="addExampleButton1"
+                                        Name="addExampleButton"
                                         HorizontalAlignment="Center" VerticalAlignment="Top"
                                         Grid.Column="2">
                                 <materialDesign:PackIcon Kind="Add" />
@@ -256,7 +558,7 @@
                                       Grid.Column="2" >
                                 
 
-                                <materialDesign:PackIcon Kind="AlertCircle" Height="20" Width="20" Foreground="Orange" Name="warningIcon" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <materialDesign:PackIcon Kind="AlertCircle" Height="20" Width="20" Foreground="Orange" Name="warningIcon1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </Grid>
 
                        
@@ -266,6 +568,7 @@
                                           Grid.Row="3"
                                           Grid.Column="0"
                                           Width="450"
+                                      Margin="14 0 14 12"
                                           Grid.ColumnSpan="3">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -274,14 +577,14 @@
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
 
-                        <Border BorderBrush="LightGray" 
-                                    BorderThickness="0.55"
-                                    Grid.Row="4"
-                                    Margin="0 14 0 14"/>
+                        <Border BorderBrush="{DynamicResource EasyGray}" 
+                                    BorderThickness="0.5"
+                                    Grid.Row="4"/>
 
                         <!--Кнопки отмены и подтверждения добавления нового CommonRelation-->
                         <Grid Grid.Row="5"
                                   Width="230"
+                              Margin="14 12 14 0"
                                   HorizontalAlignment="Center"
                                   VerticalAlignment="Center">
 
@@ -292,7 +595,7 @@
 
                             <!--Кнопка отмены добавления нового CommonRelation-->
                             <Button Style="{DynamicResource EasyCancelButton}"
-                                    Name="newVerbPrepositionAddingWindowCancelButton">
+                                    Name="newVerbPrepositionAddingWindowCancelButton1">
 
                                 <TextBlock Text="Отмена" FontSize="14" FontFamily="Arial"/>
 

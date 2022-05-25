@@ -34,22 +34,44 @@ namespace EasyLearn.VM.ViewModels.Pages
         public bool CdCorrectIconIsVisible { get; set; }
         public bool CdWrongIconIsVisible { get; set; }
         public bool CdAnotherAnswersIsVisible { get; set; }
+        public string? CdFirstExampleValue { get; set; }
+        public string? CdSecondExampleValue { get; set; }
 
         #endregion
 
         private void CdSetRelation(CommonRelation relation)
         {
+            bool firstExampleExist = relation.IsFirstExampleExist;
             if (SelectedDictationDirection == DictationDirection.Directly)
             {
                 this.CdMainDisplayValue = relation.RussianUnit.Value.NormalizeRegister();
                 this.CdUnitTypeValue = relation.RussianUnit.Type.GetRussianValue();
                 this.CdUnitTypeColor = relation.RussianUnit.Type.GetColor();
+                if (firstExampleExist)
+                {
+                    this.CdFirstExampleValue = relation.FirstExampleRussianValue.TryNormalizeRegister();
+                    this.CdSecondExampleValue = relation.SecondExampleRussianValue.TryNormalizeRegister();
+                }
+                else
+                {
+                    this.CdFirstExampleValue = relation.SecondExampleRussianValue.TryNormalizeRegister();
+                }
             }
             else
             {
                 this.CdMainDisplayValue = relation.EnglishUnit.Value.NormalizeRegister();;
                 this.CdUnitTypeValue = relation.EnglishUnit.Type.GetRussianValue();
                 this.CdUnitTypeColor = relation.EnglishUnit.Type.GetColor();
+                if (firstExampleExist)
+                {
+                    this.CdFirstExampleValue = relation.FirstExampleEnglishValue.TryNormalizeRegister();
+                    this.CdSecondExampleValue = relation.SecondExampleEnglishValue.TryNormalizeRegister();
+                }
+                else
+                {
+                    this.CdFirstExampleValue = relation.SecondExampleEnglishValue.TryNormalizeRegister();
+                }
+                
             }
             this.CdCommentValue = relation.Comment.TryNormalizeRegister();
         }
@@ -90,7 +112,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             {
                 if (commonDictationManager.CurrentRelationHasSynonyms)
                     CdShowAnotherAnswers(commonDictationManager.AvailableRelations, this.AnswerValue);
-                CdShowCorrectIcon();
+                //CdShowCorrectIcon();
+                SetAnswerTextBoxAsCorrect();
                 IncreaseDictationProgressBarValue();
                 SwitchCheckAndNextButtons();
                 CdHidePromt();
@@ -98,7 +121,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             }
             else
             {
-                CdShowWrongIcon();
+                //CdShowWrongIcon();
+                SetAnswerTextBoxAsWrong();
                 if (++wrongAnswers > 2)
                     CdShowPromt();
             }
@@ -112,7 +136,8 @@ namespace EasyLearn.VM.ViewModels.Pages
                 CdSetRelation(commonDictationManager.CurrentRelation);
                 SetDefaultAnswerValue();
                 CdHideAnotherAnswers();
-                CdHideIcons();
+                //CdHideIcons();
+                SetAnswerTextBoxAsDefault();
                 CdHidePromt();
                 SwitchCheckAndNextButtons();
             }
@@ -202,5 +227,11 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.CdPromtValue = $"({value})";
         }
         #endregion
+
+        private void CdHideExamples()
+        {
+            this.CdFirstExampleValue = string.Empty;
+            this.CdSecondExampleValue = string.Empty;
+        }
     }
 }

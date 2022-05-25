@@ -23,7 +23,11 @@ namespace EasyLearn.UI.CustomControls
         }
 
         #region Static members
-        public static ExampleView Create(string russianTranslation, string englishTranslation, int id) => new ExampleView(new ExampleVM(russianTranslation, englishTranslation, id));
+        public static ExampleView Create(
+            string russianTranslation,
+            string englishTranslation,
+            int id,
+            bool isExampleForVerbPreposition) => new ExampleView(new ExampleVM(russianTranslation, englishTranslation, id, isExampleForVerbPreposition));
         #endregion
     }
 }

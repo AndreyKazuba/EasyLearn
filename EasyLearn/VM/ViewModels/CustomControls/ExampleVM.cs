@@ -6,6 +6,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 {
     public class ExampleVM : ViewModel
     {
+        private bool isExampleForVerbPreposition;
         #region Public props
         public int Id { get; private set; }
         public string RussianValue { get; private set; }
@@ -24,14 +25,18 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         #region Command logic methods
         private void Remove()
         {
-            App.GetService<EditCommonDictionaryPageVM>().RemoveExampleViewCommand.Execute(Id);
+            if (this.isExampleForVerbPreposition)
+                App.GetService<EditVerbPrepositionDictionaryPageVM>().RemoveExampleViewCommand.Execute(Id);
+            else
+                App.GetService<EditCommonDictionaryPageVM>().RemoveExampleViewCommand.Execute(Id);
         }
         #endregion
-        public ExampleVM(string russianTranslation, string englishTranslation, int id)
+        public ExampleVM(string russianTranslation, string englishTranslation, int id, bool isExampleForVerbPreposition)
         {
             this.Id = id;
             this.RussianValue = russianTranslation;
             this.EnglishValue = englishTranslation;
+            this.isExampleForVerbPreposition = isExampleForVerbPreposition;
         }
     }
 }

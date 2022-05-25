@@ -31,6 +31,7 @@ namespace EasyLearn.Data.Models
 
         [Required]
         public DateTime CreationDateUtc { get; set; }
+        public DateTime? UpdateDateUtc { get; set; }
 
         [MaxLength(ModelConstants.CommonRelationCommentMaxLength)]
         public string? Comment { get; set; }

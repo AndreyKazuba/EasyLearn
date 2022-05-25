@@ -15,11 +15,9 @@ using EasyLearn.Data.Helpers;
 using EasyLearn.UI.Pages;
 using EasyLearn.Infrastructure.Helpers;
 using EasyLearn.UI;
-using EasyLearn.Infrastructure.Enums;
 using EasyLearn.Infrastructure.Validation;
 using System.Windows.Media;
 using System.Windows;
-using Controls = System.Windows.Controls;
 using System.Windows.Controls;
 using Page = EasyLearn.Infrastructure.Enums.Page;
 
@@ -38,6 +36,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private int dictionaryId;
         private bool bottomMenuIsOpened = false;
         private Guid relationExistValidationRuleId;
+        private CommonRelation currentRelationForUpdate;
         private List<CommonRelation> allCommonRelations;
         #endregion
 
@@ -50,6 +49,10 @@ namespace EasyLearn.VM.ViewModels.Pages
                 this.AddingWidnowTopVerticalExpanderMargin = value ? new Thickness(7, 0, 7, 12) : new Thickness(7, 0, 7, 0);
             }
         }
+        private bool WindowFieldsEqualsCurrentRelation => currentRelationForUpdate.RussianUnit.Value == AddingWindowRussianValue
+                    && currentRelationForUpdate.EnglishUnit.Value == AddingWindowEnglishValue
+                    && currentRelationForUpdate.RussianUnit.Type == AddingWindowSelectedRussianUnitType.UnitType
+                    && currentRelationForUpdate.EnglishUnit.Type == AddingWindowSelectedEnglishUnitType.UnitType;
 
 #pragma warning disable CS8618
         public EditCommonDictionaryPageVM(ICommonDictionaryRepository commonDictionaryRepository, ICommonRelationRepository commonRelationRepository)
@@ -122,7 +125,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             if (App.GetService<AppWindowVM>().CurrentPage == Page.EditCommonWordListPage)
             {
                 FocusRussianValueTextBox();
-                OpenNewCommonRelationAddingWindowButtonSoftClick();
+                OpenCommonRelationAddingWindowButtonSoftClick();
             }
         }
         private void OnWindowEscDown()
@@ -154,7 +157,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Commands
         public Command GoBackCommand { get; private set; }
         public Command CreateCommonRelationCommand { get; private set; }
-        public Command<int> DeleteCommonRelationCommand { get; private set; }
+        public Command DeleteCommonRelationCommand { get; private set; }
         public Command DeleteAllCommonRelationsCommand { get; private set; }
         public Command ClearAddingWindowCommand { get; private set; }
         public Command<int> SetDictionaryAsCurrentCommand { get; private set; }
@@ -168,11 +171,14 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command ValidateExampleSectionCommand { get; private set; }
         public Command CheckExampleFieldsMaxLengthVisibilityCommand { get; private set; }
         public Command OpenCommonRelationAddingWindowCommand { get; private set; }
+        public Command<int> OpenCommonRelationSettingsWindowCommand { get; private set; }
+        //public Command<int> SetCommonRelationForUpdatingCommand { get; private set; }
+        public Command UpdateCommonRelationCommand { get; private set; }
         protected override void InitCommands()
         {
             this.GoBackCommand = new Command(GoBack);
             this.CreateCommonRelationCommand = new Command(async () => await CreateCommonRelation());
-            this.DeleteCommonRelationCommand = new Command<int>(async commonRelationId => await DeleteCommonRelation(commonRelationId));
+            this.DeleteCommonRelationCommand = new Command(async() => await DeleteCommonRelation());
             this.DeleteAllCommonRelationsCommand = new Command(async () => await DeleteAllCommonRelations());
             this.ClearAddingWindowCommand = new Command(ClearAddingWindow);
             this.SetDictionaryAsCurrentCommand = new Command<int>(async commonDictionaryId => await SetDictionaryAsCurrent(commonDictionaryId));
@@ -180,12 +186,15 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.CheckCommonRelationForExistingCommand = new Command(CheckCommonRelationForExisting);
             this.SearchCommonRelationsCommand = new Command(SearchCommonRelations);
             this.AddExampleViewCommand = new Command(AddExampleView);
-            this.RemoveExampleViewCommand = new Command<int>(exampleId => RemoveExampleView(exampleId));
+            this.RemoveExampleViewCommand = new Command<int>(RemoveExampleView);
             this.ClearExampleAddingFieldsCommand = new Command(ClearExampleAddingFields);
             this.FocusExampleRussianValueFieldCommand = new Command(FocusExampleRussianValueField);
             this.ValidateExampleSectionCommand = new Command(ValidateExampleSection);
             this.CheckExampleFieldsMaxLengthVisibilityCommand = new Command(CheckExampleFieldsMaxLengthVisibility);
             this.OpenCommonRelationAddingWindowCommand = new Command(OpenCommonRelationAddingWindow);
+            this.OpenCommonRelationSettingsWindowCommand = new Command<int>(OpenCommonRelationSettingsWindow);
+            //this.SetCommonRelationForUpdatingCommand = new Command<int>(SetCommonRelationForUpdating);
+            this.UpdateCommonRelationCommand = new Command(async () => await UpdateCommonRelation());
         }
         #endregion
 
@@ -238,11 +247,11 @@ namespace EasyLearn.VM.ViewModels.Pages
                 secondExampleEnglishValue);
             AddCommonRelationToUI(newCommonRelation);
         }
-        private async Task DeleteCommonRelation(int commonRelationId)
+        private async Task DeleteCommonRelation()
         {
-            CommonRelationView commonRelationView = FindCommonRelationView(commonRelationId);
+            CommonRelationView commonRelationView = FindCommonRelationView(currentRelationForUpdate.Id);
             this.CommonRelationViews.Remove(commonRelationView);
-            await commonRelationRepository.DeleteCommonRelation(commonRelationId);
+            await commonRelationRepository.DeleteCommonRelation(currentRelationForUpdate.Id);
         }
         private async Task DeleteAllCommonRelations()
         {
@@ -258,6 +267,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.ExampleEnglishValue = String.Empty;
             this.AddingWindowSelectedRussianUnitType = AddingWindowRussianUnitTypes[0];
             this.AddingWindowSelectedEnglishUnitType = AddingWidnowEnglishUnitTypes[0];
+            this.ExampleViews.Clear();
             ShowExampleWarningIcon();
         }
         private async Task SetDictionaryAsCurrent(int commonDictionaryId)
@@ -274,7 +284,6 @@ namespace EasyLearn.VM.ViewModels.Pages
             AddShadowRelationView();
             foreach (CommonRelationView commonRelationView in commonRelationViews)
                 this.CommonRelationViews.Add(commonRelationView);
-           
         }
         private void UpdateConfirmCommonRelationAddingButtonAvailability() => IsConfirmCommonRelationAddingButtonEnabled = ValidationPool.IsValid(ValidationRulesGroup.AddCommonRelation);
         private void CheckCommonRelationForExisting()
@@ -303,7 +312,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             if (this.exampleInvalid)
                 return;
-            this.ExampleViews.Add(ExampleView.Create(this.ExampleRussianValue, this.ExampleEnglishValue, ++exampleIdsCount));
+            this.ExampleViews.Add(ExampleView.Create(this.ExampleRussianValue, this.ExampleEnglishValue, ++exampleIdsCount, false));
         }
         private void RemoveExampleView(int exampleId) => this.ExampleViews.Remove(FindExampleView(exampleId));
         private void ClearExampleAddingFields()
@@ -334,16 +343,83 @@ namespace EasyLearn.VM.ViewModels.Pages
             else
                 HideExampleFieldsMaxLength();
         }
-        private void OpenCommonRelationAddingWindow() => OpenNewCommonRelationAddingWindowButtonSoftClick();
+        private void OpenCommonRelationAddingWindow()
+        {
+            OpenCommonRelationAddingWindowButtonSoftClick();
+        }
+        private void OpenCommonRelationSettingsWindow(int commonRelationId)
+        {
+            CommonRelation commonRelation = commonRelationRepository.GetCommonRelation(commonRelationId);
+            this.currentRelationForUpdate = commonRelation;
+            this.AddingWindowCommentValue = StringHelper.EmptyIfNull(commonRelation.Comment);
+            ExampleViews.Clear();
+            if (commonRelation.IsFirstExampleExist)
+                this.ExampleViews.Add(ExampleView.Create(commonRelation.FirstExampleRussianValue.EmptyIfNull(), commonRelation.FirstExampleEnglishValue.EmptyIfNull(), ++exampleIdsCount, false));
+            if (commonRelation.IsSecondExampleExist)
+                this.ExampleViews.Add(ExampleView.Create(commonRelation.SecondExampleRussianValue.EmptyIfNull(), commonRelation.SecondExampleEnglishValue.EmptyIfNull(), ++exampleIdsCount, false));
+            OpenCommonRelationSettingsWindowButtonSoftClick();
+        }
+        private async Task UpdateCommonRelation()
+        {
+            int id = currentRelationForUpdate.Id;
+            string? comment = StringHelper.NullIfEmptyOrWhiteSpace(this.AddingWindowCommentValue);
+            int commonDictionaryId = this.dictionaryId;
+            string? firstExampleRussianValue = null;
+            string? firstExampleEnglishValue = null;
+            string? secondExampleRussianValue = null;
+            string? secondExampleEnglishValue = null;
+
+            // remove 
+            bool firstExampleExist = false;
+            bool secondExampleExist = false;
+
+            if (this.ExampleViews.Count > 0)
+                firstExampleExist = true;
+            if (this.ExampleViews.Count > 1)
+                secondExampleExist = true;
+
+            if (firstExampleExist)
+            {
+                firstExampleRussianValue = this.ExampleViews.ToArray()[0].RussianValue;
+                firstExampleEnglishValue = this.ExampleViews.ToArray()[0].EnglishValue;
+            }
+            if (secondExampleExist)
+            {
+                secondExampleRussianValue = this.ExampleViews.ToArray()[1].RussianValue;
+                secondExampleEnglishValue = this.ExampleViews.ToArray()[1].EnglishValue;
+            }
+            //
+
+            CommonRelation updatedCommonRelation = await commonRelationRepository.UpdateCommonRelation(
+                id,
+                comment,
+                firstExampleRussianValue,
+                firstExampleEnglishValue,
+                secondExampleRussianValue,
+                secondExampleEnglishValue);
+            UpdateCommonRelationOnUI(updatedCommonRelation);
+        }
         #endregion
 
         #region Other private members
         private ExampleView FindExampleView(int exampleId) => this.ExampleViews.First(exampleView => exampleView.Id == exampleId);
-        private CommonRelationView FindCommonRelationView(int commonRelationId) => (CommonRelationView)this.CommonRelationViews.First(commonRelationView => ((CommonRelationView)commonRelationView).Id == commonRelationId);
+        private CommonRelationView FindCommonRelationView(int commonRelationId) => (CommonRelationView)this.CommonRelationViews.First(commonRelationView =>
+        {
+            CommonRelationView? commonView = commonRelationView as CommonRelationView;
+            if (commonView is null)
+                return false;
+            else
+                return ((CommonRelationView)commonRelationView).Id == commonRelationId;
+        });
 
         private void AddCommonRelationToUI(CommonRelation commonRelation)
         {
             this.CommonRelationViews.Add(CommonRelationView.Create(commonRelation));
+        }
+        private void UpdateCommonRelationOnUI(CommonRelation updatedCommonRelation)
+        {
+            CommonRelationView relationView = FindCommonRelationView(updatedCommonRelation.Id);
+            relationView.UpdateView(updatedCommonRelation);
         }
         private void SetAddingWindowRussianUnitTypes()
         {
@@ -400,8 +476,8 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void ShowExampleFieldsMaxLength()
         {
-            Controls.TextBox exampleRussianValueField = App.GetService<EditCommonDictionaryPage>().exampleRussianValueField;
-            Controls.TextBox exampleEnglishValueField = App.GetService<EditCommonDictionaryPage>().exampleEnglishValueField;
+            TextBox exampleRussianValueField = App.GetService<EditVerbPrepositionDictionaryPage>().exampleRussianValueField;
+            TextBox exampleEnglishValueField = App.GetService<EditVerbPrepositionDictionaryPage>().exampleEnglishValueField;
             exampleRussianValueField.MaxLength = ModelConstants.ExampleValueMaxLength;
             exampleEnglishValueField.MaxLength = ModelConstants.ExampleValueMaxLength;
             exampleRussianValueField.Margin = new Thickness(0, 0, 7, 7);
@@ -409,13 +485,15 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void HideExampleFieldsMaxLength()
         {
-            Controls.TextBox exampleRussianValueField = App.GetService<EditCommonDictionaryPage>().exampleRussianValueField;
-            Controls.TextBox exampleEnglishValueField = App.GetService<EditCommonDictionaryPage>().exampleEnglishValueField;
+            TextBox exampleRussianValueField = App.GetService<EditVerbPrepositionDictionaryPage>().exampleRussianValueField;
+            TextBox exampleEnglishValueField = App.GetService<EditVerbPrepositionDictionaryPage>().exampleEnglishValueField;
             exampleRussianValueField.MaxLength = 0;
             exampleEnglishValueField.MaxLength = 0;
             exampleRussianValueField.Margin = new Thickness(0, 0, 7, 0);
             exampleEnglishValueField.Margin = new Thickness(7, 0, 0, 0);
         }
+        private UnitTypeComboBoxItem FindRussianUnitTypeView(UnitType unitType) => this.AddingWindowRussianUnitTypes.First(unitTypeView => unitTypeView.UnitType == unitType);
+        private UnitTypeComboBoxItem FindEnglishUnitTypeView(UnitType unitType) => this.AddingWidnowEnglishUnitTypes.First(unitTypeView => unitTypeView.UnitType == unitType);
         private void FocusRussianValueTextBox() => App.GetService<EditCommonDictionaryPage>().newCommonRelationRussianValueTextBox.Focus();
         private void FocusEnglishValueTextBox() => App.GetService<EditCommonDictionaryPage>().newCommonRelationEnglishValueTextBox.Focus();
         private void FocusRussianUnitTypeComboBox() => App.GetService<EditCommonDictionaryPage>().newCommonRelationRussianUnitTypeComboBox.Focus();
@@ -423,7 +501,9 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void FocusCommentValueTextBox() => App.GetService<EditCommonDictionaryPage>().newCommonRelationCommentValueTextBox.Focus();
         private void FocusExampleEnglishValueField() => App.GetService<EditCommonDictionaryPage>().exampleEnglishValueField.Focus();
         private void AddingNewCommonRelationButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().newCommonRelationAddingButton.SoftClick();
-        private void OpenNewCommonRelationAddingWindowButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().openNewCommonRelationAddingWindowButton.SoftClick();
+        private void OpenCommonRelationAddingWindowButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().openNewCommonRelationAddingWindowButton.SoftClick();
+        private void OpenCommonRelationSettingsWindowButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().openCommonRelationSettingsWindowButton.SoftClick();
+
         private void NewCommonRelationAddingWindowCancelButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().newCommonRelationAddingWindowCancelButton.SoftClick();
         private void AddExampleButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().addExampleButton.SoftClick();
         private void AddShadowRelationView() => this.CommonRelationViews.Add(ShadowCommonRelationView.Create());

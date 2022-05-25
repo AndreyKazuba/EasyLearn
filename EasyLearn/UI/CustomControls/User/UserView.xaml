@@ -12,7 +12,8 @@
     <materialDesign:Flipper Style="{DynamicResource MaterialDesignCardFlipper}" 
                             materialDesign:ShadowAssist.ShadowDepth="Depth0"
                             Margin="18 18 0 0"
-                            IsFlipped="{Binding IsCardFlipped, Mode=TwoWay}">
+                            IsFlipped="{Binding IsCardFlipped, Mode=TwoWay}"
+                            d:IsFlipped="False">
 
         <!--Лицевая сторона карточки-->
         <materialDesign:Flipper.FrontContent>
@@ -25,7 +26,7 @@
                     </Grid.RowDefinitions>
 
                     <!--Пространство с картинкой и закрашенным фоном-->
-                    <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="#99bbff">
+                    <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="{Binding IsCurrent, Converter={converters:UserViewColorConverter}}">
 
                         <materialDesign:PackIcon Kind="AccountCircle" 
                                              Height="128" 
@@ -62,23 +63,65 @@
 
                     </Button>
 
+                    <Button Padding="0"
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch"
+                            d:Content="Test"
+                            Grid.Row="1"
+                            Command="{Binding SetUserAsCurrentCommand}"
+                                IsEnabled="{Binding IsCurrent, Converter={converters:ReverseConverter}}">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Border Background="{TemplateBinding Background}">
+                                                <TextBlock VerticalAlignment="Center" 
+                                                           HorizontalAlignment="Center"
+                                                           Text="{Binding Name}" 
+                                                           d:Text="Test"
+                                                           FontFamily="Arial"
+                                                           FontSize="15"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource MainColorSuperLight}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="False">
+                                        <Setter Property="Background" Value="GhostWhite"/>
+
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
                     <!--Пространство под картинкой аккаунта-->
-                    <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <!--<Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition/>
-                        </Grid.RowDefinitions>
+                        </Grid.RowDefinitions>-->
 
                         <!--Имя пользователя-->
-                        <StackPanel Orientation="Horizontal"
+                        <!--<StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 Grid.Row="0">
-                            <TextBlock Text="{Binding Name}" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" FontSize="14"/>
-                        </StackPanel>
+                            <TextBlock Text="{Binding Name}" 
+                                       d:Text="Андрей" 
+                                       Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" 
+                                       FontSize="15"
+                                       FontFamily="Arial"/>
+                        </StackPanel>-->
+
+                        
 
                         <!--Кнопка авторизации на аккаунте-->
-                        <Button Style="{DynamicResource MaterialDesignFlatButton}"                            
+                        <!--<Button Style="{DynamicResource MaterialDesignFlatButton}"                            
                             Foreground="Black"
                             HorizontalAlignment="Center"
                             Content="Войти"
@@ -86,10 +129,10 @@
                             Grid.Row="1"
                             Margin="0 3 0 0"
                             ToolTip="Войти на аккаунт"
-                            Command="{Binding SetUserAsCurrentCommand}"/>
+                            Command="{Binding SetUserAsCurrentCommand}"/>-->
 
                         <!--Надпись "текущий аккаунт"-->
-                        <StackPanel Orientation="Horizontal"
+                        <!--<StackPanel Orientation="Horizontal"
                                 Grid.Row="1"
                                 Visibility="{Binding IsCurrent, Converter={converters:ForwardVisibilityConverter}}"
                                 HorizontalAlignment="Center"
@@ -107,10 +150,10 @@
                                                  Foreground="ForestGreen"
                                                  VerticalAlignment="Center"/>
 
-                        </StackPanel >
+                        </StackPanel >-->
 
 
-                    </Grid>
+                    <!--</Grid>-->
 
                 </Grid>
             </Border>
@@ -124,12 +167,14 @@
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="0.8*" />
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="Auto" MaxHeight="0.8"/>
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <!--Шапка-->
-                    <materialDesign:ColorZone Background="#99bbff" Padding="6">
+                    <materialDesign:ColorZone Background="{DynamicResource MainColorLight}" Padding="6">
 
                         <StackPanel Orientation="Horizontal">
 
@@ -151,20 +196,24 @@
 
                             <TextBlock Margin="8 0 0 0" 
                                    VerticalAlignment="Center"
+                                       FontFamily="Arial"
+                                       
                                    Text="Настройки аккаунта"/>
 
                         </StackPanel>
                     </materialDesign:ColorZone>
 
                     <!--Редактировать имя пользвателя-->
-                    <TextBox materialDesign:HintAssist.Hint="Имя пользователя" 
+                    <TextBox materialDesign:HintAssist.Hint="Имя" 
                          materialDesign:HintAssist.IsFloating="True"
-                         Grid.Row="1"
-                         Margin="0 12 0 0"
-                         Width="172"
-                         HorizontalAlignment="Center"
-                         VerticalAlignment="Top"
-                         Text="{Binding EditNameFieldValue, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                         Grid.Row="1"         
+                         Background="{DynamicResource MainColorSuperLight}"
+                             BorderBrush="{DynamicResource MainColor}"
+                             
+                         HorizontalAlignment="Stretch"
+                         VerticalAlignment="Stretch"
+                         Style="{DynamicResource MaterialDesignFilledTextBox}"
+                         Text="{Binding EditNameFieldValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="TextChanged">
@@ -173,15 +222,19 @@
                         </i:Interaction.Triggers>
                     </TextBox>
 
-                    <!--Кнопка удаления аккаунта-->
-                    <Button Grid.Row="2" 
-                        Margin="30 12 30 12" 
-                        Command="{Binding RemoveUserCommand}"
-                        Foreground="Red"
-                        Style="{DynamicResource MaterialDesignFlatButton}"
-                        ToolTip="Удалить аккаунт"
-                        VerticalAlignment="Bottom">
+                    <Border BorderBrush="{DynamicResource MainColorSuperLight}" 
+                                    BorderThickness="0.55"
+                                    Margin="{Binding AddingWidnowTopVerticalExpanderMargin}"
+                                    Grid.Row="3"/>
 
+                    <!--Кнопка удаления словаря-->
+                    <Button Command="{Binding RemoveUserCommand}"
+                            Foreground="#ff3333"
+                                Grid.Row="4"
+                            Height="40"
+                            Style="{DynamicResource MaterialDesignFlatButton}"
+                            HorizontalAlignment="Stretch"
+                            Grid.Column="0">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Удалить" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <materialDesign:PackIcon Kind="Trash" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
