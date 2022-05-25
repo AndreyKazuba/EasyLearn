@@ -10,6 +10,6 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         {
             this.AddRelationCommand = new Command(AddRelation);
         }
-        private void AddRelation() => App.GetService<EditCommonDictionaryPageVM>().OpenCommonRelationAddingWindowCommand.Execute();
+        private void AddRelation() => App.GetService<EditCommonDictionaryPageVM>().AwOpenWindowCommand.Execute();
     }
 }

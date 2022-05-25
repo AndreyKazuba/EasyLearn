@@ -8,6 +8,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
     public class VerbPrepositionVM : ViewModel
     {
         private CardState state;
+        public int Id { get; private set; }
         public string VerbValue { get; set; }
         public int OrderValue { get; set; }
         public string PrepositionValue { get; set; }
@@ -20,6 +21,11 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public string? SecondExampleRussianValue { get; set; }
         public string? SecondExampleEnglishValue { get; set; }
         public VerbPrepositionVM(VerbPreposition verbPreposition)
+        {
+            this.Id = verbPreposition.Id;
+            UpdateVM(verbPreposition);
+        }
+        public void UpdateVM(VerbPreposition verbPreposition)
         {
             this.PrepositionValue = verbPreposition.Preposition.Value;
             this.VerbValue = StringHelper.NormalizeRegister(verbPreposition.Verb.Value);
@@ -39,7 +45,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         {
             this.OpenSettingsCommand = new Command(OpenSettings);
         }
-        private void OpenSettings() => App.GetService<EditVerbPrepositionDictionaryPageVM>().OpenVerbPrepositionSettingsWindowCommand.Execute();
+        private void OpenSettings() => App.GetService<EditVerbPrepositionDictionaryPageVM>().UwOpenWindowCommand.Execute(Id);
         private void SetState(VerbPreposition verbPreposition)
         {
             bool firstExampleExist = verbPreposition.IsFirstExampleExist;

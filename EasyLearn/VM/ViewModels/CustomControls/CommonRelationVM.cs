@@ -78,7 +78,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         }
         private void OpenSettings()
         {
-            App.GetService<EditCommonDictionaryPageVM>().OpenCommonRelationSettingsWindowCommand.Execute(Id);
+            App.GetService<EditCommonDictionaryPageVM>().UwOpenWindowCommand.Execute(Id);
         }
         private void SetState(CommonRelation commonRelation)
         {

@@ -74,11 +74,11 @@
                                      InputLanguageManager.InputLanguage="ru-RU"
                                      materialDesign:HintAssist.Hint="Искать">
 
-                                <TextBox.Text>
+                                <!--<TextBox.Text>
                                     <Binding Path="AddingWindowRussianValue" UpdateSourceTrigger="PropertyChanged">
                                         
                                     </Binding>
-                                </TextBox.Text>
+                                </TextBox.Text>-->
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
@@ -103,6 +103,8 @@
                                                      VerticalAlignment="Center"
                                                      HorizontalAlignment="Center"/>
                             </Button>
+                            
+                            
 
                         </Grid>
                     </Border>
@@ -160,16 +162,16 @@
                                      materialDesign:HintAssist.Hint="Комментарий">
 
                                 <TextBox.Text>
-                                    <Binding Path="AddingWindowCommentValue" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding Path="UwCommentValue" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.CommonRelationCommentMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
+                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.CommonRelationCommentMaxLength}" Group="UpdateCommonRelation" ValidatesOnTargetUpdated="True"/>
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
-                                        <i:InvokeCommandAction Command="{Binding UpdateConfirmCommonRelationAddingButtonAvailabilityCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwUpdateConfirmButtonAvailabilityCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -212,23 +214,23 @@
                                          Margin="0 0 7 0"
                                  materialDesign:HintAssist.IsFloating="False"
                                      
-                                         KeyDown="OnExampleRussianValueTextBoxKeyDown"
+                                         KeyDown="OnUpdateWindowExampleRussianValueTextBoxKeyDown"
                                          InputLanguageManager.InputLanguage="ru-RU"
-                                         Name="exampleRussianValueField1"
+                                         Name="uwExampleRussianValueField"
                                          materialDesign:HintAssist.Hint="Пример на русском">
 
                                 <TextBox.Text>
-                                    <Binding Path="ExampleRussianValue" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding Path="UwExampleRussianValue" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
+                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="UpdateCommonRelation" ValidatesOnTargetUpdated="True"/>
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
-                                        <i:InvokeCommandAction Command="{Binding ValidateExampleSectionCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding CheckExampleFieldsMaxLengthVisibilityCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwValidateExampleSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwCheckExampleFieldsMaxLengthVisibilityCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBox>
@@ -241,65 +243,50 @@
                                          Padding="14 11"
                                  materialDesign:HintAssist.IsFloating="False"
                                      
-                                         KeyDown="OnExampleEnglishValueTextBoxKeyDown"
-                                         Name="exampleEnglishValueField1"
+                                         KeyDown="OnUpdateWindowExampleEnglishValueTextBoxKeyDown"
+                                         Name="uwExampleEnglishValueField"
                                          InputLanguageManager.InputLanguage="en-US"
                                          materialDesign:HintAssist.Hint="Пример на английском">
 
                                 <TextBox.Text>
-                                    <Binding Path="ExampleEnglishValue" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding Path="UwExampleEnglishValue" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
+                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="UpdateCommonRelation" ValidatesOnTargetUpdated="True"/>
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
-                                        <i:InvokeCommandAction Command="{Binding ValidateExampleSectionCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding CheckExampleFieldsMaxLengthVisibilityCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwValidateExampleSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwCheckExampleFieldsMaxLengthVisibilityCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBox>
 
-                            <Button Style="{DynamicResource MaterialDesignIconButton}"
+                            <Button Style="{DynamicResource EasyConfirmButton}"
                                         Foreground="{DynamicResource green}"
                                         Height="39"
                                         Width="39"
-                                        Margin="5 0 0 0"
-                                        Visibility="{Binding AddExampleButtonIsVisible, Converter={converters:ReverseCollapseConverter}}"
-                                        Name="addExampleButton1"
+                                        Margin="14 0 0 0"
+                                        IsEnabled="{Binding UwAddExampleButtonIsEnabled}"
+                                        Name="uwAddExampleButton"
                                         HorizontalAlignment="Center" VerticalAlignment="Top"
                                         Grid.Column="2">
-                                <materialDesign:PackIcon Kind="Add" />
+                                <materialDesign:PackIcon Kind="Add" Foreground="{DynamicResource EasyGreen}"/>
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
-                                        <i:InvokeCommandAction Command="{Binding AddExampleViewCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding ClearExampleAddingFieldsCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding FocusExampleRussianValueFieldCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwAddExampleViewCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwClearExampleAddingSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwFocusExampleRussianValueFieldCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
 
-                            <Grid Height="39"
-                                      Width="39"
-                                      Visibility="{Binding ExamleWarningIconIsVisible, Converter={converters:ReverseCollapseConverter}}"
-                                      Margin="5 0 0 0"
-                                      HorizontalAlignment="Center" VerticalAlignment="Top"
-                                      ToolTip="Для добавления примера необходмо заполнить поля слева"
-                                      MouseEnter="WarningIcon_MouseEnter"
-                                      Background="Transparent"
-                                      MouseLeave="WarningIcon_MouseLeave"
-                                      Grid.Column="2" >
-
-                                <materialDesign:PackIcon Kind="AlertCircle" Height="20" Width="20" Foreground="Orange" Name="warningIcon" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            </Grid>
-
-
                         </Grid>
 
-                        <ItemsControl ItemsSource="{Binding ExampleViews}" 
+                        <ItemsControl ItemsSource="{Binding UwExampleViews}" 
                                           Grid.Row="3"
                                           Grid.Column="0"
                                           Margin="0 0 0 14"
@@ -374,30 +361,30 @@
                         Name="openNewCommonRelationAddingWindowButton"
                         Visibility="Collapsed">
 
-                <!--<i:Interaction.Triggers>
+                <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding AwClearCommand}"/>
                     </i:EventTrigger>
-                </i:Interaction.Triggers>-->
+                </i:Interaction.Triggers>
 
                 <!--Диалоговое окно добавления нового CommonRelation-->
                 <Button.CommandParameter>
-                    <Grid Margin="14">
+                    <Grid Margin="0 14">
 
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition/>
-                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto" MaxHeight="0.8"/>
                             <RowDefinition/>
                             <RowDefinition/>
-                            <RowDefinition Height="Auto"/>
                             <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition Height="Auto"  MaxHeight="0.8"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto" MaxWidth="0.8"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
@@ -405,6 +392,7 @@
                         <TextBox Style="{DynamicResource EasyValidationTextBox}"
                                      Width="215"
                                      Padding="14 11"
+                                 Margin="14 0 0 14"
                                      InputLanguageManager.InputLanguage="ru-RU"
                                  materialDesign:ValidationAssist.Suppress="True"
                                  materialDesign:HintAssist.IsFloating="False"
@@ -413,7 +401,7 @@
                                      materialDesign:HintAssist.Hint="Русский перевод*">
 
                             <TextBox.Text>
-                                <Binding Path="AddingWindowRussianValue" UpdateSourceTrigger="PropertyChanged">
+                                <Binding Path="AwRussianValue" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <valudationRules:NotEmpty Group="AddCommonRelation" ValidatesOnTargetUpdated="True" />
                                         <valudationRules:InRange Max="{x:Static constants:ModelConstants.UnitValueMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
@@ -423,8 +411,8 @@
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TextChanged">
-                                    <i:InvokeCommandAction Command="{Binding CheckCommonRelationForExistingCommand}"/>
-                                    <i:InvokeCommandAction Command="{Binding UpdateConfirmCommonRelationAddingButtonAvailabilityCommand}"/>
+                                    <i:InvokeCommandAction Command="{Binding AwCheckCommonRelationForExistingCommand}"/>
+                                    <i:InvokeCommandAction Command="{Binding AwUpdateConfirmButtonAvailabilityCommand}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
 
@@ -433,33 +421,35 @@
                         <!--Комбобокс для выбора типа RussianUnit в новом CommonRelation-->
                         <ComboBox MaxDropDownHeight="200"
                                       Grid.Row="1"
-                                      Margin="0 0 0 14"
+                                      Margin="14 0 0 14"
                                       Width="215"
                                       Padding="14 11"
                                       Grid.Column="0"
                                       KeyDown="OnRussianUnitTypeComboBoxKeyDown"
                                       Name="newCommonRelationRussianUnitTypeComboBox"
-                                      ItemsSource="{Binding AddingWindowRussianUnitTypes}"
-                                      SelectedItem="{Binding AddingWindowSelectedRussianUnitType, Mode=TwoWay}"
+                                      ItemsSource="{Binding AwRussianUnitTypes}"
+                                      SelectedItem="{Binding AwSelectedRussianUnitType, Mode=TwoWay}"
                                       Style="{DynamicResource EasyComboBox}">
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction Command="{Binding CheckCommonRelationForExistingCommand}"/>
+                                    <i:InvokeCommandAction Command="{Binding AwCheckCommonRelationForExistingCommand}"/>
+                                    <i:InvokeCommandAction Command="{Binding AwUpdateConfirmButtonAvailabilityCommand}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
 
                         </ComboBox>
 
-                        <Border BorderBrush="LightGray" 
-                                    BorderThickness="0.55"
-                                    Margin="{Binding AddingWidnowTopVerticalExpanderMargin}"
+                        <Border BorderBrush="{DynamicResource EasyGray}" 
+                                    BorderThickness="0.5"
+                                    Margin="0 0 0 14"
                                     Grid.RowSpan="2"
                                     Grid.Column="1"/>
 
                         <!--Текстбокс для введения английского значения в новом CommonRelation-->
                         <TextBox Style="{DynamicResource EasyValidationTextBox}"
                                      Width="215"
+                                 Margin="0 0 14 14"
                                      Padding="14 11"
                                  materialDesign:ValidationAssist.Suppress="True"
                                      Grid.Column="2"
@@ -471,7 +461,7 @@
                                  materialDesign:HintAssist.IsFloating="False">
 
                             <TextBox.Text>
-                                <Binding Path="AddingWindowEnglishValue" UpdateSourceTrigger="PropertyChanged">
+                                <Binding Path="AwEnglishValue" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <valudationRules:NotEmpty Group="AddCommonRelation" ValidatesOnTargetUpdated="True" />
                                         <valudationRules:InRange Max="{x:Static constants:ModelConstants.UnitValueMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
@@ -481,8 +471,8 @@
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TextChanged">
-                                    <i:InvokeCommandAction Command="{Binding CheckCommonRelationForExistingCommand}"/>
-                                    <i:InvokeCommandAction Command="{Binding UpdateConfirmCommonRelationAddingButtonAvailabilityCommand}"/>
+                                    <i:InvokeCommandAction Command="{Binding AwCheckCommonRelationForExistingCommand}"/>
+                                    <i:InvokeCommandAction Command="{Binding AwUpdateConfirmButtonAvailabilityCommand}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
 
@@ -492,173 +482,28 @@
                         <ComboBox MaxDropDownHeight="200"
                                       Grid.Row="1"
                                       Grid.Column="2"
-                                      Margin="0 0 0 14"
+                                      Margin="0 0 14 14"
                                       Width="215"
                                       Padding="14 11"
                                       KeyDown="OnEnglishUnitTypeComboBoxKeyDown"
                                       Name="newCommonRelationEnglishUnitTypeComboBox"
-                                      ItemsSource="{Binding AddingWidnowEnglishUnitTypes}"
-                                      SelectedItem="{Binding AddingWindowSelectedEnglishUnitType, Mode=TwoWay}"
+                                      ItemsSource="{Binding AwEnglishUnitTypes}"
+                                      SelectedItem="{Binding AwSelectedEnglishUnitType, Mode=TwoWay}"
                                       Style="{DynamicResource EasyComboBox}">
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction Command="{Binding CheckCommonRelationForExistingCommand}"/>
+                                    <i:InvokeCommandAction Command="{Binding AwCheckCommonRelationForExistingCommand}"/>
+                                    <i:InvokeCommandAction Command="{Binding AwUpdateConfirmButtonAvailabilityCommand}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
 
                         </ComboBox>
 
-                        <!--Надпись о том, что запись уже существует-->
-                        <StackPanel VerticalAlignment="Center"
-                                        Margin="0 -10 0 0"
-                                        HorizontalAlignment="Center" 
-                                        Grid.Row="2" Grid.ColumnSpan="3" 
-                                        Orientation="Horizontal" 
-                                        Visibility="{Binding CommonRelationHasExistLableIsVisible, Converter={converters:ReverseCollapseConverter}}">
-                            <materialDesign:PackIcon Kind="AlertCircleOutline" Foreground="{DynamicResource error}" Margin="2"/>
-                            <TextBlock VerticalAlignment="Center"
-                                           Margin="2 0 0 2"
-                                           Text="Такая запись уже есть" 
-                                           Foreground="{DynamicResource error}"
-                                           Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"/>
-                            <TextBlock/>
-                        </StackPanel>
-
-                        <Border BorderBrush="{Binding HorisontalSeporatorColor}" 
-                                    BorderThickness="0.55" 
-                                    Grid.ColumnSpan="3"
-                                    Grid.Row="3"
-                                    Margin="0 0 0 14"
-                                    Grid.Column="0"/>
-
-                        <!--Строка с добавлением примеров-->
-                        <Grid Grid.Row="4"
-                                  Grid.Column="0"
-                                  Grid.ColumnSpan="3">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="0.12*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <TextBox Style="{DynamicResource EasyTextBox}"
-                                         Width="192"
-                                         Padding="14 11"
-                                         Margin="0 0 7 0"
-                                 materialDesign:HintAssist.IsFloating="False"
-                                     
-                                         KeyDown="OnExampleRussianValueTextBoxKeyDown"
-                                         InputLanguageManager.InputLanguage="ru-RU"
-                                         Name="exampleRussianValueField"
-                                         materialDesign:HintAssist.Hint="Пример на русском">
-
-                                <TextBox.Text>
-                                    <Binding Path="ExampleRussianValue" UpdateSourceTrigger="PropertyChanged">
-                                        <Binding.ValidationRules>
-                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
-                                        </Binding.ValidationRules>
-                                    </Binding>
-                                </TextBox.Text>
-
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="TextChanged">
-                                        <i:InvokeCommandAction Command="{Binding ValidateExampleSectionCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding CheckExampleFieldsMaxLengthVisibilityCommand}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </TextBox>
-
-                            <TextBox Style="{DynamicResource EasyTextBox}"
-                                         HorizontalAlignment="Stretch"
-                                         Width="192"
-                                         Grid.Column="1"
-                                         Margin="7 0 0 0"
-                                         Padding="14 11"
-                                 materialDesign:HintAssist.IsFloating="False"
-                                     
-                                         KeyDown="OnExampleEnglishValueTextBoxKeyDown"
-                                         Name="exampleEnglishValueField"
-                                         InputLanguageManager.InputLanguage="en-US"
-                                         materialDesign:HintAssist.Hint="Пример на английском">
-
-                                <TextBox.Text>
-                                    <Binding Path="ExampleEnglishValue" UpdateSourceTrigger="PropertyChanged">
-                                        <Binding.ValidationRules>
-                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
-                                        </Binding.ValidationRules>
-                                    </Binding>
-                                </TextBox.Text>
-
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="TextChanged">
-                                        <i:InvokeCommandAction Command="{Binding ValidateExampleSectionCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding CheckExampleFieldsMaxLengthVisibilityCommand}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </TextBox>
-
-                            <Button Style="{DynamicResource MaterialDesignIconButton}"
-                                        Foreground="{DynamicResource green}"
-                                        Height="39"
-                                        Width="39"
-                                        Margin="5 0 0 0"
-                                        Visibility="{Binding AddExampleButtonIsVisible, Converter={converters:ReverseCollapseConverter}}"
-                                        Name="addExampleButton"
-                                        HorizontalAlignment="Center" VerticalAlignment="Top"
-                                        Grid.Column="2">
-                                <materialDesign:PackIcon Kind="Add" />
-
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <i:InvokeCommandAction Command="{Binding AddExampleViewCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding ClearExampleAddingFieldsCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding FocusExampleRussianValueFieldCommand}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Button>
-
-                            <Grid Height="39"
-                                      Width="39"
-                                      Visibility="{Binding ExamleWarningIconIsVisible, Converter={converters:ReverseCollapseConverter}}"
-                                      Margin="5 0 0 0"
-                                      HorizontalAlignment="Center" VerticalAlignment="Top"
-                                      ToolTip="Для добавления примера необходмо заполнить поля слева"
-                                      MouseEnter="WarningIcon_MouseEnter"
-                                      Background="Transparent"
-                                      MouseLeave="WarningIcon_MouseLeave"
-                                      Grid.Column="2" >
-
-                                <materialDesign:PackIcon Kind="AlertCircle" Height="20" Width="20" Foreground="Orange" Name="warningIcon1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            </Grid>
-
-
-                        </Grid>
-
-                        <ItemsControl ItemsSource="{Binding ExampleViews}" 
-                                          Grid.Row="5"
-                                          Grid.Column="0"
-                                          Margin="0 0 0 14"
-                                          Width="450"
-                                          Grid.ColumnSpan="3">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-
-                        <Border BorderBrush="LightGray" 
-                                    BorderThickness="0.55" 
-                                    Grid.ColumnSpan="3"
-                                    Grid.Row="6"
-                                    Margin="0 0 0 14"
-                                    Grid.Column="0"/>
-
                         <!--Текстбокс для введения комментария к новому CommonRelation-->
                         <TextBox Style="{DynamicResource EasyValidationTextBox}"
                                      Width="230" 
-                                     Grid.Row="7"
+                                     Grid.Row="2"
                                  materialDesign:HintAssist.IsFloating="False"
                                  materialDesign:ValidationAssist.Suppress="True"
                                      Padding="14 11"
@@ -669,7 +514,7 @@
                                      materialDesign:HintAssist.Hint="Комментарий">
 
                             <TextBox.Text>
-                                <Binding Path="AddingWindowCommentValue" UpdateSourceTrigger="PropertyChanged">
+                                <Binding Path="AwCommentValue" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <valudationRules:InRange Max="{x:Static constants:ModelConstants.CommonRelationCommentMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
                                     </Binding.ValidationRules>
@@ -684,10 +529,143 @@
 
                         </TextBox>
 
+                        <!--Надпись о том, что запись уже существует-->
+                        <StackPanel VerticalAlignment="Center"
+                                        Margin="0 -10 0 0"
+                                        HorizontalAlignment="Center" 
+                                        Grid.Row="3" Grid.ColumnSpan="3" 
+                                        Orientation="Horizontal" 
+                                        Visibility="{Binding AwCommonRelationHasExistLableIsVisible, Converter={converters:ReverseCollapseConverter}}">
+                            <materialDesign:PackIcon Kind="AlertCircleOutline" Foreground="{DynamicResource error}" Margin="2"/>
+                            <TextBlock VerticalAlignment="Center"
+                                           Margin="2 0 0 2"
+                                           Text="Такая запись уже есть" 
+                                           Foreground="{DynamicResource error}"
+                                           Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"/>
+                            <TextBlock/>
+                        </StackPanel>
+
+                        <Border BorderBrush="{Binding HorisontalSeporatorColor}" 
+                                    BorderThickness="0.5" 
+                                    Grid.ColumnSpan="3"
+                                    Grid.Row="4"
+                                    Grid.Column="0"/>
+
+                        <!--Строка с добавлением примеров-->
+                        <Grid Grid.Row="5"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="3"
+                              Margin="14 14 14 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="0.12*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Style="{DynamicResource EasyTextBox}"
+                                         Width="188"
+                                         Padding="14 11"
+                                         Margin="0 0 7 0"
+                                 materialDesign:HintAssist.IsFloating="False"
+                                     
+                                         KeyDown="OnAddingWindowExampleRussianValueTextBoxKeyDown"
+                                         InputLanguageManager.InputLanguage="ru-RU"
+                                         Name="awExampleRussianValueField"
+                                         materialDesign:HintAssist.Hint="Пример на русском">
+
+                                <TextBox.Text>
+                                    <Binding Path="AwExampleRussianValue" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TextChanged">
+                                        <i:InvokeCommandAction Command="{Binding AwValidateExampleSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwCheckExampleFieldsMaxLengthVisibilityCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+
+                            <TextBox Style="{DynamicResource EasyTextBox}"
+                                         HorizontalAlignment="Stretch"
+                                         Width="188"
+                                         Grid.Column="1"
+                                         Margin="7 0 0 0"
+                                         Padding="14 11"
+                                 materialDesign:HintAssist.IsFloating="False"
+                                     
+                                         KeyDown="OnAddingWindowExampleEnglishValueTextBoxKeyDown"
+                                         Name="awExampleEnglishValueField"
+                                         InputLanguageManager.InputLanguage="en-US"
+                                         materialDesign:HintAssist.Hint="Пример на английском">
+
+                                <TextBox.Text>
+                                    <Binding Path="AwExampleEnglishValue" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TextChanged">
+                                        <i:InvokeCommandAction Command="{Binding AwValidateExampleSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwCheckExampleFieldsMaxLengthVisibilityCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+
+                            <Button Style="{DynamicResource EasyConfirmButton}"
+                                        Foreground="{DynamicResource green}"
+                                        Height="39"
+                                        Width="39"
+                                        Margin="14 0 0 0"
+                                        IsEnabled="{Binding AwAddExampleButtonIsEnabled}"
+                                        Name="awAddExampleButton"
+                                        HorizontalAlignment="Center" VerticalAlignment="Top"
+                                        Grid.Column="2">
+                                <materialDesign:PackIcon Kind="Add" Foreground="{DynamicResource EasyGreen}" />
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding AwAddExampleViewCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwClearExampleAddingSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwFocusExampleRussianValueFieldCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+
+                        </Grid>
+
+                        <ItemsControl ItemsSource="{Binding AwExampleViews}" 
+                                          Grid.Row="6"
+                                          Grid.Column="0"
+                                          Margin="14 0 14 14"
+                                          Width="450"
+                                          Grid.ColumnSpan="3">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+
+                        <Border BorderBrush="{DynamicResource EasyGray}" 
+                                    BorderThickness="0.5" 
+                                    Grid.ColumnSpan="3"
+                                    Grid.Row="7"
+                                    Grid.Column="0"/>
+
+                        
+
                         <!--Кнопки отмены и подтверждения добавления нового CommonRelation-->
                         <Grid Grid.Row="8"
                                   Grid.Column="0"
                                   Width="230"
+                              Margin="0 14 0 0"
                                   Grid.ColumnSpan="3"
                                   HorizontalAlignment="Center"
                                   VerticalAlignment="Center">
@@ -708,7 +686,7 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwClearCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -718,8 +696,7 @@
                             <Button Style="{DynamicResource EasyConfirmButton}"
                                     Grid.Column="1"
                                     Name="newCommonRelationAddingButton"
-                                    Visibility="{Binding IsModalWindowOnUpdateMode, Converter={converters:ForwardCollapseConverter}}"
-                                    IsEnabled="{Binding IsConfirmCommonRelationAddingButtonEnabled}">
+                                    IsEnabled="{Binding AwConfirmButtonIsEnabled}">
 
                                 <TextBlock Text="Добавить" FontSize="14" FontFamily="Arial"/>
 
@@ -728,24 +705,6 @@
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding CreateCommonRelationCommand}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-
-                            </Button>
-
-                            <Button Style="{DynamicResource EasyConfirmButton}"
-                                    Grid.Column="1"
-                                    Name="updateCommonRelationButton"
-                                    Visibility="{Binding IsModalWindowOnUpdateMode, Converter={converters:ReverseCollapseConverter}}"
-                                    IsEnabled="{Binding IsConfirmCommonRelationAddingButtonEnabled}">
-
-                                <TextBlock Text="Сохранить" FontSize="14" FontFamily="Arial"/>
-
-                                <!--Действия кнопки при её нажатии-->
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding UpdateCommonRelationCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 

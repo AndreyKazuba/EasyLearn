@@ -2,9 +2,11 @@
 {
     public enum ValidationRulesGroup
     {
-        AddCommonRelation,
-        AddVerbPreposition,
-        AddNewUser,
-        AddNewDictionary,
+        AddCommonRelation = 1,
+        AddVerbPreposition = 2,
+        AddNewUser = 3,
+        AddNewDictionary = 4,
+        UpdateCommonRelation = 5,
+        UpdateVerbPrepsotion = 6,
     }
 }

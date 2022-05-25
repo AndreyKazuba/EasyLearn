@@ -181,7 +181,7 @@
                         <TextBox.Text>
                             <Binding Path="EditDescriptionFieldValue" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
-                                    <valudationRules:InRange Max="{x:Static constants:ModelConstants.DictionaryDescriptionMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
+                                    <!--<valudationRules:InRange Max="{x:Static constants:ModelConstants.DictionaryDescriptionMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>-->
                                 </Binding.ValidationRules>
                             </Binding>
                         </TextBox.Text>

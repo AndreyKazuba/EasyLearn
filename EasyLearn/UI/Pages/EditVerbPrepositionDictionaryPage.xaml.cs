@@ -11,8 +11,10 @@ namespace EasyLearn.UI.Pages
         public static event Action? VerbValueTextBoxEnterDown;
         public static event Action? PrepositionValueTextBoxEnterDown;
         public static event Action? TranslationValueTextBoxEnterDown;
-        public static event Action? ExampleRussianValueTextBoxEnterDown;
-        public static event Action? ExampleEnglishValueTextBoxEnterDown;
+        public static event Action? AddingWindowExampleRussianValueTextBoxEnterDown;
+        public static event Action? AddingWindowExampleEnglishValueTextBoxEnterDown;
+        public static event Action? UpdateWindowExampleRussianValueTextBoxEnterDown;
+        public static event Action? UpdateWindowExampleEnglishValueTextBoxEnterDown;
         public EditVerbPrepositionDictionaryPage(EditVerbPrepositionDictionaryPageVM viewModel)
         {
             this.DataContext = viewModel;
@@ -33,17 +35,25 @@ namespace EasyLearn.UI.Pages
             if (e.Key == Key.Enter && TranslationValueTextBoxEnterDown is not null)
                 TranslationValueTextBoxEnterDown();
         }
-        private void OnExampleRussianValueTextBoxKeyDown(object sender, KeyEventArgs e)
+        private void OnAddingWindowExampleRussianValueTextBoxKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && ExampleRussianValueTextBoxEnterDown is not null)
-                ExampleRussianValueTextBoxEnterDown();
+            if (e.Key == Key.Enter && AddingWindowExampleRussianValueTextBoxEnterDown is not null)
+                AddingWindowExampleRussianValueTextBoxEnterDown();
         }
-        private void OnExampleEnglishValueTextBoxKeyDown(object sender, KeyEventArgs e)
+        private void OnAddingWindowExampleEnglishValueTextBoxKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && ExampleEnglishValueTextBoxEnterDown is not null)
-                ExampleEnglishValueTextBoxEnterDown();
+            if (e.Key == Key.Enter && AddingWindowExampleEnglishValueTextBoxEnterDown is not null)
+                AddingWindowExampleEnglishValueTextBoxEnterDown();
         }
-        private void WarningIcon_MouseEnter(object sender, MouseEventArgs e) => this.warningIcon.Foreground = Brushes.OrangeRed;
-        private void WarningIcon_MouseLeave(object sender, MouseEventArgs e) => this.warningIcon.Foreground = Brushes.Orange;
+        private void OnUpdateWindowExampleRussianValueTextBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && UpdateWindowExampleRussianValueTextBoxEnterDown is not null)
+                UpdateWindowExampleRussianValueTextBoxEnterDown();
+        }
+        private void OnUpdateWindowExampleEnglishValueTextBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && UpdateWindowExampleEnglishValueTextBoxEnterDown is not null)
+                UpdateWindowExampleEnglishValueTextBoxEnterDown();
+        }
     }
 }

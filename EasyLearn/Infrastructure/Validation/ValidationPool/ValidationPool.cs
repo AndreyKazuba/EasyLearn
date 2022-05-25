@@ -14,6 +14,8 @@ namespace EasyLearn.Infrastructure.Validation
             validationRules.Add(ValidationRulesGroup.AddCommonRelation, new Dictionary<Guid, bool>());
             validationRules.Add(ValidationRulesGroup.AddNewUser, new Dictionary<Guid, bool>());
             validationRules.Add(ValidationRulesGroup.AddNewDictionary, new Dictionary<Guid, bool>());
+            validationRules.Add(ValidationRulesGroup.UpdateCommonRelation, new Dictionary<Guid, bool>());
+            validationRules.Add(ValidationRulesGroup.UpdateVerbPrepsotion, new Dictionary<Guid, bool>());
         }
         public static Guid Register(ValidationRulesGroup group, bool isPassed = false)
         {

@@ -8,6 +8,7 @@ using EasyLearn.Data.Exceptions;
 using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
 using EasyLearn.Data.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace EasyLearn.Data.Repositories.Implementations
 {
@@ -36,6 +37,10 @@ namespace EasyLearn.Data.Repositories.Implementations
                 return false;
             return IsVerbPrepositionExist(verb.Id, preposition.Id, dictionaryId);
         }
+        public VerbPreposition GetVerbPreposition(int verbPrepositionId) => context.VerbPrepositions
+           .Include(verbPreposition => verbPreposition.Verb)
+           .Include(verbPreposition => verbPreposition.Preposition)
+           .First(verbPreposition => verbPreposition.Id == verbPrepositionId);
         public async Task<VerbPreposition> CreateVerbPreposition(
             string verbValue,
             string prepositionValue,
@@ -66,6 +71,30 @@ namespace EasyLearn.Data.Repositories.Implementations
             newVerbPreposition.Verb = verb;
             newVerbPreposition.Preposition = preposition;
             return newVerbPreposition;
+        }
+        public async Task<VerbPreposition> UpdateVerbPreposition(
+            int verbPrepositionId,
+            string translation,
+            string? firstExampleRussianValue,
+            string? firstExampleEnglishValue,
+            string? secondExampleRussianValue,
+            string? secondExampleEnglishValue)
+        {
+            ThrowIfExampleValueInvalid(firstExampleEnglishValue, nameof(CommonRelation.FirstExampleEnglishValue));
+            ThrowIfExampleValueInvalid(firstExampleRussianValue, nameof(CommonRelation.FirstExampleRussianValue));
+            ThrowIfExampleValueInvalid(secondExampleEnglishValue, nameof(CommonRelation.SecondExampleEnglishValue));
+            ThrowIfExampleValueInvalid(secondExampleRussianValue, nameof(CommonRelation.SecondExampleRussianValue));
+            ThrowIfTranslationInvalid(translation);
+            VerbPreposition updatedVerbPreposition = GetVerbPreposition(verbPrepositionId);
+            updatedVerbPreposition.UpdateDateUtc = DateTime.UtcNow;
+            updatedVerbPreposition.Translation = StringHelper.Prepare(translation);
+            updatedVerbPreposition.FirstExampleRussianValue = StringHelper.TryPrepare(firstExampleRussianValue);
+            updatedVerbPreposition.FirstExampleEnglishValue = StringHelper.TryPrepare(firstExampleEnglishValue);
+            updatedVerbPreposition.SecondExampleRussianValue = StringHelper.TryPrepare(secondExampleRussianValue);
+            updatedVerbPreposition.SecondExampleEnglishValue = StringHelper.TryPrepare(secondExampleEnglishValue);
+            await context.SaveChangesAsync();
+            context.ChangeTracker.Clear();
+            return updatedVerbPreposition;
         }
         public async Task DeleteAllDictionaryVerbPrepositions(int dictionaryId)
         {

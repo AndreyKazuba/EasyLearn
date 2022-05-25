@@ -35,6 +35,7 @@ namespace EasyLearn.Data.Models
 
         [Required]
         public DateTime CreationDateUtc { get; set; }
+        public DateTime? UpdateDateUtc { get; set; }
 
         public bool IsFirstExampleExist => !string.IsNullOrEmpty(this.FirstExampleRussianValue) && !string.IsNullOrEmpty(this.FirstExampleEnglishValue);
 

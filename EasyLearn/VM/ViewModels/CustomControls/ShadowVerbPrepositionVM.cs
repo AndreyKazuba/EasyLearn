@@ -10,6 +10,6 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         {
             this.AddVerbPrepositionCommand = new Command(AddVerbPreposition);
         }
-        public void AddVerbPreposition() => App.GetService<EditVerbPrepositionDictionaryPageVM>().OpenNewVerbPrepositionAddingWindowCommand.Execute();
+        public void AddVerbPreposition() => App.GetService<EditVerbPrepositionDictionaryPageVM>().AwOpenWindowCommand.Execute();
     }
 }
