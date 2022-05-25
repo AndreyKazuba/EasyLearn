@@ -59,7 +59,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             await App.GetService<IVerbPrepositionDictionaryRepository>().EditVerbPrepositionDictionary(this.Id, newDictionaryName,StringHelper.NullIfEmptyOrWhiteSpace(newDictionaryDescription));
         }
 
-        private void SetCurrentDictionary() => App.GetService<EditVerbPrepositionDictionaryPageVM>().SetDictionaryAsCurrentCommand.Execute(Id);
+        private void SetCurrentDictionary() => App.GetService<EditVerbPrepositionDictionaryPageVM>().SetDictionaryCommand.Execute(Id);
 
         private void SetEditFieldsValue()
         {

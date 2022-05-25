@@ -68,8 +68,8 @@
                 </materialDesign:DrawerHost.TopDrawerContent>
 
                 <Grid>
-                    <Button Visibility="Collapsed" Name="openMenuButton" Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"/>
-                    <Button Visibility="Collapsed" Name="closeMenuButton" Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"/>
+                    <Button Visibility="Collapsed" Name="openTopMenuButton" Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"/>
+                    <Button Visibility="Collapsed" Name="closeTopMenuButton" Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"/>
                     <!--Контейнер для содержания всех VerbPreposition-->
                     <ScrollViewer Grid.Row="1">
                         <ItemsControl ItemsSource="{Binding VerbPrepositionViews}" 
@@ -88,7 +88,7 @@
 
 
 
-            <Button Name="openVerbPrepositionSettingsWindowButton"
+            <Button Name="uwOpenWindowButton"
                     Visibility="Collapsed"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
 
@@ -173,7 +173,7 @@
                                      
                                          KeyDown="OnUpdateWindowExampleRussianValueTextBoxKeyDown"
                                          InputLanguageManager.InputLanguage="ru-RU"
-                                         Name="uwExampleRussianValueField"
+                                         Name="uwExampleRussianValueTextBox"
                                          materialDesign:HintAssist.Hint="Пример на русском">
 
                                 <TextBox.Text>
@@ -201,7 +201,7 @@
                                  materialDesign:HintAssist.IsFloating="False"
                                      
                                          KeyDown="OnUpdateWindowExampleEnglishValueTextBoxKeyDown"
-                                         Name="uwExampleEnglishValueField"
+                                         Name="uwExampleEnglishValueTextBox"
                                          InputLanguageManager.InputLanguage="en-US"
                                          materialDesign:HintAssist.Hint="Пример на английском">
 
@@ -276,7 +276,7 @@
 
                             <!--Кнопка отмены-->
                             <Button Style="{DynamicResource EasyCancelButton}"
-                                    Name="newVerbPrepositionAddingWindowCancelButton">
+                                    Name="newVerbPrepositionAddingWindowCancelButton1">
 
                                 <TextBlock Text="Отмена" FontSize="14" FontFamily="Arial"/>
 
@@ -317,7 +317,7 @@
 
             <!--Кнопка добавления нового VerbPreposition-->
             <Button Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
-                        Name="openNewVerbPrepositionAddingWindowButton"
+                        Name="awOpenWindowButton"
                         Visibility="Collapsed">
 
                 <i:Interaction.Triggers>
@@ -353,7 +353,7 @@
                                      HorizontalAlignment="Left"
                                      Style="{DynamicResource EasyValidationTextBox}"
                                      materialDesign:HintAssist.Hint="Глагол*"
-                                     Name="newVerbPrepositionVerbValueTextBox"
+                                     Name="awVerbValueTextBox"
                                      materialDesign:ValidationAssist.Suppress="True"
                                      materialDesign:HintAssist.IsFloating="False"
                                      InputLanguageManager.InputLanguage="en-US"
@@ -387,7 +387,7 @@
                                      materialDesign:HintAssist.Hint="Предлог*"
                                      Style="{DynamicResource EasyValidationTextBox}"
                                      InputLanguageManager.InputLanguage="en-US"
-                                     Name="newVerbPrepositionPrepositionValueTextBox"
+                                     Name="awPrepositionValueTextBox"
                                      KeyDown="OnPrepositionValueTextBoxKeyDown">
 
                                 <TextBox.Text>
@@ -417,7 +417,7 @@
                                      materialDesign:HintAssist.IsFloating="False"
                                      materialDesign:ValidationAssist.Suppress="True"
                                          InputLanguageManager.InputLanguage="ru-RU"
-                                         Name="newVerbPrepositionTranslationValueTextBox"
+                                         Name="awTranslationValueTextBox"
                                          KeyDown="OnTranslationValueKeyDown">
 
                                 <TextBox.Text>
@@ -460,7 +460,7 @@
                                      
                                          KeyDown="OnAddingWindowExampleRussianValueTextBoxKeyDown"
                                          InputLanguageManager.InputLanguage="ru-RU"
-                                         Name="awExampleRussianValueField"
+                                         Name="awExampleRussianValueTextBox"
                                          materialDesign:HintAssist.Hint="Пример на русском">
                                 
 
@@ -489,7 +489,7 @@
                                  materialDesign:HintAssist.IsFloating="False"
                                      
                                          KeyDown="OnAddingWindowExampleEnglishValueTextBoxKeyDown"
-                                         Name="awExampleEnglishValueField"
+                                         Name="awExampleEnglishValueTextBox"
                                          InputLanguageManager.InputLanguage="en-US"
                                          materialDesign:HintAssist.Hint="Пример на английском">
                                 
@@ -515,7 +515,7 @@
                                         Width="39"
                                         Margin="14 0 0 0"
                                         IsEnabled="{Binding AwAddExampleButtonIsEnabled}"
-                                        Name="addExampleButton"
+                                        Name="awAddExampleButton"
                                         HorizontalAlignment="Center" VerticalAlignment="Top"
                                         Grid.Column="2">
                                 <materialDesign:PackIcon Kind="Add" Foreground="{DynamicResource EasyGreen}"/>
@@ -564,7 +564,7 @@
 
                             <!--Кнопка отмены добавления нового CommonRelation-->
                             <Button Style="{DynamicResource EasyCancelButton}"
-                                    Name="newVerbPrepositionAddingWindowCancelButton1">
+                                    Name="awCancelButton">
 
                                 <TextBlock Text="Отмена" FontSize="14" FontFamily="Arial"/>
 
@@ -581,7 +581,7 @@
                             <!--Кнопка подтверждения добавления нового CommonRalation-->
                             <Button Style="{DynamicResource EasyConfirmButton}"
                                     Grid.Column="1"
-                                    Name="newVerbPrepositionAddingButton"
+                                    Name="awConfirmButton"
                                     IsEnabled="{Binding IsConfirmVerbPrepositionAddingButtonEnabled}">
 
                                 <TextBlock Text="Добавить" FontSize="14" FontFamily="Arial"/>
@@ -597,45 +597,6 @@
                             </Button>
 
                         </Grid>
-
-                        <!--<StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center">
-                            --><!--Кнопка отмены добавления нового VerbPreposition--><!--
-                            <Button Margin="10"
-                                        Style="{DynamicResource MaterialDesignFlatButton}" 
-                                        Content="Отмена"
-                                        Name="newVerbPrepositionAddingWindowCancelButton"
-                                        Foreground="Red">
-
-                                --><!--Действия кнопки при её нажатии--><!--
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-
-                            </Button>
-
-                            --><!--Кнопка подтверждения добавления новой связи--><!--
-                            <Button Margin="10"
-                                        Style="{DynamicResource MaterialDesignFlatButton}"  
-                                        HorizontalAlignment="Center"
-                                        Content="Добавить"
-                                        Foreground="ForestGreen"
-                                        Name="newVerbPrepositionAddingButton"
-                                        IsEnabled="{Binding IsConfirmVerbPrepositionAddingButtonEnabled}">
-
-                                --><!--Действия кнопки при её нажатии--><!--
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding CreateVerbPrepositionCommand}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-
-                            </Button>
-                        </StackPanel>-->
-
 
                     </Grid>
                 </Button.CommandParameter>

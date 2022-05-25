@@ -319,16 +319,17 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void SearchCommonRelations()
         {
             string searchingString = this.SearchStringValue;
-            if (searchingString is null || StringHelper.IsEmptyOrWhiteSpace(searchingString))
+            foreach(UserControl userControl in this.CommonRelationViews)
             {
-                this.CommonRelationViews = new ObservableCollection<UserControl>(allCommonRelations.Select(relation => CommonRelationView.Create(relation)));
-                return;
+                CommonRelationView? commonRelationView = userControl as CommonRelationView;
+                if (commonRelationView is null)
+                    continue;
+                bool isMatch = commonRelationView.RussianValue.Contains(searchingString) || commonRelationView.EnglishValue.Contains(searchingString);
+                if (isMatch)
+                    commonRelationView.Show();
+                else
+                    commonRelationView.Collapse();
             }
-            IEnumerable<CommonRelation> selectedRelations = this.allCommonRelations
-                .Where(relation => $"{relation.RussianUnit.Value.Prepare()}{relation.EnglishUnit.Value.Prepare()}".Contains(searchingString.Prepare()));
-            IEnumerable<CommonRelationView> commonRelationViews = selectedRelations.Select(selectedRelation => CommonRelationView.Create(selectedRelation));
-            this.CommonRelationViews = new ObservableCollection<UserControl>(commonRelationViews);
-            AddShadowRelationView();
         }
         private void AwAddExampleView()
         {

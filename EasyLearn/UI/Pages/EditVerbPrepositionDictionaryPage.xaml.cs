@@ -8,9 +8,9 @@ namespace EasyLearn.UI.Pages
 {
     public partial class EditVerbPrepositionDictionaryPage : Page
     {
-        public static event Action? VerbValueTextBoxEnterDown;
-        public static event Action? PrepositionValueTextBoxEnterDown;
-        public static event Action? TranslationValueTextBoxEnterDown;
+        public static event Action? AddingWindowVerbValueTextBoxEnterDown;
+        public static event Action? AddingWindowPrepositionValueTextBoxEnterDown;
+        public static event Action? AddingWindowTranslationValueTextBoxEnterDown;
         public static event Action? AddingWindowExampleRussianValueTextBoxEnterDown;
         public static event Action? AddingWindowExampleEnglishValueTextBoxEnterDown;
         public static event Action? UpdateWindowExampleRussianValueTextBoxEnterDown;
@@ -22,18 +22,18 @@ namespace EasyLearn.UI.Pages
         }
         private void OnVerbValueTextBoxKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && VerbValueTextBoxEnterDown is not null)
-                VerbValueTextBoxEnterDown();
+            if (e.Key == Key.Enter && AddingWindowVerbValueTextBoxEnterDown is not null)
+                AddingWindowVerbValueTextBoxEnterDown();
         }
         private void OnPrepositionValueTextBoxKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && PrepositionValueTextBoxEnterDown is not null)
-                PrepositionValueTextBoxEnterDown();
+            if (e.Key == Key.Enter && AddingWindowPrepositionValueTextBoxEnterDown is not null)
+                AddingWindowPrepositionValueTextBoxEnterDown();
         }
         private void OnTranslationValueKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && TranslationValueTextBoxEnterDown is not null)
-                TranslationValueTextBoxEnterDown();
+            if (e.Key == Key.Enter && AddingWindowTranslationValueTextBoxEnterDown is not null)
+                AddingWindowTranslationValueTextBoxEnterDown();
         }
         private void OnAddingWindowExampleRussianValueTextBoxKeyDown(object sender, KeyEventArgs e)
         {

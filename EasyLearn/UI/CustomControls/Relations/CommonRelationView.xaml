@@ -3,49 +3,60 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:EasyLearn.UI.CustomControls"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             mc:Ignorable="d">
-    <Border BorderThickness="0.6" BorderBrush="#99bbff" Background="GhostWhite" Margin="12 12 0 0" Height="{Binding CardHeight}" VerticalAlignment="Top">
+             mc:Ignorable="d"
+             Visibility="{Binding IsVisible, Converter={converters:ReverseCollapseConverter}}">
+    <Border BorderThickness="0.6" 
+            BorderBrush="{DynamicResource MainColorLight}" 
+            Background="GhostWhite" 
+            Margin="12 12 0 0" 
+            Height="{Binding Height}" 
+            VerticalAlignment="Top">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MinWidth="100" Width="Auto"/>
-                <ColumnDefinition Width="2.2" MaxWidth="2.2"/>
+                <ColumnDefinition Width="1" MaxWidth="1"/>
                 <ColumnDefinition MinWidth="100" Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="35"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" MaxHeight="0.8"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
+            <!--Русское значение-->
             <TextBlock Grid.Row="0" Grid.Column="0" 
                        Style="{DynamicResource MaterialDesignHeadline5TextBlock}" 
                        FontSize="19"
                        Text="{Binding RussianValue}" 
-                       HorizontalAlignment="Center" VerticalAlignment="Center" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center" 
                        Margin="20 8"
                        d:Text="Проверять"/>
+
+            <!--Английское значение-->
             <TextBlock Grid.Row="0" Grid.Column="2" 
                        Style="{DynamicResource MaterialDesignHeadline5TextBlock}" 
                        FontSize="19" 
                        Text="{Binding EnglishValue}" 
-                       HorizontalAlignment="Center" VerticalAlignment="Center" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center" 
                        Margin="20 8"
                        d:Text="Check"/>
 
-            <!--Разделитель-->
-            <Border BorderBrush="LightGray" 
-                    BorderThickness="0.8" 
+            <!--Вертикальный разделитель-->
+            <Border BorderBrush="{DynamicResource EasyGray}" 
+                    BorderThickness="0.5" 
                     Grid.RowSpan="2"
                     Margin="{Binding VerticalExpanderMargin}"
                     Grid.Column="1"/>
 
+            <!--Лейба с типом русского юнита-->
             <Border Grid.Row="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
@@ -57,10 +68,12 @@
                            Foreground="#f2f2f2"
                            FontFamily="Arial"
                            FontWeight="Bold"
-                           Text="{Binding RussianUnitType}"></TextBlock>
+                           Text="{Binding RussianUnitTypeText}"/>
             </Border>
 
-            <Border Grid.Row="1" Grid.Column="2"
+            <!--Лейба с типом английского юнита-->
+            <Border Grid.Row="1" 
+                    Grid.Column="2"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
                     CornerRadius="4"
@@ -71,34 +84,36 @@
                            FontFamily="Arial"
                            Foreground="#f2f2f2"
                            FontWeight="Bold"
-                           Text="{Binding EnglishUnitType}"></TextBlock>
+                           Text="{Binding EnglishUnitTypeText}"/>
             </Border>
 
-            <Border BorderBrush="LightGray" 
-                    BorderThickness="0.8" 
+            <!--Горизонтальный разделитель-->
+            <Border BorderBrush="{DynamicResource EasyGray}" 
+                    BorderThickness="0.5" 
                     Grid.ColumnSpan="3"
-                    Margin="5 0.3"
                     Grid.Column="0"
                     Grid.Row="2"
-                    Visibility="{Binding IsSeporatorVisible, Converter={converters:ReverseCollapseConverter}}"/>
+                    Visibility="{Binding HorisontalSeporatorIsVisible, Converter={converters:ReverseCollapseConverter}}"/>
 
+            <!--Отображение комментария-->
             <Grid Width="Auto" Margin="10 7 10 0" Grid.Row="3" VerticalAlignment="Center" 
                   HorizontalAlignment="Center" Grid.ColumnSpan="3"
-                  Visibility="{Binding IsCommentVisible, Converter={converters:ReverseCollapseConverter}}">
+                  Visibility="{Binding CommentIsVisible, Converter={converters:ReverseCollapseConverter}}">
                 <Border Grid.Row="1" Background="#e6e6e6" CornerRadius="15" Height="30"></Border>
                 <Border Background="{DynamicResource MainColor}"  CornerRadius="15" Height="30" Width="110" HorizontalAlignment="Left">
                     <TextBlock Text="Комментарий" FontSize="13" 
                            FontFamily="Arial" FontWeight="Bold"
                            Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Border>
-                <TextBlock Text="{Binding Comment}" FontSize="13" 
+                <TextBlock Text="{Binding CommentValue}" FontSize="13" 
                            FontFamily="Arial" FontWeight="DemiBold"
                            Foreground="#737373" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="118 0 16 0"/>
             </Grid>
 
+            <!--Отображение первого примера-->
             <Grid Width="Auto" Margin="10 7 10 0" Grid.Row="4" VerticalAlignment="Center" 
                   HorizontalAlignment="Center" Grid.ColumnSpan="3"
-                  Visibility="{Binding IsFirstExampleVisible, Converter={converters:ReverseCollapseConverter}}">
+                  Visibility="{Binding FirstExampleIsVisible, Converter={converters:ReverseCollapseConverter}}">
                 <Border Grid.Row="1" Background="#e6e6e6" CornerRadius="15" Height="45"></Border>
                 <Border Background="{DynamicResource MainColor}"  CornerRadius="15" Height="45" Width="80" HorizontalAlignment="Left">
                     <TextBlock Text="Пример" FontSize="13" 
@@ -116,9 +131,10 @@
 
             </Grid>
 
+            <!--Отображение второго примера-->
             <Grid Width="Auto" Margin="10 7 10 0" Grid.Row="5" VerticalAlignment="Center" 
                   HorizontalAlignment="Center" Grid.ColumnSpan="3"
-                  Visibility="{Binding IsSecondExampleVisible, Converter={converters:ReverseCollapseConverter}}">
+                  Visibility="{Binding SecondExampleIsVisible, Converter={converters:ReverseCollapseConverter}}">
                 <Border Grid.Row="1" Background="#e6e6e6" CornerRadius="15" Height="45"></Border>
                 <Border Background="{DynamicResource MainColor}"  CornerRadius="15" Height="45" Width="80" HorizontalAlignment="Left">
                     <TextBlock Text="Пример" FontSize="13" 
@@ -135,17 +151,11 @@
                 </StackPanel>
             </Grid>
 
-           
-            
-            
-            
-
-
+            <!--Кнопка, открывающая редактирование отношения-->
             <Button Style="{DynamicResource MaterialDesignFlatButton}"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
-                    Foreground="DarkGray"
-                    
+                    Foreground="DarkGray"                 
                     Width="18"
                     Height="18"
                     Padding="1"
@@ -155,14 +165,14 @@
                                          Width="17" 
                                          Height="17"
                                          HorizontalAlignment="Center"
-                                         VerticalAlignment="Center"/>
+                                         VerticalAlignment="Center">
+                </materialDesign:PackIcon>
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <i:InvokeCommandAction Command="{Binding OpenSettingsCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding OpenUpdateRelationWindowCommand}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
-
             </Button>
 
         </Grid>

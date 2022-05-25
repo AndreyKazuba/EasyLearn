@@ -56,7 +56,7 @@
 
             <materialDesign:DrawerHost OpenMode="Standard" materialDesign:ShadowAssist.ShadowDepth="Depth0">
                 <materialDesign:DrawerHost.TopDrawerContent>
-                    <Border Background="GhostWhite" Height="58" BorderBrush="{DynamicResource MainColor}" BorderThickness="0.6 0.6 0 0">
+                    <Border Background="GhostWhite" Height="58" BorderBrush="{DynamicResource MainColor}" BorderThickness="0.6 0 0 0.6">
                         <Grid VerticalAlignment="Stretch">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -65,20 +65,17 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="60"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox Style="{DynamicResource MaterialDesignOutlinedTextBox}"
+                            <TextBox Style="{DynamicResource EasyTextBox}"
                                      Width="245"
+                                     Margin="0"
                                      Grid.Column="1"
                                      Padding="14 11"
-                                     BorderBrush="{DynamicResource MainColor}"
                                      VerticalAlignment="Center"
                                      InputLanguageManager.InputLanguage="ru-RU"
-                                     materialDesign:HintAssist.Hint="Искать">
+                                     materialDesign:HintAssist.Hint="Искать"
+                                     materialDesign:HintAssist.IsFloating="False"
+                                     Text="{Binding SearchStringValue, UpdateSourceTrigger=PropertyChanged}">
 
-                                <!--<TextBox.Text>
-                                    <Binding Path="AddingWindowRussianValue" UpdateSourceTrigger="PropertyChanged">
-                                        
-                                    </Binding>
-                                </TextBox.Text>-->
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
@@ -89,18 +86,17 @@
 
                             </TextBox>
 
-                            <Button Style="{StaticResource MaterialDesignRaisedButton}" Margin="10 0 0 0" Height="38" 
-                                    Foreground="White" Content="Искать" Grid.Column="2"
-                                    Background="{DynamicResource MainColor}"
-                                    BorderBrush="{DynamicResource MainColor}"/>
+                            <Button Style="{StaticResource EasyCommonButton}" Margin="10 0 0 0" Height="38" 
+                                   Grid.Column="2" Command="{Binding SearchCommonRelationsCommand}">
+                                <TextBlock Text="Искать" FontSize="14" FontFamily="Arial"/>
 
-                            <Button Style="{StaticResource MaterialDesignRaisedButton}" Margin="0 0 15 0" Height="38" Width="38"
+                            </Button>
+
+                            <Button Style="{StaticResource EasyCancelButton}" Margin="0 0 15 0" Height="38" Width="38"
                                     Grid.Column="4"
-                                    Background="#ff3333"
-                                    BorderBrush="#ff3333"
                                     Padding="0">
-                                <materialDesign:PackIcon Kind="TrashCanOutline" Height="28" Width="28" Foreground="White"
-                                                     VerticalAlignment="Center"
+                                <materialDesign:PackIcon Kind="TrashCanOutline" Height="28" Width="28"
+                                                     VerticalAlignment="Center" Foreground="{DynamicResource EasyRed}"
                                                      HorizontalAlignment="Center"/>
                             </Button>
                             

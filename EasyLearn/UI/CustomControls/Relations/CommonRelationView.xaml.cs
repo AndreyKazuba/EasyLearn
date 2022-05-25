@@ -13,9 +13,13 @@ namespace EasyLearn.UI.CustomControls
         #region Public props
         public int Id => viewModel.Id;
         public int Order => viewModel.OrderValue;
+        public string RussianValue => viewModel.RussianValue;
+        public string EnglishValue => viewModel.EnglishValue;
         #endregion
 
-        public void UpdateView(CommonRelation commonRelation) => this.viewModel.UpdateVM(commonRelation);
+        public void UpdateView(CommonRelation commonRelation) => this.viewModel.Set(commonRelation);
+        public void Collapse() => this.viewModel.Collapse();
+        public void Show() => this.viewModel.Show();
 
         public CommonRelationView(CommonRelationVM viewModel)
         {

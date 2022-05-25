@@ -28,22 +28,21 @@ namespace EasyLearn.VM.ViewModels.Pages
         #endregion
 
         #region Private fields
-        private bool awExampleInvalid = true;
-        private bool uwExampleInvalid = true;
+        private bool awExampleIsInvalid = true;
+        private bool uwExampleIsInvalid = true;
         private bool topMenuIsOpened = false;
-        private int exampleIdsCount;
-        private int dictionaryId;
+        private int exampleIdCounter;
+        private int pageCurrentDictionaryId;
         private VerbPreposition currentVerbPrepositionForUpdate;
         private Guid verbPrepositionExistValidationRuleId;
         #endregion
 
+        #region Private helper props
         private bool VerbPrepositionExist
         {
-            set
-            {
-                ValidationPool.Set(ValidationRulesGroup.AddVerbPreposition, verbPrepositionExistValidationRuleId, !value);
-            }
+            set => ValidationPool.Set(ValidationRulesGroup.AddVerbPreposition, verbPrepositionExistValidationRuleId, !value);
         }
+        #endregion
 
 #pragma warning disable CS8618
         public EditVerbPrepositionDictionaryPageVM(IVerbPrepositionRepository verbPrepositionRepository, IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository)
@@ -54,8 +53,8 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
 #pragma warning restore CS8618
 
-        #region Props for binding
-        public ObservableCollection<UserControl> VerbPrepositionViews { get; set; }
+        #region Binding props
+        public ObservableCollection<UserControl> VerbPrepositionViews { get; set; } = new ObservableCollection<UserControl>();
         public ObservableCollection<ExampleView> AwExampleViews { get; set; } = new ObservableCollection<ExampleView>();
         public ObservableCollection<ExampleView> UwExampleViews { get; set; } = new ObservableCollection<ExampleView>();
         public string AwVerbValue { get; set; }
@@ -75,9 +74,9 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Events
         protected override void InitEvents()
         {
-            EditVerbPrepositionDictionaryPage.VerbValueTextBoxEnterDown += OnVerbValueTextBoxEnterDown;
-            EditVerbPrepositionDictionaryPage.PrepositionValueTextBoxEnterDown += OnPrepositionValueTextBoxEnterDown;
-            EditVerbPrepositionDictionaryPage.TranslationValueTextBoxEnterDown += OnTranslationValueTextBoxEnterDown;
+            EditVerbPrepositionDictionaryPage.AddingWindowVerbValueTextBoxEnterDown += OnAddingWindowVerbValueTextBoxEnterDown;
+            EditVerbPrepositionDictionaryPage.AddingWindowPrepositionValueTextBoxEnterDown += OnAddingWindowPrepositionValueTextBoxEnterDown;
+            EditVerbPrepositionDictionaryPage.AddingWindowTranslationValueTextBoxEnterDown += OnAddingWindowTranslationValueTextBoxEnterDown;
             EditVerbPrepositionDictionaryPage.AddingWindowExampleRussianValueTextBoxEnterDown += OnAddingWindowExampleRussianValueTextBoxEnterDown;
             EditVerbPrepositionDictionaryPage.AddingWindowExampleEnglishValueTextBoxEnterDown += OnAddingWindowExampleEnglishValueTextBoxEnterDown;
             EditVerbPrepositionDictionaryPage.UpdateWindowExampleRussianValueTextBoxEnterDown += OnUpdateWindowExampleRussianValueTextBoxEnterDown;
@@ -88,17 +87,24 @@ namespace EasyLearn.VM.ViewModels.Pages
             AppWindow.DrawerButtonClick += OnDrawerButtonClick;
             AppWindow.OpenMenuButtonClick += OnOpenMenuButtonClick;
         }
-        private void OnVerbValueTextBoxEnterDown() => FocusPrepositionValueTextBox();
-        private void OnPrepositionValueTextBoxEnterDown() => FocusTranslationValueTextBox();
-        private void OnTranslationValueTextBoxEnterDown()
+        private void OnAddingWindowVerbValueTextBoxEnterDown() => AwFocusPrepositionValueTextBox();
+        private void OnAddingWindowPrepositionValueTextBoxEnterDown() => AwFocusTranslationValueTextBox();
+        private void OnAddingWindowTranslationValueTextBoxEnterDown()
         {
             if (ValidationPool.IsValid(ValidationRulesGroup.AddVerbPreposition))
-                AddingNewVerbPrepositionButtonSoftClick();
+                AwConfirmButtonSoftClick();
         }
-        private void OnUpdateWindowExampleRussianValueTextBoxEnterDown() => UwFocusExampleEnglishValueField();
+        private void OnAddingWindowExampleRussianValueTextBoxEnterDown() => AwFocusExampleEnglishValueTextBox();
+        private void OnAddingWindowExampleEnglishValueTextBoxEnterDown()
+        {
+            if (awExampleIsInvalid)
+                return;
+            AwAddExampleButtonSoftClick();
+        }
+        private void OnUpdateWindowExampleRussianValueTextBoxEnterDown() => UwFocusExampleEnglishValueTextBox();
         private void OnUpdateWindowExampleEnglishValueTextBoxEnterDown()
         {
-            if (this.uwExampleInvalid)
+            if (uwExampleIsInvalid)
                 return;
             UwAddExampleButtonSoftClick();
         }
@@ -106,14 +112,14 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             if (App.GetService<AppWindowVM>().CurrentPage == Page.EditVerbPrepositionListPage)
             {
-                FocusVerbValueTextBox();
-                OpenNewVerbPrepositionAddingWindowButtonSoftClick();
+                AwFocusVerbValueTextBox();
+                AwOpenWindowButtonSoftClick();
             }
         }
         private void OnWindowEscDown()
         {
             if (App.GetService<AppWindowVM>().CurrentPage == Page.EditVerbPrepositionListPage)
-                NewVerbPrepositionAddingWindowCancelButtonSoftClick();
+                AwCancelButtonSoftClick();
         }
         private void OnGoBackButtonClick()
         {
@@ -121,23 +127,16 @@ namespace EasyLearn.VM.ViewModels.Pages
             GoBack();
         }
         private void OnDrawerButtonClick() => App.GetService<AppWindowVM>().HideGoBackButtonCommand.Execute();
-        private void OnAddingWindowExampleRussianValueTextBoxEnterDown() => FocusExampleEnglishValueField();
-        private void OnAddingWindowExampleEnglishValueTextBoxEnterDown()
-        {
-            if (this.awExampleInvalid)
-                return;
-            AddExampleButtonSoftClick();
-        }
         private void OnOpenMenuButtonClick()
         {
             if (topMenuIsOpened)
             {
-                CloseMenuButtonSoftClick();
+                CloseTopMenuButtonSoftClick();
                 topMenuIsOpened = false;
             }
             else
             {
-                OpenMenuButtonSoftClick();
+                OpenTopMenuButtonSoftClick();
                 topMenuIsOpened = true;
             }
         }
@@ -145,87 +144,82 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         #region Commands 
         public Command GoBackCommand { get; private set; }
+        public Command<int> SetDictionaryCommand { get; private set; }
         public Command CreateVerbPrepositionCommand { get; private set; }
-        public Command<int> SetDictionaryAsCurrentCommand { get; private set; }
-        public Command<int> RemoveExampleViewCommand { get; private set; }
-        public Command CheckVerbPrepositionForExistingCommand { get; private set; }
-        public Command AwUpdateConfirmButtonAvailabilityCommand { get; private set; }
-        public Command AwClearCommand { get; private set; }
+        public Command UpdateVerbPrepositionCommand { get; private set; }
+
+
         public Command AwOpenWindowCommand { get; private set; }
+        public Command AwClearCommand { get; private set; }
+        public Command AwUpdateConfirmButtonAvailabilityCommand { get; private set; }
+        public Command AwCheckVerbPrepositionForExistingCommand { get; private set; }
+
         public Command AwAddExampleViewCommand { get; private set; }
         public Command AwClearExampleSectionCommand { get; private set; }
-        public Command AwFocusExampleRussianValueFieldCommand { get; private set; }
         public Command AwValidateExampleSectionCommand { get; private set; }
-        public Command AwCheckExampleFieldsMaxLengthVisibilityCommand { get; private set; }
+        public Command AwFocusExampleRussianValueTextBoxCommand { get; private set; }
+        public Command AwCheckExampleTextBoxesMaxLengthVisibilityCommand { get; private set; }
+
         public Command<int> UwOpenWindowCommand { get; private set; }
-        public Command UwAddExampleViewCommand { get; private set; }
         public Command UwClearCommand { get; private set; }
         public Command UwUpdateConfirmButtonAvailabilityCommand { get; private set; }
-        public Command UwClearExampleAddingSectionCommand { get; private set; }
-        public Command UwFocusExampleRussianValueFieldCommand { get; private set; }
+
+        public Command UwAddExampleViewCommand { get; private set; }
+        public Command UwClearExampleSectionCommand { get; private set; }
         public Command UwValidateExampleSectionCommand { get; private set; }
+        public Command UwFocusExampleRussianValueFieldCommand { get; private set; }
         public Command UwCheckExampleFieldsMaxLengthVisibilityCommand { get; private set; }
-        public Command UpdateVerbPrepositionCommand { get; private set; }
+
+        public Command<int> RemoveExampleViewCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.GoBackCommand = new Command(GoBack);
-            this.CreateVerbPrepositionCommand = new Command(async () => await CreateVerbPreposition());
-            this.AwClearCommand = new Command(AwClear);
-            this.SetDictionaryAsCurrentCommand = new Command<int>(async verbPrepositionDictionaryId => await SetDictionaryAsCurrent(verbPrepositionDictionaryId));
-            this.CheckVerbPrepositionForExistingCommand = new Command(CheckVerbPrepositionForExisting);
-            this.AwUpdateConfirmButtonAvailabilityCommand = new Command(AwUpdateConfirmButtonAvailability);
-            this.AwOpenWindowCommand = new Command(AwOpenWindow);
-            this.AwAddExampleViewCommand = new Command(AwAddExampleView);
-            this.RemoveExampleViewCommand = new Command<int>(RemoveExampleView);
-            this.AwClearExampleSectionCommand = new Command(AwClearExampleSection);
-            this.AwFocusExampleRussianValueFieldCommand = new Command(AwFocusExampleRussianValueField);
-            this.AwValidateExampleSectionCommand = new Command(AwValidateExampleSection);
-            this.AwCheckExampleFieldsMaxLengthVisibilityCommand = new Command(AwCheckExampleFieldsMaxLengthVisibility);
-            this.UwOpenWindowCommand = new Command<int>(UwOpenWindow);
-            this.UpdateVerbPrepositionCommand = new Command(async () => await UpdateVerbPreposition());
-            this.UwAddExampleViewCommand = new Command(UwAddExampleView);
-            this.UwClearCommand = new Command(UwClear);
-            this.UwUpdateConfirmButtonAvailabilityCommand = new Command(UwUpdateConfirmButtonAvailability);
-            this.UwClearExampleAddingSectionCommand = new Command(UwClearExampleAddingSection);
-            this.UwFocusExampleRussianValueFieldCommand = new Command(UwFocusExampleRussianValueField);
-            this.UwValidateExampleSectionCommand = new Command(UwValidateExampleSection);
-            this.UwCheckExampleFieldsMaxLengthVisibilityCommand = new Command(UwCheckExampleFieldsMaxLengthVisibility);
-        }
-        #endregion
+            GoBackCommand = new Command(GoBack);
+            SetDictionaryCommand = new Command<int>(async verbPrepositionDictionaryId => await SetDictionary(verbPrepositionDictionaryId));
+            CreateVerbPrepositionCommand = new Command(async () => await CreateVerbPreposition());
+            UpdateVerbPrepositionCommand = new Command(async () => await UpdateVerbPreposition());
 
-        #region Command logic methods
+            AwOpenWindowCommand = new Command(AwOpenWindow);
+            AwClearCommand = new Command(AwClear);
+            AwUpdateConfirmButtonAvailabilityCommand = new Command(AwUpdateConfirmButtonAvailability);
+            AwCheckVerbPrepositionForExistingCommand = new Command(AwCheckVerbPrepositionForExisting);
+
+            AwAddExampleViewCommand = new Command(AwAddExampleView);
+            AwClearExampleSectionCommand = new Command(AwClearExampleSection);
+            AwValidateExampleSectionCommand = new Command(AwValidateExampleSection);
+            AwFocusExampleRussianValueTextBoxCommand = new Command(AwFocusExampleRussianValueTextBox);
+            AwCheckExampleTextBoxesMaxLengthVisibilityCommand = new Command(AwCheckExampleTextBoxesMaxLengthVisibility);
+
+            UwOpenWindowCommand = new Command<int>(UwOpenWindow);
+            UwClearCommand = new Command(UwClear);
+            UwUpdateConfirmButtonAvailabilityCommand = new Command(UwUpdateConfirmButtonAvailability);
+
+            UwAddExampleViewCommand = new Command(UwAddExampleView);
+            UwClearExampleSectionCommand = new Command(UwClearExampleSection);
+            UwValidateExampleSectionCommand = new Command(UwValidateExampleSection);
+            UwFocusExampleRussianValueFieldCommand = new Command(UwFocusExampleRussianValueField);
+            UwCheckExampleFieldsMaxLengthVisibilityCommand = new Command(UwCheckExampleFieldsMaxLengthVisibility);
+
+            RemoveExampleViewCommand = new Command<int>(RemoveExampleView);
+        }
         private void GoBack() => App.GetService<AppWindowVM>().OpenDictionariesPageCommand.Execute();
+        private async Task SetDictionary(int verbPrepositionDictionaryId)
+        {
+            VerbPrepositionDictionnary verbPrepositionDictionary = await verbPrepositionDictionaryRepository.GetVerbPrepositionDictionaryAsync(verbPrepositionDictionaryId);
+            this.pageCurrentDictionaryId = verbPrepositionDictionaryId;
+            VerbPrepositionViews.Clear();
+            AddShadowVerbPrepositionViewToUI();
+            AddVerbPrepositionViewsToUIKeepingOrder(CreateOrderedVerbPrepositionViews(verbPrepositionDictionary.VerbPrepositions));
+        }
         private async Task CreateVerbPreposition()
         {
-            string prepositionValue = this.AwPrepositionValue;
-            string verbValue = this.AwVerbValue;
-            string translation = this.AwTranslationValue;
-            int verbPrepositionDictionaryId = this.dictionaryId;
-            string? firstExampleRussianValue = null;
-            string? firstExampleEnglishValue = null;
-            string? secondExampleRussianValue = null;
-            string? secondExampleEnglishValue = null;
-
-            // remove 
-            bool firstExampleExist = false;
-            bool secondExampleExist = false;
-
-            if (this.AwExampleViews.Count > 0)
-                firstExampleExist = true;
-            if (this.AwExampleViews.Count > 1)
-                secondExampleExist = true;
-
-            if (firstExampleExist)
-            {
-                firstExampleRussianValue = this.AwExampleViews.ToArray()[0].RussianValue;
-                firstExampleEnglishValue = this.AwExampleViews.ToArray()[0].EnglishValue;
-            }
-            if (secondExampleExist)
-            {
-                secondExampleRussianValue = this.AwExampleViews.ToArray()[1].RussianValue;
-                secondExampleEnglishValue = this.AwExampleViews.ToArray()[1].EnglishValue;
-            }
-            //
+            string prepositionValue = AwPrepositionValue;
+            string verbValue = AwVerbValue;
+            string translation = AwTranslationValue;
+            string? firstExampleRussianValue = AwGetFirstExampleRussianValue();
+            string? firstExampleEnglishValue = AwGetFirstExampleEnglishValue();
+            string? secondExampleRussianValue = AwGetSecondExampleRussianValue();
+            string? secondExampleEnglishValue = AwGetSecondExampleEnglishValue();
+            int verbPrepositionDictionaryId = this.pageCurrentDictionaryId;
             VerbPreposition newVerbPreposition = await verbPrepositionRepository.CreateVerbPreposition(
                 verbValue,
                 prepositionValue,
@@ -235,166 +229,16 @@ namespace EasyLearn.VM.ViewModels.Pages
                 firstExampleEnglishValue,
                 secondExampleRussianValue,
                 secondExampleEnglishValue);
-            AddVerbPrepositionToUI(newVerbPreposition);
-        }
-        private void AwClear()
-        {
-            this.AwVerbValue = String.Empty;
-            this.AwPrepositionValue = String.Empty;
-            this.AwTranslationValue = String.Empty;
-            this.AwExampleViews.Clear();
-            this.AwAddExampleButtonIsEnabled = false;
-        }
-        private async Task SetDictionaryAsCurrent(int verbPrepositionDictionaryId)
-        {
-            VerbPrepositionDictionnary verbPrepositionDictionary = await verbPrepositionDictionaryRepository.GetVerbPrepositionDictionaryAsync(verbPrepositionDictionaryId);
-            this.dictionaryId = verbPrepositionDictionaryId;
-            IEnumerable<VerbPrepositionView> verbPrepositionViews = verbPrepositionDictionary.VerbPrepositions
-                .Select(verbPreposition => VerbPrepositionView.Create(verbPreposition))
-                .OrderBy(verbPrepositiinView => verbPrepositiinView.Order);
-            this.VerbPrepositionViews = new ObservableCollection<UserControl>();
-            AddShadowVerbPreposition();
-            foreach (VerbPrepositionView verbPrepositionView in verbPrepositionViews)
-                this.VerbPrepositionViews.Add(verbPrepositionView);
-        }
-        private void CheckVerbPrepositionForExisting()
-        {
-            string verbValue = this.AwVerbValue;
-            string prepositionValue = this.AwPrepositionValue;
-            this.VerbPrepositionExist = this.verbPrepositionRepository.IsVerbPrepositionExist(verbValue, prepositionValue, dictionaryId);
-        }
-        private void AwUpdateConfirmButtonAvailability() => AwConfirmButtonIsEnabled = ValidationPool.IsValid(ValidationRulesGroup.AddVerbPreposition);
-        private void AwOpenWindow() => OpenNewVerbPrepositionAddingWindowButtonSoftClick();
-        private void AwAddExampleView()
-        {
-            if (this.awExampleInvalid)
-                return;
-            this.AwExampleViews.Add(ExampleView.Create(this.AwExampleRussianValue, this.AwExampleEnglishValue, ++exampleIdsCount, true));
-        }
-        private void RemoveExampleView(int exampleId)
-        {
-            ExampleView? awExampleView = AwTryFindExampleView(exampleId);
-            ExampleView? uwExampleView = UwTryFindExampleView(exampleId);
-            if (awExampleView is not null)
-                this.AwExampleViews.Remove(awExampleView);
-            if (uwExampleView is not null)
-                this.UwExampleViews.Remove(uwExampleView);
-            AwValidateExampleSection();
-            UwValidateExampleSection();
-        }
-        private void AwClearExampleSection()
-        {
-            this.AwExampleRussianValue = String.Empty;
-            this.AwExampleEnglishValue = String.Empty;
-        }
-        private void AwFocusExampleRussianValueField() => App.GetService<EditVerbPrepositionDictionaryPage>().awExampleRussianValueField.Focus();
-        private void UwFocusExampleRussianValueField() => App.GetService<EditVerbPrepositionDictionaryPage>().uwExampleRussianValueField.Focus();
-        private void AwValidateExampleSection()
-        {
-            bool empty = String.IsNullOrWhiteSpace(this.AwExampleEnglishValue) || String.IsNullOrWhiteSpace(this.AwExampleRussianValue);
-
-            if (empty)
-            {
-                this.awExampleInvalid = true;
-                this.AwAddExampleButtonIsEnabled = false;
-                return;
-            }
-            this.awExampleInvalid = false;
-            this.AwAddExampleButtonIsEnabled = true;
-        }
-        private void AwCheckExampleFieldsMaxLengthVisibility()
-        {
-            bool inRange = (!String.IsNullOrWhiteSpace(this.AwExampleEnglishValue) && this.AwExampleEnglishValue.Length > 20)
-                        || (!String.IsNullOrWhiteSpace(this.AwExampleRussianValue) && this.AwExampleRussianValue.Length > 20);
-            if (inRange)
-                AwShowExampleFieldsMaxLength();
-            else
-                AwHideExampleFieldsMaxLength();
-        }
-        private void UwOpenWindow(int verbPrepositionId)
-        {
-            VerbPreposition verbPreposition = verbPrepositionRepository.GetVerbPreposition(verbPrepositionId);
-            this.currentVerbPrepositionForUpdate = verbPreposition;
-            this.UwTranslationValue = StringHelper.EmptyIfNull(verbPreposition.Translation);
-            UwExampleViews.Clear();
-            if (verbPreposition.IsFirstExampleExist)
-                this.UwExampleViews.Add(ExampleView.Create(verbPreposition.FirstExampleRussianValue.EmptyIfNull(), verbPreposition.FirstExampleEnglishValue.EmptyIfNull(), ++exampleIdsCount, true));
-            if (verbPreposition.IsSecondExampleExist)
-                this.UwExampleViews.Add(ExampleView.Create(verbPreposition.SecondExampleRussianValue.EmptyIfNull(), verbPreposition.SecondExampleEnglishValue.EmptyIfNull(), ++exampleIdsCount, true));
-            OpenVerbPrepositionSettingsWindowButtonSoftClick();
-        }
-        private void UwAddExampleView()
-        {
-            if (this.uwExampleInvalid || this.UwExampleViews.Count >= ModelConstants.MaxExamplesCount)
-                return;
-            this.UwExampleViews.Add(ExampleView.Create(this.UwExampleRussianValue, this.UwExampleEnglishValue, ++exampleIdsCount, false));
-        }
-        private void UwClear()
-        {
-            this.UwTranslationValue = String.Empty;
-            this.UwExampleRussianValue = String.Empty;
-            this.UwExampleEnglishValue = String.Empty;
-            this.UwExampleViews.Clear();
-            this.UwAddExampleButtonIsEnabled = false;
-        }
-        private void UwUpdateConfirmButtonAvailability() => UwConfirmButtonIsEnabled = ValidationPool.IsValid(ValidationRulesGroup.UpdateVerbPrepsotion);
-        private void UwClearExampleAddingSection()
-        {
-            this.UwExampleRussianValue = String.Empty;
-            this.UwExampleEnglishValue = String.Empty;
-        }
-        private void UwValidateExampleSection()
-        {
-            bool empty = String.IsNullOrWhiteSpace(this.UwExampleEnglishValue) || String.IsNullOrWhiteSpace(this.UwExampleRussianValue);
-
-            if (empty || this.UwExampleViews.Count >= ModelConstants.MaxExamplesCount)
-            {
-                this.uwExampleInvalid = true;
-                this.UwAddExampleButtonIsEnabled = false;
-                return;
-            }
-            this.uwExampleInvalid = false;
-            this.UwAddExampleButtonIsEnabled = true;
-        }
-        private void UwCheckExampleFieldsMaxLengthVisibility()
-        {
-            bool inRange = (!String.IsNullOrWhiteSpace(this.UwExampleEnglishValue) && this.UwExampleEnglishValue.Length > 20)
-                        || (!String.IsNullOrWhiteSpace(this.UwExampleRussianValue) && this.UwExampleRussianValue.Length > 20);
-            if (inRange)
-                UwShowExampleFieldsMaxLength();
-            else
-                UwHideExampleFieldsMaxLength();
+            AddVerbPrepositionViewToUI(newVerbPreposition);
         }
         private async Task UpdateVerbPreposition()
         {
             int id = currentVerbPrepositionForUpdate.Id;
-            string translation = this.UwTranslationValue;
-            string? firstExampleRussianValue = null;
-            string? firstExampleEnglishValue = null;
-            string? secondExampleRussianValue = null;
-            string? secondExampleEnglishValue = null;
-
-            // remove 
-            bool firstExampleExist = false;
-            bool secondExampleExist = false;
-
-            if (this.UwExampleViews.Count > 0)
-                firstExampleExist = true;
-            if (this.UwExampleViews.Count > 1)
-                secondExampleExist = true;
-
-            if (firstExampleExist)
-            {
-                firstExampleRussianValue = this.UwExampleViews.ToArray()[0].RussianValue;
-                firstExampleEnglishValue = this.UwExampleViews.ToArray()[0].EnglishValue;
-            }
-            if (secondExampleExist)
-            {
-                secondExampleRussianValue = this.UwExampleViews.ToArray()[1].RussianValue;
-                secondExampleEnglishValue = this.UwExampleViews.ToArray()[1].EnglishValue;
-            }
-            //
-
+            string translation = UwTranslationValue;
+            string? firstExampleRussianValue = UwGetFirstExampleRussianValue();
+            string? firstExampleEnglishValue = UwGetFirstExampleEnglishValue();
+            string? secondExampleRussianValue = UwGetSecondExampleRussianValue();
+            string? secondExampleEnglishValue = UwGetSecondExampleEnglishValue();
             VerbPreposition updatedVerbPreposition = await verbPrepositionRepository.UpdateVerbPreposition(
                 id,
                 translation,
@@ -402,78 +246,233 @@ namespace EasyLearn.VM.ViewModels.Pages
                 firstExampleEnglishValue,
                 secondExampleRussianValue,
                 secondExampleEnglishValue);
-            UpdateVerbPrepositionOnUI(updatedVerbPreposition);
+            UpdateVerbPrepositionViewOnUI(updatedVerbPreposition);
+        }
+        private void AwOpenWindow() => AwOpenWindowButtonSoftClick();
+        private void AwClear()
+        {
+            this.AwVerbValue = string.Empty;
+            this.AwPrepositionValue = string.Empty;
+            this.AwTranslationValue = string.Empty;
+            this.AwExampleViews.Clear();
+            this.AwAddExampleButtonIsEnabled = false;
+        }
+        private void AwUpdateConfirmButtonAvailability() => AwConfirmButtonIsEnabled = ValidationPool.IsValid(ValidationRulesGroup.AddVerbPreposition);
+        private void AwCheckVerbPrepositionForExisting()
+        {
+            string verbValue = AwVerbValue;
+            string prepositionValue = AwPrepositionValue;
+            VerbPrepositionExist = this.verbPrepositionRepository.IsVerbPrepositionExist(verbValue, prepositionValue, pageCurrentDictionaryId);
+        }
+        private void AwAddExampleView()
+        {
+            if (awExampleIsInvalid)
+                return;
+            AwExampleViews.Add(ExampleView.Create(AwExampleRussianValue, AwExampleEnglishValue, ++exampleIdCounter, true));
+        }
+        private void AwClearExampleSection()
+        {
+            AwExampleRussianValue = string.Empty;
+            AwExampleEnglishValue = string.Empty;
+        }
+        private void AwValidateExampleSection()
+        {
+            bool anyTextBoxIsEmpty = string.IsNullOrWhiteSpace(AwExampleEnglishValue) || string.IsNullOrWhiteSpace(AwExampleRussianValue);
+            if (anyTextBoxIsEmpty || AwExampleViews.Count >= ModelConstants.MaxExamplesCount)
+            {
+                this.awExampleIsInvalid = true;
+                AwAddExampleButtonIsEnabled = false;
+            }
+            else
+            {
+                this.awExampleIsInvalid = false;
+                AwAddExampleButtonIsEnabled = true;
+            }
+        }
+        private void AwFocusExampleRussianValueTextBox() => App.GetService<EditVerbPrepositionDictionaryPage>().awExampleRussianValueTextBox.Focus();
+        private void AwCheckExampleTextBoxesMaxLengthVisibility()
+        {
+            bool anyTextBoxIsInRange = (!string.IsNullOrWhiteSpace(AwExampleEnglishValue) && AwExampleEnglishValue.Length > 20)
+                                    || (!string.IsNullOrWhiteSpace(AwExampleRussianValue) && AwExampleRussianValue.Length > 20);
+            if (anyTextBoxIsInRange)
+                AwShowExampleTextBoxesMaxLength();
+            else
+                AwHideExampleTextBoxesMaxLength();
+        }
+        private void UwOpenWindow(int verbPrepositionId)
+        {
+            VerbPreposition verbPreposition = verbPrepositionRepository.GetVerbPreposition(verbPrepositionId);
+            SetVerbPrepositionForUpdating(verbPreposition);
+            UwOpenWindowButtonSoftClick();
+        }
+        private void UwClear()
+        {
+            this.UwTranslationValue = string.Empty;
+            this.UwExampleRussianValue = string.Empty;
+            this.UwExampleEnglishValue = string.Empty;
+            this.UwExampleViews.Clear();
+            this.UwAddExampleButtonIsEnabled = false;
+        }
+        private void UwUpdateConfirmButtonAvailability() => UwConfirmButtonIsEnabled = ValidationPool.IsValid(ValidationRulesGroup.UpdateVerbPrepsotion);
+        private void UwAddExampleView()
+        {
+            if (uwExampleIsInvalid || UwExampleViews.Count >= ModelConstants.MaxExamplesCount)
+                return;
+            UwExampleViews.Add(ExampleView.Create(UwExampleRussianValue, UwExampleEnglishValue, ++exampleIdCounter, false));
+        }
+        private void UwClearExampleSection()
+        {
+            UwExampleRussianValue = string.Empty;
+            UwExampleEnglishValue = string.Empty;
+        }
+        private void UwValidateExampleSection()
+        {
+            bool anyTextBoxIsEmpty = string.IsNullOrWhiteSpace(UwExampleEnglishValue) || string.IsNullOrWhiteSpace(UwExampleRussianValue);
+            if (anyTextBoxIsEmpty || UwExampleViews.Count >= ModelConstants.MaxExamplesCount)
+            {
+                this.uwExampleIsInvalid = true;
+                UwAddExampleButtonIsEnabled = false;
+            }
+            else
+            {
+                this.uwExampleIsInvalid = false;
+                UwAddExampleButtonIsEnabled = true;
+            }
+        }
+        private void UwCheckExampleFieldsMaxLengthVisibility()
+        {
+            bool anyTextBoxIsInRange = (!string.IsNullOrWhiteSpace(UwExampleEnglishValue) && UwExampleEnglishValue.Length > 20)
+                                    || (!string.IsNullOrWhiteSpace(UwExampleRussianValue) && UwExampleRussianValue.Length > 20);
+            if (anyTextBoxIsInRange)
+                UwShowExampleTextBoxesMaxLength();
+            else
+                UwHideExampleTextBoxesMaxLength();
+        }
+        private void RemoveExampleView(int exampleId)
+        {
+            ExampleView? awExampleView = AwTryFindExampleView(exampleId);
+            ExampleView? uwExampleView = UwTryFindExampleView(exampleId);
+            if (awExampleView is not null)
+                AwExampleViews.Remove(awExampleView);
+            if (uwExampleView is not null)
+                UwExampleViews.Remove(uwExampleView);
+            AwValidateExampleSection();
+            UwValidateExampleSection();
         }
         #endregion
 
-        #region Other private methods
-        private void AwShowExampleFieldsMaxLength()
+        #region Page halpers
+        private IEnumerable<VerbPrepositionView> CreateOrderedVerbPrepositionViews(IEnumerable<VerbPreposition> verbPrepositions)
         {
-            TextBox awExampleRussianValueField = App.GetService<EditVerbPrepositionDictionaryPage>().awExampleRussianValueField;
-            TextBox awExampleEnglishValueField = App.GetService<EditVerbPrepositionDictionaryPage>().awExampleEnglishValueField;
-            awExampleRussianValueField.MaxLength = ModelConstants.ExampleValueMaxLength;
-            awExampleEnglishValueField.MaxLength = ModelConstants.ExampleValueMaxLength;
-            awExampleRussianValueField.Margin = new Thickness(0, 0, 7, 7);
-            awExampleEnglishValueField.Margin = new Thickness(7, 0, 0, 7);
+            return verbPrepositions
+                .Select(verbPreposition => VerbPrepositionView.Create(verbPreposition))
+                .OrderBy(verbPrepositiinView => verbPrepositiinView.Order);
         }
-        private void AwHideExampleFieldsMaxLength()
+        #endregion
+
+        #region Adding window helpers
+        private string? AwGetFirstExampleRussianValue() => AwExampleViews.Count == 0 ? null : AwExampleViews.ToArray()[0].RussianValue;
+        private string? AwGetFirstExampleEnglishValue() => AwExampleViews.Count == 0 ? null : AwExampleViews.ToArray()[0].EnglishValue;
+        private string? AwGetSecondExampleRussianValue() => AwExampleViews.Count < 2 ? null : AwExampleViews.ToArray()[0].RussianValue;
+        private string? AwGetSecondExampleEnglishValue() => AwExampleViews.Count < 2 ? null : AwExampleViews.ToArray()[0].RussianValue;
+        #endregion
+
+        #region Update window helpers
+        private string? UwGetFirstExampleRussianValue() => UwExampleViews.Count == 0 ? null : UwExampleViews.ToArray()[0].RussianValue;
+        private string? UwGetFirstExampleEnglishValue() => UwExampleViews.Count == 0 ? null : UwExampleViews.ToArray()[0].EnglishValue;
+        private string? UwGetSecondExampleRussianValue() => UwExampleViews.Count < 2 ? null : UwExampleViews.ToArray()[0].RussianValue;
+        private string? UwGetSecondExampleEnglishValue() => UwExampleViews.Count < 2 ? null : UwExampleViews.ToArray()[0].RussianValue;
+        #endregion
+
+        #region VerbPrepositions UI methods
+        private void AddVerbPrepositionViewsToUIKeepingOrder(IEnumerable<VerbPrepositionView> verbPrepositionViews)
         {
-            TextBox awExampleRussianValueField = App.GetService<EditVerbPrepositionDictionaryPage>().awExampleRussianValueField;
-            TextBox awExampleEnglishValueField = App.GetService<EditVerbPrepositionDictionaryPage>().awExampleEnglishValueField;
-            awExampleRussianValueField.MaxLength = 0;
-            awExampleEnglishValueField.MaxLength = 0;
-            awExampleRussianValueField.Margin = new Thickness(0, 0, 7, 0);
-            awExampleEnglishValueField.Margin = new Thickness(7, 0, 0, 0);
+            foreach (VerbPrepositionView verbPrepositionView in verbPrepositionViews)
+                VerbPrepositionViews.Add(verbPrepositionView);
         }
-        private void UwShowExampleFieldsMaxLength()
+        private void AddShadowVerbPrepositionViewToUI() => VerbPrepositionViews.Add(ShadowVerbPrepositionView.Create());
+        private void AddVerbPrepositionViewToUI(VerbPreposition verbPreposition) => VerbPrepositionViews.Add(VerbPrepositionView.Create(verbPreposition));
+        private void UpdateVerbPrepositionViewOnUI(VerbPreposition updatedVerbPreposition)
         {
-            TextBox awExampleRussianValueField = App.GetService<EditVerbPrepositionDictionaryPage>().uwExampleRussianValueField;
-            TextBox awExampleEnglishValueField = App.GetService<EditVerbPrepositionDictionaryPage>().uwExampleEnglishValueField;
-            awExampleRussianValueField.MaxLength = ModelConstants.ExampleValueMaxLength;
-            awExampleEnglishValueField.MaxLength = ModelConstants.ExampleValueMaxLength;
-            awExampleRussianValueField.Margin = new Thickness(0, 0, 7, 7);
-            awExampleEnglishValueField.Margin = new Thickness(7, 0, 0, 7);
-        }
-        private void UwHideExampleFieldsMaxLength()
-        {
-            TextBox awExampleRussianValueField = App.GetService<EditVerbPrepositionDictionaryPage>().uwExampleRussianValueField;
-            TextBox awExampleEnglishValueField = App.GetService<EditVerbPrepositionDictionaryPage>().uwExampleEnglishValueField;
-            awExampleRussianValueField.MaxLength = 0;
-            awExampleEnglishValueField.MaxLength = 0;
-            awExampleRussianValueField.Margin = new Thickness(0, 0, 7, 0);
-            awExampleEnglishValueField.Margin = new Thickness(7, 0, 0, 0);
-        }
-        //private ExampleView FindExampleView(int exampleId) => this.AwExampleViews.First(exampleView => exampleView.Id == exampleId);
-        private ExampleView? AwTryFindExampleView(int exampleId) => this.AwExampleViews.FirstOrDefault(exampleView => exampleView.Id == exampleId);
-        private ExampleView? UwTryFindExampleView(int exampleId) => this.UwExampleViews.FirstOrDefault(exampleView => exampleView.Id == exampleId);
-        private void AddShadowVerbPreposition() => this.VerbPrepositionViews.Add(ShadowVerbPrepositionView.Create());
-        private void AddVerbPrepositionToUI(VerbPreposition verbPreposition) => this.VerbPrepositionViews.Add(VerbPrepositionView.Create(verbPreposition));
-        private void UpdateVerbPrepositionOnUI(VerbPreposition updatedVerbPreposition)
-        {
-            VerbPrepositionView verbPrepositionView = FindVerbPrepositionView(updatedVerbPreposition.Id);
+            VerbPrepositionView verbPrepositionView = FindVerbPrepositionViewOnUI(updatedVerbPreposition.Id);
             verbPrepositionView.UpdateView(updatedVerbPreposition);
         }
-        private VerbPrepositionView FindVerbPrepositionView(int verbPrepositionId) => (VerbPrepositionView)this.VerbPrepositionViews.First(verbPrepositionView =>
+        private VerbPrepositionView FindVerbPrepositionViewOnUI(int verbPrepositionId) => (VerbPrepositionView)VerbPrepositionViews.First(userControl =>
         {
-            VerbPrepositionView? vpView = verbPrepositionView as VerbPrepositionView;
-            if (vpView is null)
-                return false;
-            else
-                return ((VerbPrepositionView)verbPrepositionView).Id == verbPrepositionId;
+            VerbPrepositionView? verbPrepositionView = userControl as VerbPrepositionView;
+            return verbPrepositionView is null ? false : verbPrepositionView.Id == verbPrepositionId;
         });
-        private void FocusVerbValueTextBox() => App.GetService<EditVerbPrepositionDictionaryPage>().newVerbPrepositionVerbValueTextBox.Focus();
-        private void FocusPrepositionValueTextBox() => App.GetService<EditVerbPrepositionDictionaryPage>().newVerbPrepositionPrepositionValueTextBox.Focus();
-        private void FocusTranslationValueTextBox() => App.GetService<EditVerbPrepositionDictionaryPage>().newVerbPrepositionTranslationValueTextBox.Focus();
-        private void AddingNewVerbPrepositionButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().newVerbPrepositionAddingButton.SoftClick();
-        private void OpenNewVerbPrepositionAddingWindowButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().openNewVerbPrepositionAddingWindowButton.SoftClick();
-        private void FocusExampleEnglishValueField() => App.GetService<EditVerbPrepositionDictionaryPage>().awExampleEnglishValueField.Focus();
-        private void AddExampleButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().addExampleButton.SoftClick();
-        private void NewVerbPrepositionAddingWindowCancelButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().newVerbPrepositionAddingWindowCancelButton.SoftClick();
-        private void OpenMenuButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().openMenuButton.SoftClick();
-        private void CloseMenuButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().closeMenuButton.SoftClick();
-        private void OpenVerbPrepositionSettingsWindowButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().openVerbPrepositionSettingsWindowButton.SoftClick();
-        private void UwFocusExampleEnglishValueField() => App.GetService<EditVerbPrepositionDictionaryPage>().uwExampleEnglishValueField.Focus();
+        #endregion
+
+        #region Top menu UI methods
+        private void OpenTopMenuButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().openTopMenuButton.SoftClick();
+        private void CloseTopMenuButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().closeTopMenuButton.SoftClick();
+        #endregion
+
+        #region Adding window UI methods
+        private ExampleView? AwTryFindExampleView(int exampleId) => AwExampleViews.FirstOrDefault(exampleView => exampleView.Id == exampleId);
+        private void AwOpenWindowButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().awOpenWindowButton.SoftClick();
+        private void AwAddExampleButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().awAddExampleButton.SoftClick();
+        private void AwCancelButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().awCancelButton.SoftClick();
+        private void AwConfirmButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().awConfirmButton.SoftClick();
+        private void AwFocusExampleEnglishValueTextBox() => App.GetService<EditVerbPrepositionDictionaryPage>().awExampleEnglishValueTextBox.Focus();
+        private void AwFocusTranslationValueTextBox() => App.GetService<EditVerbPrepositionDictionaryPage>().awTranslationValueTextBox.Focus();
+        private void AwFocusVerbValueTextBox() => App.GetService<EditVerbPrepositionDictionaryPage>().awVerbValueTextBox.Focus();
+        private void AwFocusPrepositionValueTextBox() => App.GetService<EditVerbPrepositionDictionaryPage>().awPrepositionValueTextBox.Focus();
+        private void AwShowExampleTextBoxesMaxLength()
+        {
+            TextBox awExampleRussianValueTextBox = App.GetService<EditVerbPrepositionDictionaryPage>().awExampleRussianValueTextBox;
+            TextBox awExampleEnglishValueTextBox = App.GetService<EditVerbPrepositionDictionaryPage>().awExampleEnglishValueTextBox;
+            awExampleRussianValueTextBox.MaxLength = ModelConstants.ExampleValueMaxLength;
+            awExampleEnglishValueTextBox.MaxLength = ModelConstants.ExampleValueMaxLength;
+            awExampleRussianValueTextBox.Margin = new Thickness(0, 0, 7, 7);
+            awExampleEnglishValueTextBox.Margin = new Thickness(7, 0, 0, 7);
+        }
+        private void AwHideExampleTextBoxesMaxLength()
+        {
+            TextBox awExampleRussianValueTextBox = App.GetService<EditVerbPrepositionDictionaryPage>().awExampleRussianValueTextBox;
+            TextBox awExampleEnglishValueTextBox = App.GetService<EditVerbPrepositionDictionaryPage>().awExampleEnglishValueTextBox;
+            awExampleRussianValueTextBox.MaxLength = 0;
+            awExampleEnglishValueTextBox.MaxLength = 0;
+            awExampleRussianValueTextBox.Margin = new Thickness(0, 0, 7, 0);
+            awExampleEnglishValueTextBox.Margin = new Thickness(7, 0, 0, 0);
+        }
+        #endregion
+
+        #region Update window UI methods
+        private ExampleView? UwTryFindExampleView(int exampleId) => UwExampleViews.FirstOrDefault(exampleView => exampleView.Id == exampleId);
+        private void UwOpenWindowButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().uwOpenWindowButton.SoftClick();
         private void UwAddExampleButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().uwAddExampleButton.SoftClick();
+        private void UwFocusExampleEnglishValueTextBox() => App.GetService<EditVerbPrepositionDictionaryPage>().uwExampleEnglishValueTextBox.Focus();
+        private void UwFocusExampleRussianValueField() => App.GetService<EditVerbPrepositionDictionaryPage>().uwExampleRussianValueTextBox.Focus();
+        private void UwShowExampleTextBoxesMaxLength()
+        {
+            TextBox awExampleRussianValueTextBox = App.GetService<EditVerbPrepositionDictionaryPage>().uwExampleRussianValueTextBox;
+            TextBox awExampleEnglishValueTextBox = App.GetService<EditVerbPrepositionDictionaryPage>().uwExampleEnglishValueTextBox;
+            awExampleRussianValueTextBox.MaxLength = ModelConstants.ExampleValueMaxLength;
+            awExampleEnglishValueTextBox.MaxLength = ModelConstants.ExampleValueMaxLength;
+            awExampleRussianValueTextBox.Margin = new Thickness(0, 0, 7, 7);
+            awExampleEnglishValueTextBox.Margin = new Thickness(7, 0, 0, 7);
+        }
+        private void UwHideExampleTextBoxesMaxLength()
+        {
+            TextBox awExampleRussianValueTextBox = App.GetService<EditVerbPrepositionDictionaryPage>().uwExampleRussianValueTextBox;
+            TextBox awExampleEnglishValueTextBox = App.GetService<EditVerbPrepositionDictionaryPage>().uwExampleEnglishValueTextBox;
+            awExampleRussianValueTextBox.MaxLength = 0;
+            awExampleEnglishValueTextBox.MaxLength = 0;
+            awExampleRussianValueTextBox.Margin = new Thickness(0, 0, 7, 0);
+            awExampleEnglishValueTextBox.Margin = new Thickness(7, 0, 0, 0);
+        }
+        private void SetVerbPrepositionForUpdating(VerbPreposition verbPreposition)
+        {
+            this.currentVerbPrepositionForUpdate = verbPreposition;
+            UwTranslationValue = StringHelper.EmptyIfNull(verbPreposition.Translation);
+            UwExampleViews.Clear();
+            if (verbPreposition.IsFirstExampleExist)
+                UwExampleViews.Add(ExampleView.Create(verbPreposition.FirstExampleRussianValue.EmptyIfNull(), verbPreposition.FirstExampleEnglishValue.TryNormalizeRegister().EmptyIfNull(), ++exampleIdCounter, true));
+            if (verbPreposition.IsSecondExampleExist)
+                UwExampleViews.Add(ExampleView.Create(verbPreposition.SecondExampleRussianValue.EmptyIfNull(), verbPreposition.SecondExampleEnglishValue.TryNormalizeRegister().EmptyIfNull(), ++exampleIdCounter, true));
+        }
         #endregion
     }
 }
