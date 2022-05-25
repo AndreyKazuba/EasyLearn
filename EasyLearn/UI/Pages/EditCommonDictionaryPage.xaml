@@ -12,49 +12,9 @@
       d:DesignHeight="450" d:DesignWidth="800">
     <materialDesign:DialogHost OverlayBackground="{DynamicResource MainColorSuperDark}">
         <Grid >
-
-            <!--Кнопка "удалить все CommonRelations"-->
-            <!--<Button VerticalAlignment="Center" 
-                        Command="{Binding ClearCommonDictionaryCommand}"
-                        Style="{DynamicResource MaterialDesignFlatButton}"
-                        Content="Очистить"
-                        DockPanel.Dock="Right"
-                        Foreground="#FFA70404"
-                        Margin="5 0"/>-->
-
-            <!--Поисковая строка-->
-            <!--<materialDesign:ColorZone Mode="Standard"
-                                          Height="40"
-                                          CornerRadius="6"
-                                          materialDesign:ShadowAssist.ShadowDepth="Depth1"
-                                          Margin="2"
-                                          VerticalAlignment="Center"
-                                          Width="260">
-                    <DockPanel LastChildFill="True">
-                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                Margin="8 -6 8 -6"
-                                DockPanel.Dock="Right"
-                                Content="{materialDesign:PackIcon Kind=Search}"/>
-                        <TextBox FontSize="15"
-                                 Margin="8 0 0 0"
-                                 VerticalAlignment="Center"
-                                 materialDesign:HintAssist.Hint="Search"
-                                 Text="{Binding SearchStringValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-
-
-
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="TextChanged">
-                                    <i:InvokeCommandAction Command="{Binding SearchCommonRelationsCommand}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-
-                        </TextBox>
-                    </DockPanel>
-                </materialDesign:ColorZone>-->
-
-
             <materialDesign:DrawerHost OpenMode="Standard" materialDesign:ShadowAssist.ShadowDepth="Depth0">
+
+                <!--Верхнее выплывающее меню-->
                 <materialDesign:DrawerHost.TopDrawerContent>
                     <Border Background="GhostWhite" Height="58" BorderBrush="{DynamicResource MainColor}" BorderThickness="0.6 0 0 0.6">
                         <Grid VerticalAlignment="Stretch">
@@ -99,15 +59,17 @@
                                                      VerticalAlignment="Center" Foreground="{DynamicResource EasyRed}"
                                                      HorizontalAlignment="Center"/>
                             </Button>
-                            
-                            
-
                         </Grid>
                     </Border>
                 </materialDesign:DrawerHost.TopDrawerContent>
+
                 <Grid>
-                    <Button Visibility="Collapsed" Name="openMenuButton" Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"/>
-                    <Button Visibility="Collapsed" Name="closeMenuButton" Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"/>
+                    <!--Кнопка для открытия верхнего меню-->
+                    <Button Visibility="Collapsed" Name="openTopMenuButton" Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"/>
+                    
+                    <!--Кнопка для хакрытия верхнего меню-->
+                    <Button Visibility="Collapsed" Name="closeTopMenuButton" Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"/>
+                    
                     <!--Контейнер для содержания всех CommonRelations-->
                     <ScrollViewer Grid.Row="1" ScrollViewer.CanContentScroll="False">
                         <ItemsControl ItemsSource="{Binding CommonRelationViews}" 
@@ -122,12 +84,11 @@
                         </ItemsControl>
                     </ScrollViewer>
                 </Grid>
-                
+
             </materialDesign:DrawerHost>
 
-
-
-            <Button Name="openCommonRelationSettingsWindowButton"
+            <!--Окно обновления отношения-->
+            <Button Name="uwOpenWindowButton"
                     Visibility="Collapsed"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
 
@@ -149,8 +110,8 @@
                                      Width="260" 
                                      Grid.Row="7"
                                      HorizontalAlignment="Left"
-                                 materialDesign:HintAssist.IsFloating="False"
-                                 materialDesign:ValidationAssist.Suppress="True"
+                                     materialDesign:HintAssist.IsFloating="False"
+                                     materialDesign:ValidationAssist.Suppress="True"
                                      Padding="14 11"
                                      Grid.ColumnSpan="3"
                                      InputLanguageManager.InputLanguage="ru-RU"
@@ -208,11 +169,10 @@
                                          Width="192"
                                          Padding="14 11"
                                          Margin="0 0 7 0"
-                                 materialDesign:HintAssist.IsFloating="False"
-                                     
+                                         materialDesign:HintAssist.IsFloating="False"
                                          KeyDown="OnUpdateWindowExampleRussianValueTextBoxKeyDown"
                                          InputLanguageManager.InputLanguage="ru-RU"
-                                         Name="uwExampleRussianValueField"
+                                         Name="uwExampleRussianValueTextBox"
                                          materialDesign:HintAssist.Hint="Пример на русском">
 
                                 <TextBox.Text>
@@ -226,7 +186,7 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
                                         <i:InvokeCommandAction Command="{Binding UwValidateExampleSectionCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding UwCheckExampleFieldsMaxLengthVisibilityCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwCheckExampleTextBoxesMaxLengthVisibilityCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBox>
@@ -237,10 +197,9 @@
                                          Grid.Column="1"
                                          Margin="7 0 0 0"
                                          Padding="14 11"
-                                 materialDesign:HintAssist.IsFloating="False"
-                                     
+                                         materialDesign:HintAssist.IsFloating="False"
                                          KeyDown="OnUpdateWindowExampleEnglishValueTextBoxKeyDown"
-                                         Name="uwExampleEnglishValueField"
+                                         Name="uwExampleEnglishValueTextBox"
                                          InputLanguageManager.InputLanguage="en-US"
                                          materialDesign:HintAssist.Hint="Пример на английском">
 
@@ -255,7 +214,7 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
                                         <i:InvokeCommandAction Command="{Binding UwValidateExampleSectionCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding UwCheckExampleFieldsMaxLengthVisibilityCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwCheckExampleTextBoxesMaxLengthVisibilityCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBox>
@@ -274,8 +233,8 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{Binding UwAddExampleViewCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding UwClearExampleAddingSectionCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding UwFocusExampleRussianValueFieldCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwClearExampleSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwFocusExampleRussianValueTextBoxCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
@@ -297,15 +256,15 @@
 
 
                         <Border BorderBrush="{DynamicResource EasyGray}" 
-                                    BorderThickness="0.5"
-                                    Grid.Row="4"/>
+                                BorderThickness="0.5"
+                                Grid.Row="4"/>
 
                         <!--Кнопки отмены и подтверждения добавления нового CommonRelation-->
                         <Grid Grid.Row="5"
-                                  Width="230"
+                              Width="230"
                               Margin="14 12 14 0"
-                                  HorizontalAlignment="Center"
-                                  VerticalAlignment="Center">
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -314,7 +273,7 @@
 
                             <!--Кнопка отмены-->
                             <Button Style="{DynamicResource EasyCancelButton}"
-                                    Name="newVerbPrepositionAddingWindowCancelButton">
+                                    Name="uwCancelButton">
 
                                 <TextBlock Text="Отмена" FontSize="14" FontFamily="Arial"/>
 
@@ -330,8 +289,8 @@
                             <!--Кнопка подтверждения-->
                             <Button Style="{DynamicResource EasyConfirmButton}"
                                     Grid.Column="1"
-                                    Name="newVerbPrepositionAddingButton"
-                                    IsEnabled="{Binding IsConfirmVerbPrepositionAddingButtonEnabled}">
+                                    Name="uwConfirmButton"
+                                    IsEnabled="{Binding AwConfirmButtonIsEnabled}">
 
                                 <TextBlock Text="Сохранить" FontSize="14" FontFamily="Arial"/>
 
@@ -352,10 +311,10 @@
 
             </Button>
 
-            <!--Кнопка добавления нового CommonRelation-->
+            <!--Окно добавления нового отношения-->
             <Button Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
-                        Name="openNewCommonRelationAddingWindowButton"
-                        Visibility="Collapsed">
+                    Name="awOpenWindowButton"
+                    Visibility="Collapsed">
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
@@ -386,15 +345,15 @@
 
                         <!--Текстбокс для введения русского значения в новом CommonRelation-->
                         <TextBox Style="{DynamicResource EasyValidationTextBox}"
-                                     Width="215"
-                                     Padding="14 11"
+                                 Width="215"
+                                 Padding="14 11"
                                  Margin="14 0 0 14"
-                                     InputLanguageManager.InputLanguage="ru-RU"
+                                 InputLanguageManager.InputLanguage="ru-RU"
                                  materialDesign:ValidationAssist.Suppress="True"
                                  materialDesign:HintAssist.IsFloating="False"
-                                     KeyDown="OnRussianValueTextBoxKeyDown"
-                                     Name="newCommonRelationRussianValueTextBox"
-                                     materialDesign:HintAssist.Hint="Русский перевод*">
+                                 KeyDown="OnRussianValueTextBoxKeyDown"
+                                 Name="awRussianValueTextBox"
+                                 materialDesign:HintAssist.Hint="Русский перевод*">
 
                             <TextBox.Text>
                                 <Binding Path="AwRussianValue" UpdateSourceTrigger="PropertyChanged">
@@ -416,16 +375,16 @@
 
                         <!--Комбобокс для выбора типа RussianUnit в новом CommonRelation-->
                         <ComboBox MaxDropDownHeight="200"
-                                      Grid.Row="1"
-                                      Margin="14 0 0 14"
-                                      Width="215"
-                                      Padding="14 11"
-                                      Grid.Column="0"
-                                      KeyDown="OnRussianUnitTypeComboBoxKeyDown"
-                                      Name="newCommonRelationRussianUnitTypeComboBox"
-                                      ItemsSource="{Binding AwRussianUnitTypes}"
-                                      SelectedItem="{Binding AwSelectedRussianUnitType, Mode=TwoWay}"
-                                      Style="{DynamicResource EasyComboBox}">
+                                  Grid.Row="1"
+                                  Margin="14 0 0 14"
+                                  Width="215"
+                                  Padding="14 11"
+                                  Grid.Column="0"
+                                  KeyDown="OnRussianUnitTypeComboBoxKeyDown"
+                                  Name="awRussianUnitTypeComboBox"
+                                  ItemsSource="{Binding AwRussianUnitTypes}"
+                                  SelectedItem="{Binding AwSelectedRussianUnitType, Mode=TwoWay}"
+                                  Style="{DynamicResource EasyComboBox}">
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
@@ -444,16 +403,16 @@
 
                         <!--Текстбокс для введения английского значения в новом CommonRelation-->
                         <TextBox Style="{DynamicResource EasyValidationTextBox}"
-                                     Width="215"
+                                 Width="215"
                                  Margin="0 0 14 14"
-                                     Padding="14 11"
+                                 Padding="14 11"
                                  materialDesign:ValidationAssist.Suppress="True"
-                                     Grid.Column="2"
-                                     InputLanguageManager.InputLanguage="en-US"
-                                     KeyDown="OnEnglishValueTextBoxKeyDown"  
-                                     materialDesign:ValidationAssist.PopupPlacement="AbsolutePoint"
-                                     Name="newCommonRelationEnglishValueTextBox"
-                                     materialDesign:HintAssist.Hint="Английский перевод*"
+                                 Grid.Column="2"
+                                 InputLanguageManager.InputLanguage="en-US"
+                                 KeyDown="OnEnglishValueTextBoxKeyDown"  
+                                 materialDesign:ValidationAssist.PopupPlacement="AbsolutePoint"
+                                 Name="awEnglishValueTextBox"
+                                 materialDesign:HintAssist.Hint="Английский перевод*"
                                  materialDesign:HintAssist.IsFloating="False">
 
                             <TextBox.Text>
@@ -476,16 +435,16 @@
 
                         <!--Комбобокс для выбора типа EnglishUnit в новом CommonRelation-->
                         <ComboBox MaxDropDownHeight="200"
-                                      Grid.Row="1"
-                                      Grid.Column="2"
-                                      Margin="0 0 14 14"
-                                      Width="215"
-                                      Padding="14 11"
-                                      KeyDown="OnEnglishUnitTypeComboBoxKeyDown"
-                                      Name="newCommonRelationEnglishUnitTypeComboBox"
-                                      ItemsSource="{Binding AwEnglishUnitTypes}"
-                                      SelectedItem="{Binding AwSelectedEnglishUnitType, Mode=TwoWay}"
-                                      Style="{DynamicResource EasyComboBox}">
+                                  Grid.Row="1"
+                                  Grid.Column="2"
+                                  Margin="0 0 14 14"
+                                  Width="215"
+                                  Padding="14 11"
+                                  KeyDown="OnEnglishUnitTypeComboBoxKeyDown"
+                                  Name="awEnglishUnitTypeComboBox"
+                                  ItemsSource="{Binding AwEnglishUnitTypes}"
+                                  SelectedItem="{Binding AwSelectedEnglishUnitType, Mode=TwoWay}"
+                                  Style="{DynamicResource EasyComboBox}">
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
@@ -498,16 +457,16 @@
 
                         <!--Текстбокс для введения комментария к новому CommonRelation-->
                         <TextBox Style="{DynamicResource EasyValidationTextBox}"
-                                     Width="230" 
-                                     Grid.Row="2"
+                                 Width="230" 
+                                 Grid.Row="2"
                                  materialDesign:HintAssist.IsFloating="False"
                                  materialDesign:ValidationAssist.Suppress="True"
-                                     Padding="14 11"
-                                     Grid.ColumnSpan="3"
-                                     InputLanguageManager.InputLanguage="ru-RU"
-                                     Name="newCommonRelationCommentValueTextBox"
-                                     KeyDown="OnCommentValueTextBoxKeyDown"
-                                     materialDesign:HintAssist.Hint="Комментарий">
+                                 Padding="14 11"
+                                 Grid.ColumnSpan="3"
+                                 InputLanguageManager.InputLanguage="ru-RU"
+                                 Name="awCommentValueTextBox"
+                                 KeyDown="OnCommentValueTextBoxKeyDown"
+                                 materialDesign:HintAssist.Hint="Комментарий">
 
                             <TextBox.Text>
                                 <Binding Path="AwCommentValue" UpdateSourceTrigger="PropertyChanged">
@@ -519,7 +478,7 @@
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TextChanged">
-                                    <i:InvokeCommandAction Command="{Binding UpdateConfirmCommonRelationAddingButtonAvailabilityCommand}"/>
+                                    <i:InvokeCommandAction Command="{Binding AwUpdateConfirmButtonAvailabilityCommand}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
 
@@ -527,11 +486,11 @@
 
                         <!--Надпись о том, что запись уже существует-->
                         <StackPanel VerticalAlignment="Center"
-                                        Margin="0 -10 0 0"
-                                        HorizontalAlignment="Center" 
-                                        Grid.Row="3" Grid.ColumnSpan="3" 
-                                        Orientation="Horizontal" 
-                                        Visibility="{Binding AwCommonRelationHasExistLableIsVisible, Converter={converters:ReverseCollapseConverter}}">
+                                    Margin="0 -10 0 0"
+                                    HorizontalAlignment="Center" 
+                                    Grid.Row="3" Grid.ColumnSpan="3" 
+                                    Orientation="Horizontal" 
+                                    Visibility="{Binding AwCommonRelationHasExistLableIsVisible, Converter={converters:ReverseCollapseConverter}}">
                             <materialDesign:PackIcon Kind="AlertCircleOutline" Foreground="{DynamicResource error}" Margin="2"/>
                             <TextBlock VerticalAlignment="Center"
                                            Margin="2 0 0 2"
@@ -559,15 +518,14 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBox Style="{DynamicResource EasyTextBox}"
-                                         Width="188"
-                                         Padding="14 11"
-                                         Margin="0 0 7 0"
-                                 materialDesign:HintAssist.IsFloating="False"
-                                     
-                                         KeyDown="OnAddingWindowExampleRussianValueTextBoxKeyDown"
-                                         InputLanguageManager.InputLanguage="ru-RU"
-                                         Name="awExampleRussianValueField"
-                                         materialDesign:HintAssist.Hint="Пример на русском">
+                                     Width="188"
+                                     Padding="14 11"
+                                     Margin="0 0 7 0"
+                                     materialDesign:HintAssist.IsFloating="False"
+                                     KeyDown="OnAddingWindowExampleRussianValueTextBoxKeyDown"
+                                     InputLanguageManager.InputLanguage="ru-RU"
+                                     Name="awExampleRussianValueTextBox"
+                                     materialDesign:HintAssist.Hint="Пример на русском">
 
                                 <TextBox.Text>
                                     <Binding Path="AwExampleRussianValue" UpdateSourceTrigger="PropertyChanged">
@@ -580,7 +538,7 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
                                         <i:InvokeCommandAction Command="{Binding AwValidateExampleSectionCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding AwCheckExampleFieldsMaxLengthVisibilityCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwCheckExampleTextBoxesMaxLengthVisibilityCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBox>
@@ -594,7 +552,7 @@
                                  materialDesign:HintAssist.IsFloating="False"
                                      
                                          KeyDown="OnAddingWindowExampleEnglishValueTextBoxKeyDown"
-                                         Name="awExampleEnglishValueField"
+                                         Name="awExampleEnglishValueTextBox"
                                          InputLanguageManager.InputLanguage="en-US"
                                          materialDesign:HintAssist.Hint="Пример на английском">
 
@@ -609,7 +567,7 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
                                         <i:InvokeCommandAction Command="{Binding AwValidateExampleSectionCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding AwCheckExampleFieldsMaxLengthVisibilityCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwCheckExampleTextBoxesMaxLengthVisibilityCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBox>
@@ -628,8 +586,8 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{Binding AwAddExampleViewCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding AwClearExampleAddingSectionCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding AwFocusExampleRussianValueFieldCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwClearExampleSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwFocusExampleRussianValueTextBoxCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
@@ -655,16 +613,16 @@
                                     Grid.Row="7"
                                     Grid.Column="0"/>
 
-                        
+
 
                         <!--Кнопки отмены и подтверждения добавления нового CommonRelation-->
                         <Grid Grid.Row="8"
-                                  Grid.Column="0"
-                                  Width="230"
+                              Grid.Column="0"
+                              Width="230"
                               Margin="0 14 0 0"
-                                  Grid.ColumnSpan="3"
-                                  HorizontalAlignment="Center"
-                                  VerticalAlignment="Center">
+                              Grid.ColumnSpan="3"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -673,7 +631,7 @@
 
                             <!--Кнопка отмены добавления нового CommonRelation-->
                             <Button Style="{DynamicResource EasyCancelButton}"
-                                    Name="newCommonRelationAddingWindowCancelButton">
+                                    Name="awCancelButton">
 
 
                                 <TextBlock Text="Отмена" FontSize="14" FontFamily="Arial"/>
@@ -691,7 +649,7 @@
                             <!--Кнопка подтверждения добавления нового CommonRalation-->
                             <Button Style="{DynamicResource EasyConfirmButton}"
                                     Grid.Column="1"
-                                    Name="newCommonRelationAddingButton"
+                                    Name="awConfirmButton"
                                     IsEnabled="{Binding AwConfirmButtonIsEnabled}">
 
                                 <TextBlock Text="Добавить" FontSize="14" FontFamily="Arial"/>

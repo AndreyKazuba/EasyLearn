@@ -1,5 +1,4 @@
-﻿using EasyLearn.Data.Models;
-using EasyLearn.VM.ViewModels.CustomControls;
+﻿using EasyLearn.VM.ViewModels.CustomControls;
 using System.Windows.Controls;
 
 namespace EasyLearn.UI.CustomControls
@@ -26,8 +25,7 @@ namespace EasyLearn.UI.CustomControls
         public static ExampleView Create(
             string russianTranslation,
             string englishTranslation,
-            int id,
-            bool isExampleForVerbPreposition) => new ExampleView(new ExampleVM(russianTranslation, englishTranslation, id, isExampleForVerbPreposition));
+            int id) => new ExampleView(new ExampleVM(russianTranslation, englishTranslation, id));
         #endregion
     }
 }

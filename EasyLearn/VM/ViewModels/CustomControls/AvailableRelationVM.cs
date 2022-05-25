@@ -10,10 +10,9 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public string Value { get; set; }
         public AvailableRelationVM(CommonRelation commonRelation, DictationDirection direction)
         {
-            if (direction == DictationDirection.Directly)
-                this.Value = commonRelation.EnglishUnit.Value.NormalizeRegister();
-            else
-                this.Value = commonRelation.RussianUnit.Value.NormalizeRegister();
+            Value = direction == DictationDirection.Directly 
+                ? commonRelation.EnglishUnit.Value.NormalizeRegister() 
+                : commonRelation.RussianUnit.Value.NormalizeRegister();
         }
     }
 }

@@ -7,11 +7,11 @@ namespace EasyLearn.UI.Pages
 {
     public partial class EditCommonDictionaryPage : Page
     {
-        public static event Action? RussianValueTextBoxEnterDown;
-        public static event Action? EnglishValueTextBoxEnterDown;
-        public static event Action? RussianUnitTypeComboBoxEnterDown;
-        public static event Action? EnglishUnitTypeComboBoxEnterDown;
-        public static event Action? CommentValueTextBoxEnterDown;
+        public static event Action? AddingWindowRussianValueTextBoxEnterDown;
+        public static event Action? AddingWindowEnglishValueTextBoxEnterDown;
+        public static event Action? AddingWindowRussianUnitTypeComboBoxEnterDown;
+        public static event Action? AddingWindowEnglishUnitTypeComboBoxEnterDown;
+        public static event Action? AddingWindowCommentValueTextBoxEnterDown;
         public static event Action? AddingWindowExampleRussianValueTextBoxEnterDown;
         public static event Action? AddingWindowExampleEnglishValueTextBoxEnterDown;
         public static event Action? UpdateWindowExampleRussianValueTextBoxEnterDown;
@@ -24,28 +24,28 @@ namespace EasyLearn.UI.Pages
         }
         private void OnRussianValueTextBoxKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && RussianValueTextBoxEnterDown is not null)
-                RussianValueTextBoxEnterDown();
+            if (e.Key == Key.Enter && AddingWindowRussianValueTextBoxEnterDown is not null)
+                AddingWindowRussianValueTextBoxEnterDown();
         }
         private void OnEnglishValueTextBoxKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && EnglishValueTextBoxEnterDown is not null)
-                EnglishValueTextBoxEnterDown();
+            if (e.Key == Key.Enter && AddingWindowEnglishValueTextBoxEnterDown is not null)
+                AddingWindowEnglishValueTextBoxEnterDown();
         }
         private void OnRussianUnitTypeComboBoxKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && RussianUnitTypeComboBoxEnterDown is not null)
-                RussianUnitTypeComboBoxEnterDown();
+            if (e.Key == Key.Enter && AddingWindowRussianUnitTypeComboBoxEnterDown is not null)
+                AddingWindowRussianUnitTypeComboBoxEnterDown();
         }
         private void OnEnglishUnitTypeComboBoxKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && EnglishUnitTypeComboBoxEnterDown is not null)
-                EnglishUnitTypeComboBoxEnterDown();
+            if (e.Key == Key.Enter && AddingWindowEnglishUnitTypeComboBoxEnterDown is not null)
+                AddingWindowEnglishUnitTypeComboBoxEnterDown();
         }
         private void OnCommentValueTextBoxKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && CommentValueTextBoxEnterDown is not null)
-                CommentValueTextBoxEnterDown();
+            if (e.Key == Key.Enter && AddingWindowCommentValueTextBoxEnterDown is not null)
+                AddingWindowCommentValueTextBoxEnterDown();
         }
         private void OnAddingWindowExampleRussianValueTextBoxKeyDown(object sender, KeyEventArgs e)
         {

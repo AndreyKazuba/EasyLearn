@@ -1,12 +1,10 @@
-﻿using EasyLearn.Data.Models;
-using EasyLearn.VM.Core;
+﻿using EasyLearn.VM.Core;
 using EasyLearn.VM.ViewModels.Pages;
 
 namespace EasyLearn.VM.ViewModels.CustomControls
 {
     public class ExampleVM : ViewModel
     {
-        private bool isExampleForVerbPreposition;
         #region Public props
         public int Id { get; private set; }
         public string RussianValue { get; private set; }
@@ -25,18 +23,15 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         #region Command logic methods
         private void Remove()
         {
-            if (this.isExampleForVerbPreposition)
-                App.GetService<EditVerbPrepositionDictionaryPageVM>().RemoveExampleViewCommand.Execute(Id);
-            else
-                App.GetService<EditCommonDictionaryPageVM>().RemoveExampleViewCommand.Execute(Id);
+            App.GetService<EditVerbPrepositionDictionaryPageVM>().RemoveExampleViewCommand.Execute(Id);
+            App.GetService<EditCommonDictionaryPageVM>().RemoveExampleViewCommand.Execute(Id);
         }
         #endregion
-        public ExampleVM(string russianTranslation, string englishTranslation, int id, bool isExampleForVerbPreposition)
+        public ExampleVM(string russianTranslation, string englishTranslation, int id)
         {
             this.Id = id;
             this.RussianValue = russianTranslation;
             this.EnglishValue = englishTranslation;
-            this.isExampleForVerbPreposition = isExampleForVerbPreposition;
         }
     }
 }
