@@ -8,7 +8,8 @@
       xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
       mc:Ignorable="d" 
       d:DesignHeight="700" d:DesignWidth="1100"
-      Title="DictationPage">
+      Title="DictationPage"
+      Background="{Binding PageBackground}">
 
     <materialDesign:DialogHost>
         <Grid>
@@ -21,7 +22,7 @@
             <Grid Visibility="{Binding CdSectionIsVisible, Converter={converters:ReverseCollapseConverter}}" 
                   VerticalAlignment="Stretch" 
                   HorizontalAlignment="Center"
-                  d:Visibility="Collapsed">
+                   d:Visibility="Collapsed">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1.75*"/>
@@ -69,6 +70,7 @@
                                Foreground="Gray"/>
 
                     <TextBlock FontSize="20"
+                               Margin="0 20 0 0"
                                Text="{Binding CdFirstExampleValue}"
                                Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
                                HorizontalAlignment="Center"
@@ -76,7 +78,7 @@
                                FontFamily="Arial"
                                FontStyle="Italic"
                                d:Text="Comment"
-                               Foreground="{DynamicResource MainColor}"/>
+                               Foreground="{DynamicResource MainColorLight}"/>
 
                     <TextBlock FontSize="20"
                                Text="{Binding CdSecondExampleValue}"
@@ -86,7 +88,7 @@
                                FontFamily="Arial"
                                FontStyle="Italic"
                                d:Text="Comment"
-                               Foreground="{DynamicResource MainColor}"/>
+                               Foreground="{DynamicResource MainColorLight}"/>
 
 
                 </StackPanel>
@@ -127,30 +129,7 @@
                     </ItemsControl>
                 </StackPanel>
 
-                <!--Иконка правильного простого диктанта-->
-                <!--<materialDesign:PackIcon Kind="Check" 
-                                         Height="60" 
-                                         Width="60" 
-                                         Grid.Row="2"
-                                         Foreground="ForestGreen"
-                                         HorizontalAlignment="Center"
-                                         VerticalAlignment="Bottom"
-                                         Visibility="{Binding CdCorrectIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>-->
-
-                <!--Иконка неправильного ответа сложного диктанта-->
-                <!--<materialDesign:PackIcon Kind="Close" 
-                                         Height="60" 
-                                         Width="60" 
-                                         Grid.Row="2"
-                                         Foreground="Red"
-                                         HorizontalAlignment="Center"
-                                         VerticalAlignment="Bottom"
-                                         Visibility="{Binding CdWrongIconIsVisible, Converter={converters:ForwardVisibilityConverter}}"/>-->
-
-
-
-
-
+                
             </Grid>
 
 

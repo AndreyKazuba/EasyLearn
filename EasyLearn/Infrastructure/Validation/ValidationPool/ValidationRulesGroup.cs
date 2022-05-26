@@ -7,6 +7,6 @@
         AddNewUser = 3,
         AddNewDictionary = 4,
         UpdateCommonRelation = 5,
-        UpdateVerbPrepsotion = 6,
+        UpdateVerbPreposition = 6,
     }
 }

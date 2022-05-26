@@ -83,7 +83,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public string UwCommentValue { get; set; }
         public string UwExampleRussianValue { get; set; }
         public string UwExampleEnglishValue { get; set; }
-        public bool UwConfirmButtonIsEnabled { get; set; }
+        public bool UwConfirmButtonIsEnabled { get; set; } = true;
         public bool UwAddExampleButtonIsEnabled { get; set; }
         #endregion
 
@@ -275,6 +275,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private async Task DeleteAllCommonRelations()
         {
             CommonRelationViews.Clear();
+            AddShadowRelationViewToUI();
             await commonRelationRepository.DeleteAllDictionaryRelations(pageCurrentDictionaryId);
         }
         private async Task SetDictionary(int commonDictionaryId)
@@ -429,15 +430,15 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Adding window helpers
         private string? AwGetFirstExampleRussianValue() => AwExampleViews.Count == 0 ? null : AwExampleViews.ToArray()[0].RussianValue;
         private string? AwGetFirstExampleEnglishValue() => AwExampleViews.Count == 0 ? null : AwExampleViews.ToArray()[0].EnglishValue;
-        private string? AwGetSecondExampleRussianValue() => AwExampleViews.Count < 2 ? null : AwExampleViews.ToArray()[0].RussianValue;
-        private string? AwGetSecondExampleEnglishValue() => AwExampleViews.Count < 2 ? null : AwExampleViews.ToArray()[0].RussianValue;
+        private string? AwGetSecondExampleRussianValue() => AwExampleViews.Count < 2 ? null : AwExampleViews.ToArray()[1].RussianValue;
+        private string? AwGetSecondExampleEnglishValue() => AwExampleViews.Count < 2 ? null : AwExampleViews.ToArray()[1].RussianValue;
         #endregion
 
         #region Update window helpers
         private string? UwGetFirstExampleRussianValue() => UwExampleViews.Count == 0 ? null : UwExampleViews.ToArray()[0].RussianValue;
         private string? UwGetFirstExampleEnglishValue() => UwExampleViews.Count == 0 ? null : UwExampleViews.ToArray()[0].EnglishValue;
-        private string? UwGetSecondExampleRussianValue() => UwExampleViews.Count < 2 ? null : UwExampleViews.ToArray()[0].RussianValue;
-        private string? UwGetSecondExampleEnglishValue() => UwExampleViews.Count < 2 ? null : UwExampleViews.ToArray()[0].RussianValue;
+        private string? UwGetSecondExampleRussianValue() => UwExampleViews.Count < 2 ? null : UwExampleViews.ToArray()[1].RussianValue;
+        private string? UwGetSecondExampleEnglishValue() => UwExampleViews.Count < 2 ? null : UwExampleViews.ToArray()[1].RussianValue;
         #endregion
 
         #region CommonRelations UI methods

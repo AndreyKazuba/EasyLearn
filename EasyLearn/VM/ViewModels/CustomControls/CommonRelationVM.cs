@@ -48,41 +48,38 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 #pragma warning restore CS8618
 
         #region Commands
-        public Command DeleteRelationCommand { get; private set; }
         public Command OpenUpdateRelationWindowCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.DeleteRelationCommand = new Command(DeleteRelation);
-            this.OpenUpdateRelationWindowCommand = new Command(OpenUpdateRelationWindow);
+            OpenUpdateRelationWindowCommand = new Command(OpenUpdateRelationWindow);
         }
-        private void DeleteRelation() => App.GetService<EditCommonDictionaryPageVM>().DeleteCommonRelationCommand.Execute(Id);
         private void OpenUpdateRelationWindow() => App.GetService<EditCommonDictionaryPageVM>().UwOpenWindowCommand.Execute(Id);
         #endregion
 
         #region Public methods
         public void Set(CommonRelation commonRelation)
         {
-            this.RussianValue = StringHelper.NormalizeRegister(commonRelation.RussianUnit.Value);
-            this.EnglishValue = StringHelper.NormalizeRegister(commonRelation.EnglishUnit.Value);
-            this.RussianUnitTypeText = commonRelation.RussianUnit.Type.GetRussianValue();
-            this.EnglishUnitTypeText = commonRelation.EnglishUnit.Type.GetRussianValue();
-            this.RussianUnitTypeColor = commonRelation.RussianUnit.Type.GetColor();
-            this.EnglishUnitTypeColor = commonRelation.EnglishUnit.Type.GetColor();
-            this.CommentValue = commonRelation.Comment.TryNormalizeRegister().EmptyIfNull();
-            this.CommentIsVisible = !string.IsNullOrEmpty(this.CommentValue);
-            this.FirstExampleIsVisible = commonRelation.IsFirstExampleExist;
-            this.SecondExampleIsVisible = commonRelation.IsSecondExampleExist;
-            this.FirstExampleRussianValue = commonRelation.FirstExampleRussianValue.TryNormalizeRegister().EmptyIfNull();
-            this.FirstExampleEnglishValue = commonRelation.FirstExampleEnglishValue.TryNormalizeRegister().EmptyIfNull();
-            this.SecondExampleRussianValue = commonRelation.SecondExampleRussianValue.TryNormalizeRegister().EmptyIfNull();
-            this.SecondExampleEnglishValue = commonRelation.SecondExampleEnglishValue.TryNormalizeRegister().EmptyIfNull();
+            RussianValue = StringHelper.NormalizeRegister(commonRelation.RussianUnit.Value);
+            EnglishValue = StringHelper.NormalizeRegister(commonRelation.EnglishUnit.Value);
+            RussianUnitTypeText = commonRelation.RussianUnit.Type.GetRussianValue();
+            EnglishUnitTypeText = commonRelation.EnglishUnit.Type.GetRussianValue();
+            RussianUnitTypeColor = commonRelation.RussianUnit.Type.GetColor();
+            EnglishUnitTypeColor = commonRelation.EnglishUnit.Type.GetColor();
+            CommentValue = commonRelation.Comment.TryNormalizeRegister().EmptyIfNull();
+            CommentIsVisible = !string.IsNullOrEmpty(CommentValue);
+            FirstExampleIsVisible = commonRelation.IsFirstExampleExist;
+            SecondExampleIsVisible = commonRelation.IsSecondExampleExist;
+            FirstExampleRussianValue = commonRelation.FirstExampleRussianValue.TryNormalizeRegister().EmptyIfNull();
+            FirstExampleEnglishValue = commonRelation.FirstExampleEnglishValue.TryNormalizeRegister().EmptyIfNull();
+            SecondExampleRussianValue = commonRelation.SecondExampleRussianValue.TryNormalizeRegister().EmptyIfNull();
+            SecondExampleEnglishValue = commonRelation.SecondExampleEnglishValue.TryNormalizeRegister().EmptyIfNull();
             SetState(commonRelation);
             SetHeight();
             SetOrder();
             SetVerticalExpanderMargin(commonRelation);
         }
-        public void Collapse() => this.IsVisible = false;
-        public void Show() => this.IsVisible = true;
+        public void Collapse() => IsVisible = false;
+        public void Show() => IsVisible = true;
         #endregion
 
         #region Private methods
@@ -90,50 +87,50 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         {
             bool firstExampleExist = commonRelation.IsFirstExampleExist;
             bool secondExampleExist = commonRelation.IsSecondExampleExist;
-            bool isCommentExist = this.CommentIsVisible;
+            bool isCommentExist = CommentIsVisible;
             if (!isCommentExist && !firstExampleExist)
-                this.state = CardState.Without;
+                state = CardState.Without;
             else if (isCommentExist && !firstExampleExist)
-                this.state = CardState.JustComment;
+                state = CardState.JustComment;
             else if (!isCommentExist && firstExampleExist && !secondExampleExist)
-                this.state = CardState.JustOneExample;
+                state = CardState.JustOneExample;
             else if (!isCommentExist && secondExampleExist)
-                this.state = CardState.JustTwoExamples;
+                state = CardState.JustTwoExamples;
             else if (isCommentExist && firstExampleExist && !secondExampleExist)
-                this.state = CardState.CommentAndOneExample;
+                state = CardState.CommentAndOneExample;
             else
-                this.state = CardState.CommentAndTwoExamples;
+                state = CardState.CommentAndTwoExamples;
         }
         private void SetHeight()
         {
-            switch (this.state)
+            switch (state)
             {
                 case CardState.Without:
-                    this.Height = 75;
+                    Height = 75;
                     break;
                 case CardState.JustComment:
-                    this.Height = 75 + 48;
+                    Height = 75 + 48;
                     break;
                 case CardState.JustOneExample:
-                    this.Height = 75 + 63;
+                    Height = 75 + 63;
                     break;
                 case CardState.JustTwoExamples:
-                    this.Height = 75 + 63 + 52;
+                    Height = 75 + 63 + 52;
                     break;
                 case CardState.CommentAndOneExample:
-                    this.Height = 75 + 48 + 52;
+                    Height = 75 + 48 + 52;
                     break;
                 case CardState.CommentAndTwoExamples:
-                    this.Height = 75 + 48 + 52 + 52;
+                    Height = 75 + 48 + 52 + 52;
                     break;
             }
         }
-        private void SetOrder() => this.OrderValue = (int)this.state;
+        private void SetOrder() => OrderValue = (int)state;
         private void SetVerticalExpanderMargin(CommonRelation commonRelation)
         {
             bool shouldBeExpanded = CommentIsVisible || commonRelation.IsFirstExampleExist || commonRelation.IsSecondExampleExist;
-            this.VerticalExpanderMargin = shouldBeExpanded ? new Thickness(0.3, 6, 0.3, 0) : new Thickness(0.3, 6, 0.3, 6);
-            this.HorisontalSeporatorIsVisible = shouldBeExpanded;
+            VerticalExpanderMargin = shouldBeExpanded ? new Thickness(0.3, 6, 0.3, 0) : new Thickness(0.3, 6, 0.3, 6);
+            HorisontalSeporatorIsVisible = shouldBeExpanded;
         }
         #endregion
 

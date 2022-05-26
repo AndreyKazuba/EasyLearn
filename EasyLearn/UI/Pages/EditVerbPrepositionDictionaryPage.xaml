@@ -34,13 +34,8 @@
                                      InputLanguageManager.InputLanguage="ru-RU"
                                      materialDesign:HintAssist.Hint="Искать"
                                      Margin="0"
-                                     materialDesign:HintAssist.IsFloating="False">
-
-                                <!--<TextBox.Text>
-                                    --><!--<Binding Path="AddingWindowRussianValue" UpdateSourceTrigger="PropertyChanged">
-
-                                    </Binding>--><!--
-                                </TextBox.Text>-->
+                                     materialDesign:HintAssist.IsFloating="False"
+                                     Text="{Binding SearchStringValue, UpdateSourceTrigger=PropertyChanged}">
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
@@ -51,16 +46,74 @@
 
                             </TextBox>
 
-                            <Button Style="{StaticResource EasyCommonButton}" Margin="10 0 0 0" Height="38" Grid.Column="2">
+                            <Button Style="{StaticResource EasyCommonButton}" Margin="10 0 0 0" Height="38" Grid.Column="2"
+                                    Command="{Binding SearchVerbPrepositionsCommand}">
                                 <TextBlock Text="Искать" FontSize="14" FontFamily="Arial"/>
                             </Button>
 
                             <Button Style="{StaticResource EasyCancelButton}" Margin="0 0 15 0" Height="38" Width="38"
                                     Grid.Column="4"
-                                    Padding="0">
+                                    Padding="0"
+                                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
                                 <materialDesign:PackIcon Kind="TrashCanOutline" Height="28" Width="28" Foreground="{DynamicResource EasyRed}"
                                                      VerticalAlignment="Center"
                                                      HorizontalAlignment="Center"/>
+                                <Button.CommandParameter>
+                                    <Grid Margin="0 14">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition Height="0.8" MaxHeight="0.8"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Margin="14 0 14 12" Style="{DynamicResource MaterialDesignBody1TextBlock}" Text="Удалить все записи?" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+                                        <Border BorderBrush="{DynamicResource EasyGray}" 
+                                                BorderThickness="0.5"
+                                                Grid.Row="1"/>
+
+                                        <Grid Grid.Row="2"
+                                              Margin="14 12 14 0"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center">
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!--Кнопка отмены-->
+                                            <Button Style="{DynamicResource EasyCancelButton}"
+                                                    Name="dwCancelButton"
+                                                    Width="50"
+                                                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
+
+                                                <TextBlock Text="Нет" FontSize="14" FontFamily="Arial"/>
+                                            </Button>
+
+                                            <!--Кнопка подтверждения-->
+                                            <Button Style="{DynamicResource EasyConfirmButton}"
+                                                    Grid.Column="1"
+                                                    Width="50"
+                                                    
+                                                    Name="вwConfirmButton">
+
+                                                <TextBlock Text="Да" FontSize="14" FontFamily="Arial"/>
+
+                                                <!--Действия кнопки при её нажатии-->
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                                                        <i:InvokeCommandAction Command="{Binding DeleteAllVerbPrepositionsCommand}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+
+                                            </Button>
+
+                                        </Grid>
+
+                                    </Grid>
+                                </Button.CommandParameter>
                             </Button>
 
                         </Grid>
@@ -73,8 +126,8 @@
                     <!--Контейнер для содержания всех VerbPreposition-->
                     <ScrollViewer Grid.Row="1">
                         <ItemsControl ItemsSource="{Binding VerbPrepositionViews}" 
-                  VerticalContentAlignment="Top"
-                  HorizontalContentAlignment="Left">
+                                      VerticalContentAlignment="Top"
+                                      HorizontalContentAlignment="Left">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel Orientation="Horizontal"/>
@@ -110,8 +163,8 @@
                                      Width="260" 
                                      Grid.Row="7"
                                      HorizontalAlignment="Left"
-                                 materialDesign:HintAssist.IsFloating="False"
-                                 materialDesign:ValidationAssist.Suppress="True"
+                                     materialDesign:HintAssist.IsFloating="False"
+                                     materialDesign:ValidationAssist.Suppress="True"
                                      Padding="14 11"
                                      Grid.ColumnSpan="3"
                                      InputLanguageManager.InputLanguage="ru-RU"
@@ -121,7 +174,9 @@
                                 <TextBox.Text>
                                     <Binding Path="UwTranslationValue" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.CommonRelationCommentMaxLength}" Group="UpdateVerbPrepsotion" ValidatesOnTargetUpdated="True"/>
+                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.VerbPrepositionTranslationMaxLength}" 
+                                                                     Min="{x:Static constants:ModelConstants.VerbPrepositionTranslationMinLength}"
+                                                                     Group="UpdateVerbPreposition" ValidatesOnTargetUpdated="True"/>
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -166,20 +221,19 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBox Style="{DynamicResource EasyTextBox}"
-                                         Width="192"
-                                         Padding="14 11"
-                                         Margin="0 0 7 0"
-                                 materialDesign:HintAssist.IsFloating="False"
-                                     
-                                         KeyDown="OnUpdateWindowExampleRussianValueTextBoxKeyDown"
-                                         InputLanguageManager.InputLanguage="ru-RU"
-                                         Name="uwExampleRussianValueTextBox"
-                                         materialDesign:HintAssist.Hint="Пример на русском">
+                                     Width="192"
+                                     Padding="14 11"
+                                     Margin="0 0 7 0"
+                                     materialDesign:HintAssist.IsFloating="False"
+                                     KeyDown="OnUpdateWindowExampleRussianValueTextBoxKeyDown"
+                                     InputLanguageManager.InputLanguage="ru-RU"
+                                     Name="uwExampleRussianValueTextBox"
+                                     materialDesign:HintAssist.Hint="Пример на русском">
 
                                 <TextBox.Text>
                                     <Binding Path="UwExampleRussianValue" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="UpdateVerbPrepsotion" ValidatesOnTargetUpdated="True"/>
+                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="UpdateVerbPreposition" ValidatesOnTargetUpdated="True"/>
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -187,28 +241,27 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
                                         <i:InvokeCommandAction Command="{Binding UwValidateExampleSectionCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding UwCheckExampleFieldsMaxLengthVisibilityCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwCheckExampleTextBoxesMaxLengthVisibilityCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBox>
 
                             <TextBox Style="{DynamicResource EasyTextBox}"
-                                         HorizontalAlignment="Stretch"
-                                         Width="192"
-                                         Grid.Column="1"
-                                         Margin="7 0 0 0"
-                                         Padding="14 11"
-                                 materialDesign:HintAssist.IsFloating="False"
-                                     
-                                         KeyDown="OnUpdateWindowExampleEnglishValueTextBoxKeyDown"
-                                         Name="uwExampleEnglishValueTextBox"
-                                         InputLanguageManager.InputLanguage="en-US"
-                                         materialDesign:HintAssist.Hint="Пример на английском">
+                                     HorizontalAlignment="Stretch"
+                                     Width="192"
+                                     Grid.Column="1"
+                                     Margin="7 0 0 0"
+                                     Padding="14 11"
+                                     materialDesign:HintAssist.IsFloating="False"
+                                     KeyDown="OnUpdateWindowExampleEnglishValueTextBoxKeyDown"
+                                     Name="uwExampleEnglishValueTextBox"
+                                     InputLanguageManager.InputLanguage="en-US"
+                                     materialDesign:HintAssist.Hint="Пример на английском">
 
                                 <TextBox.Text>
                                     <Binding Path="UwExampleEnglishValue" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="UpdateVerbPrepsotion" ValidatesOnTargetUpdated="True"/>
+                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="UpdateVerbPreposition" ValidatesOnTargetUpdated="True"/>
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
@@ -216,7 +269,7 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
                                         <i:InvokeCommandAction Command="{Binding UwValidateExampleSectionCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding UwCheckExampleFieldsMaxLengthVisibilityCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwCheckExampleTextBoxesMaxLengthVisibilityCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBox>
@@ -234,8 +287,8 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{Binding UwAddExampleViewCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding UwClearExampleAddingSectionCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding FocusExampleRussianValueFieldCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwClearExampleSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwFocusExampleRussianValueTextBoxCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
@@ -257,17 +310,16 @@
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
 
-
                         <Border BorderBrush="{DynamicResource EasyGray}" 
-                                    BorderThickness="0.5"
-                                    Grid.Row="4"/>
+                                BorderThickness="0.5"
+                                Grid.Row="4"/>
 
                         <!--Кнопки отмены и подтверждения добавления нового CommonRelation-->
                         <Grid Grid.Row="5"
-                                  Width="230"
+                              Width="230"
                               Margin="14 12 14 0"
-                                  HorizontalAlignment="Center"
-                                  VerticalAlignment="Center">
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -276,7 +328,7 @@
 
                             <!--Кнопка отмены-->
                             <Button Style="{DynamicResource EasyCancelButton}"
-                                    Name="newVerbPrepositionAddingWindowCancelButton1">
+                                    Name="uwCancelButton">
 
                                 <TextBlock Text="Отмена" FontSize="14" FontFamily="Arial"/>
 
@@ -284,6 +336,7 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwClearExampleSectionCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -292,8 +345,8 @@
                             <!--Кнопка подтверждения-->
                             <Button Style="{DynamicResource EasyConfirmButton}"
                                     Grid.Column="1"
-                                    Name="newVerbPrepositionAddingButton1"
-                                    IsEnabled="{Binding IsConfirmVerbPrepositionAddingButtonEnabled}">
+                                    Name="uwConfirmButton"
+                                    IsEnabled="{Binding UwConfirmButtonIsEnabled}">
 
                                 <TextBlock Text="Сохранить" FontSize="14" FontFamily="Arial"/>
 
@@ -302,6 +355,7 @@
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding UpdateVerbPrepositionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwClearExampleSectionCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -322,7 +376,8 @@
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding AwClearCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding AwClearExampleSectionCommand}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
 
@@ -346,7 +401,7 @@
                                 <ColumnDefinition Width="104"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            
+
                             <!--Текстбокс для введения значения глагола в новом VerbPreposition-->
                             <TextBox Width="140"
                                      Padding="14 11"
@@ -360,7 +415,7 @@
                                      KeyDown="OnVerbValueTextBoxKeyDown">
 
                                 <TextBox.Text>
-                                    <Binding Path="UwVerbValue" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                                    <Binding Path="AwVerbValue" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
                                         <Binding.ValidationRules>
                                             <validation:NotEmpty Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
                                             <validation:InRange Max="20" Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
@@ -370,8 +425,8 @@
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
-                                        <i:InvokeCommandAction Command="{Binding CheckVerbPrepositionForExistingCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding UpdateConfirmVerbPrepositionAddingButtonAvailabilityCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwCheckVerbPrepositionForExistingCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwUpdateConfirmButtonAvailabilityCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -391,7 +446,7 @@
                                      KeyDown="OnPrepositionValueTextBoxKeyDown">
 
                                 <TextBox.Text>
-                                    <Binding Path="AddingWindowPrepositionValue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding Path="AwPrepositionValue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
                                             <validation:NotEmpty Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
                                             <validation:InRange Max="10" Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
@@ -401,8 +456,8 @@
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
-                                        <i:InvokeCommandAction Command="{Binding CheckVerbPrepositionForExistingCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding UpdateConfirmVerbPrepositionAddingButtonAvailabilityCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwCheckVerbPrepositionForExistingCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwUpdateConfirmButtonAvailabilityCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -412,16 +467,16 @@
                             <TextBox Grid.Column="3"
                                      Padding="14 11"
                                      Width="190"
-                                         Style="{DynamicResource EasyValidationTextBox}"
-                                         materialDesign:HintAssist.Hint="Перевод*"
+                                     Style="{DynamicResource EasyValidationTextBox}"
+                                     materialDesign:HintAssist.Hint="Перевод*"
                                      materialDesign:HintAssist.IsFloating="False"
                                      materialDesign:ValidationAssist.Suppress="True"
-                                         InputLanguageManager.InputLanguage="ru-RU"
-                                         Name="awTranslationValueTextBox"
-                                         KeyDown="OnTranslationValueKeyDown">
+                                     InputLanguageManager.InputLanguage="ru-RU"
+                                     Name="awTranslationValueTextBox"
+                                     KeyDown="OnTranslationValueKeyDown">
 
                                 <TextBox.Text>
-                                    <Binding Path="AddingWindowTranslationValue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding Path="AwTranslationValue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
                                             <validation:NotEmpty Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
                                             <validation:InRange Max="20" Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
@@ -431,7 +486,7 @@
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
-                                        <i:InvokeCommandAction Command="{Binding UpdateConfirmVerbPrepositionAddingButtonAvailabilityCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwUpdateConfirmButtonAvailabilityCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -462,50 +517,48 @@
                                          InputLanguageManager.InputLanguage="ru-RU"
                                          Name="awExampleRussianValueTextBox"
                                          materialDesign:HintAssist.Hint="Пример на русском">
-                                
+
 
                                 <TextBox.Text>
-                                    <Binding Path="ExampleRussianValue" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding Path="AwExampleRussianValue" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
+                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
-                                        <i:InvokeCommandAction Command="{Binding ValidateExampleSectionCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding CheckExampleFieldsMaxLengthVisibilityCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwValidateExampleSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwCheckExampleTextBoxesMaxLengthVisibilityCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBox>
 
                             <TextBox Style="{DynamicResource EasyTextBox}"
-                                         HorizontalAlignment="Stretch"
-                                         Width="192"
-                                         Grid.Column="1"
-                                         Margin="7 0 0 0"
-                                         Padding="14 11"
-                                 materialDesign:HintAssist.IsFloating="False"
-                                     
-                                         KeyDown="OnAddingWindowExampleEnglishValueTextBoxKeyDown"
-                                         Name="awExampleEnglishValueTextBox"
-                                         InputLanguageManager.InputLanguage="en-US"
-                                         materialDesign:HintAssist.Hint="Пример на английском">
-                                
+                                     HorizontalAlignment="Stretch"
+                                     Width="192"
+                                     Grid.Column="1"
+                                     Margin="7 0 0 0"
+                                     Padding="14 11"
+                                     materialDesign:HintAssist.IsFloating="False"
+                                     KeyDown="OnAddingWindowExampleEnglishValueTextBoxKeyDown"
+                                     Name="awExampleEnglishValueTextBox"
+                                     InputLanguageManager.InputLanguage="en-US"
+                                     materialDesign:HintAssist.Hint="Пример на английском">
 
                                 <TextBox.Text>
-                                    <Binding Path="ExampleEnglishValue" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding Path="AwExampleEnglishValue" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
-                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>
+                                            <valudationRules:InRange Max="{x:Static constants:ModelConstants.ExampleValueMaxLength}" Group="AddVerbPreposition" ValidatesOnTargetUpdated="True"/>
                                         </Binding.ValidationRules>
                                     </Binding>
                                 </TextBox.Text>
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
-                                        <i:InvokeCommandAction Command="{Binding ValidateExampleSectionCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding CheckExampleFieldsMaxLengthVisibilityCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwValidateExampleSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwCheckExampleTextBoxesMaxLengthVisibilityCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBox>
@@ -522,18 +575,18 @@
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
-                                        <i:InvokeCommandAction Command="{Binding AddExampleViewCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding ClearExampleAddingFieldsCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding FocusExampleRussianValueFieldCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwAddExampleViewCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwClearExampleSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwFocusExampleRussianValueTextBoxCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
 
 
-                       
+
                         </Grid>
 
-                        <ItemsControl ItemsSource="{Binding ExampleViews}" 
+                        <ItemsControl ItemsSource="{Binding AwExampleViews}" 
                                           Grid.Row="3"
                                           Grid.Column="0"
                                           Width="450"
@@ -550,7 +603,7 @@
                                     BorderThickness="0.5"
                                     Grid.Row="4"/>
 
-                        <!--Кнопки отмены и подтверждения добавления нового CommonRelation-->
+
                         <Grid Grid.Row="5"
                                   Width="230"
                               Margin="14 12 14 0"
@@ -562,7 +615,6 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <!--Кнопка отмены добавления нового CommonRelation-->
                             <Button Style="{DynamicResource EasyCancelButton}"
                                     Name="awCancelButton">
 
@@ -572,7 +624,8 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwClearCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding AwClearExampleSectionCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -582,7 +635,7 @@
                             <Button Style="{DynamicResource EasyConfirmButton}"
                                     Grid.Column="1"
                                     Name="awConfirmButton"
-                                    IsEnabled="{Binding IsConfirmVerbPrepositionAddingButtonEnabled}">
+                                    IsEnabled="{Binding AwConfirmButtonIsEnabled}">
 
                                 <TextBlock Text="Добавить" FontSize="14" FontFamily="Arial"/>
 

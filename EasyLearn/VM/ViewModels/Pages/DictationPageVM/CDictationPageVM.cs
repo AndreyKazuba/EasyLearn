@@ -112,7 +112,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             {
                 if (commonDictationManager.CurrentRelationHasSynonyms)
                     CdShowAnotherAnswers(commonDictationManager.AvailableRelations, this.AnswerValue);
-                //CdShowCorrectIcon();
+                SetCorrectPageBackground();
                 SetAnswerTextBoxAsCorrect();
                 IncreaseDictationProgressBarValue();
                 SwitchCheckAndNextButtons();
@@ -121,7 +121,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             }
             else
             {
-                //CdShowWrongIcon();
+                SetWrongPageBackground();
                 SetAnswerTextBoxAsWrong();
                 if (++wrongAnswers > 2)
                     CdShowPromt();
@@ -136,7 +136,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 CdSetRelation(commonDictationManager.CurrentRelation);
                 SetDefaultAnswerValue();
                 CdHideAnotherAnswers();
-                //CdHideIcons();
+                SetDefaultPageBackground();
                 SetAnswerTextBoxAsDefault();
                 CdHidePromt();
                 SwitchCheckAndNextButtons();

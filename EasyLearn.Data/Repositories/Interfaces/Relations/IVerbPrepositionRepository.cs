@@ -25,5 +25,6 @@ namespace EasyLearn.Data.Repositories.Interfaces
             string? secondExampleRussianValue,
             string? secondExampleEnglishValue);
         Task DeleteAllDictionaryVerbPrepositions(int dictionaryId);
+        Task DeleteVerbPreposition(int verbPrepositionId);
     }
 }

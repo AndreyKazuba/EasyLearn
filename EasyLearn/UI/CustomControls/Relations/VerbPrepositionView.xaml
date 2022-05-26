@@ -6,8 +6,14 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             mc:Ignorable="d">
-    <Border BorderThickness="0.6" BorderBrush="#99bbff" Background="GhostWhite" Margin="12 12 0 0" Height="{Binding CardHeight}" VerticalAlignment="Top">
+             mc:Ignorable="d"
+             Visibility="{Binding IsVisible, Converter={converters:ReverseCollapseConverter}}">
+    <Border BorderThickness="0.6" 
+            BorderBrush="#99bbff" 
+            Background="GhostWhite" 
+            Margin="12 12 0 0" 
+            Height="{Binding Height}" 
+            VerticalAlignment="Top">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="45"/>
@@ -96,8 +102,7 @@
                     Width="18"
                     Height="18"
                     Padding="1"
-                    Grid.Column="2"
-                    ToolTip="Настройки аккаунта">
+                    Grid.Column="2">
 
                 <materialDesign:PackIcon Kind="DotsVertical" 
                                          Width="17" 
@@ -107,7 +112,7 @@
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <i:InvokeCommandAction Command="{Binding OpenSettingsCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding OpenUpdateVerbPrepositionWindowCommand}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
 

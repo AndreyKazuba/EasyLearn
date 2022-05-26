@@ -17,16 +17,18 @@ namespace EasyLearn.UI.CustomControls
         public string EnglishValue => viewModel.EnglishValue;
         #endregion
 
-        public void UpdateView(CommonRelation commonRelation) => this.viewModel.Set(commonRelation);
-        public void Collapse() => this.viewModel.Collapse();
-        public void Show() => this.viewModel.Show();
-
         public CommonRelationView(CommonRelationVM viewModel)
         {
             this.viewModel = viewModel;
             this.DataContext = viewModel;
             InitializeComponent();
         }
+
+        #region Public methods
+        public void UpdateView(CommonRelation commonRelation) => viewModel.Set(commonRelation);
+        public void Collapse() => viewModel.Collapse();
+        public void Show() => viewModel.Show();
+        #endregion
 
         #region Static members
         public static CommonRelationView Create(CommonRelation commonRelation) => new CommonRelationView(new CommonRelationVM(commonRelation));

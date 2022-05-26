@@ -54,10 +54,67 @@
 
                             <Button Style="{StaticResource EasyCancelButton}" Margin="0 0 15 0" Height="38" Width="38"
                                     Grid.Column="4"
-                                    Padding="0">
+                                    Padding="0"
+                                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
                                 <materialDesign:PackIcon Kind="TrashCanOutline" Height="28" Width="28"
                                                      VerticalAlignment="Center" Foreground="{DynamicResource EasyRed}"
                                                      HorizontalAlignment="Center"/>
+                                <Button.CommandParameter>
+                                    <Grid Margin="0 14">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition Height="0.8" MaxHeight="0.8"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Margin="14 0 14 12" Style="{DynamicResource MaterialDesignBody1TextBlock}" Text="Удалить все записи?" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+                                        <Border BorderBrush="{DynamicResource EasyGray}" 
+                                                BorderThickness="0.5"
+                                                Grid.Row="1"/>
+
+                                        <Grid Grid.Row="2"
+                                              Margin="14 12 14 0"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center">
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!--Кнопка отмены-->
+                                            <Button Style="{DynamicResource EasyCancelButton}"
+                                                    Name="dwCancelButton"
+                                                    Width="50"
+                                                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
+
+                                                <TextBlock Text="Нет" FontSize="14" FontFamily="Arial"/>
+                                            </Button>
+
+                                            <!--Кнопка подтверждения-->
+                                            <Button Style="{DynamicResource EasyConfirmButton}"
+                                                    Grid.Column="1"
+                                                    Width="50"
+                                                    
+                                                    Name="вwConfirmButton">
+
+                                                <TextBlock Text="Да" FontSize="14" FontFamily="Arial"/>
+
+                                                <!--Действия кнопки при её нажатии-->
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                                                        <i:InvokeCommandAction Command="{Binding DeleteAllCommonRelationsCommand}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+
+                                            </Button>
+
+                                        </Grid>
+
+                                    </Grid>
+                                </Button.CommandParameter>
                             </Button>
                         </Grid>
                     </Border>
@@ -66,10 +123,10 @@
                 <Grid>
                     <!--Кнопка для открытия верхнего меню-->
                     <Button Visibility="Collapsed" Name="openTopMenuButton" Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"/>
-                    
+
                     <!--Кнопка для хакрытия верхнего меню-->
                     <Button Visibility="Collapsed" Name="closeTopMenuButton" Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"/>
-                    
+
                     <!--Контейнер для содержания всех CommonRelations-->
                     <ScrollViewer Grid.Row="1" ScrollViewer.CanContentScroll="False">
                         <ItemsControl ItemsSource="{Binding CommonRelationViews}" 
@@ -281,6 +338,8 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwClearExampleSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwClearCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -290,7 +349,7 @@
                             <Button Style="{DynamicResource EasyConfirmButton}"
                                     Grid.Column="1"
                                     Name="uwConfirmButton"
-                                    IsEnabled="{Binding AwConfirmButtonIsEnabled}">
+                                    IsEnabled="{Binding UwConfirmButtonIsEnabled}">
 
                                 <TextBlock Text="Сохранить" FontSize="14" FontFamily="Arial"/>
 
@@ -299,6 +358,8 @@
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding UpdateCommonRelationCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwClearExampleSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwClearCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 

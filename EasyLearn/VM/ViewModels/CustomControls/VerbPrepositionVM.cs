@@ -7,81 +7,103 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 {
     public class VerbPrepositionVM : ViewModel
     {
+        #region Private fields
         private CardState state;
+        #endregion
+
+        #region Public props
         public int Id { get; private set; }
+        public int OrderValue { get; private set; }
+        #endregion
+
+        #region Binding props
+        public bool IsVisible { get; set; } = true;
         public string VerbValue { get; set; }
-        public int OrderValue { get; set; }
         public string PrepositionValue { get; set; }
         public string TranslationValue { get; set; }
-        public int CardHeight { get; set; }
+        public string FirstExampleRussianValue { get; set; }
+        public string FirstExampleEnglishValue { get; set; }
+        public string SecondExampleRussianValue { get; set; }
+        public string SecondExampleEnglishValue { get; set; }
         public bool IsFirstExampleVisible { get; set; }
         public bool IsSecondExampleVisible { get; set; }
-        public string? FirstExampleRussianValue { get; set; }
-        public string? FirstExampleEnglishValue { get; set; }
-        public string? SecondExampleRussianValue { get; set; }
-        public string? SecondExampleEnglishValue { get; set; }
+        public int Height { get; set; }
+        #endregion
+
+#pragma warning disable CS8618
         public VerbPrepositionVM(VerbPreposition verbPreposition)
         {
             this.Id = verbPreposition.Id;
-            UpdateVM(verbPreposition);
+            Set(verbPreposition);
         }
-        public void UpdateVM(VerbPreposition verbPreposition)
+#pragma warning restore CS8618
+
+        #region Commands
+        public Command OpenUpdateVerbPrepositionWindowCommand { get; private set; }
+        protected override void InitCommands()
         {
-            this.PrepositionValue = verbPreposition.Preposition.Value;
-            this.VerbValue = StringHelper.NormalizeRegister(verbPreposition.Verb.Value);
-            this.TranslationValue = StringHelper.NormalizeRegister(verbPreposition.Translation);
-            this.IsFirstExampleVisible = verbPreposition.IsFirstExampleExist;
-            this.IsSecondExampleVisible = verbPreposition.IsSecondExampleExist;
-            this.FirstExampleRussianValue = verbPreposition.FirstExampleRussianValue;
-            this.FirstExampleEnglishValue = verbPreposition.FirstExampleEnglishValue;
-            this.SecondExampleRussianValue = verbPreposition.SecondExampleRussianValue;
-            this.SecondExampleEnglishValue = verbPreposition.SecondExampleEnglishValue;
+            OpenUpdateVerbPrepositionWindowCommand = new Command(OpenUpdateVerbPrepositionWindow);
+        }
+        private void OpenUpdateVerbPrepositionWindow() => App.GetService<EditVerbPrepositionDictionaryPageVM>().UwOpenWindowCommand.Execute(Id);
+        #endregion
+
+        #region Public methods
+        public void Set(VerbPreposition verbPreposition)
+        {
+            PrepositionValue = verbPreposition.Preposition.Value;
+            VerbValue = StringHelper.NormalizeRegister(verbPreposition.Verb.Value);
+            TranslationValue = StringHelper.NormalizeRegister(verbPreposition.Translation);
+            IsFirstExampleVisible = verbPreposition.IsFirstExampleExist;
+            IsSecondExampleVisible = verbPreposition.IsSecondExampleExist;
+            FirstExampleRussianValue = verbPreposition.FirstExampleRussianValue.TryNormalizeRegister().EmptyIfNull();
+            FirstExampleEnglishValue = verbPreposition.FirstExampleEnglishValue.TryNormalizeRegister().EmptyIfNull();
+            SecondExampleRussianValue = verbPreposition.SecondExampleRussianValue.TryNormalizeRegister().EmptyIfNull();
+            SecondExampleEnglishValue = verbPreposition.SecondExampleEnglishValue.TryNormalizeRegister().EmptyIfNull();
             SetState(verbPreposition);
             SetHeight();
             SetOrder();
         }
-        public Command OpenSettingsCommand { get; private set; }
-        protected override void InitCommands()
-        {
-            this.OpenSettingsCommand = new Command(OpenSettings);
-        }
-        private void OpenSettings() => App.GetService<EditVerbPrepositionDictionaryPageVM>().UwOpenWindowCommand.Execute(Id);
+        public void Collapse() => IsVisible = false;
+        public void Show() => IsVisible = true;
+        #endregion
+
+        #region Private methods
         private void SetState(VerbPreposition verbPreposition)
         {
             bool firstExampleExist = verbPreposition.IsFirstExampleExist;
             bool secondExampleExist = verbPreposition.IsSecondExampleExist;
             if (!firstExampleExist && !secondExampleExist)
-                this.state = CardState.Without;
+                state = CardState.Without;
             else if (firstExampleExist && secondExampleExist)
-                this.state = CardState.WithTwoExamples;
+                state = CardState.WithTwoExamples;
             else
-                this.state = CardState.WithOneExample;
+                state = CardState.WithOneExample;
         }
-        private void SetOrder()
-        {
-            this.OrderValue = (int)this.state;
-        }
+        private void SetOrder() => OrderValue = (int)state;
         private void SetHeight()
         {
-            switch (this.state)
+            switch (state)
             {
                 case CardState.Without:
-                    this.CardHeight = 94;
+                    Height = 94;
                     break;
                 case CardState.WithOneExample:
-                    this.CardHeight = 94 + 50;
+                    Height = 94 + 50;
                     break;
                 case CardState.WithTwoExamples:
-                    this.CardHeight = 94 + 50 + 52;
+                    Height = 94 + 50 + 52;
                     break;
             }
         }
+        #endregion
 
+        #region Nested types
         private enum CardState
         {
             Without = 0,
             WithOneExample = 1,
             WithTwoExamples = 2,
         }
+        #endregion
     }
 }

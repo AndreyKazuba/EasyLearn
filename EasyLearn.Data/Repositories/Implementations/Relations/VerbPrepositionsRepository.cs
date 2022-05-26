@@ -102,6 +102,12 @@ namespace EasyLearn.Data.Repositories.Implementations
             context.VerbPrepositions.RemoveRange(verbPrepositions);
             await context.SaveChangesAsync();
         }
+        public async Task DeleteVerbPreposition(int verbPrepositionId)
+        {
+            VerbPreposition verbPreposition = await context.VerbPrepositions.FirstAsync(verbPreposition => verbPreposition.Id == verbPrepositionId);
+            context.VerbPrepositions.Remove(verbPreposition);
+            await context.SaveChangesAsync();
+        }
         #endregion
 
         #region Private members

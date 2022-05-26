@@ -85,6 +85,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public bool StopButtonIsVisible { get; set; }
         public bool DictationDirectionButtonsIsVisible { get; set; }
         public string AnswerValue { get; set; }
+        public SolidColorBrush PageBackground { get; set; }
         #endregion
 
         #region Commands 
@@ -250,6 +251,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             SetAnswerTextBoxAsDefault();
             IvSetDefaultFixedAnswerValues();
             IvHidePromt();
+            SetDefaultPageBackground();
         }
         private void SetDefaultAnswerValue() => this.AnswerValue = String.Empty;
         private void SetDefaultMainDisplayValue()
@@ -357,6 +359,9 @@ namespace EasyLearn.VM.ViewModels.Pages
             answerTextBox.BorderBrush = border;
             answerTextBoxIsOnDefaultState = true;
         }
+        private void SetDefaultPageBackground() => PageBackground = new BrushConverter().ConvertFrom("#ffffff") as SolidColorBrush ?? throw new Exception();
+        private void SetCorrectPageBackground() => PageBackground = new BrushConverter().ConvertFrom("#eff5f1") as SolidColorBrush ?? throw new Exception();
+        private void SetWrongPageBackground() => PageBackground = new BrushConverter().ConvertFrom("#f6eeee") as SolidColorBrush ?? throw new Exception();
         private void ExecuteForCurrentDictionaryType(Action commonAction, Action verbPrepositionAction, Action irregularVerbAction)
         {
             switch (CurrentDictionaryType)
