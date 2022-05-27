@@ -28,12 +28,12 @@ namespace EasyLearn.Infrastructure.DictationManagers
             this.maxCurrentVerbPrepositionId = verbPrepositions.Count - 1;
         }
 
-        #region Public methods
+        #region Public dictation process methods
         public VerbPreposition Start()
         {
             ThrowIfItImpossibleToStart();
-            this.isStarted = true;
-            return this.verbPrepositions[currentVerbPrepositionId];
+            isStarted = true;
+            return verbPrepositions[currentVerbPrepositionId];
         }
         public bool GoNext()
         {
@@ -43,19 +43,19 @@ namespace EasyLearn.Infrastructure.DictationManagers
         public bool IsAnswerCorrect(string answer)
         {
             ThrowIfDictationIsNotStarted();
-            return StringHelper.Equals(this.verbPrepositions[currentVerbPrepositionId].Preposition.Value, answer);
+            return StringHelper.Equals(verbPrepositions[currentVerbPrepositionId].Preposition.Value, answer);
         }
         #endregion
 
-        #region Private methods
+        #region Private throwers
         private void ThrowIfItImpossibleToStart()
         {
-            if (this.verbPrepositions is null || !this.verbPrepositions.Any())
+            if (verbPrepositions is null || !verbPrepositions.Any())
                 throw new Exception(ExceptionMessagesHelper.CannotStartDictationWithoutWords);
         }
         private void ThrowIfDictationIsNotStarted()
         {
-            if (!this.isStarted)
+            if (!isStarted)
                 throw new Exception(ExceptionMessagesHelper.NeedsToStarDictationFirst);
         }
         #endregion

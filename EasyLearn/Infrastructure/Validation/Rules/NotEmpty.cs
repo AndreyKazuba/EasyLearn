@@ -13,8 +13,8 @@ namespace EasyLearn.Infrastructure.Validation
         {
             set
             {
-                this.group = value;
-                this.currentRuleId = ValidationPool.Register(value);
+                group = value;
+                currentRuleId = ValidationPool.Register(value);
             }
         }
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)

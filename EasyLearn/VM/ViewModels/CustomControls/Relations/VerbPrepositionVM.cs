@@ -67,7 +67,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public void Show() => IsVisible = true;
         #endregion
 
-        #region Private methods
+        #region Private helpers
         private void SetState(VerbPreposition verbPreposition)
         {
             bool firstExampleExist = verbPreposition.IsFirstExampleExist;

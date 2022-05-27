@@ -10,10 +10,6 @@ namespace EasyLearn.Infrastructure.ValueConverters
             bool isCollapsed = (bool)value;
             return isCollapsed ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
         }
-
-        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }

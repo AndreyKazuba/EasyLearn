@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="UI\AppWindow.xaml.cs">
+    <Compile Update="UI\Windows\AppWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="UI\Pages\DictationPage.xaml.cs">
@@ -42,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="UI\AppWindow.xaml">
+    <Page Update="UI\Windows\AppWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

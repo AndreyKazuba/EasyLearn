@@ -10,27 +10,16 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 {
     public class CommonDictionaryVM : ViewModel
     {
-        public int Id { get; set; }
+        #region Public props
+        public int Id { get; private set; }
+        #endregion
+
+        #region Binding props
         public string Name { get; set; }
         public string Description { get; set; }
         public string EditNameFieldValue { get; set; }
         public string EditDescriptionFieldValue { get; set; }
         public bool IsCardFlipped { get; set; }
-
-        #region Commands
-        public Command OpenCurrentCommonDictionaryCommand { get; private set; }
-        public Command RemoveCommonDictionaryCommand { get; private set; }
-        public Command EditCommonDictionaryCommand { get; private set; }
-        public Command SetEditFieldsValueCommand { get; private set; }
-        public Command FlipBackAllAnotherCardsCommand { get; private set; }
-        protected override void InitCommands()
-        {
-            this.OpenCurrentCommonDictionaryCommand = new Command(OpenCurrentCommonDictionary);
-            this.RemoveCommonDictionaryCommand = new Command(RemoveCommonDictionary);
-            this.EditCommonDictionaryCommand = new Command(async () => await EditCommonDictionary());
-            this.SetEditFieldsValueCommand = new Command(SetEditFieldsValue);
-            this.FlipBackAllAnotherCardsCommand = new Command(FlipBackAllAnotherCards);
-        }
         #endregion
 
 #pragma warning disable CS8618
@@ -42,30 +31,47 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         }
 #pragma warning restore CS8618
 
-        private void RemoveCommonDictionary() => App.GetService<DictionariesPageVM>().DeleteCommonDictionaryCommand.Execute(Id);
-        private async Task EditCommonDictionary()
+        #region Commands
+        public Command OpenCurrentCommonDictionaryCommand { get; private set; }
+        public Command RemoveCommonDictionaryCommand { get; private set; }
+        public Command EditCommonDictionaryCommand { get; private set; }
+        public Command SetEditFieldsValueCommand { get; private set; }
+        public Command FlipBackAllAnotherCardsCommand { get; private set; }
+        protected override void InitCommands()
         {
-            string newDictionaryName = this.EditNameFieldValue;
-            string newDictionaryDescription = this.EditDescriptionFieldValue;
-            if (StringHelper.Equals(this.Name, newDictionaryName) && StringHelper.Equals(this.Description, newDictionaryDescription))
-                return;
-            this.Name = newDictionaryName;
-            this.Description = newDictionaryDescription;
-            await App.GetService<ICommonDictionaryRepository>().EditCommonDictionary(this.Id, newDictionaryName, StringHelper.NullIfEmptyOrWhiteSpace(newDictionaryDescription));
+            OpenCurrentCommonDictionaryCommand = new Command(OpenCurrentCommonDictionary);
+            RemoveCommonDictionaryCommand = new Command(RemoveCommonDictionary);
+            EditCommonDictionaryCommand = new Command(async () => await EditCommonDictionary());
+            SetEditFieldsValueCommand = new Command(SetEditFieldsValue);
+            FlipBackAllAnotherCardsCommand = new Command(FlipBackAllAnotherCards);
         }
-
         private void OpenCurrentCommonDictionary()
         {
             SetCurrentDictionary();
             App.GetService<AppWindowVM>().OpenEditCommonDictionaryPageCommand.Execute();
             App.GetService<AppWindowVM>().SetGoBackButtonCommand.Execute();
         }
-        private void FlipBackAllAnotherCards() => App.GetService<DictionariesPageVM>().FlipBackAllCardsCommand.Execute();
-        private void SetCurrentDictionary() => App.GetService<EditCommonDictionaryPageVM>().SetDictionaryCommand.Execute(Id);
+        private void RemoveCommonDictionary() => App.GetService<DictionariesPageVM>().DeleteCommonDictionaryCommand.Execute(Id);
+        private async Task EditCommonDictionary()
+        {
+            string newDictionaryName = EditNameFieldValue;
+            string newDictionaryDescription = EditDescriptionFieldValue;
+            if (StringHelper.Equals(Name, newDictionaryName) && StringHelper.Equals(Description, newDictionaryDescription))
+                return;
+            Name = newDictionaryName;
+            Description = newDictionaryDescription;
+            await App.GetService<ICommonDictionaryRepository>().EditCommonDictionary(Id, newDictionaryName, StringHelper.NullIfEmptyOrWhiteSpace(newDictionaryDescription));
+        }
         private void SetEditFieldsValue()
         {
-            this.EditDescriptionFieldValue = this.Description;
-            this.EditNameFieldValue = this.Name;
+            EditDescriptionFieldValue = Description;
+            EditNameFieldValue = Name;
         }
+        private void FlipBackAllAnotherCards() => App.GetService<DictionariesPageVM>().FlipBackAllCardsCommand.Execute();
+        #endregion
+
+        #region Private helpers
+        private void SetCurrentDictionary() => App.GetService<EditCommonDictionaryPageVM>().SetDictionaryCommand.Execute(Id);
+        #endregion
     }
 }

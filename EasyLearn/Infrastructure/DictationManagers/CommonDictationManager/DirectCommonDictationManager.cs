@@ -13,7 +13,6 @@ namespace EasyLearn.Infrastructure.DictationManagers
         public override string CurrentAnswerValue => CurrentRelation.EnglishUnit.Value;
         #endregion
 
-#pragma warning disable CS8618
         public DirectCommonDictationManager(List<CommonRelation> commonRelations, int dictationLength)
         {
             if (dictationLength <= 0 || dictationLength > commonRelations.Count)
@@ -22,21 +21,20 @@ namespace EasyLearn.Infrastructure.DictationManagers
             this.selectedRelations = new List<CommonRelation>(UniversalHelper.Shuffle(allRelations).Take(dictationLength));
             this.maxCurrentRelationId = dictationLength - 1;
         }
-#pragma warning restore CS8618
 
         #region Public methods
         public override bool IsAnswerCorrect(string answer)
         {
             ThrowIfDictationIsNotStarted();
-            return this.AvailableRelations.Any(relation => StringHelper.Equals(relation.EnglishUnit.Value, answer));
+            return AvailableRelations.Any(relation => StringHelper.Equals(relation.EnglishUnit.Value, answer));
         }
         #endregion
 
-        #region Proteched methods
+        #region Protected methods
         protected override void SetSynonymRelations()
         {
-            int currentRelationRussianUnitId = this.selectedRelations[currentRelationId].RussianUnit.Id;
-            this.synonymRelations = this.allRelations
+            int currentRelationRussianUnitId = selectedRelations[currentRelationId].RussianUnit.Id;
+            synonymRelations = allRelations
                 .Where(relation => relation.RussianUnit.Id == currentRelationRussianUnitId)
                 .ToList();
         }

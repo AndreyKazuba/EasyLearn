@@ -8,31 +8,37 @@ namespace EasyLearn.VM.Windows
 {
     public class AppWindowVM : ViewModel
     {
+        #region Private fields
         private Page currentPage;
-        public event Action CurrentPageChanged;
+        #endregion
 
+        #region Events
+        public event Action CurrentPageChanged;
+        #endregion
+
+        #region Binding props
         public Page CurrentPage
         {
             get { return currentPage; }
             set
             {
                 currentPage = value;
-                if (this.CurrentPageChanged is not null)
-                    this.CurrentPageChanged.Invoke();
+                if (CurrentPageChanged is not null)
+                    CurrentPageChanged.Invoke();
             }
         }
         public bool ShowMenuButtonIsVisible { get; set; } = true;
         public bool CloseMenuButtonIsVisible { get; set; }
         public bool GoBackButtonIsVisible { get; set; }
+        #endregion
 
-        public AppWindowVM()
-        {
-            SetStartPage();
-        }
+#pragma warning disable CS8618
+        public AppWindowVM() => CurrentPage = Page.Dictionaries;
+#pragma warning restore CS8618
 
         #region Commands
-        public Command OpenDictationPage { get; private set; }
-        public Command OpenUsersPage { get; private set; }
+        public Command OpenDictationPageCommand { get; private set; }
+        public Command OpenUsersPageCommand { get; private set; }
         public Command OpenDictionariesPageCommand { get; private set; }
         public Command OpenEditCommonDictionaryPageCommand { get; private set; }
         public Command OpenEditVerbPrepositionDictionaryPageCommand { get; private set; }
@@ -45,41 +51,24 @@ namespace EasyLearn.VM.Windows
         public Command HideGoBackButtonCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.OpenDictationPage = new Command(() => this.CurrentPage = Page.Dictation);
-            this.OpenUsersPage = new Command(() => this.CurrentPage = Page.Users);
-            this.OpenDictionariesPageCommand = new Command(() => this.CurrentPage = Page.Dictionaries);
-            this.OpenEditCommonDictionaryPageCommand = new Command(() => this.CurrentPage = Page.EditCommonWordListPage);
-            this.OpenEditVerbPrepositionDictionaryPageCommand = new Command(() => this.CurrentPage = Page.EditVerbPrepositionListPage);
-            this.MinimizeCommand = new Command(Minimize);
-            this.MaximizeCommand = new Command(Maximize);
-            this.CloseCommand = new Command(Close);
-            this.SetCloseMenuButtonCommand = new Command(SetCloseMenuButton);
-            this.SetShowMenuButtonCommand = new Command(SetShowMenuButton);
-            this.SetGoBackButtonCommand = new Command(SetGoBackButton);
-            this.HideGoBackButtonCommand = new Command(HideGoBackButton);
+            OpenDictationPageCommand = new Command(OpenDictationPage);
+            OpenUsersPageCommand = new Command(OpenUsersPage);
+            OpenDictionariesPageCommand = new Command(OpenDictionariesPage);
+            OpenEditCommonDictionaryPageCommand = new Command(OpenEditCommonDictionaryPage);
+            OpenEditVerbPrepositionDictionaryPageCommand = new Command(OpenEditVerbPrepositionDictionaryPage);
+            MinimizeCommand = new Command(Minimize);
+            MaximizeCommand = new Command(Maximize);
+            CloseCommand = new Command(Close);
+            SetCloseMenuButtonCommand = new Command(SetCloseMenuButton);
+            SetShowMenuButtonCommand = new Command(SetShowMenuButton);
+            SetGoBackButtonCommand = new Command(SetGoBackButton);
+            HideGoBackButtonCommand = new Command(HideGoBackButton);
         }
-
-        protected override void InitEvents()
-        {
-            AppWindow.DrawerButtonClick += OnDrawerButtonClick;
-        }
-        private void OnDrawerButtonClick() => SetShowMenuButton();
-
-        #endregion
-        private void SetCloseMenuButton()
-        {
-            this.ShowMenuButtonIsVisible = false;
-            this.CloseMenuButtonIsVisible = true;
-        }
-        private void SetShowMenuButton()
-        {
-            this.CloseMenuButtonIsVisible = false;
-            this.ShowMenuButtonIsVisible = true;
-        }
-        private void SetGoBackButton() => this.GoBackButtonIsVisible = true;
-        private void HideGoBackButton() => this.GoBackButtonIsVisible = false;
-
-        private void SetStartPage() => this.CurrentPage = Page.Dictionaries;
+        private void OpenDictationPage() => CurrentPage = Page.Dictation;
+        private void OpenUsersPage() => CurrentPage = Page.Users;
+        private void OpenDictionariesPage() => CurrentPage = Page.Dictionaries;
+        private void OpenEditCommonDictionaryPage() => CurrentPage = Page.EditCommonDictionaryPage;
+        private void OpenEditVerbPrepositionDictionaryPage() => CurrentPage = Page.EditVerbPrepositionDictionaryPage;
         private void Minimize()
         {
             AppWindow window = App.GetService<AppWindow>();
@@ -95,6 +84,26 @@ namespace EasyLearn.VM.Windows
             AppWindow window = App.GetService<AppWindow>();
             window.Close();
         }
+        private void SetCloseMenuButton()
+        {
+            ShowMenuButtonIsVisible = false;
+            CloseMenuButtonIsVisible = true;
+        }
+        private void SetShowMenuButton()
+        {
+            CloseMenuButtonIsVisible = false;
+            ShowMenuButtonIsVisible = true;
+        }
+        private void SetGoBackButton() => GoBackButtonIsVisible = true;
+        private void HideGoBackButton() => GoBackButtonIsVisible = false;
+        #endregion
 
+        #region Event handling
+        protected override void InitEvents()
+        {
+            AppWindow.DrawerButtonClick += OnDrawerButtonClick;
+        }
+        private void OnDrawerButtonClick() => SetShowMenuButton();
+        #endregion
     }
 }

@@ -11,10 +11,6 @@ namespace EasyLearn.Infrastructure.ValueConverters
             bool isCurrent = (bool)value;
             return isCurrent ? new BrushConverter().ConvertFrom("#71da8d") : new BrushConverter().ConvertFrom("#99bbff");
         }
-
-        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }

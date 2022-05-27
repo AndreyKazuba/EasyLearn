@@ -5,12 +5,12 @@ using System.Windows.Controls;
 
 namespace EasyLearn.UI.CustomControls
 {
-    public partial class AvailableRelationView : UserControl
+    public partial class SynonymView : UserControl
     {
         #region Private fields
-        private AvailableRelationVM viewModel;
+        private SynonymVM viewModel;
         #endregion
-        public AvailableRelationView(AvailableRelationVM viewModel)
+        public SynonymView(SynonymVM viewModel)
         {
             this.viewModel = viewModel;
             this.DataContext = viewModel;
@@ -18,8 +18,8 @@ namespace EasyLearn.UI.CustomControls
         }
 
         #region Static members
-        public static AvailableRelationView Create(CommonRelation commonRelation, DictationDirection direction) 
-            => new AvailableRelationView(new AvailableRelationVM(commonRelation, direction));
+        public static SynonymView Create(CommonRelation commonRelation, DictationDirection direction) 
+            => new SynonymView(new SynonymVM(commonRelation, direction));
         #endregion
     }
 }

@@ -9,29 +9,32 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public int Id { get; private set; }
         public string RussianValue { get; private set; }
         public string EnglishValue { get; private set; }
+        #endregion
+
+        #region Binding props
         public string Content => $"{RussianValue} - {EnglishValue}";
         #endregion
+
+#pragma warning disable CS8618
+        public ExampleVM(string russianValue, string englishValue, int id)
+        {
+            this.Id = id;
+            this.RussianValue = russianValue;
+            this.EnglishValue = englishValue;
+        }
+#pragma warning restore CS8618
 
         #region Commands
         public Command RemoveCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.RemoveCommand = new Command(Remove);
+            RemoveCommand = new Command(Remove);
         }
-        #endregion
-
-        #region Command logic methods
         private void Remove()
         {
             App.GetService<EditVerbPrepositionDictionaryPageVM>().RemoveExampleViewCommand.Execute(Id);
             App.GetService<EditCommonDictionaryPageVM>().RemoveExampleViewCommand.Execute(Id);
         }
         #endregion
-        public ExampleVM(string russianTranslation, string englishTranslation, int id)
-        {
-            this.Id = id;
-            this.RussianValue = russianTranslation;
-            this.EnglishValue = englishTranslation;
-        }
     }
 }

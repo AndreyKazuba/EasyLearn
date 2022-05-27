@@ -29,12 +29,12 @@ namespace EasyLearn.Infrastructure.DictationManagers
             this.maxCurrentIrregularVerbId = irregularVerbs.Count - 1;
         }
 
-        #region Public methods
+        #region Public dictation process methods
         public IrregularVerb Start()
         {
             ThrowIfItImpossibleToStart();
-            this.isStarted = true;
-            return this.irregularVerbs[currentIrregularVerbId];
+            isStarted = true;
+            return irregularVerbs[currentIrregularVerbId];
         }
         public bool GoNext()
         {
@@ -44,29 +44,29 @@ namespace EasyLearn.Infrastructure.DictationManagers
         public bool IsV1AnswerCorrect(string answer)
         {
             ThrowIfDictationIsNotStarted();
-            return StringHelper.Equals(this.irregularVerbs[currentIrregularVerbId].FirstForm.Value, answer);
+            return StringHelper.Equals(irregularVerbs[currentIrregularVerbId].FirstForm.Value, answer);
         }
         public bool IsV2AnswerCorrect(string answer)
         {
             ThrowIfDictationIsNotStarted();
-            return StringHelper.Equals(this.irregularVerbs[currentIrregularVerbId].SecondForm.Value, answer);
+            return StringHelper.Equals(irregularVerbs[currentIrregularVerbId].SecondForm.Value, answer);
         }
         public bool IsV3AnswerCorrect(string answer)
         {
             ThrowIfDictationIsNotStarted();
-            return StringHelper.Equals(this.irregularVerbs[currentIrregularVerbId].ThirdForm.Value, answer);
+            return StringHelper.Equals(irregularVerbs[currentIrregularVerbId].ThirdForm.Value, answer);
         }
         #endregion
 
-        #region Provate methods
+        #region Private throwers
         private void ThrowIfItImpossibleToStart()
         {
-            if (this.irregularVerbs is null || !this.irregularVerbs.Any())
+            if (irregularVerbs is null || !irregularVerbs.Any())
                 throw new Exception(ExceptionMessagesHelper.CannotStartDictationWithoutWords);
         }
         private void ThrowIfDictationIsNotStarted()
         {
-            if (!this.isStarted)
+            if (!isStarted)
                 throw new Exception(ExceptionMessagesHelper.NeedsToStarDictationFirst);
         }
         #endregion

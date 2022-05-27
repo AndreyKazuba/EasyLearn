@@ -356,7 +356,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void OnWindowCtrlNDown()
         {
-            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditVerbPrepositionListPage)
+            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditVerbPrepositionDictionaryPage)
             {
                 AwFocusVerbValueTextBox();
                 AwOpenWindowButtonSoftClick();
@@ -364,7 +364,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void OnWindowEscDown()
         {
-            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditVerbPrepositionListPage)
+            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditVerbPrepositionDictionaryPage)
                 AwCancelButtonSoftClick();
         }
         private void OnGoBackButtonClick()

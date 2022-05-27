@@ -10,10 +10,6 @@ namespace EasyLearn.Infrastructure.ValueConverters
             bool isVisible = (bool)value;
             return isVisible ? System.Windows.Visibility.Visible : System.Windows.Visibility.Hidden;
         }
-
-        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }

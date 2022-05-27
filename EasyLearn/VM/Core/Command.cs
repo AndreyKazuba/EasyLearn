@@ -14,7 +14,7 @@ namespace EasyLearn.VM.Core
         }
         public Command(Action action) => this.action = action;
         public bool CanExecute(object? parameter) => true;
-        public void Execute(object? parameter = null) => this.action.Invoke();
+        public void Execute(object? parameter = null) => action.Invoke();
     }
     public class Command<TArgument> : ICommand
     {
@@ -30,7 +30,7 @@ namespace EasyLearn.VM.Core
         {
             if (parameter is not TArgument)
                 throw new ArgumentException(ExceptionMessagesHelper.InvalidArgumentType(nameof(parameter), nameof(TArgument)));
-            this.action((TArgument)parameter);
+            action((TArgument)parameter);
         }
     }
 }

@@ -38,7 +38,7 @@
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
                                 <i:InvokeCommandAction Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"/>
-                                <i:InvokeCommandAction Command="{Binding OpenDictationPage}"/>
+                                <i:InvokeCommandAction Command="{Binding OpenDictationPageCommand}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
 
@@ -76,7 +76,7 @@
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
                                 <i:InvokeCommandAction Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"/>
-                                <i:InvokeCommandAction Command="{Binding OpenUsersPage}"/>
+                                <i:InvokeCommandAction Command="{Binding OpenUsersPageCommand}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
 

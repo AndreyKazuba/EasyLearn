@@ -24,7 +24,7 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         #region Binding props
         public Brush CdUnitTypeColor { get; set; }
-        public ObservableCollection<AvailableRelationView> CdAnotherAnswerViews { get; set; }
+        public ObservableCollection<SynonymView> CdAnotherAnswerViews { get; set; }
         public DictationDirection SelectedDictationDirection { get; set; }
         public string CdMainDisplayValue { get; set; }
         public string CdUnitTypeValue { get; set; }
@@ -162,22 +162,22 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void CdShowSynonyms(IEnumerable<CommonRelation> commonRelations, string asnwerValue)
         {
             CdAnotherAnswersIsVisible = true;
-            IEnumerable<AvailableRelationView> synonymsViews = GetSynonymViews(commonRelations, asnwerValue);
-            CdAnotherAnswerViews = new ObservableCollection<AvailableRelationView>(synonymsViews);
+            IEnumerable<SynonymView> synonymsViews = GetSynonymViews(commonRelations, asnwerValue);
+            CdAnotherAnswerViews = new ObservableCollection<SynonymView>(synonymsViews);
         }
-        private IEnumerable<AvailableRelationView> GetSynonymViews(IEnumerable<CommonRelation> commonRelations, string asnwerValue)
+        private IEnumerable<SynonymView> GetSynonymViews(IEnumerable<CommonRelation> commonRelations, string asnwerValue)
         {
             if (SelectedDictationDirection == DictationDirection.Directly)
             {
                 return commonRelations
                 .Where(relation => !StringHelper.Equals(relation.EnglishUnit.Value, asnwerValue))
-                .Select(relation => AvailableRelationView.Create(relation, SelectedDictationDirection));
+                .Select(relation => SynonymView.Create(relation, SelectedDictationDirection));
             }
             else
             {
                 return commonRelations
                 .Where(relation => !StringHelper.Equals(relation.RussianUnit.Value, asnwerValue))
-                .Select(relation => AvailableRelationView.Create(relation, SelectedDictationDirection));
+                .Select(relation => SynonymView.Create(relation, SelectedDictationDirection));
             }
         }
         private void CdHideSynonyms()

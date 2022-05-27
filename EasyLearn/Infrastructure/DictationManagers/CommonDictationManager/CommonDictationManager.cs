@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+#pragma warning disable CS8618
 namespace EasyLearn.Infrastructure.DictationManagers
 {
     public abstract class CommonDictationManager
@@ -29,9 +30,9 @@ namespace EasyLearn.Infrastructure.DictationManagers
         public CommonRelation Start()
         {
             ThrowIfItImpossibleToStart();
-            this.isStarted = true;
+            isStarted = true;
             SetSynonymRelations();
-            return this.selectedRelations[currentRelationId];
+            return selectedRelations[currentRelationId];
         }
         public bool GoNext()
         {
@@ -49,21 +50,21 @@ namespace EasyLearn.Infrastructure.DictationManagers
         public abstract bool IsAnswerCorrect(string answer);
         #endregion
 
-        #region Proteched methods
+        #region Protected methods
         protected abstract void SetSynonymRelations();
         protected void ThrowIfItImpossibleToStart()
         {
-            if (this.selectedRelations is null || !this.selectedRelations.Any())
+            if (selectedRelations is null || !selectedRelations.Any())
                 throw new Exception(ExceptionMessagesHelper.CannotStartDictationWithoutWords);
         }
         protected void ThrowIfDictationIsNotStarted()
         {
-            if (!this.isStarted)
+            if (!isStarted)
                 throw new Exception(ExceptionMessagesHelper.NeedsToStarDictationFirst);
         }
         #endregion
 
-        #region Static members
+        #region Static methods
         public static CommonDictationManager CreateManager(List<CommonRelation> commonRelations, int dictationLength, DictationDirection direction)
         {
             switch (direction)

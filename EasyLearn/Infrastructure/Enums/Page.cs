@@ -20,11 +20,11 @@
         /// <summary>
         /// Страница редактирования простого словаря.
         /// </summary>
-        EditCommonWordListPage = 3,
+        EditCommonDictionaryPage = 3,
 
         /// <summary>
         /// Страница редактирования словаря предлог-глаголов.
         /// </summary>
-        EditVerbPrepositionListPage = 4,
+        EditVerbPrepositionDictionaryPage = 4,
     }
 }

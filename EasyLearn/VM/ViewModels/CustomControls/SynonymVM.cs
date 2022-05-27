@@ -5,13 +5,16 @@ using EasyLearn.VM.Core;
 
 namespace EasyLearn.VM.ViewModels.CustomControls
 {
-    public class AvailableRelationVM : ViewModel
+    public class SynonymVM : ViewModel
     {
+        #region Binding props
         public string Value { get; set; }
-        public AvailableRelationVM(CommonRelation commonRelation, DictationDirection direction)
+        #endregion
+
+        public SynonymVM(CommonRelation commonRelation, DictationDirection direction)
         {
-            Value = direction == DictationDirection.Directly 
-                ? commonRelation.EnglishUnit.Value.NormalizeRegister() 
+            Value = direction == DictationDirection.Directly
+                ? commonRelation.EnglishUnit.Value.NormalizeRegister()
                 : commonRelation.RussianUnit.Value.NormalizeRegister();
         }
     }

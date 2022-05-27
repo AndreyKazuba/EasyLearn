@@ -385,7 +385,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void OnWindowCtrlNDown()
         {
-            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditCommonWordListPage)
+            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditCommonDictionaryPage)
             {
                 AwFocusRussianValueTextBox();
                 AwOpenWindowButtonSoftClick();
@@ -393,7 +393,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void OnWindowEscDown()
         {
-            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditCommonWordListPage)
+            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditCommonDictionaryPage)
                 AwCancelButtonSoftClick();
         }
         private void OnGoBackButtonClick()

@@ -8,16 +8,15 @@ namespace EasyLearn.VM.ViewModels.ExpandedElements
     {
         public static readonly DependencyProperty DictionaryIdProperty;
         public static readonly DependencyProperty DictionaryTypeProperty;
-
         static DictionaryComboBoxItem()
         {
             DictionaryIdProperty = DependencyProperty.Register(nameof(DictionaryId), typeof(int), typeof(DictionaryComboBoxItem));
             DictionaryTypeProperty = DependencyProperty.Register(nameof(DictionaryType), typeof(DictionaryType), typeof(DictionaryComboBoxItem));
         }
-        public DictionaryComboBoxItem(string content, int id, DictionaryType dictionaryType)
+        public DictionaryComboBoxItem(string content, int dictionaryId, DictionaryType dictionaryType)
         {
             this.Content = content;
-            this.DictionaryId = id;
+            this.DictionaryId = dictionaryId;
             this.DictionaryType = dictionaryType;
         }
         public int DictionaryId

@@ -9,6 +9,7 @@
         public const string ThereIsNoSuchService = "Нет такого сервиса";
         public const string ThereIdNoSuchDictationDirection = "Нет такого направления диктанта";
         public const string DictationManagerIsNull = "Незвозможно выполнить действие без предварительного создания менеджера";
+        public const string EnumElementNotImplementedInSwitch = "Данный элемент перечисления не предусмотрен";
         public static string NoSuchDictionaryOnUI(string dictionaryTypeName, int id) => $"На UI нет {dictionaryTypeName} с Id = {id.ToString()}";
         public static string InvalidArgumentType(string argName, string argNeededTypeName) => $"Аргумент {argName} должен быть типа {argNeededTypeName}";
     }
