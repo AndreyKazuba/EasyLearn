@@ -10,6 +10,9 @@ namespace EasyLearn.UI.CustomControls
             this.DataContext = viewModel;
             InitializeComponent();
         }
+
+        #region Static methods
         public static ShadowCommonRelationView Create() => new ShadowCommonRelationView(new ShadowCommonRelationVM());
+        #endregion
     }
 }

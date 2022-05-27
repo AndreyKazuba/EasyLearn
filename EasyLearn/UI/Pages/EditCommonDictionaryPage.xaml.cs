@@ -7,6 +7,7 @@ namespace EasyLearn.UI.Pages
 {
     public partial class EditCommonDictionaryPage : Page
     {
+        #region Events
         public static event Action? AddingWindowRussianValueTextBoxEnterDown;
         public static event Action? AddingWindowEnglishValueTextBoxEnterDown;
         public static event Action? AddingWindowRussianUnitTypeComboBoxEnterDown;
@@ -16,12 +17,15 @@ namespace EasyLearn.UI.Pages
         public static event Action? AddingWindowExampleEnglishValueTextBoxEnterDown;
         public static event Action? UpdateWindowExampleRussianValueTextBoxEnterDown;
         public static event Action? UpdateWindowExampleEnglishValueTextBoxEnterDown;
+        #endregion
 
         public EditCommonDictionaryPage(EditCommonDictionaryPageVM viewModel)
         {
             this.DataContext = viewModel;
             InitializeComponent();
         }
+
+        #region UI event handlers
         private void OnRussianValueTextBoxKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter && AddingWindowRussianValueTextBoxEnterDown is not null)
@@ -67,5 +71,6 @@ namespace EasyLearn.UI.Pages
             if (e.Key == Key.Enter && UpdateWindowExampleEnglishValueTextBoxEnterDown is not null)
                 UpdateWindowExampleEnglishValueTextBoxEnterDown();
         }
+        #endregion
     }
 }

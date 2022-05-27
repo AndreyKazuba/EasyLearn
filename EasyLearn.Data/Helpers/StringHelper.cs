@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace EasyLearn.Data.Helpers
 {
@@ -22,7 +21,7 @@ namespace EasyLearn.Data.Helpers
         public static string TryNormalizeRegister(this string? @string) => @string?.Substring(0, 1).ToUpper() + @string?.Remove(0, 1).ToLower();
         public static string PrepareAndNormalize(this string @string) => @string.Prepare().NormalizeRegister();
         public static string? NullIfEmptyOrWhiteSpace(this string @string) => @string is null || IsEmptyOrWhiteSpace(@string) ? null : @string;
-        public static string EmptyIfNull(this string? @string) => @string is null ? String.Empty : @string;
+        public static string EmptyIfNull(this string? @string) => @string is null ? string.Empty : @string;
         public static string ReplaceString(string value, char symbol) => new string(symbol, value.Length);
     }
 }

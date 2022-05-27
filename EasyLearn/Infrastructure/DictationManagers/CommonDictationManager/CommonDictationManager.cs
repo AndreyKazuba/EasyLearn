@@ -12,8 +12,11 @@ namespace EasyLearn.Infrastructure.DictationManagers
     {
         #region Private fields
         protected bool isStarted;
+        protected bool currentAnswerIsNew;
         protected int currentRelationId;
         protected int maxCurrentRelationId;
+        protected int answersCounter;
+        protected int wrongAnswersCounter;
         protected List<CommonRelation> allRelations;
         protected List<CommonRelation> selectedRelations;
         protected List<CommonRelation> synonymRelations;
@@ -22,8 +25,11 @@ namespace EasyLearn.Infrastructure.DictationManagers
         #region Public props
         public CommonRelation CurrentRelation => selectedRelations[currentRelationId];
         public abstract string CurrentAnswerValue { get; }
-        public List<CommonRelation> AvailableRelations => synonymRelations;
+        public List<CommonRelation> SynonymRelations => synonymRelations;
         public bool CurrentRelationHasSynonyms => synonymRelations.Count > 1;
+        public int TotalRelationsCount => allRelations.Count;
+        public int AnswersCount => answersCounter;
+        public int WrongAnswersCount => wrongAnswersCounter;
         #endregion
 
         #region Public methods
@@ -31,6 +37,9 @@ namespace EasyLearn.Infrastructure.DictationManagers
         {
             ThrowIfItImpossibleToStart();
             isStarted = true;
+            currentAnswerIsNew = true;
+            answersCounter = 0;
+            wrongAnswersCounter = 0;
             SetSynonymRelations();
             return selectedRelations[currentRelationId];
         }
@@ -40,6 +49,7 @@ namespace EasyLearn.Infrastructure.DictationManagers
             if (++currentRelationId <= maxCurrentRelationId)
             {
                 SetSynonymRelations();
+                currentAnswerIsNew = true;
                 return true;
             }
             else

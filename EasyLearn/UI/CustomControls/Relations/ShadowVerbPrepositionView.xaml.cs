@@ -10,6 +10,9 @@ namespace EasyLearn.UI.CustomControls
             this.DataContext = viewModel;
             InitializeComponent();
         }
+
+        #region Static methods
         public static ShadowVerbPrepositionView Create() => new ShadowVerbPrepositionView(new ShadowVerbPrepositionVM());
+        #endregion
     }
 }

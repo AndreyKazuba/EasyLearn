@@ -7,15 +7,19 @@ namespace EasyLearn.UI.Pages
 {
     public partial class DictationPage : Page
     {
+        #region Events
         public static event Action? EnterClick;
         public static event Action? PromtMouseEnter;
         public static event Action? PromtMouseLeave;
+        #endregion
+
         public DictationPage(DictationPageVM viewModel)
         {
             this.DataContext = viewModel;
             InitializeComponent();
         }
 
+        #region UI event handlers
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter && EnterClick is not null)
@@ -31,5 +35,6 @@ namespace EasyLearn.UI.Pages
             if (PromtMouseLeave is not null)
                 PromtMouseLeave();
         }
+        #endregion
     }
 }

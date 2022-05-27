@@ -2,12 +2,12 @@
 using System;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace EasyLearn.UI.Pages
 {
     public partial class EditVerbPrepositionDictionaryPage : Page
     {
+        #region Events
         public static event Action? AddingWindowVerbValueTextBoxEnterDown;
         public static event Action? AddingWindowPrepositionValueTextBoxEnterDown;
         public static event Action? AddingWindowTranslationValueTextBoxEnterDown;
@@ -15,11 +15,15 @@ namespace EasyLearn.UI.Pages
         public static event Action? AddingWindowExampleEnglishValueTextBoxEnterDown;
         public static event Action? UpdateWindowExampleRussianValueTextBoxEnterDown;
         public static event Action? UpdateWindowExampleEnglishValueTextBoxEnterDown;
+        #endregion
+
         public EditVerbPrepositionDictionaryPage(EditVerbPrepositionDictionaryPageVM viewModel)
         {
             this.DataContext = viewModel;
             InitializeComponent();
         }
+
+        #region UI event handlers
         private void OnVerbValueTextBoxKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter && AddingWindowVerbValueTextBoxEnterDown is not null)
@@ -55,5 +59,6 @@ namespace EasyLearn.UI.Pages
             if (e.Key == Key.Enter && UpdateWindowExampleEnglishValueTextBoxEnterDown is not null)
                 UpdateWindowExampleEnglishValueTextBoxEnterDown();
         }
+        #endregion
     }
 }

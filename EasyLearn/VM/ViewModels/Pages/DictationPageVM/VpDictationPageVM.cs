@@ -32,6 +32,8 @@ namespace EasyLearn.VM.ViewModels.Pages
         public bool VpSectionIsVisible { get; set; }
         public bool VpPromtIsVisible { get; set; }
         public bool VpSecondDisplayIsVisible { get; set; }
+        public string? VdFirstExampleValue { get; set; }
+        public string? VdSecondExampleValue { get; set; }
         #endregion
 
         #region Private helpers
@@ -40,6 +42,18 @@ namespace EasyLearn.VM.ViewModels.Pages
             int countOfVerbPrepositions = DictationLengthSliderValue;
             List<VerbPreposition> verbPrepositions = UniversalHelper.Shuffle(vpLoadedDictionary.VerbPrepositions).Take(countOfVerbPrepositions).ToList();
             vpDictationManager = new VerbPrepositionDictationManager(verbPrepositions);
+        }
+        #endregion
+
+        #region Private UI methods (stop window)
+        private void VpSetStopWindow()
+        {
+            if (vpDictationManager is null)
+                throw new Exception(ExceptionMessagesHelper.DictationManagerIsNull);
+            DictationWordsCount = vpDictationManager.TotalVerbPrepositionsCount.ToString();
+            DictationAnswersCount = vpDictationManager.AnswersCount.ToString();
+            DictationWrongAnswersCount = vpDictationManager.WrongAnswersCount.ToString();
+            Grade = ((int)((vpDictationManager.AnswersCount - vpDictationManager.WrongAnswersCount) * (100d / vpDictationManager.AnswersCount))).ToString();
         }
         #endregion
 
@@ -55,18 +69,25 @@ namespace EasyLearn.VM.ViewModels.Pages
             VpSetDefaultSecondValue();
             VpMainDisplayValue = verbPreposition.Verb.Value.NormalizeRegister();
             VpTranslationValue = verbPreposition.Translation.NormalizeRegister();
+            if (verbPreposition.IsFirstExampleExist)
+            {
+                VdFirstExampleValue = verbPreposition.FirstExampleRussianValue.TryNormalizeRegister();
+                VdSecondExampleValue = verbPreposition.SecondExampleRussianValue.TryNormalizeRegister();
+            }
+            else
+            {
+                VdFirstExampleValue = verbPreposition.SecondExampleRussianValue.TryNormalizeRegister();
+            }
         }
         #endregion
 
         #region Private UI methods (dictation process)
         private void VpStart()
         {
-            if (vpDictationManager is null)
-                throw new Exception(ExceptionMessagesHelper.DictationManagerIsNull);
             SetDefaultPageState();
             dictationIsStarted = true;
             VpSetDictationManager();
-            VerbPreposition firstVerbPreposition = vpDictationManager.Start();
+            VerbPreposition firstVerbPreposition = vpDictationManager?.Start() ?? throw new Exception(ExceptionMessagesHelper.DictationManagerIsNull);
             VpSetVerbPreposition(firstVerbPreposition);
             SwitchStartAndStopButtons();
             VpShowSecondDisplay();
@@ -82,6 +103,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             {
                 VpSetSecondValue(vpDictationManager.CurrentVerbPreposition.Preposition.Value);
                 VpShowCorrectIcon();
+                currentAnswerIsCorrect = true;
                 IncreaseDictationProgressBarValue();
                 SetDefaultAnswerValue();
                 VpHidePromt();
@@ -89,6 +111,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             }
             else
             {
+                currentAnswerIsCorrect = false;
                 VpShowWrongIcon();
                 if (++wrongAnswers > 2)
                     VpShowPromt();
@@ -100,13 +123,14 @@ namespace EasyLearn.VM.ViewModels.Pages
                 return;
             if (vpDictationManager.GoNext())
             {
+                currentAnswerIsCorrect = false;
                 VpSetVerbPreposition(vpDictationManager.CurrentVerbPreposition);
                 SetDefaultAnswerValue();
                 VpHideIcons();
                 VpHidePromt();
             }
             else
-                StopDictation();
+                StopDictationButtonSoftClick();
         }
         #endregion
 
@@ -163,6 +187,14 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         #region Private UI methods (translation)
         private void VpSetDefaultTranslationValue() => VpTranslationValue = string.Empty;
+        #endregion
+
+        #region Private UI methods (examples)
+        private void VpHideExamples()
+        {
+            VdFirstExampleValue = string.Empty;
+            VdSecondExampleValue = string.Empty;
+        }
         #endregion
     }
 }

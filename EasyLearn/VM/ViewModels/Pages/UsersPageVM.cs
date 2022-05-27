@@ -94,7 +94,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             }
         }
         private void UpdateConfirmUserAddingButtonAvailability() => ConfirmUserAddingButtonIsEnabled = ValidationPool.IsValid(ValidationRulesGroup.AddNewUser);
-        private void OpenAddingUserWindow() => ConfirmUserAddingButtonSoftClick();
+        private void OpenAddingUserWindow() => OpenNewUserAddingWindowButtonSoftClick();
         #endregion
 
         #region Event handling

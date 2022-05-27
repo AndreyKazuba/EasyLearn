@@ -10,7 +10,10 @@ namespace EasyLearn.Infrastructure.DictationManagers
     public class VerbPrepositionDictationManager
     {
         #region Private fields
+        protected bool currentAnswerIsNew;
         private bool isStarted;
+        private int answersCounter;
+        private int wrongAnswersCounter;
         private int currentVerbPrepositionId;
         private int maxCurrentVerbPrepositionId;
         private List<VerbPreposition> verbPrepositions;
@@ -20,6 +23,9 @@ namespace EasyLearn.Infrastructure.DictationManagers
         public VerbPreposition CurrentVerbPreposition => verbPrepositions[currentVerbPrepositionId];
         public string CurrentPrepositionValue => CurrentVerbPreposition.Preposition.Value;
         public string CurrentVerbValue => CurrentVerbPreposition.Verb.Value;
+        public int TotalVerbPrepositionsCount => verbPrepositions.Count;
+        public int AnswersCount => answersCounter;
+        public int WrongAnswersCount => wrongAnswersCounter;
         #endregion
 
         public VerbPrepositionDictationManager(List<VerbPreposition> verbPrepositions)
@@ -33,17 +39,29 @@ namespace EasyLearn.Infrastructure.DictationManagers
         {
             ThrowIfItImpossibleToStart();
             isStarted = true;
+            currentAnswerIsNew = true;
+            answersCounter = 0;
+            wrongAnswersCounter = 0;
             return verbPrepositions[currentVerbPrepositionId];
         }
         public bool GoNext()
         {
             ThrowIfDictationIsNotStarted();
+            currentAnswerIsNew = true;
             return ++currentVerbPrepositionId <= maxCurrentVerbPrepositionId;
         }
         public bool IsAnswerCorrect(string answer)
         {
             ThrowIfDictationIsNotStarted();
-            return StringHelper.Equals(verbPrepositions[currentVerbPrepositionId].Preposition.Value, answer);
+            bool answerIsCorrect = StringHelper.Equals(verbPrepositions[currentVerbPrepositionId].Preposition.Value, answer);
+            if (currentAnswerIsNew)
+            {
+                answersCounter++;
+                currentAnswerIsNew = false;
+                if (!answerIsCorrect)
+                    wrongAnswersCounter++;
+            }
+            return answerIsCorrect;
         }
         #endregion
 

@@ -9,6 +9,7 @@ namespace EasyLearn.Data.Repositories.Implementations
     {
         public IrregularVerbsRepository(EasyLearnContext context) : base(context) { }
 
+        #region Public members
         public IEnumerable<IrregularVerb> GetAllIrregularVerbs()
         {
             return context.IrregularVerbs
@@ -18,5 +19,6 @@ namespace EasyLearn.Data.Repositories.Implementations
                 .Include(irregularVerb => irregularVerb.ThirdForm)
                 .AsNoTracking();
         }
+        #endregion
     }
 }

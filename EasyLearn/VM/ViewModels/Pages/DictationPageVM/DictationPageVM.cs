@@ -13,6 +13,7 @@ using EasyLearn.VM.ViewModels.ExpandedElements;
 using EasyLearn.Data.Repositories.Interfaces;
 using System.Windows.Media;
 using System.Windows.Controls;
+using EasyLearn.Infrastructure.Helpers;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -30,6 +31,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private bool answerTextBoxIsOnDefaultState = true;
         private int currentUserId;
         private int wrongAnswers;
+        private bool currentAnswerIsCorrect;
         private DictionaryComboBoxItem selectedDictionaryComboBoxItem;
         #endregion
 
@@ -63,13 +65,15 @@ namespace EasyLearn.VM.ViewModels.Pages
         public int DictationLengthSliderValue { get; set; }
         public int DictationProgressBarMaxValue { get; set; }
         public int DictationProgressBarValue { get; set; }
-        public bool CheckAnswerButtonIsVisible { get; set; }
-        public bool NextButtonIsVisible { get; set; }
         public bool StartButtonIsVisible { get; set; }
         public bool StartButtonIsEnabled { get; set; } = true;
         public bool StopButtonIsVisible { get; set; }
         public bool DictationDirectionButtonsIsVisible { get; set; }
         public string AnswerValue { get; set; }
+        public string Grade { get; set; }
+        public string DictationWordsCount { get; set; }
+        public string DictationAnswersCount { get; set; }
+        public string DictationWrongAnswersCount { get; set; }
         public SolidColorBrush PageBackground { get; set; }
         #endregion
 
@@ -92,7 +96,6 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Commands 
         public Command UpdateDictationLengthSliderCommand { get; private set; }
         public Command StartDictationCommand { get; private set; }
-        public Command CheckAnswerCommand { get; private set; }
         public Command TryGoNextCommand { get; private set; }
         public Command StopDictationCommand { get; private set; }
         public Command UpdatePageForNewUserCommand { get; private set; }
@@ -100,7 +103,6 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             UpdateDictationLengthSliderCommand = new Command(UpdateDictationLengthSlider);
             StartDictationCommand = new Command(StartDictation);
-            CheckAnswerCommand = new Command(CheckAnswer);
             TryGoNextCommand = new Command(TryGoNext);
             StopDictationCommand = new Command(StopDictation);
             UpdatePageForNewUserCommand = new Command(UpdatePageForNewUser);
@@ -112,11 +114,11 @@ namespace EasyLearn.VM.ViewModels.Pages
             DictationLengthSliderValue = DictationLengthSliderMaxValue;
         }
         private void StartDictation() => ExecuteForCurrentDictionaryType(CdStart, VpStart, IvStart);
-        private void CheckAnswer() => ExecuteForCurrentDictionaryType(CdCheck, VpCheck, IvCheck);
         private void TryGoNext() => ExecuteForCurrentDictionaryType(CdTryGoNext, VpTryGoNext, IvTryGoNext);
         private void StopDictation()
         {
             SetDefaultPageState();
+            SetStopWindow();
             commonDictationManager = null;
             vpDictationManager = null;
             ivDictationManager = null;
@@ -145,10 +147,14 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             if (!dictationIsStarted)
                 return;
-            if (CheckAnswerButtonIsVisible)
-                CheckAnswer();
-            else
+            if (currentAnswerIsCorrect)
+            {
                 TryGoNext();
+            }
+            else
+            {
+                CheckAnswer();
+            }
         }
         private void OnCdPromtMouseEnter()
         {
@@ -210,19 +216,18 @@ namespace EasyLearn.VM.ViewModels.Pages
                 throw new Exception(ExceptionMessagesHelper.FailedToGetCurrentUserId);
             this.currentUserId = currentUserId.Value;
         }
-        #endregion
-
-        #region Private UI methods (page)
-        private void SetCurrentDictationSection() => ExecuteForCurrentDictionaryType(CdShowSection, VpShowSection, IvShowSection);
+        private void CheckAnswer() => ExecuteForCurrentDictionaryType(CdCheck, VpCheck, IvCheck);
         private void SetDefaultPageState()
         {
             dictationIsStarted = false;
+            currentAnswerIsCorrect = false;
             wrongAnswers = 0;
             currentIrregularVerbForm = IrregularVerbForm.FirstForm;
             CdHideUnitType();
             CdHideSynonyms();
             CdHidePromt();
             CdHideExamples();
+            VpHideExamples();
             VpHidePromt();
             VpHideSecondDisplay();
             SetDefaultMainDisplayValue();
@@ -236,7 +241,12 @@ namespace EasyLearn.VM.ViewModels.Pages
             IvSetDefaultFixedAnswerValues();
             IvHidePromt();
             SetDefaultPageBackground();
+            ClearStopWindow();
         }
+        #endregion
+
+        #region Private UI methods (page)
+        private void SetCurrentDictationSection() => ExecuteForCurrentDictionaryType(CdShowSection, VpShowSection, IvShowSection);
         #endregion
 
         #region Private UI methods (main display)
@@ -279,6 +289,19 @@ namespace EasyLearn.VM.ViewModels.Pages
             DictionaryComboBoxItems = new ObservableCollection<DictionaryComboBoxItem>(dictionaryComboBoxItems);
             SelectedDictionaryComboBoxItem = DictionaryComboBoxItems[0];
         }
+        #endregion
+
+        #region Private UI methods (stop modal window)
+        private void StopDictationButtonSoftClick() => App.GetService<DictationPage>().stopDictationButton.SoftClick();
+        private void ClearStopWindow()
+        {
+            Grade = string.Empty;
+            DictationWordsCount = string.Empty;
+            DictationAnswersCount = string.Empty;
+            DictationWrongAnswersCount = string.Empty;
+        }
+        private void SetStopWindow() => ExecuteForCurrentDictionaryType(CdSetStopWindow, VpSetStopWindow, IvSetStopWindow);
+        
         #endregion
 
         #region Private UI methods (comment)

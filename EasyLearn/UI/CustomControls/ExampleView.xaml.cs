@@ -21,11 +21,11 @@ namespace EasyLearn.UI.CustomControls
             InitializeComponent();
         }
 
-        #region Static members
+        #region Static methods
         public static ExampleView Create(
             string russianTranslation,
             string englishTranslation,
-            int id) => new ExampleView(new ExampleVM(russianTranslation, englishTranslation, id));
+            int exampleId) => new ExampleView(new ExampleVM(russianTranslation, englishTranslation, exampleId));
         #endregion
     }
 }

@@ -422,7 +422,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void UpdateVerbPrepositionViewOnUI(VerbPreposition updatedVerbPreposition)
         {
             VerbPrepositionView verbPrepositionView = FindVerbPrepositionViewOnUI(updatedVerbPreposition.Id);
-            verbPrepositionView.UpdateView(updatedVerbPreposition);
+            verbPrepositionView.Update(updatedVerbPreposition);
         }
         private VerbPrepositionView FindVerbPrepositionViewOnUI(int verbPrepositionId) => (VerbPrepositionView)VerbPrepositionViews.First(userControl =>
         {

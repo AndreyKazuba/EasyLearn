@@ -25,12 +25,12 @@ namespace EasyLearn.UI.CustomControls
         }
 
         #region Public methods
-        public void UpdateView(CommonRelation commonRelation) => viewModel.Set(commonRelation);
+        public void Update(CommonRelation commonRelation) => viewModel.Set(commonRelation);
         public void Collapse() => viewModel.Collapse();
         public void Show() => viewModel.Show();
         #endregion
 
-        #region Static members
+        #region Static methods
         public static CommonRelationView Create(CommonRelation commonRelation) => new CommonRelationView(new CommonRelationVM(commonRelation));
         #endregion
     }

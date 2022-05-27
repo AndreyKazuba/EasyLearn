@@ -49,6 +49,18 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         #endregion
 
+        #region Private UI methods (stop window)
+        private void IvSetStopWindow()
+        {
+            if (ivDictationManager is null)
+                throw new Exception(ExceptionMessagesHelper.DictationManagerIsNull);
+            DictationWordsCount = ivDictationManager.TotalIrregularVerbsCount.ToString();
+            DictationAnswersCount = ivDictationManager.AnswersCount.ToString();
+            DictationWrongAnswersCount = ivDictationManager.WrongAnswersCount.ToString();
+            Grade = ((int)((ivDictationManager.AnswersCount - ivDictationManager.WrongAnswersCount) * (100d / ivDictationManager.AnswersCount))).ToString();
+        }
+        #endregion
+
         #region Private UI methods (irregular verb dictation section)
         private void IvShowSection()
         {
@@ -82,12 +94,10 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Private UI methods (dictation process)
         private void IvStart()
         {
-            if (ivDictationManager is null)
-                throw new Exception(ExceptionMessagesHelper.DictationManagerIsNull);
             SetDefaultPageState();
             dictationIsStarted = true;
             IvSetDictationManager();
-            IrregularVerb firstIrregularVerb = ivDictationManager.Start();
+            IrregularVerb firstIrregularVerb = ivDictationManager?.Start() ?? throw new Exception(ExceptionMessagesHelper.DictationManagerIsNull);
             IvSetIrregularVerb(firstIrregularVerb);
             SwitchStartAndStopButtons();
             FocusAnswerTextBox();
@@ -152,6 +162,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             {
                 IvShowThirdFormCorrectIcon();
                 IncreaseDictationProgressBarValue();
+                currentAnswerIsCorrect = true;
                 IvHidePromt();
                 IvThirdFormFixedAnswerValue = StringHelper.NormalizeRegister(AnswerValue);
                 SetDefaultAnswerValue();
@@ -171,6 +182,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 return;
             if (ivDictationManager.GoNext())
             {
+                currentAnswerIsCorrect = false;
                 IvSetIrregularVerb(ivDictationManager.CurrentIrregularVerb);
                 SetDefaultAnswerValue();
                 IvShowGrayIcons();
@@ -178,7 +190,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 IvSetFixedAnswerValues(ivDictationManager.CurrentIrregularVerb);
             }
             else
-                StopDictation();
+                StopDictationButtonSoftClick();
         }
         #endregion
 

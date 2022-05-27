@@ -17,16 +17,24 @@ namespace EasyLearn.Infrastructure.DictationManagers
         {
             if (dictationLength <= 0 || dictationLength > commonRelations.Count)
                 throw new ArgumentOutOfRangeException(nameof(dictationLength));
-            this.allRelations = commonRelations;
-            this.selectedRelations = new List<CommonRelation>(UniversalHelper.Shuffle(allRelations).Take(dictationLength));
-            this.maxCurrentRelationId = dictationLength - 1;
+            allRelations = commonRelations;
+            selectedRelations = new List<CommonRelation>(UniversalHelper.Shuffle(allRelations).Take(dictationLength));
+            maxCurrentRelationId = dictationLength - 1;
         }
 
         #region Public methods
         public override bool IsAnswerCorrect(string answer)
         {
             ThrowIfDictationIsNotStarted();
-            return AvailableRelations.Any(relation => StringHelper.Equals(relation.EnglishUnit.Value, answer));
+            bool answerIsCorrect = SynonymRelations.Any(relation => StringHelper.Equals(relation.EnglishUnit.Value, answer));
+            if (currentAnswerIsNew)
+            {
+                answersCounter++;
+                currentAnswerIsNew = false;
+                if (!answerIsCorrect)
+                    wrongAnswersCounter++;
+            }
+            return answerIsCorrect;
         }
         #endregion
 

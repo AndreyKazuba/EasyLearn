@@ -49,6 +49,18 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         #endregion
 
+        #region Private UI methods (stop window)
+        private void CdSetStopWindow()
+        {
+            if (commonDictationManager is null)
+                throw new Exception(ExceptionMessagesHelper.DictationManagerIsNull);
+            DictationWordsCount = commonDictationManager.TotalRelationsCount.ToString();
+            DictationAnswersCount = commonDictationManager.AnswersCount.ToString();
+            DictationWrongAnswersCount = commonDictationManager.WrongAnswersCount.ToString();
+            Grade = ((int)((commonDictationManager.AnswersCount - commonDictationManager.WrongAnswersCount) * (100d / commonDictationManager.AnswersCount))).ToString();
+        }
+        #endregion
+
         #region Private UI methods (common dictation section)
         private void CdSetRelation(CommonRelation relation)
         {
@@ -100,12 +112,10 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Private UI methods (dictation process)
         private void CdStart()
         {
-            if (commonDictationManager is null)
-                throw new Exception(ExceptionMessagesHelper.DictationManagerIsNull);
             SetDefaultPageState();
             dictationIsStarted = true;
             CdSetDictationManager();
-            CommonRelation firstCommonRelation = commonDictationManager.Start();
+            CommonRelation firstCommonRelation = commonDictationManager?.Start() ?? throw new Exception(ExceptionMessagesHelper.DictationManagerIsNull);
             CdSetRelation(firstCommonRelation);
             CdShowUnitType();
             SwitchStartAndStopButtons();
@@ -120,17 +130,19 @@ namespace EasyLearn.VM.ViewModels.Pages
             if (answerIsCorrect)
             {
                 if (commonDictationManager.CurrentRelationHasSynonyms)
-                    CdShowSynonyms(commonDictationManager.AvailableRelations, AnswerValue);
+                    CdShowSynonyms(commonDictationManager.SynonymRelations, AnswerValue);
                 SetCorrectPageBackground();
                 SetAnswerTextBoxAsCorrect();
                 IncreaseDictationProgressBarValue();
                 CdHidePromt();
                 wrongAnswers = 0;
+                currentAnswerIsCorrect = true;
             }
             else
             {
                 SetWrongPageBackground();
                 SetAnswerTextBoxAsWrong();
+                currentAnswerIsCorrect = false;
                 if (++wrongAnswers > 2)
                     CdShowPromt();
             }
@@ -145,11 +157,12 @@ namespace EasyLearn.VM.ViewModels.Pages
                 SetDefaultAnswerValue();
                 CdHideSynonyms();
                 SetDefaultPageBackground();
+                currentAnswerIsCorrect = false;
                 SetAnswerTextBoxAsDefault();
                 CdHidePromt();
             }
             else
-                StopDictation();
+                StopDictationButtonSoftClick();
         }
         #endregion
 

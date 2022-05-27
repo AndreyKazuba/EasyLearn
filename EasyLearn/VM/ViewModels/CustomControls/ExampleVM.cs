@@ -16,9 +16,9 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         #endregion
 
 #pragma warning disable CS8618
-        public ExampleVM(string russianValue, string englishValue, int id)
+        public ExampleVM(string russianValue, string englishValue, int exampleId)
         {
-            this.Id = id;
+            this.Id = exampleId;
             this.RussianValue = russianValue;
             this.EnglishValue = englishValue;
         }

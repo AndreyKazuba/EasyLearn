@@ -10,6 +10,9 @@ namespace EasyLearn.UI.CustomControls
             this.DataContext = viewModel;
             this.InitializeComponent();
         }
+
+        #region Static methods
         public static ShadowUserView Create() => new ShadowUserView(new ShadowUserVM());
+        #endregion
     }
 }

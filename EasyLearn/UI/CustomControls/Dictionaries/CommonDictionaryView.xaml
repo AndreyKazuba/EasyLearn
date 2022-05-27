@@ -59,7 +59,7 @@
 
                     </Button>
 
-                    <!--Имя словаря-->
+                    <!--Имя словаря (кнопка открытия словаря)-->
                     <Button Grid.Row="1"
                             Padding="0"
                             d:Content="Test"
@@ -96,7 +96,7 @@
                 </Grid>
             </Border>
 
-            
+
         </materialDesign:Flipper.FrontContent>
 
         <!--Задняя сторона карточки-->
@@ -197,11 +197,10 @@
                         </StackPanel>
                     </Button>
 
-
                 </Grid>
             </Border>
 
-            
         </materialDesign:Flipper.BackContent>
+        
     </materialDesign:Flipper>
 </UserControl>

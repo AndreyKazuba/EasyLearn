@@ -14,7 +14,6 @@
         public const int UserNameMaxLength = 14;
         public const int UserNameMinLength = 1;
 
-        //public const int VerbPrepositionCommentMaxLength = 12;
         public const int VerbPrepositionTranslationMaxLength = 30;
         public const int VerbPrepositionTranslationMinLength = 1;
 

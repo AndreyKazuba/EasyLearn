@@ -7,17 +7,13 @@ namespace EasyLearn.UI.CustomControls
 {
     public partial class SynonymView : UserControl
     {
-        #region Private fields
-        private SynonymVM viewModel;
-        #endregion
         public SynonymView(SynonymVM viewModel)
         {
-            this.viewModel = viewModel;
             this.DataContext = viewModel;
             InitializeComponent();
         }
 
-        #region Static members
+        #region Static methods
         public static SynonymView Create(CommonRelation commonRelation, DictationDirection direction) 
             => new SynonymView(new SynonymVM(commonRelation, direction));
         #endregion

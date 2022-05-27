@@ -25,12 +25,12 @@ namespace EasyLearn.UI.CustomControls
         }
 
         #region Public methods
-        public void UpdateView(VerbPreposition verbPreposition) => viewModel.Set(verbPreposition);
+        public void Update(VerbPreposition verbPreposition) => viewModel.Set(verbPreposition);
         public void Collapse() => viewModel.Collapse();
         public void Show() => viewModel.Show();
         #endregion
 
-        #region Static members
+        #region Static methods
         public static VerbPrepositionView Create(VerbPreposition verbPreposition) => new VerbPrepositionView(new VerbPrepositionVM(verbPreposition));
         #endregion
     }

@@ -8,11 +8,13 @@ namespace EasyLearn.UI
 {
     public partial class AppWindow : Window
     {
+        #region Events
         public static event Action? WindowCtrlNDown;
         public static event Action? WindowEscDown;
         public static event Action? DrawerButtonClick;
         public static event Action? GoBackButtonClick;
         public static event Action? OpenMenuButtonClick;
+        #endregion
 
         public AppWindow(AppWindowVM viewModel)
         {
@@ -20,6 +22,8 @@ namespace EasyLearn.UI
             this.DataContext = viewModel;
             new WindowResizer(this);
         }
+
+        #region UI event handlers
         private void OnWindowKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.N && (e.KeyboardDevice.IsKeyDown(Key.LeftCtrl) || e.KeyboardDevice.IsKeyDown(Key.RightCtrl)) && WindowCtrlNDown is not null)
@@ -27,7 +31,6 @@ namespace EasyLearn.UI
             if (e.Key == Key.Escape && WindowEscDown is not null)
                 WindowEscDown();
         }
-
         private void OnDrawerButtonClick(object sender, RoutedEventArgs e)
         {
             if (DrawerButtonClick is not null)
@@ -43,5 +46,6 @@ namespace EasyLearn.UI
             if (OpenMenuButtonClick is not null)
                 OpenMenuButtonClick();
         }
+        #endregion
     }
 }

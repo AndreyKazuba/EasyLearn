@@ -26,7 +26,15 @@ namespace EasyLearn.Infrastructure.DictationManagers
         public override bool IsAnswerCorrect(string answer)
         {
             ThrowIfDictationIsNotStarted();
-            return AvailableRelations.Any(relation => StringHelper.Equals(relation.RussianUnit.Value, answer));
+            bool answerIsCorrect = SynonymRelations.Any(relation => StringHelper.Equals(relation.RussianUnit.Value, answer));
+            if (currentAnswerIsNew)
+            {
+                answersCounter++;
+                currentAnswerIsNew = false;
+                if (!answerIsCorrect)
+                    wrongAnswersCounter++;
+            }
+            return answerIsCorrect;
         }
         #endregion
 

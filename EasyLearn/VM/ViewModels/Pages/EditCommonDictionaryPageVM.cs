@@ -451,7 +451,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void UpdateCommonRelationOnUI(CommonRelation updatedCommonRelation)
         {
             CommonRelationView relationView = FindCommonRelationViewOnUI(updatedCommonRelation.Id);
-            relationView.UpdateView(updatedCommonRelation);
+            relationView.Update(updatedCommonRelation);
         }
         private CommonRelationView FindCommonRelationViewOnUI(int commonRelationId) => (CommonRelationView)CommonRelationViews.First(userControl =>
         {
