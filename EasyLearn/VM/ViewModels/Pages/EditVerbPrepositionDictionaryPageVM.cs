@@ -44,15 +44,6 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         #endregion
 
-#pragma warning disable CS8618
-        public EditVerbPrepositionDictionaryPageVM(IVerbPrepositionRepository verbPrepositionRepository, IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository)
-        {
-            this.verbPrepositionRepository = verbPrepositionRepository;
-            this.verbPrepositionDictionaryRepository = verbPrepositionDictionaryRepository;
-            this.verbPrepositionExistValidationRuleId = ValidationPool.Register(ValidationRulesGroup.AddVerbPreposition);
-        }
-#pragma warning restore CS8618
-
         #region Binding props
         public ObservableCollection<UserControl> VerbPrepositionViews { get; set; } = new ObservableCollection<UserControl>();
         public ObservableCollection<ExampleView> AwExampleViews { get; set; } = new ObservableCollection<ExampleView>();
@@ -72,76 +63,14 @@ namespace EasyLearn.VM.ViewModels.Pages
         public bool UwAddExampleButtonIsEnabled { get; set; }
         #endregion
 
-        #region Events
-        protected override void InitEvents()
+#pragma warning disable CS8618
+        public EditVerbPrepositionDictionaryPageVM(IVerbPrepositionRepository verbPrepositionRepository, IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository)
         {
-            EditVerbPrepositionDictionaryPage.AddingWindowVerbValueTextBoxEnterDown += OnAddingWindowVerbValueTextBoxEnterDown;
-            EditVerbPrepositionDictionaryPage.AddingWindowPrepositionValueTextBoxEnterDown += OnAddingWindowPrepositionValueTextBoxEnterDown;
-            EditVerbPrepositionDictionaryPage.AddingWindowTranslationValueTextBoxEnterDown += OnAddingWindowTranslationValueTextBoxEnterDown;
-            EditVerbPrepositionDictionaryPage.AddingWindowExampleRussianValueTextBoxEnterDown += OnAddingWindowExampleRussianValueTextBoxEnterDown;
-            EditVerbPrepositionDictionaryPage.AddingWindowExampleEnglishValueTextBoxEnterDown += OnAddingWindowExampleEnglishValueTextBoxEnterDown;
-            EditVerbPrepositionDictionaryPage.UpdateWindowExampleRussianValueTextBoxEnterDown += OnUpdateWindowExampleRussianValueTextBoxEnterDown;
-            EditVerbPrepositionDictionaryPage.UpdateWindowExampleEnglishValueTextBoxEnterDown += OnUpdateWindowExampleEnglishValueTextBoxEnterDown;
-            AppWindow.WindowCtrlNDown += OnWindowCtrlNDown;
-            AppWindow.WindowEscDown += OnWindowEscDown;
-            AppWindow.GoBackButtonClick += OnGoBackButtonClick;
-            AppWindow.DrawerButtonClick += OnDrawerButtonClick;
-            AppWindow.OpenMenuButtonClick += OnOpenMenuButtonClick;
+            this.verbPrepositionRepository = verbPrepositionRepository;
+            this.verbPrepositionDictionaryRepository = verbPrepositionDictionaryRepository;
+            this.verbPrepositionExistValidationRuleId = ValidationPool.Register(ValidationRulesGroup.AddVerbPreposition);
         }
-        private void OnAddingWindowVerbValueTextBoxEnterDown() => AwFocusPrepositionValueTextBox();
-        private void OnAddingWindowPrepositionValueTextBoxEnterDown() => AwFocusTranslationValueTextBox();
-        private void OnAddingWindowTranslationValueTextBoxEnterDown()
-        {
-            if (ValidationPool.IsValid(ValidationRulesGroup.AddVerbPreposition))
-                AwConfirmButtonSoftClick();
-        }
-        private void OnAddingWindowExampleRussianValueTextBoxEnterDown() => AwFocusExampleEnglishValueTextBox();
-        private void OnAddingWindowExampleEnglishValueTextBoxEnterDown()
-        {
-            if (awExampleIsInvalid)
-                return;
-            AwAddExampleButtonSoftClick();
-        }
-        private void OnUpdateWindowExampleRussianValueTextBoxEnterDown() => UwFocusExampleEnglishValueTextBox();
-        private void OnUpdateWindowExampleEnglishValueTextBoxEnterDown()
-        {
-            if (uwExampleIsInvalid)
-                return;
-            UwAddExampleButtonSoftClick();
-        }
-        private void OnWindowCtrlNDown()
-        {
-            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditVerbPrepositionListPage)
-            {
-                AwFocusVerbValueTextBox();
-                AwOpenWindowButtonSoftClick();
-            }
-        }
-        private void OnWindowEscDown()
-        {
-            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditVerbPrepositionListPage)
-                AwCancelButtonSoftClick();
-        }
-        private void OnGoBackButtonClick()
-        {
-            App.GetService<AppWindowVM>().HideGoBackButtonCommand.Execute();
-            GoBack();
-        }
-        private void OnDrawerButtonClick() => App.GetService<AppWindowVM>().HideGoBackButtonCommand.Execute();
-        private void OnOpenMenuButtonClick()
-        {
-            if (topMenuIsOpened)
-            {
-                CloseTopMenuButtonSoftClick();
-                topMenuIsOpened = false;
-            }
-            else
-            {
-                OpenTopMenuButtonSoftClick();
-                topMenuIsOpened = true;
-            }
-        }
-        #endregion
+#pragma warning restore CS8618
 
         #region Commands 
         public Command GoBackCommand { get; private set; }
@@ -200,7 +129,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             UwClearExampleSectionCommand = new Command(UwClearExampleSection);
             UwValidateExampleSectionCommand = new Command(UwValidateExampleSection);
             UwCheckExampleTextBoxesMaxLengthVisibilityCommand = new Command(UwCheckExampleTextBoxesMaxLengthVisibility);
-            UwFocusExampleRussianValueTextBoxCommand = new Command(UwFocusExampleRussianValueTextBox);  
+            UwFocusExampleRussianValueTextBoxCommand = new Command(UwFocusExampleRussianValueTextBox);
         }
         private void GoBack() => App.GetService<AppWindowVM>().OpenDictionariesPageCommand.Execute();
         private async Task SetDictionary(int verbPrepositionDictionaryId)
@@ -388,7 +317,78 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         #endregion
 
-        #region Page halpers
+        #region Event handling
+        protected override void InitEvents()
+        {
+            EditVerbPrepositionDictionaryPage.AddingWindowVerbValueTextBoxEnterDown += OnAddingWindowVerbValueTextBoxEnterDown;
+            EditVerbPrepositionDictionaryPage.AddingWindowPrepositionValueTextBoxEnterDown += OnAddingWindowPrepositionValueTextBoxEnterDown;
+            EditVerbPrepositionDictionaryPage.AddingWindowTranslationValueTextBoxEnterDown += OnAddingWindowTranslationValueTextBoxEnterDown;
+            EditVerbPrepositionDictionaryPage.AddingWindowExampleRussianValueTextBoxEnterDown += OnAddingWindowExampleRussianValueTextBoxEnterDown;
+            EditVerbPrepositionDictionaryPage.AddingWindowExampleEnglishValueTextBoxEnterDown += OnAddingWindowExampleEnglishValueTextBoxEnterDown;
+            EditVerbPrepositionDictionaryPage.UpdateWindowExampleRussianValueTextBoxEnterDown += OnUpdateWindowExampleRussianValueTextBoxEnterDown;
+            EditVerbPrepositionDictionaryPage.UpdateWindowExampleEnglishValueTextBoxEnterDown += OnUpdateWindowExampleEnglishValueTextBoxEnterDown;
+            AppWindow.WindowCtrlNDown += OnWindowCtrlNDown;
+            AppWindow.WindowEscDown += OnWindowEscDown;
+            AppWindow.GoBackButtonClick += OnGoBackButtonClick;
+            AppWindow.DrawerButtonClick += OnDrawerButtonClick;
+            AppWindow.OpenMenuButtonClick += OnOpenMenuButtonClick;
+        }
+        private void OnAddingWindowVerbValueTextBoxEnterDown() => AwFocusPrepositionValueTextBox();
+        private void OnAddingWindowPrepositionValueTextBoxEnterDown() => AwFocusTranslationValueTextBox();
+        private void OnAddingWindowTranslationValueTextBoxEnterDown()
+        {
+            if (ValidationPool.IsValid(ValidationRulesGroup.AddVerbPreposition))
+                AwConfirmButtonSoftClick();
+        }
+        private void OnAddingWindowExampleRussianValueTextBoxEnterDown() => AwFocusExampleEnglishValueTextBox();
+        private void OnAddingWindowExampleEnglishValueTextBoxEnterDown()
+        {
+            if (awExampleIsInvalid)
+                return;
+            AwAddExampleButtonSoftClick();
+        }
+        private void OnUpdateWindowExampleRussianValueTextBoxEnterDown() => UwFocusExampleEnglishValueTextBox();
+        private void OnUpdateWindowExampleEnglishValueTextBoxEnterDown()
+        {
+            if (uwExampleIsInvalid)
+                return;
+            UwAddExampleButtonSoftClick();
+        }
+        private void OnWindowCtrlNDown()
+        {
+            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditVerbPrepositionListPage)
+            {
+                AwFocusVerbValueTextBox();
+                AwOpenWindowButtonSoftClick();
+            }
+        }
+        private void OnWindowEscDown()
+        {
+            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditVerbPrepositionListPage)
+                AwCancelButtonSoftClick();
+        }
+        private void OnGoBackButtonClick()
+        {
+            App.GetService<AppWindowVM>().HideGoBackButtonCommand.Execute();
+            GoBack();
+        }
+        private void OnDrawerButtonClick() => App.GetService<AppWindowVM>().HideGoBackButtonCommand.Execute();
+        private void OnOpenMenuButtonClick()
+        {
+            if (topMenuIsOpened)
+            {
+                CloseTopMenuButtonSoftClick();
+                topMenuIsOpened = false;
+            }
+            else
+            {
+                OpenTopMenuButtonSoftClick();
+                topMenuIsOpened = true;
+            }
+        }
+        #endregion
+
+        #region Private page halpers
         private IEnumerable<VerbPrepositionView> CreateOrderedVerbPrepositionViews(IEnumerable<VerbPreposition> verbPrepositions)
         {
             return verbPrepositions
@@ -397,21 +397,21 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         #endregion
 
-        #region Adding window helpers
+        #region Private adding window helpers
         private string? AwGetFirstExampleRussianValue() => AwExampleViews.Count == 0 ? null : AwExampleViews.ToArray()[0].RussianValue;
         private string? AwGetFirstExampleEnglishValue() => AwExampleViews.Count == 0 ? null : AwExampleViews.ToArray()[0].EnglishValue;
         private string? AwGetSecondExampleRussianValue() => AwExampleViews.Count < 2 ? null : AwExampleViews.ToArray()[1].RussianValue;
         private string? AwGetSecondExampleEnglishValue() => AwExampleViews.Count < 2 ? null : AwExampleViews.ToArray()[1].RussianValue;
         #endregion
 
-        #region Update window helpers
+        #region Private update window helpers
         private string? UwGetFirstExampleRussianValue() => UwExampleViews.Count == 0 ? null : UwExampleViews.ToArray()[0].RussianValue;
         private string? UwGetFirstExampleEnglishValue() => UwExampleViews.Count == 0 ? null : UwExampleViews.ToArray()[0].EnglishValue;
         private string? UwGetSecondExampleRussianValue() => UwExampleViews.Count < 2 ? null : UwExampleViews.ToArray()[1].RussianValue;
         private string? UwGetSecondExampleEnglishValue() => UwExampleViews.Count < 2 ? null : UwExampleViews.ToArray()[1].RussianValue;
         #endregion
 
-        #region VerbPrepositions UI methods
+        #region Private UI methods (page)
         private void AddVerbPrepositionViewsToUIKeepingOrder(IEnumerable<VerbPrepositionView> verbPrepositionViews)
         {
             foreach (VerbPrepositionView verbPrepositionView in verbPrepositionViews)
@@ -431,12 +431,12 @@ namespace EasyLearn.VM.ViewModels.Pages
         });
         #endregion
 
-        #region Top menu UI methods
+        #region Private UI methods (top menu)
         private void OpenTopMenuButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().openTopMenuButton.SoftClick();
         private void CloseTopMenuButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().closeTopMenuButton.SoftClick();
         #endregion
 
-        #region Adding window UI methods
+        #region Private UI methods (adding window)
         private ExampleView? AwTryFindExampleView(int exampleId) => AwExampleViews.FirstOrDefault(exampleView => exampleView.Id == exampleId);
         private void AwOpenWindowButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().awOpenWindowButton.SoftClick();
         private void AwAddExampleButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().awAddExampleButton.SoftClick();
@@ -466,7 +466,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         #endregion
 
-        #region Update window UI methods
+        #region Private UI methods (update window)
         private ExampleView? UwTryFindExampleView(int exampleId) => UwExampleViews.FirstOrDefault(exampleView => exampleView.Id == exampleId);
         private void UwOpenWindowButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().uwOpenWindowButton.SoftClick();
         private void UwAddExampleButtonSoftClick() => App.GetService<EditVerbPrepositionDictionaryPage>().uwAddExampleButton.SoftClick();

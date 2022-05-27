@@ -391,7 +391,7 @@
 
             <!--Текстбокс, в который нужно записывать перевод слова для проверки-->
             <TextBox Grid.Row="1" 
-                     Name="dictationTextBox"
+                     Name="answerTextBox"
                      HorizontalAlignment="Center"
                      VerticalAlignment="Top"
                      Height="54"

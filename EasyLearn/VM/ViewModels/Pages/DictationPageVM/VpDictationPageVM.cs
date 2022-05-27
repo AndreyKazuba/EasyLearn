@@ -5,12 +5,13 @@ using System.Windows.Media;
 using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
 using EasyLearn.Infrastructure.DictationManagers;
+using EasyLearn.Infrastructure.Exceptions;
 using EasyLearn.Infrastructure.Helpers;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
     /// <summary>
-    /// Verb preposition dictation part
+    /// Verb preposition dictation section
     /// </summary>
     public partial class DictationPageVM
     {
@@ -33,33 +34,37 @@ namespace EasyLearn.VM.ViewModels.Pages
         public bool VpSecondDisplayIsVisible { get; set; }
         #endregion
 
+        #region Private helpers
+        private void VpSetDictationManager()
+        {
+            int countOfVerbPrepositions = DictationLengthSliderValue;
+            List<VerbPreposition> verbPrepositions = UniversalHelper.Shuffle(vpLoadedDictionary.VerbPrepositions).Take(countOfVerbPrepositions).ToList();
+            vpDictationManager = new VerbPrepositionDictationManager(verbPrepositions);
+        }
+        #endregion
+
+        #region Private UI methods (verb preposition dictation section)
         private void VpShowSection()
         {
-            this.CdSectionIsVisible = false;
-            this.VpSectionIsVisible = true;
-            this.IvSectionIsVisible = false;
+            CdSectionIsVisible = false;
+            VpSectionIsVisible = true;
+            IvSectionIsVisible = false;
         }
-        private void VpSetDefaultTranslationValue() => this.VpTranslationValue = String.Empty;
         private void VpSetVerbPreposition(VerbPreposition verbPreposition)
         {
             VpSetDefaultSecondValue();
-            this.VpMainDisplayValue = verbPreposition.Verb.Value.NormalizeRegister();
-            this.VpTranslationValue = verbPreposition.Translation.NormalizeRegister();
-            //this.VpCommentValue = StringHelper.EmptyIfNull(verbPreposition.Comment);
+            VpMainDisplayValue = verbPreposition.Verb.Value.NormalizeRegister();
+            VpTranslationValue = verbPreposition.Translation.NormalizeRegister();
         }
-        private void VpSetDictationManager()
-        {
-            int countOfVerbPrepositions = this.DictationLengthSliderValue;
-            List<VerbPreposition> verbPrepositions = UniversalHelper.Shuffle(this.vpLoadedDictionary.VerbPrepositions).Take(countOfVerbPrepositions).ToList();
-            this.vpDictationManager = new VerbPrepositionDictationManager(verbPrepositions);
-        }
+        #endregion
 
-        #region Dictation
-#pragma warning disable CS8602
+        #region Private UI methods (dictation process)
         private void VpStart()
         {
+            if (vpDictationManager is null)
+                throw new Exception(ExceptionMessagesHelper.DictationManagerIsNull);
             SetDefaultPageState();
-            this.dictationIsStarted = true;
+            dictationIsStarted = true;
             VpSetDictationManager();
             VerbPreposition firstVerbPreposition = vpDictationManager.Start();
             VpSetVerbPreposition(firstVerbPreposition);
@@ -68,18 +73,16 @@ namespace EasyLearn.VM.ViewModels.Pages
             FocusAnswerTextBox();
             SetDictationProgressBar();
         }
-#pragma warning restore CS8602
         private void VpCheck()
         {
             if (!dictationIsStarted || vpDictationManager is null)
                 return;
-            bool answerIsCorrect = vpDictationManager.IsAnswerCorrect(this.AnswerValue);
+            bool answerIsCorrect = vpDictationManager.IsAnswerCorrect(AnswerValue);
             if (answerIsCorrect)
             {
                 VpSetSecondValue(vpDictationManager.CurrentVerbPreposition.Preposition.Value);
                 VpShowCorrectIcon();
                 IncreaseDictationProgressBarValue();
-                SwitchCheckAndNextButtons();
                 SetDefaultAnswerValue();
                 VpHidePromt();
                 wrongAnswers = 0;
@@ -93,75 +96,73 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void VpTryGoNext()
         {
-            if (!this.dictationIsStarted || this.vpDictationManager is null)
+            if (!dictationIsStarted || vpDictationManager is null)
                 return;
-            if (this.vpDictationManager.GoNext())
+            if (vpDictationManager.GoNext())
             {
                 VpSetVerbPreposition(vpDictationManager.CurrentVerbPreposition);
                 SetDefaultAnswerValue();
                 VpHideIcons();
                 VpHidePromt();
-                SwitchCheckAndNextButtons();
             }
             else
-            {
                 StopDictation();
-            }
         }
         #endregion
 
-        #region Second display
+        #region Private UI methods (second display)
         private void VpSetDefaultSecondValue()
         {
-            this.VpSecondDisplayValue = "...";
-            this.VpSecondDisplayColor = Brushes.Black;
+            VpSecondDisplayValue = "...";
+            VpSecondDisplayColor = Brushes.Black;
         }
         private void VpSetSecondValue(string value)
         {
-            this.VpSecondDisplayValue = value;
-            this.VpSecondDisplayColor = Brushes.ForestGreen;
+            VpSecondDisplayValue = value;
+            VpSecondDisplayColor = Brushes.ForestGreen;
         }
         private void VpHideSecondDisplay() => this.VpSecondDisplayIsVisible = false;
         private void VpShowSecondDisplay() => this.VpSecondDisplayIsVisible = true;
         #endregion
 
-        #region Icons
+        #region Private UI methods (wrong and correct icons)
         private void VpShowWrongIcon()
         {
-            this.VpWrongIconIsVisible = true;
-            this.VpCorrectIconIsVisible = false;
+            VpWrongIconIsVisible = true;
+            VpCorrectIconIsVisible = false;
         }
         private void VpShowCorrectIcon()
         {
-            this.VpCorrectIconIsVisible = true;
-            this.VpWrongIconIsVisible = false;
+            VpCorrectIconIsVisible = true;
+            VpWrongIconIsVisible = false;
         }
         private void VpHideIcons()
         {
-            this.VpCorrectIconIsVisible = false;
-            this.VpWrongIconIsVisible = false;
+            VpCorrectIconIsVisible = false;
+            VpWrongIconIsVisible = false;
         }
         #endregion
 
-        #region Promt
+        #region Privte UI methods (promt)
         private void VpShowPromt()
         {
             if (vpDictationManager is null)
                 return;
             VpSetMysteriousPromtValue(vpDictationManager.CurrentPrepositionValue);
-            this.VpPromtIsVisible = true;
+            VpPromtIsVisible = true;
         }
-        private void VpHidePromt() => this.VpPromtIsVisible = false;
+        private void VpHidePromt() => VpPromtIsVisible = false;
         private void VpSetMysteriousPromtValue(string value)
         {
             int symbolsCount = value.Length;
             string mysteriousString = new string('?', symbolsCount);
-            this.VpPromtValue = $"({mysteriousString})";
+            VpPromtValue = $"({mysteriousString})";
         }
-        private void VpSetPromtValue(string value)
-        {
-            this.VpPromtValue = $"({value})";
-        }
+        private void VpSetPromtValue(string value) => VpPromtValue = $"({value})";
+        #endregion
+
+        #region Private UI methods (translation)
+        private void VpSetDefaultTranslationValue() => VpTranslationValue = string.Empty;
         #endregion
     }
 }

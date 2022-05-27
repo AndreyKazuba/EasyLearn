@@ -40,6 +40,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private CommonRelation currentRelationForUpdate;
         #endregion
 
+        #region Private helper props
         private bool CommonRelationExist
         {
             set
@@ -48,6 +49,34 @@ namespace EasyLearn.VM.ViewModels.Pages
                 AwCommonRelationHasExistLableIsVisible = value;
             }
         }
+        #endregion
+
+        #region Binding props
+        public ObservableCollection<UserControl> CommonRelationViews { get; set; } = new ObservableCollection<UserControl>();
+        public string SearchStringValue { get; set; }
+        public SolidColorBrush HorisontalSeporatorColor => AwCommonRelationHasExistLableIsVisible ? new BrushConverter().ConvertFrom("#FFA70404") as SolidColorBrush ?? Brushes.Red : Brushes.LightGray;
+
+        public ObservableCollection<ExampleView> AwExampleViews { get; set; } = new ObservableCollection<ExampleView>();
+        public string AwEnglishValue { get; set; }
+        public string AwRussianValue { get; set; }
+        public string AwCommentValue { get; set; }
+        public string AwExampleRussianValue { get; set; }
+        public string AwExampleEnglishValue { get; set; }
+        public bool AwConfirmButtonIsEnabled { get; set; }
+        public bool AwCommonRelationHasExistLableIsVisible { get; set; }
+        public bool AwAddExampleButtonIsEnabled { get; set; }
+        public ObservableCollection<UnitTypeComboBoxItem> AwRussianUnitTypes { get; set; }
+        public ObservableCollection<UnitTypeComboBoxItem> AwEnglishUnitTypes { get; set; }
+        public UnitTypeComboBoxItem AwSelectedRussianUnitType { get; set; }
+        public UnitTypeComboBoxItem AwSelectedEnglishUnitType { get; set; }
+
+        public ObservableCollection<ExampleView> UwExampleViews { get; set; } = new ObservableCollection<ExampleView>();
+        public string UwCommentValue { get; set; }
+        public string UwExampleRussianValue { get; set; }
+        public string UwExampleEnglishValue { get; set; }
+        public bool UwConfirmButtonIsEnabled { get; set; } = true;
+        public bool UwAddExampleButtonIsEnabled { get; set; }
+        #endregion
 
 #pragma warning disable CS8618
         public EditCommonDictionaryPageVM(ICommonDictionaryRepository commonDictionaryRepository, ICommonRelationRepository commonRelationRepository)
@@ -59,108 +88,6 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.relationExistValidationRuleId = ValidationPool.Register(ValidationRulesGroup.AddCommonRelation);
         }
 #pragma warning restore CS8618
-
-        #region Binding props
-        public ObservableCollection<UserControl> CommonRelationViews { get; set; } = new ObservableCollection<UserControl>();
-        public string SearchStringValue { get; set; }   
-        public SolidColorBrush HorisontalSeporatorColor => AwCommonRelationHasExistLableIsVisible ? new BrushConverter().ConvertFrom("#FFA70404") as SolidColorBrush ?? Brushes.Red : Brushes.LightGray;       
-
-        public ObservableCollection<ExampleView> AwExampleViews { get; set; } = new ObservableCollection<ExampleView>();    
-        public string AwEnglishValue { get; set; }  
-        public string AwRussianValue { get; set; }  
-        public string AwCommentValue { get; set; }  
-        public string AwExampleRussianValue { get; set; }   
-        public string AwExampleEnglishValue { get; set; }   
-        public bool AwConfirmButtonIsEnabled { get; set; }  
-        public bool AwCommonRelationHasExistLableIsVisible { get; set; }    
-        public bool AwAddExampleButtonIsEnabled { get; set; }   
-        public ObservableCollection<UnitTypeComboBoxItem> AwRussianUnitTypes { get; set; }  
-        public ObservableCollection<UnitTypeComboBoxItem> AwEnglishUnitTypes { get; set; }  
-        public UnitTypeComboBoxItem AwSelectedRussianUnitType { get; set; } 
-        public UnitTypeComboBoxItem AwSelectedEnglishUnitType { get; set; } 
-
-        public ObservableCollection<ExampleView> UwExampleViews { get; set; } = new ObservableCollection<ExampleView>();
-        public string UwCommentValue { get; set; }
-        public string UwExampleRussianValue { get; set; }
-        public string UwExampleEnglishValue { get; set; }
-        public bool UwConfirmButtonIsEnabled { get; set; } = true;
-        public bool UwAddExampleButtonIsEnabled { get; set; }
-        #endregion
-
-        #region Events
-        protected override void InitEvents()
-        {
-            EditCommonDictionaryPage.AddingWindowRussianValueTextBoxEnterDown += OnAddingWindowRussianValueTextBoxEnterDown;
-            EditCommonDictionaryPage.AddingWindowEnglishValueTextBoxEnterDown += OnAddingWindowEnglishValueTextBoxEnterDown;
-            EditCommonDictionaryPage.AddingWindowRussianUnitTypeComboBoxEnterDown += OnAddingWindowRussianUnitTypeComboBoxEnterDown;
-            EditCommonDictionaryPage.AddingWindowEnglishUnitTypeComboBoxEnterDown += OnAddingWindowEnglishUnitTypeComboBoxEnterDown;
-            EditCommonDictionaryPage.AddingWindowCommentValueTextBoxEnterDown += OnAddingWindowCommentValueTextBoxEnterDown;
-            EditCommonDictionaryPage.AddingWindowExampleRussianValueTextBoxEnterDown += OnAddingWindowExampleRussianValueTextBoxEnterDown;
-            EditCommonDictionaryPage.AddingWindowExampleEnglishValueTextBoxEnterDown += OnAddingWindowExampleEnglishValueTextBoxEnterDown;
-            EditCommonDictionaryPage.UpdateWindowExampleRussianValueTextBoxEnterDown += OnUpdateWindowExampleRussianValueTextBoxEnterDown;
-            EditCommonDictionaryPage.UpdateWindowExampleEnglishValueTextBoxEnterDown += OnUpdateWindowExampleEnglishValueTextBoxEnterDown;
-            AppWindow.WindowCtrlNDown += OnWindowCtrlNDown;
-            AppWindow.WindowEscDown += OnWindowEscDown;
-            AppWindow.GoBackButtonClick += OnGoBackButtonClick;
-            AppWindow.OpenMenuButtonClick += OnOpenMenuButtonClick;
-            AppWindow.DrawerButtonClick += OnDrawerButtonClick;
-        }
-        private void OnAddingWindowRussianValueTextBoxEnterDown() => AwFocusEnglishValueTextBox();
-        private void OnAddingWindowEnglishValueTextBoxEnterDown() => AwFocusRussianUnitTypeComboBox();
-        private void OnAddingWindowRussianUnitTypeComboBoxEnterDown() => AwFocusEnglishUnitTypeComboBox();
-        private void OnAddingWindowEnglishUnitTypeComboBoxEnterDown() => AwFocusCommentValueTextBox();
-        private void OnAddingWindowCommentValueTextBoxEnterDown()
-        {
-            if (ValidationPool.IsValid(ValidationRulesGroup.AddCommonRelation))
-                AwConfirmButtonSoftClick();
-        }
-        private void OnAddingWindowExampleRussianValueTextBoxEnterDown() => AwFocusExampleEnglishValueTextBox();
-        private void OnAddingWindowExampleEnglishValueTextBoxEnterDown()
-        {
-            if (awExampleInvalid)
-                return;
-            AwAddExampleButtonSoftClick();
-        }
-        private void OnUpdateWindowExampleRussianValueTextBoxEnterDown() => UwFocusExampleEnglishValueTextBox();
-        private void OnUpdateWindowExampleEnglishValueTextBoxEnterDown()
-        {
-            if (uwExampleInvalid)
-                return;
-            UwAddExampleButtonSoftClick();
-        }
-        private void OnWindowCtrlNDown()
-        {
-            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditCommonWordListPage)
-            {
-                AwFocusRussianValueTextBox();
-                AwOpenWindowButtonSoftClick();
-            }
-        }
-        private void OnWindowEscDown()
-        {
-            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditCommonWordListPage)
-                AwCancelButtonSoftClick();
-        }
-        private void OnGoBackButtonClick()
-        {
-            App.GetService<AppWindowVM>().HideGoBackButtonCommand.Execute();
-            GoBack();
-        }
-        private void OnOpenMenuButtonClick()
-        {
-            if (topMenuIsOpened)
-            {
-                CloseTopMenuButtonSoftClick();
-                topMenuIsOpened = false;
-            }
-            else
-            {
-                OpenTopMenuButtonSoftClick();
-                topMenuIsOpened = true;
-            }
-        }
-        private void OnDrawerButtonClick() => App.GetService<AppWindowVM>().HideGoBackButtonCommand.Execute();
-        #endregion
 
         #region Commands
         public Command GoBackCommand { get; private set; }
@@ -192,37 +119,34 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command UwFocusExampleRussianValueTextBoxCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.GoBackCommand = new Command(GoBack);
-            this.CreateCommonRelationCommand = new Command(async () => await CreateCommonRelation());
-            this.UpdateCommonRelationCommand = new Command(async () => await UpdateCommonRelation());
-            this.DeleteCommonRelationCommand = new Command(async () => await DeleteCommonRelation());
-            this.DeleteAllCommonRelationsCommand = new Command(async () => await DeleteAllCommonRelations());
-            this.SetDictionaryCommand = new Command<int>(async commonDictionaryId => await SetDictionary(commonDictionaryId));
-            this.SearchCommonRelationsCommand = new Command(SearchCommonRelations);
-            this.RemoveExampleViewCommand = new Command<int>(RemoveExampleView);
+            GoBackCommand = new Command(GoBack);
+            CreateCommonRelationCommand = new Command(async () => await CreateCommonRelation());
+            UpdateCommonRelationCommand = new Command(async () => await UpdateCommonRelation());
+            DeleteCommonRelationCommand = new Command(async () => await DeleteCommonRelation());
+            DeleteAllCommonRelationsCommand = new Command(async () => await DeleteAllCommonRelations());
+            SetDictionaryCommand = new Command<int>(async commonDictionaryId => await SetDictionary(commonDictionaryId));
+            SearchCommonRelationsCommand = new Command(SearchCommonRelations);
+            RemoveExampleViewCommand = new Command<int>(RemoveExampleView);
 
-            this.AwOpenWindowCommand = new Command(AwOpenWindow);
-            this.AwClearCommand = new Command(AwClear);
-            this.AwUpdateConfirmButtonAvailabilityCommand = new Command(AwUpdateConfirmButtonAvailability);
-            this.AwAddExampleViewCommand = new Command(AwAddExampleView);
-            this.AwCheckCommonRelationForExistingCommand = new Command(AwCheckCommonRelationForExisting);
-            this.AwClearExampleSectionCommand = new Command(AwClearExampleSection);
-            this.AwValidateExampleSectionCommand = new Command(AwValidateExampleSection);
-            this.AwCheckExampleTextBoxesMaxLengthVisibilityCommand = new Command(AwCheckExampleTextBoxesMaxLengthVisibility);
-            this.AwFocusExampleRussianValueTextBoxCommand = new Command(AwFocusExampleRussianValueTextBox);
+            AwOpenWindowCommand = new Command(AwOpenWindow);
+            AwClearCommand = new Command(AwClear);
+            AwUpdateConfirmButtonAvailabilityCommand = new Command(AwUpdateConfirmButtonAvailability);
+            AwAddExampleViewCommand = new Command(AwAddExampleView);
+            AwCheckCommonRelationForExistingCommand = new Command(AwCheckCommonRelationForExisting);
+            AwClearExampleSectionCommand = new Command(AwClearExampleSection);
+            AwValidateExampleSectionCommand = new Command(AwValidateExampleSection);
+            AwCheckExampleTextBoxesMaxLengthVisibilityCommand = new Command(AwCheckExampleTextBoxesMaxLengthVisibility);
+            AwFocusExampleRussianValueTextBoxCommand = new Command(AwFocusExampleRussianValueTextBox);
 
-            this.UwOpenWindowCommand = new Command<int>(UwOpenWindow);
-            this.UwClearCommand = new Command(UwClear);
-            this.UwUpdateConfirmButtonAvailabilityCommand = new Command(UwUpdateConfirmButtonAvailability);
-            this.UwAddExampleViewCommand = new Command(UwAddExampleView);
-            this.UwClearExampleSectionCommand = new Command(UwClearExampleSection);
-            this.UwValidateExampleSectionCommand = new Command(UwValidateExampleSection);
-            this.UwCheckExampleTextBoxesMaxLengthVisibilityCommand = new Command(UwCheckExampleTextBoxesMaxLengthVisibility);
-            this.UwFocusExampleRussianValueTextBoxCommand = new Command(UwFocusExampleRussianValueTextBox);
+            UwOpenWindowCommand = new Command<int>(UwOpenWindow);
+            UwClearCommand = new Command(UwClear);
+            UwUpdateConfirmButtonAvailabilityCommand = new Command(UwUpdateConfirmButtonAvailability);
+            UwAddExampleViewCommand = new Command(UwAddExampleView);
+            UwClearExampleSectionCommand = new Command(UwClearExampleSection);
+            UwValidateExampleSectionCommand = new Command(UwValidateExampleSection);
+            UwCheckExampleTextBoxesMaxLengthVisibilityCommand = new Command(UwCheckExampleTextBoxesMaxLengthVisibility);
+            UwFocusExampleRussianValueTextBoxCommand = new Command(UwFocusExampleRussianValueTextBox);
         }
-        #endregion
-
-        #region Command logic methods
         private void GoBack() => App.GetService<AppWindowVM>().OpenDictionariesPageCommand.Execute();
         private async Task CreateCommonRelation()
         {
@@ -418,7 +342,82 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         #endregion
 
-        #region Page halpers
+        #region Event handling
+        protected override void InitEvents()
+        {
+            EditCommonDictionaryPage.AddingWindowRussianValueTextBoxEnterDown += OnAddingWindowRussianValueTextBoxEnterDown;
+            EditCommonDictionaryPage.AddingWindowEnglishValueTextBoxEnterDown += OnAddingWindowEnglishValueTextBoxEnterDown;
+            EditCommonDictionaryPage.AddingWindowRussianUnitTypeComboBoxEnterDown += OnAddingWindowRussianUnitTypeComboBoxEnterDown;
+            EditCommonDictionaryPage.AddingWindowEnglishUnitTypeComboBoxEnterDown += OnAddingWindowEnglishUnitTypeComboBoxEnterDown;
+            EditCommonDictionaryPage.AddingWindowCommentValueTextBoxEnterDown += OnAddingWindowCommentValueTextBoxEnterDown;
+            EditCommonDictionaryPage.AddingWindowExampleRussianValueTextBoxEnterDown += OnAddingWindowExampleRussianValueTextBoxEnterDown;
+            EditCommonDictionaryPage.AddingWindowExampleEnglishValueTextBoxEnterDown += OnAddingWindowExampleEnglishValueTextBoxEnterDown;
+            EditCommonDictionaryPage.UpdateWindowExampleRussianValueTextBoxEnterDown += OnUpdateWindowExampleRussianValueTextBoxEnterDown;
+            EditCommonDictionaryPage.UpdateWindowExampleEnglishValueTextBoxEnterDown += OnUpdateWindowExampleEnglishValueTextBoxEnterDown;
+            AppWindow.WindowCtrlNDown += OnWindowCtrlNDown;
+            AppWindow.WindowEscDown += OnWindowEscDown;
+            AppWindow.GoBackButtonClick += OnGoBackButtonClick;
+            AppWindow.OpenMenuButtonClick += OnOpenMenuButtonClick;
+            AppWindow.DrawerButtonClick += OnDrawerButtonClick;
+        }
+        private void OnAddingWindowRussianValueTextBoxEnterDown() => AwFocusEnglishValueTextBox();
+        private void OnAddingWindowEnglishValueTextBoxEnterDown() => AwFocusRussianUnitTypeComboBox();
+        private void OnAddingWindowRussianUnitTypeComboBoxEnterDown() => AwFocusEnglishUnitTypeComboBox();
+        private void OnAddingWindowEnglishUnitTypeComboBoxEnterDown() => AwFocusCommentValueTextBox();
+        private void OnAddingWindowCommentValueTextBoxEnterDown()
+        {
+            if (ValidationPool.IsValid(ValidationRulesGroup.AddCommonRelation))
+                AwConfirmButtonSoftClick();
+        }
+        private void OnAddingWindowExampleRussianValueTextBoxEnterDown() => AwFocusExampleEnglishValueTextBox();
+        private void OnAddingWindowExampleEnglishValueTextBoxEnterDown()
+        {
+            if (awExampleInvalid)
+                return;
+            AwAddExampleButtonSoftClick();
+        }
+        private void OnUpdateWindowExampleRussianValueTextBoxEnterDown() => UwFocusExampleEnglishValueTextBox();
+        private void OnUpdateWindowExampleEnglishValueTextBoxEnterDown()
+        {
+            if (uwExampleInvalid)
+                return;
+            UwAddExampleButtonSoftClick();
+        }
+        private void OnWindowCtrlNDown()
+        {
+            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditCommonWordListPage)
+            {
+                AwFocusRussianValueTextBox();
+                AwOpenWindowButtonSoftClick();
+            }
+        }
+        private void OnWindowEscDown()
+        {
+            if (App.GetService<AppWindowVM>().CurrentPage == Page.EditCommonWordListPage)
+                AwCancelButtonSoftClick();
+        }
+        private void OnGoBackButtonClick()
+        {
+            App.GetService<AppWindowVM>().HideGoBackButtonCommand.Execute();
+            GoBack();
+        }
+        private void OnOpenMenuButtonClick()
+        {
+            if (topMenuIsOpened)
+            {
+                CloseTopMenuButtonSoftClick();
+                topMenuIsOpened = false;
+            }
+            else
+            {
+                OpenTopMenuButtonSoftClick();
+                topMenuIsOpened = true;
+            }
+        }
+        private void OnDrawerButtonClick() => App.GetService<AppWindowVM>().HideGoBackButtonCommand.Execute();
+        #endregion
+
+        #region Private page halpers
         private IEnumerable<CommonRelationView> CreateOrderedCommonRelationViews(IEnumerable<CommonRelation> commonRelations)
         {
             return commonRelations
@@ -427,21 +426,21 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         #endregion
 
-        #region Adding window helpers
+        #region Private adding window helpers
         private string? AwGetFirstExampleRussianValue() => AwExampleViews.Count == 0 ? null : AwExampleViews.ToArray()[0].RussianValue;
         private string? AwGetFirstExampleEnglishValue() => AwExampleViews.Count == 0 ? null : AwExampleViews.ToArray()[0].EnglishValue;
         private string? AwGetSecondExampleRussianValue() => AwExampleViews.Count < 2 ? null : AwExampleViews.ToArray()[1].RussianValue;
         private string? AwGetSecondExampleEnglishValue() => AwExampleViews.Count < 2 ? null : AwExampleViews.ToArray()[1].RussianValue;
         #endregion
 
-        #region Update window helpers
+        #region Private update window helpers
         private string? UwGetFirstExampleRussianValue() => UwExampleViews.Count == 0 ? null : UwExampleViews.ToArray()[0].RussianValue;
         private string? UwGetFirstExampleEnglishValue() => UwExampleViews.Count == 0 ? null : UwExampleViews.ToArray()[0].EnglishValue;
         private string? UwGetSecondExampleRussianValue() => UwExampleViews.Count < 2 ? null : UwExampleViews.ToArray()[1].RussianValue;
         private string? UwGetSecondExampleEnglishValue() => UwExampleViews.Count < 2 ? null : UwExampleViews.ToArray()[1].RussianValue;
         #endregion
 
-        #region CommonRelations UI methods
+        #region Private UI methods (page)
         private void AddCommonRelationViewsToUIKeepingOrder(IEnumerable<CommonRelationView> commonRelationViews)
         {
             foreach (CommonRelationView commonRelationView in commonRelationViews)
@@ -461,7 +460,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         });
         #endregion
 
-        #region Update window UI methods
+        #region Private UI methods (update window)
         private ExampleView? UwTryFindExampleView(int exampleId) => UwExampleViews.FirstOrDefault(exampleView => exampleView.Id == exampleId);
         private void UwOpenWindowButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().uwOpenWindowButton.SoftClick();
         private void UwAddExampleButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().uwAddExampleButton.SoftClick();
@@ -497,7 +496,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         #endregion
 
-        #region Adding window UI methods
+        #region private UI methods (adding window)
         private ExampleView? AwTryFindExampleView(int exampleId) => AwExampleViews.FirstOrDefault(exampleView => exampleView.Id == exampleId);
         private void AwCancelButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().awCancelButton.SoftClick();
         private void AwAddExampleButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().awAddExampleButton.SoftClick();
@@ -571,7 +570,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         #endregion
 
-        #region Top menu UI methods
+        #region Private UI methods (top menu)
         private void OpenTopMenuButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().openTopMenuButton.SoftClick();
         private void CloseTopMenuButtonSoftClick() => App.GetService<EditCommonDictionaryPage>().closeTopMenuButton.SoftClick();
         #endregion

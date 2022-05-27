@@ -25,7 +25,7 @@
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
 
-            <Button Name="addNewUserButton"
+            <Button Name="openNewUserAddingWindowButton"
                     Visibility="Collapsed"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
                 <Button.CommandParameter>

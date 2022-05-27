@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media;
@@ -7,11 +8,12 @@ using EasyLearn.Data.Models;
 using EasyLearn.Infrastructure.DictationManagers;
 using EasyLearn.Infrastructure.Enums;
 using EasyLearn.UI.CustomControls;
+using EasyLearn.Infrastructure.Exceptions;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
     /// <summary>
-    /// Common dictation part
+    /// Common dictation section
     /// </summary>
     public partial class DictationPageVM
     {
@@ -36,64 +38,72 @@ namespace EasyLearn.VM.ViewModels.Pages
         public bool CdAnotherAnswersIsVisible { get; set; }
         public string? CdFirstExampleValue { get; set; }
         public string? CdSecondExampleValue { get; set; }
-
         #endregion
 
+        #region Private helpers
+        private void CdSetDictationManager()
+        {
+            int countOfRelations = DictationLengthSliderValue;
+            List<CommonRelation> commonRelations = cdLoadedDictionary.Relations;
+            commonDictationManager = CommonDictationManager.CreateManager(commonRelations, countOfRelations, SelectedDictationDirection);
+        }
+        #endregion
+
+        #region Private UI methods (common dictation section)
         private void CdSetRelation(CommonRelation relation)
         {
-            bool firstExampleExist = relation.IsFirstExampleExist;
             if (SelectedDictationDirection == DictationDirection.Directly)
+                CdSetRelationWithDirecltyDirection(relation);
+            else
+                CdSetRelationWithOpposteDirection(relation);
+        }
+        private void CdSetRelationWithDirecltyDirection(CommonRelation relation)
+        {
+            CdMainDisplayValue = relation.RussianUnit.Value.NormalizeRegister();
+            CdUnitTypeValue = relation.RussianUnit.Type.GetRussianValue();
+            CdUnitTypeColor = relation.RussianUnit.Type.GetColor();
+            CdCommentValue = relation.Comment.TryNormalizeRegister();
+            if (relation.IsFirstExampleExist)
             {
-                this.CdMainDisplayValue = relation.RussianUnit.Value.NormalizeRegister();
-                this.CdUnitTypeValue = relation.RussianUnit.Type.GetRussianValue();
-                this.CdUnitTypeColor = relation.RussianUnit.Type.GetColor();
-                if (firstExampleExist)
-                {
-                    this.CdFirstExampleValue = relation.FirstExampleRussianValue.TryNormalizeRegister();
-                    this.CdSecondExampleValue = relation.SecondExampleRussianValue.TryNormalizeRegister();
-                }
-                else
-                {
-                    this.CdFirstExampleValue = relation.SecondExampleRussianValue.TryNormalizeRegister();
-                }
+                CdFirstExampleValue = relation.FirstExampleRussianValue.TryNormalizeRegister();
+                CdSecondExampleValue = relation.SecondExampleRussianValue.TryNormalizeRegister();
             }
             else
             {
-                this.CdMainDisplayValue = relation.EnglishUnit.Value.NormalizeRegister();;
-                this.CdUnitTypeValue = relation.EnglishUnit.Type.GetRussianValue();
-                this.CdUnitTypeColor = relation.EnglishUnit.Type.GetColor();
-                if (firstExampleExist)
-                {
-                    this.CdFirstExampleValue = relation.FirstExampleEnglishValue.TryNormalizeRegister();
-                    this.CdSecondExampleValue = relation.SecondExampleEnglishValue.TryNormalizeRegister();
-                }
-                else
-                {
-                    this.CdFirstExampleValue = relation.SecondExampleEnglishValue.TryNormalizeRegister();
-                }
-                
+                CdFirstExampleValue = relation.SecondExampleRussianValue.TryNormalizeRegister();
             }
-            this.CdCommentValue = relation.Comment.TryNormalizeRegister();
         }
-        private void CdSetDictationManager()
+        private void CdSetRelationWithOpposteDirection(CommonRelation relation)
         {
-            int countOfRelations = this.DictationLengthSliderValue;
-            List<CommonRelation> commonRelations = this.cdLoadedDictionary.Relations;
-            this.commonDictationManager = CommonDictationManager.CreateManager(commonRelations, countOfRelations, SelectedDictationDirection);
+            CdMainDisplayValue = relation.EnglishUnit.Value.NormalizeRegister(); ;
+            CdUnitTypeValue = relation.EnglishUnit.Type.GetRussianValue();
+            CdUnitTypeColor = relation.EnglishUnit.Type.GetColor();
+            CdCommentValue = relation.Comment.TryNormalizeRegister();
+            if (relation.IsFirstExampleExist)
+            {
+                CdFirstExampleValue = relation.FirstExampleEnglishValue.TryNormalizeRegister();
+                CdSecondExampleValue = relation.SecondExampleEnglishValue.TryNormalizeRegister();
+            }
+            else
+            {
+                CdFirstExampleValue = relation.SecondExampleEnglishValue.TryNormalizeRegister();
+            }
         }
         private void CdShowSection()
         {
-            this.CdSectionIsVisible = true;
-            this.VpSectionIsVisible = false;
-            this.IvSectionIsVisible = false;
+            CdSectionIsVisible = true;
+            VpSectionIsVisible = false;
+            IvSectionIsVisible = false;
         }
+        #endregion
 
-        #region Dictation
-#pragma warning disable CS8602
+        #region Private UI methods (dictation process)
         private void CdStart()
         {
+            if (commonDictationManager is null)
+                throw new Exception(ExceptionMessagesHelper.DictationManagerIsNull);
             SetDefaultPageState();
-            this.dictationIsStarted = true;
+            dictationIsStarted = true;
             CdSetDictationManager();
             CommonRelation firstCommonRelation = commonDictationManager.Start();
             CdSetRelation(firstCommonRelation);
@@ -102,20 +112,18 @@ namespace EasyLearn.VM.ViewModels.Pages
             FocusAnswerTextBox();
             SetDictationProgressBar();
         }
-#pragma warning restore CS8602
         private void CdCheck()
         {
             if (!dictationIsStarted || commonDictationManager is null)
                 return;
-            bool answerIsCorrect = commonDictationManager.IsAnswerCorrect(this.AnswerValue);
+            bool answerIsCorrect = commonDictationManager.IsAnswerCorrect(AnswerValue);
             if (answerIsCorrect)
             {
                 if (commonDictationManager.CurrentRelationHasSynonyms)
-                    CdShowAnotherAnswers(commonDictationManager.AvailableRelations, this.AnswerValue);
+                    CdShowSynonyms(commonDictationManager.AvailableRelations, AnswerValue);
                 SetCorrectPageBackground();
                 SetAnswerTextBoxAsCorrect();
                 IncreaseDictationProgressBarValue();
-                SwitchCheckAndNextButtons();
                 CdHidePromt();
                 wrongAnswers = 0;
             }
@@ -135,38 +143,29 @@ namespace EasyLearn.VM.ViewModels.Pages
             {
                 CdSetRelation(commonDictationManager.CurrentRelation);
                 SetDefaultAnswerValue();
-                CdHideAnotherAnswers();
+                CdHideSynonyms();
                 SetDefaultPageBackground();
                 SetAnswerTextBoxAsDefault();
                 CdHidePromt();
-                SwitchCheckAndNextButtons();
             }
             else
-            {
                 StopDictation();
-            }
         }
         #endregion
 
-        #region Unit type
-        private void CdShowUnitType()
-        {
-            this.CdUnitTypeIsVisible = true;
-        }
-        private void CdHideUnitType()
-        {
-            this.CdUnitTypeIsVisible = false;
-        }
+        #region Private UI methods (unit type label)
+        private void CdShowUnitType() => CdUnitTypeIsVisible = true;
+        private void CdHideUnitType() => CdUnitTypeIsVisible = false;
         #endregion
 
-        #region Another asnwers
-        private void CdShowAnotherAnswers(IEnumerable<CommonRelation> commonRelations, string asnwerValue)
+        #region Private UI methods (synonyms)
+        private void CdShowSynonyms(IEnumerable<CommonRelation> commonRelations, string asnwerValue)
         {
-            this.CdAnotherAnswersIsVisible = true;
-            IEnumerable<AvailableRelationView> anotherAnswerViews = GetAnotherAnswerViews(commonRelations, asnwerValue);
-            this.CdAnotherAnswerViews = new ObservableCollection<AvailableRelationView>(anotherAnswerViews);
+            CdAnotherAnswersIsVisible = true;
+            IEnumerable<AvailableRelationView> synonymsViews = GetSynonymViews(commonRelations, asnwerValue);
+            CdAnotherAnswerViews = new ObservableCollection<AvailableRelationView>(synonymsViews);
         }
-        private IEnumerable<AvailableRelationView> GetAnotherAnswerViews(IEnumerable<CommonRelation> commonRelations, string asnwerValue)
+        private IEnumerable<AvailableRelationView> GetSynonymViews(IEnumerable<CommonRelation> commonRelations, string asnwerValue)
         {
             if (SelectedDictationDirection == DictationDirection.Directly)
             {
@@ -181,57 +180,38 @@ namespace EasyLearn.VM.ViewModels.Pages
                 .Select(relation => AvailableRelationView.Create(relation, SelectedDictationDirection));
             }
         }
-        private void CdHideAnotherAnswers()
+        private void CdHideSynonyms()
         {
-            this.CdAnotherAnswersIsVisible = false;
-            if (this.CdAnotherAnswerViews is not null)
-                this.CdAnotherAnswerViews.Clear();
+            CdAnotherAnswersIsVisible = false;
+            if (CdAnotherAnswerViews is not null)
+                CdAnotherAnswerViews.Clear();
         }
         #endregion
 
-        #region Icons
-        private void CdShowWrongIcon()
-        {
-            this.CdWrongIconIsVisible = true;
-            this.CdCorrectIconIsVisible = false;
-        }
-        private void CdShowCorrectIcon()
-        {
-            this.CdCorrectIconIsVisible = true;
-            this.CdWrongIconIsVisible = false;
-        }
-        private void CdHideIcons()
-        {
-            this.CdCorrectIconIsVisible = false;
-            this.CdWrongIconIsVisible = false;
-        }
-        #endregion
-
-        #region Promt
+        #region Private UI methods (promt)
         private void CdShowPromt()
         {
-            if (this.commonDictationManager is null)
+            if (commonDictationManager is null)
                 return;
             CdSetMysteriousPromtValue(this.commonDictationManager.CurrentAnswerValue);
-            this.CdPromtIsVisible = true;
+            CdPromtIsVisible = true;
         }
-        private void CdHidePromt() => this.CdPromtIsVisible = false;
+        private void CdHidePromt() => CdPromtIsVisible = false;
         private void CdSetMysteriousPromtValue(string value)
         {
             int symbolsCount = value.Length;
             string mysteriousString = new string('?', symbolsCount);
-            this.CdPromtValue = $"({mysteriousString})";
+            CdPromtValue = $"({mysteriousString})";
         }
-        private void CdSetPromtValue(string value)
-        {
-            this.CdPromtValue = $"({value})";
-        }
+        private void CdSetPromtValue(string value) => CdPromtValue = $"({value})";
         #endregion
 
+        #region Private UI methods (examples)
         private void CdHideExamples()
         {
-            this.CdFirstExampleValue = string.Empty;
-            this.CdSecondExampleValue = string.Empty;
+            CdFirstExampleValue = string.Empty;
+            CdSecondExampleValue = string.Empty;
         }
+        #endregion
     }
 }

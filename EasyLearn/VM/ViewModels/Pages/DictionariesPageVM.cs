@@ -17,7 +17,6 @@ using EasyLearn.Infrastructure.Validation;
 using EasyLearn.Infrastructure.Exceptions;
 using EasyLearn.UI.Pages;
 using EasyLearn.Infrastructure.Helpers;
-using System.Windows.Media;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -33,24 +32,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private int currentUserId;
         #endregion
 
-#pragma warning disable CS8618
-        public DictionariesPageVM
-            (IEasyLearnUserRepository userRerository,
-            ICommonDictionaryRepository commonDictionaryRepository,
-            IVerbPrepositionDictionaryRepository erbPrepositionDictionaryRepository)
-        {
-            this.userRepository = userRerository;
-            this.commonDictionaryRepository = commonDictionaryRepository;
-            this.verbPrepositionDictionaryRepository = erbPrepositionDictionaryRepository;
-            SubscribeToEvents();
-            UpdatePageForNewUser();
-            SetAddingWindowDictionaryTypes();
-            ClearAddingWindow();
-        }
-#pragma warning restore CS8618
-
-
-        #region Props for binding
+        #region Binding props
         public ObservableCollection<UserControl> DictionaryViews { get; set; }
         public string AddingWindowDictionaryNameValue { get; set; }
         public string AddingWindowDictionaryDescriptionValue { get; set; }
@@ -58,8 +40,22 @@ namespace EasyLearn.VM.ViewModels.Pages
         public DictionaryTypeComboBoxItem AddingWindowSelectedDictionaryType { get; set; }
         public bool IsConfirmDictionaryAddingButtonEnabled { get; set; }
         public bool DictionaryNameTextBoxHasError { get; set; }
-
         #endregion
+
+#pragma warning disable CS8618
+        public DictionariesPageVM(
+            IEasyLearnUserRepository userRepository,
+            ICommonDictionaryRepository commonDictionaryRepository,
+            IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository)
+        {
+            this.userRepository = userRepository;
+            this.commonDictionaryRepository = commonDictionaryRepository;
+            this.verbPrepositionDictionaryRepository = verbPrepositionDictionaryRepository;
+            UpdatePageForNewUser();
+            SetAddingWindowDictionaryTypes();
+            ClearAddingWindow();
+        }
+#pragma warning restore CS8618
 
         #region Commands
         public Command ClearAddingWindowCommand { get; private set; }
@@ -72,28 +68,25 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command OpenAddingDictionaryWindowCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.ClearAddingWindowCommand = new Command(ClearAddingWindow);
-            this.CreateDictionaryCommand = new Command(async () => await CreateDictionary());
-            this.DeleteCommonDictionaryCommand = new Command<int>(async dictionaryId => await DeleteCommonDictionary(dictionaryId));
-            this.DeleteVerbPrepositionDictionaryCommand = new Command<int>(async dictionaryId => await DeleteVerbPrepositionDictionary(dictionaryId));
-            this.FlipBackAllCardsCommand = new Command(FlipBackAllCards);
-            this.UpdatePageForNewUserCommand = new Command(UpdatePageForNewUser);
-            this.UpdateConfirmDictionaryAddingButtonAvailabilityCommand = new Command(UpdateConfirmDictionaryAddingButtonAvailability);
-            this.OpenAddingDictionaryWindowCommand = new Command(OpenAddingDictionaryWindow);
+            ClearAddingWindowCommand = new Command(ClearAddingWindow);
+            CreateDictionaryCommand = new Command(async () => await CreateDictionary());
+            DeleteCommonDictionaryCommand = new Command<int>(async dictionaryId => await DeleteCommonDictionary(dictionaryId));
+            DeleteVerbPrepositionDictionaryCommand = new Command<int>(async dictionaryId => await DeleteVerbPrepositionDictionary(dictionaryId));
+            FlipBackAllCardsCommand = new Command(FlipBackAllCards);
+            UpdatePageForNewUserCommand = new Command(UpdatePageForNewUser);
+            UpdateConfirmDictionaryAddingButtonAvailabilityCommand = new Command(UpdateConfirmDictionaryAddingButtonAvailability);
+            OpenAddingDictionaryWindowCommand = new Command(OpenAddingDictionaryWindow);
         }
-        #endregion
-
-        #region Command logic methods
         private void ClearAddingWindow()
         {
-            this.AddingWindowDictionaryNameValue = String.Empty;
-            this.AddingWindowDictionaryDescriptionValue = String.Empty;
-            this.AddingWindowSelectedDictionaryType = this.AddingWindowDictionaryTypes[0];
-            this.IsConfirmDictionaryAddingButtonEnabled = false;
+            AddingWindowDictionaryNameValue = string.Empty;
+            AddingWindowDictionaryDescriptionValue = string.Empty;
+            AddingWindowSelectedDictionaryType = AddingWindowDictionaryTypes[0];
+            IsConfirmDictionaryAddingButtonEnabled = false;
         }
         private async Task CreateDictionary()
         {
-            DictionaryType selectedDictionaryType = this.AddingWindowSelectedDictionaryType.DictionaryType;
+            DictionaryType selectedDictionaryType = AddingWindowSelectedDictionaryType.DictionaryType;
             switch (selectedDictionaryType)
             {
                 case DictionaryType.CommonDictionary:
@@ -107,13 +100,13 @@ namespace EasyLearn.VM.ViewModels.Pages
         private async Task DeleteCommonDictionary(int commonDictionaryId)
         {
             CommonDictionaryView commonDictionaryView = FindCommonDictionaryView(commonDictionaryId);
-            this.DictionaryViews.Remove(commonDictionaryView);
+            DictionaryViews.Remove(commonDictionaryView);
             await commonDictionaryRepository.DeleteCommonDictionary(commonDictionaryView.Id);
         }
         private async Task DeleteVerbPrepositionDictionary(int verbPrepositionDictionaryId)
         {
             VerbPrepositionDictionaryView verbPrepositionDictionaryView = FindVerbPrepositionDictionaryView(verbPrepositionDictionaryId);
-            this.DictionaryViews.Remove(verbPrepositionDictionaryView);
+            DictionaryViews.Remove(verbPrepositionDictionaryView);
             await verbPrepositionDictionaryRepository.DeleteVerbPrepositionDictionary(verbPrepositionDictionaryView.Id);
         }
         private void FlipBackAllCards()
@@ -135,51 +128,27 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void OpenAddingDictionaryWindow() => AddNewDictionaryButtonSoftClick();
         #endregion
 
-        #region Other private methods
+        #region Event handling
+        protected override void InitEvents()
+        {
+            App.GetService<AppWindowVM>().CurrentPageChanged += FlipBackAllCards;
+        }
+        #endregion
+
+        #region Private helpers
         private async Task CreateCommonDictionary()
         {
-            string name = this.AddingWindowDictionaryNameValue;
-            string? description = StringHelper.NullIfEmptyOrWhiteSpace(this.AddingWindowDictionaryDescriptionValue);
-            int userId = this.currentUserId;
-            CommonDictionary newCommonDictionary = await commonDictionaryRepository.CreateCommonDictionary(name, description, userId);
-            AddCommonDictionaryToUI(newCommonDictionary);
+            string name = AddingWindowDictionaryNameValue;
+            string? description = StringHelper.NullIfEmptyOrWhiteSpace(AddingWindowDictionaryDescriptionValue);
+            CommonDictionary newCommonDictionary = await commonDictionaryRepository.CreateCommonDictionary(name, description, currentUserId);
+            AddCommonDictionaryViewToUI(newCommonDictionary);
         }
         private async Task CreateVerbPrepositionDictionary()
         {
-            string name = this.AddingWindowDictionaryNameValue;
-            string? description = StringHelper.NullIfEmptyOrWhiteSpace(this.AddingWindowDictionaryDescriptionValue);
-            int userId = this.currentUserId;
-            VerbPrepositionDictionnary newVerbPrepositionDictionary = await verbPrepositionDictionaryRepository.CreateVerbPrepositionDictionary(name, description, userId);
-            AddVerbPrepositionDictionaryToUI(newVerbPrepositionDictionary);
-        }
-        private void AddCommonDictionaryToUI(CommonDictionary dictionary)
-        {
-            RemoveShadowDictionaryView();
-            this.DictionaryViews.Add(CommonDictionaryView.Create(dictionary));
-            AddShadowDictionaryView();
-        }
-        private void AddVerbPrepositionDictionaryToUI(VerbPrepositionDictionnary dictionnary) => this.DictionaryViews.Add(VerbPrepositionDictionaryView.Create(dictionnary));
-        private CommonDictionaryView FindCommonDictionaryView(int commonDictionaryId)
-        {
-            foreach (UserControl dictionary in this.DictionaryViews)
-                if (dictionary is CommonDictionaryView)
-                {
-                    CommonDictionaryView dictionaryView = (CommonDictionaryView)dictionary;
-                    if (dictionaryView.Id == commonDictionaryId)
-                        return dictionaryView;
-                }
-            throw new Exception(ExceptionMessagesHelper.NoSuchDictionaryOnUI(nameof(CommonDictionary), commonDictionaryId));
-        }
-        private VerbPrepositionDictionaryView FindVerbPrepositionDictionaryView(int verbPrepositionDictionaryId)
-        {
-            foreach (UserControl dictionary in this.DictionaryViews)
-                if (dictionary is VerbPrepositionDictionaryView)
-                {
-                    VerbPrepositionDictionaryView dictionaryView = (VerbPrepositionDictionaryView)dictionary;
-                    if (dictionaryView.Id == verbPrepositionDictionaryId)
-                        return dictionaryView;
-                }
-            throw new Exception(ExceptionMessagesHelper.NoSuchDictionaryOnUI(nameof(VerbPrepositionDictionnary), verbPrepositionDictionaryId));
+            string name = AddingWindowDictionaryNameValue;
+            string? description = StringHelper.NullIfEmptyOrWhiteSpace(AddingWindowDictionaryDescriptionValue);
+            VerbPrepositionDictionnary newVerbPrepositionDictionary = await verbPrepositionDictionaryRepository.CreateVerbPrepositionDictionary(name, description, currentUserId);
+            AddVerbPrepositionDictionaryViewToUI(newVerbPrepositionDictionary);
         }
         private void SetAddingWindowDictionaryTypes()
         {
@@ -189,8 +158,8 @@ namespace EasyLearn.VM.ViewModels.Pages
                 new DictionaryTypeComboBoxItem(DictionaryTypeRussianNames.VerbPrepositionDictionary, DictionaryType.VerbPrepositionDictionary),
             };
             DictionaryTypeComboBoxItem selectedDictionaryType = dictionryTypes[0];
-            this.AddingWindowDictionaryTypes = dictionryTypes;
-            this.AddingWindowSelectedDictionaryType = selectedDictionaryType;
+            AddingWindowDictionaryTypes = dictionryTypes;
+            AddingWindowSelectedDictionaryType = selectedDictionaryType;
         }
         private void SetCurrentUserId()
         {
@@ -211,11 +180,42 @@ namespace EasyLearn.VM.ViewModels.Pages
             List<UserControl> allCurrentUserDictionariesViews = commonDictionaryViews.Union(verbPrepositionDictionaryViews).ToList();
             allCurrentUserDictionariesViews.Add(irregularVerbDictionaryView);
             this.DictionaryViews = new ObservableCollection<UserControl>(allCurrentUserDictionariesViews);
-            AddShadowDictionaryView();
+            AddShadowDictionaryViewToUI();
         }
-        private void AddShadowDictionaryView() => this.DictionaryViews.Add(ShadowDictionaryView.Create());
-        private void RemoveShadowDictionaryView() => this.DictionaryViews.RemoveAt(DictionaryViews.Count - 1);
-        private void SubscribeToEvents() => App.GetService<AppWindowVM>().CurrentPageChanged += () => FlipBackAllCards();
+        #endregion
+
+        #region Private UI methods
+        private void AddCommonDictionaryViewToUI(CommonDictionary dictionary)
+        {
+            RemoveShadowDictionaryViewFromUI();
+            DictionaryViews.Add(CommonDictionaryView.Create(dictionary));
+            AddShadowDictionaryViewToUI();
+        }
+        private void AddVerbPrepositionDictionaryViewToUI(VerbPrepositionDictionnary dictionnary) => DictionaryViews.Add(VerbPrepositionDictionaryView.Create(dictionnary));
+        private CommonDictionaryView FindCommonDictionaryView(int commonDictionaryId)
+        {
+            foreach (UserControl dictionary in DictionaryViews)
+                if (dictionary is CommonDictionaryView)
+                {
+                    CommonDictionaryView dictionaryView = (CommonDictionaryView)dictionary;
+                    if (dictionaryView.Id == commonDictionaryId)
+                        return dictionaryView;
+                }
+            throw new Exception(ExceptionMessagesHelper.NoSuchDictionaryOnUI(nameof(CommonDictionary), commonDictionaryId));
+        }
+        private VerbPrepositionDictionaryView FindVerbPrepositionDictionaryView(int verbPrepositionDictionaryId)
+        {
+            foreach (UserControl dictionary in DictionaryViews)
+                if (dictionary is VerbPrepositionDictionaryView)
+                {
+                    VerbPrepositionDictionaryView dictionaryView = (VerbPrepositionDictionaryView)dictionary;
+                    if (dictionaryView.Id == verbPrepositionDictionaryId)
+                        return dictionaryView;
+                }
+            throw new Exception(ExceptionMessagesHelper.NoSuchDictionaryOnUI(nameof(VerbPrepositionDictionnary), verbPrepositionDictionaryId));
+        }
+        private void AddShadowDictionaryViewToUI() => DictionaryViews.Add(ShadowDictionaryView.Create());
+        private void RemoveShadowDictionaryViewFromUI() => DictionaryViews.RemoveAt(DictionaryViews.Count - 1);
         private void AddNewDictionaryButtonSoftClick() => App.GetService<DictionariesPage>().addNewDictionaryButton.SoftClick();
         #endregion
     }

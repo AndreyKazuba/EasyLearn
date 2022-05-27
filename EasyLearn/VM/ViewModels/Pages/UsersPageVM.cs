@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
@@ -23,6 +22,12 @@ namespace EasyLearn.VM.ViewModels.Pages
         private readonly IEasyLearnUserRepository userRerository;
         #endregion
 
+        #region Binding props
+        public ObservableCollection<UserControl> UserViews { get; set; }
+        public string AddingWindowUserNameValue { get; set; }
+        public bool ConfirmUserAddingButtonIsEnabled { get; set; }
+        #endregion
+
 #pragma warning disable CS8618
         public UsersPageVM(IEasyLearnUserRepository userRerository)
         {
@@ -30,37 +35,6 @@ namespace EasyLearn.VM.ViewModels.Pages
             LoadUserViews();
         }
 #pragma warning restore CS8618
-
-        #region Props for binding
-        public ObservableCollection<UserControl> UserViews { get; set; }
-        public string AddingWindowUserNameValue { get; set; }
-        public bool ConfirmUserAddingButtonIsEnabled { get; set; }
-        #endregion
-
-        #region Events
-        protected override void InitEvents()
-        {
-            App.GetService<AppWindowVM>().CurrentPageChanged += () => FlipBackAllCards();
-            UsersPage.UserNameValueTextBoxEnterDown += OnUserNameValueTextBoxEnterDown;
-            AppWindow.WindowCtrlNDown += OnWindowCtrlNDown;
-            AppWindow.WindowEscDown += OnWindowEscDown;
-        }
-        private void OnUserNameValueTextBoxEnterDown()
-        {
-            if (ValidationPool.IsValid(ValidationRulesGroup.AddNewUser))
-                AddingNewUserButtonSoftClick();
-        }
-        private void OnWindowCtrlNDown()
-        {
-            if (App.GetService<AppWindowVM>().CurrentPage == Page.Users)
-                OpenNewUserAddingWindowButtonSoftClick();
-        }
-        private void OnWindowEscDown()
-        {
-            if (App.GetService<AppWindowVM>().CurrentPage == Page.Users)
-                NewUserAddingWindowCancelButtonSoftClick();
-        }
-        #endregion
 
         #region Commands
         public Command CreateUserCommand { get; private set; }
@@ -72,22 +46,19 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command OpenAddingUserWindowCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.CreateUserCommand = new Command(async () => await CreateUser());
-            this.DeleteUserCommand = new Command<int>(async userId => await DeleteUser(userId));
-            this.SetUserAsCurrentCommand = new Command<int>(async userId => await SetUserAsCurrent(userId));
-            this.ClearAddingWindowCommand = new Command(ClearAddingWindow);
-            this.FlipBackAllCardsCommand = new Command(FlipBackAllCards);
-            this.UpdateConfirmUserAddingButtonAvailabilityCommand = new Command(UpdateConfirmUserAddingButtonAvailability);
-            this.OpenAddingUserWindowCommand = new Command(OpenAddingUserWindow);
+            CreateUserCommand = new Command(async () => await CreateUser());
+            DeleteUserCommand = new Command<int>(async userId => await DeleteUser(userId));
+            SetUserAsCurrentCommand = new Command<int>(async userId => await SetUserAsCurrent(userId));
+            ClearAddingWindowCommand = new Command(ClearAddingWindow);
+            FlipBackAllCardsCommand = new Command(FlipBackAllCards);
+            UpdateConfirmUserAddingButtonAvailabilityCommand = new Command(UpdateConfirmUserAddingButtonAvailability);
+            OpenAddingUserWindowCommand = new Command(OpenAddingUserWindow);
         }
-        #endregion
-
-        #region Command logic methods
         private async Task CreateUser()
         {
-            string userName = this.AddingWindowUserNameValue;
+            string userName = AddingWindowUserNameValue;
             EasyLearnUser newUser = await userRerository.CreateUser(userName);
-            AddUserToUI(newUser);
+            AddUserToViewUI(newUser);
             await SetUserAsCurrent(newUser.Id);
         }
         private async Task DeleteUser(int userId)
@@ -95,7 +66,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             UserView userView = FindUserView(userId);
             bool wasCurrent = userView.IsCurrent;
             this.UserViews.Remove(userView);
-            if (wasCurrent && this.UserViews.Any())
+            if (wasCurrent && UserViews.Any())
                 await SetUserAsCurrent(((UserView)this.UserViews[0]).Id);
             await userRerository.DeleteUser(userId);
         }
@@ -110,53 +81,81 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void ClearAddingWindow()
         {
-            this.AddingWindowUserNameValue = String.Empty;
-            this.ConfirmUserAddingButtonIsEnabled = false;
+            AddingWindowUserNameValue = string.Empty;
+            ConfirmUserAddingButtonIsEnabled = false;
         }
         private void FlipBackAllCards()
         {
-            foreach (UserControl userView in this.UserViews)
+            foreach (UserControl userView in UserViews)
             {
                 UserView? user = userView as UserView;
                 if (user is not null)
                     user.IsCardFlipped = false;
             }
         }
-        private void UpdateConfirmUserAddingButtonAvailability() => this.ConfirmUserAddingButtonIsEnabled = ValidationPool.IsValid(ValidationRulesGroup.AddNewUser);
-        private void OpenAddingUserWindow() => AddNewUserButtonSoftClick();
+        private void UpdateConfirmUserAddingButtonAvailability() => ConfirmUserAddingButtonIsEnabled = ValidationPool.IsValid(ValidationRulesGroup.AddNewUser);
+        private void OpenAddingUserWindow() => ConfirmUserAddingButtonSoftClick();
         #endregion
 
-        #region Other private methods
+        #region Event handling
+        protected override void InitEvents()
+        {
+            App.GetService<AppWindowVM>().CurrentPageChanged += () => FlipBackAllCards();
+            UsersPage.UserNameValueTextBoxEnterDown += OnUserNameValueTextBoxEnterDown;
+            AppWindow.WindowCtrlNDown += OnWindowCtrlNDown;
+            AppWindow.WindowEscDown += OnWindowEscDown;
+        }
+        private void OnUserNameValueTextBoxEnterDown()
+        {
+            if (ValidationPool.IsValid(ValidationRulesGroup.AddNewUser))
+                ConfirmUserAddingButton();
+        }
+        private void OnWindowCtrlNDown()
+        {
+            if (App.GetService<AppWindowVM>().CurrentPage == Page.Users)
+                OpenNewUserAddingWindowButtonSoftClick();
+        }
+        private void OnWindowEscDown()
+        {
+            if (App.GetService<AppWindowVM>().CurrentPage == Page.Users)
+                CancelUserAddingButtonSoftClick();
+        }
+        #endregion
+
+        #region Private helpers
         private void LoadUserViews()
         {
             IEnumerable<EasyLearnUser> easyLearnUsers = userRerository.GetAllUsers();
             IEnumerable<UserView> userViews = easyLearnUsers.Select(easyLearnUser => UserView.Create(easyLearnUser));
-            this.UserViews = new ObservableCollection<UserControl>(userViews);
-            AddShadowUserView();
-        }
-        private void AddUserToUI(EasyLearnUser user)
-        {
-            RemoveShadowUserView();
-            this.UserViews.Add(UserView.Create(user));
-            AddShadowUserView();
-        }
-        private void AddShadowUserView() => this.UserViews.Add(ShadowUserView.Create());
-        private void RemoveShadowUserView() => this.UserViews.RemoveAt(UserViews.Count - 1);
-        private UserView FindUserView(int userId) => (UserView)this.UserViews.First(userView => userView is UserView && ((UserView)userView).Id == userId);
-        private UserView? TryFindCurrentUserView()
-        {
-            UserControl? currentUser = this.UserViews.FirstOrDefault(userView => userView is UserView && ((UserView)userView).IsCurrent);
-            return currentUser is null ? null : (UserView?)currentUser;
+            UserViews = new ObservableCollection<UserControl>(userViews);
+            AddShadowUserViewToUI();
         }
         private void UpdatePagesForNewUser()
         {
             App.GetService<DictionariesPageVM>().UpdatePageForNewUserCommand.Execute();
             App.GetService<DictationPageVM>().UpdatePageForNewUserCommand.Execute();
         }
-        private void AddingNewUserButtonSoftClick() => App.GetService<UsersPage>().confirmUserAddingButton.SoftClick();
-        private void OpenNewUserAddingWindowButtonSoftClick() => App.GetService<UsersPage>().addNewUserButton.SoftClick();
-        private void NewUserAddingWindowCancelButtonSoftClick() => App.GetService<UsersPage>().cancelUserAddingButton.SoftClick();
-        private void AddNewUserButtonSoftClick() => App.GetService<UsersPage>().addNewUserButton.SoftClick();
+        #endregion
+
+        #region Private UI methods
+        private void AddUserToViewUI(EasyLearnUser user)
+        {
+            RemoveShadowUserViewFromUI();
+            UserViews.Add(UserView.Create(user));
+            AddShadowUserViewToUI();
+        }
+        private void AddShadowUserViewToUI() => UserViews.Add(ShadowUserView.Create());
+        private void RemoveShadowUserViewFromUI() => UserViews.RemoveAt(UserViews.Count - 1);
+        private UserView FindUserView(int userId) => (UserView)UserViews.First(userView => userView is UserView && ((UserView)userView).Id == userId);
+        private UserView? TryFindCurrentUserView()
+        {
+            UserControl? currentUser = UserViews.FirstOrDefault(userView => userView is UserView && ((UserView)userView).IsCurrent);
+            return currentUser is null ? null : (UserView?)currentUser;
+        }
+        private void CancelUserAddingButtonSoftClick() => App.GetService<UsersPage>().cancelUserAddingButton.SoftClick();
+        private void ConfirmUserAddingButton() => App.GetService<UsersPage>().confirmUserAddingButton.SoftClick();
+        private void OpenNewUserAddingWindowButtonSoftClick() => App.GetService<UsersPage>().openNewUserAddingWindowButton.SoftClick();
+        private void ConfirmUserAddingButtonSoftClick() => App.GetService<UsersPage>().confirmUserAddingButton.SoftClick();
         #endregion
     }
 }

@@ -33,22 +33,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private DictionaryComboBoxItem selectedDictionaryComboBoxItem;
         #endregion
 
-#pragma warning disable CS8618
-        public DictationPageVM(IEasyLearnUserRepository userRepository,
-            ICommonDictionaryRepository commonDictionaryRepository,
-            IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository,
-            IIrregularVerbRepository irregularVerbRepository)
-        {
-            this.userRepository = userRepository;
-            this.commonDictionaryRepository = commonDictionaryRepository;
-            this.verbPrepositionDictionaryRepository = verbPrepositionDictionaryRepository;
-            this.irregularVerbRepository = irregularVerbRepository;
-            UpdatePageForNewUser();
-            SetDefaultPageState();
-        }
-#pragma warning restore CS8618
-
-        #region Helper props
+        #region Private helper props
         private int ItemsInSelectedLoadedDictionary
         {
             get => ExecuteForCurrentDictionaryType(
@@ -59,7 +44,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private DictionaryType CurrentDictionaryType => selectedDictionaryComboBoxItem.DictionaryType;
         #endregion
 
-        #region Props for binding
+        #region Binding props
         public ObservableCollection<DictionaryComboBoxItem> DictionaryComboBoxItems { get; set; }
         public DictionaryComboBoxItem SelectedDictionaryComboBoxItem
         {
@@ -70,7 +55,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 LoadSelectedDictionary();
                 UpdateDictationLengthSlider();
                 SetCurrentDictationSection();
-                SetDictationDirestionButtonsVisibility();
+                SetDictationDirectionButtonsVisibility();
             }
         }
         public int DictationLengthSliderMaxValue { get; set; }
@@ -88,6 +73,22 @@ namespace EasyLearn.VM.ViewModels.Pages
         public SolidColorBrush PageBackground { get; set; }
         #endregion
 
+#pragma warning disable CS8618
+        public DictationPageVM(
+            IEasyLearnUserRepository userRepository,
+            ICommonDictionaryRepository commonDictionaryRepository,
+            IVerbPrepositionDictionaryRepository verbPrepositionDictionaryRepository,
+            IIrregularVerbRepository irregularVerbRepository)
+        {
+            this.userRepository = userRepository;
+            this.commonDictionaryRepository = commonDictionaryRepository;
+            this.verbPrepositionDictionaryRepository = verbPrepositionDictionaryRepository;
+            this.irregularVerbRepository = irregularVerbRepository;
+            UpdatePageForNewUser();
+            SetDefaultPageState();
+        }
+#pragma warning restore CS8618
+
         #region Commands 
         public Command UpdateDictationLengthSliderCommand { get; private set; }
         public Command StartDictationCommand { get; private set; }
@@ -97,21 +98,18 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command UpdatePageForNewUserCommand { get; private set; }
         protected override void InitCommands()
         {
-            this.UpdateDictationLengthSliderCommand = new Command(UpdateDictationLengthSlider);
-            this.StartDictationCommand = new Command(StartDictation);
-            this.CheckAnswerCommand = new Command(CheckAnswer);
-            this.TryGoNextCommand = new Command(TryGoNext);
-            this.StopDictationCommand = new Command(StopDictation);
-            this.UpdatePageForNewUserCommand = new Command(UpdatePageForNewUser);
+            UpdateDictationLengthSliderCommand = new Command(UpdateDictationLengthSlider);
+            StartDictationCommand = new Command(StartDictation);
+            CheckAnswerCommand = new Command(CheckAnswer);
+            TryGoNextCommand = new Command(TryGoNext);
+            StopDictationCommand = new Command(StopDictation);
+            UpdatePageForNewUserCommand = new Command(UpdatePageForNewUser);
         }
-        #endregion
-
-        #region Command logic methods
         private void UpdateDictationLengthSlider()
         {
-            this.DictationLengthSliderMinValue = this.ItemsInSelectedLoadedDictionary > 0 ? 1 : 0;
-            this.DictationLengthSliderMaxValue = this.ItemsInSelectedLoadedDictionary;
-            this.DictationLengthSliderValue = this.DictationLengthSliderMaxValue;
+            DictationLengthSliderMinValue = ItemsInSelectedLoadedDictionary > 0 ? 1 : 0;
+            DictationLengthSliderMaxValue = ItemsInSelectedLoadedDictionary;
+            DictationLengthSliderValue = DictationLengthSliderMaxValue;
         }
         private void StartDictation() => ExecuteForCurrentDictionaryType(CdStart, VpStart, IvStart);
         private void CheckAnswer() => ExecuteForCurrentDictionaryType(CdCheck, VpCheck, IvCheck);
@@ -119,9 +117,9 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void StopDictation()
         {
             SetDefaultPageState();
-            this.commonDictationManager = null;
-            this.vpDictationManager = null;
-            this.ivDictationManager = null;
+            commonDictationManager = null;
+            vpDictationManager = null;
+            ivDictationManager = null;
         }
         public void UpdatePageForNewUser()
         {
@@ -129,38 +127,6 @@ namespace EasyLearn.VM.ViewModels.Pages
             UpdateDictionaryComboBoxItems();
             LoadSelectedDictionary();
             UpdateDictationLengthSlider();
-        }
-        #endregion
-
-        #region Other private methods
-        private void SetCurrentUserId()
-        {
-            int? currentUserId = userRepository.TryGetCurrentUser()?.Id;
-            if (!currentUserId.HasValue)
-                throw new Exception(ExceptionMessagesHelper.FailedToGetCurrentUserId);
-            this.currentUserId = currentUserId.Value;
-        }
-        private void UpdateDictionaryComboBoxItems()
-        {
-            IEnumerable<CommonDictionary> commonDictionaries = commonDictionaryRepository.GetUsersCommonDictionaries(currentUserId);
-            IEnumerable<VerbPrepositionDictionnary> verbPrepositionDictionnaries = verbPrepositionDictionaryRepository.GetUsersVerbPreposotionDictionaries(currentUserId);
-            IEnumerable<DictionaryComboBoxItem> commonDictionaryComboBoxItems = commonDictionaries
-                .Select(dictionary => new DictionaryComboBoxItem(StringHelper.NormalizeRegister(dictionary.Name), dictionary.Id, DictionaryType.CommonDictionary));
-            IEnumerable<DictionaryComboBoxItem> verbPrepositionDictionnaryComboBoxItems = verbPrepositionDictionnaries
-                .Select(dictionary => new DictionaryComboBoxItem(StringHelper.NormalizeRegister(dictionary.Name), dictionary.Id, DictionaryType.VerbPrepositionDictionary));
-            DictionaryComboBoxItem irregularVerbDictionaryComboBoxItem = new DictionaryComboBoxItem(DictionaryTypeRussianNames.IrregularVerbDictionary, int.MinValue, DictionaryType.IrregularVerbDictionary);
-            List<DictionaryComboBoxItem> dictionaryComboBoxItems = commonDictionaryComboBoxItems.Union(verbPrepositionDictionnaryComboBoxItems).ToList();
-            dictionaryComboBoxItems.Add(irregularVerbDictionaryComboBoxItem);
-            this.DictionaryComboBoxItems = new ObservableCollection<DictionaryComboBoxItem>(dictionaryComboBoxItems);
-            this.SelectedDictionaryComboBoxItem = this.DictionaryComboBoxItems[0];
-        }
-        private void LoadSelectedDictionary()
-        {
-            int selectedDictionaryId = this.SelectedDictionaryComboBoxItem.DictionaryId;
-            ExecuteForCurrentDictionaryType(
-                () => this.cdLoadedDictionary = commonDictionaryRepository.GetCommonDictionary(selectedDictionaryId),
-                () => this.vpLoadedDictionary = verbPrepositionDictionaryRepository.GetVerbPrepositionDictionary(selectedDictionaryId),
-                () => { });
         }
         #endregion
 
@@ -177,9 +143,9 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void OnEnterClick()
         {
-            if (!this.dictationIsStarted)
+            if (!dictationIsStarted)
                 return;
-            if (this.CheckAnswerButtonIsVisible)
+            if (CheckAnswerButtonIsVisible)
                 CheckAnswer();
             else
                 TryGoNext();
@@ -228,14 +194,33 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         #endregion
 
-        #region Display actions
+        #region Private page helpers
+        private void LoadSelectedDictionary()
+        {
+            int selectedDictionaryId = SelectedDictionaryComboBoxItem.DictionaryId;
+            ExecuteForCurrentDictionaryType(
+                () => cdLoadedDictionary = commonDictionaryRepository.GetCommonDictionary(selectedDictionaryId),
+                () => vpLoadedDictionary = verbPrepositionDictionaryRepository.GetVerbPrepositionDictionary(selectedDictionaryId),
+                () => { });
+        }
+        private void SetCurrentUserId()
+        {
+            int? currentUserId = userRepository.TryGetCurrentUser()?.Id;
+            if (!currentUserId.HasValue)
+                throw new Exception(ExceptionMessagesHelper.FailedToGetCurrentUserId);
+            this.currentUserId = currentUserId.Value;
+        }
+        #endregion
+
+        #region Private UI methods (page)
+        private void SetCurrentDictationSection() => ExecuteForCurrentDictionaryType(CdShowSection, VpShowSection, IvShowSection);
         private void SetDefaultPageState()
         {
-            this.dictationIsStarted = false;
-            this.wrongAnswers = 0;
-            this.currentIrregularVerbForm = IrregularVerbForm.FirstForm;
+            dictationIsStarted = false;
+            wrongAnswers = 0;
+            currentIrregularVerbForm = IrregularVerbForm.FirstForm;
             CdHideUnitType();
-            CdHideAnotherAnswers();
+            CdHideSynonyms();
             CdHidePromt();
             CdHideExamples();
             VpHidePromt();
@@ -245,7 +230,6 @@ namespace EasyLearn.VM.ViewModels.Pages
             SetDefaultAnswerValue();
             VpSetDefaultTranslationValue();
             ShowStartButton();
-            ShowCheckButton();
             SetDictationProgressBarDefaultValue();
             ResetAllIcons();
             SetAnswerTextBoxAsDefault();
@@ -253,64 +237,73 @@ namespace EasyLearn.VM.ViewModels.Pages
             IvHidePromt();
             SetDefaultPageBackground();
         }
-        private void SetDefaultAnswerValue() => this.AnswerValue = String.Empty;
+        #endregion
+
+        #region Private UI methods (main display)
         private void SetDefaultMainDisplayValue()
         {
             string easyLearn = "Easy Learn";
-            this.CdMainDisplayValue = easyLearn;
-            this.VpMainDisplayValue = easyLearn;
-            this.IvMainDisplayValue = easyLearn;
+            CdMainDisplayValue = easyLearn;
+            VpMainDisplayValue = easyLearn;
+            IvMainDisplayValue = easyLearn;
         }
-        private void SetDefaultCommentValue()
-        {
-            this.CdCommentValue = String.Empty;
-            this.VpCommentValue = String.Empty;
-            this.IvCommentValue = String.Empty;
-        }
+        #endregion
+
+        #region Private UI methods (wrong and correct icons)
         private void ResetAllIcons()
         {
-            CdHideIcons();
             VpHideIcons();
             IvShowGrayIcons();
         }
-        private void FocusAnswerTextBox() => App.GetService<DictationPage>().dictationTextBox.Focus();
-        private void SetCurrentDictationSection() => ExecuteForCurrentDictionaryType(CdShowSection, VpShowSection, IvShowSection);
-        private void SetDictationDirestionButtonsVisibility()
+        #endregion
+
+        #region Private UI methods (start modal window)
+        private void SetDictationDirectionButtonsVisibility()
         {
             if (CurrentDictionaryType == DictionaryType.CommonDictionary)
-                this.DictationDirectionButtonsIsVisible = true;
+                DictationDirectionButtonsIsVisible = true;
             else
-                this.DictationDirectionButtonsIsVisible = false;
+                DictationDirectionButtonsIsVisible = false;
+        }
+        private void UpdateDictionaryComboBoxItems()
+        {
+            IEnumerable<CommonDictionary> commonDictionaries = commonDictionaryRepository.GetUsersCommonDictionaries(currentUserId);
+            IEnumerable<VerbPrepositionDictionnary> verbPrepositionDictionnaries = verbPrepositionDictionaryRepository.GetUsersVerbPreposotionDictionaries(currentUserId);
+            IEnumerable<DictionaryComboBoxItem> commonDictionaryComboBoxItems = commonDictionaries
+                .Select(dictionary => new DictionaryComboBoxItem(StringHelper.NormalizeRegister(dictionary.Name), dictionary.Id, DictionaryType.CommonDictionary));
+            IEnumerable<DictionaryComboBoxItem> verbPrepositionDictionnaryComboBoxItems = verbPrepositionDictionnaries
+                .Select(dictionary => new DictionaryComboBoxItem(StringHelper.NormalizeRegister(dictionary.Name), dictionary.Id, DictionaryType.VerbPrepositionDictionary));
+            DictionaryComboBoxItem irregularVerbDictionaryComboBoxItem = new DictionaryComboBoxItem(DictionaryTypeRussianNames.IrregularVerbDictionary, int.MinValue, DictionaryType.IrregularVerbDictionary);
+            List<DictionaryComboBoxItem> dictionaryComboBoxItems = commonDictionaryComboBoxItems.Union(verbPrepositionDictionnaryComboBoxItems).ToList();
+            dictionaryComboBoxItems.Add(irregularVerbDictionaryComboBoxItem);
+            DictionaryComboBoxItems = new ObservableCollection<DictionaryComboBoxItem>(dictionaryComboBoxItems);
+            SelectedDictionaryComboBoxItem = DictionaryComboBoxItems[0];
         }
         #endregion
 
-        #region Start & stop buttons
+        #region Private UI methods (comment)
+        private void SetDefaultCommentValue()
+        {
+            CdCommentValue = string.Empty;
+            VpCommentValue = string.Empty;
+            IvCommentValue = string.Empty;
+        }
+        #endregion
+
+        #region Private UI methods (start and stop dictation buttons)
         private void ShowStartButton()
         {
-            this.StartButtonIsVisible = true;
-            this.StopButtonIsVisible = false;
+            StartButtonIsVisible = true;
+            StopButtonIsVisible = false;
         }
         private void SwitchStartAndStopButtons()
         {
-            this.StartButtonIsVisible = !this.StartButtonIsVisible;
-            this.StopButtonIsVisible = !this.StopButtonIsVisible;
+            StartButtonIsVisible = !StartButtonIsVisible;
+            StopButtonIsVisible = !StopButtonIsVisible;
         }
         #endregion
 
-        #region Check & next buttons
-        private void ShowCheckButton()
-        {
-            this.CheckAnswerButtonIsVisible = true;
-            this.NextButtonIsVisible = false;
-        }
-        private void SwitchCheckAndNextButtons()
-        {
-            this.CheckAnswerButtonIsVisible = !this.CheckAnswerButtonIsVisible;
-            this.NextButtonIsVisible = !this.NextButtonIsVisible;
-        }
-        #endregion
-
-        #region Dictation progress bar
+        #region Private UI methods (dictation progress bar)
         private void SetDictationProgressBar()
         {
             SetDictationProgressBarMaxValue();
@@ -319,17 +312,20 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void SetDictationProgressBarMaxValue()
         {
             if (CurrentDictionaryType == DictionaryType.IrregularVerbDictionary)
-                this.DictationProgressBarMaxValue = this.DictationLengthSliderValue * 3;
+                DictationProgressBarMaxValue = DictationLengthSliderValue * 3;
             else
-                this.DictationProgressBarMaxValue = this.DictationLengthSliderValue;
+                DictationProgressBarMaxValue = DictationLengthSliderValue;
         }
-        private void IncreaseDictationProgressBarValue() => this.DictationProgressBarValue++;
-        private void SetDictationProgressBarDefaultValue() => this.DictationProgressBarValue = 0;
+        private void IncreaseDictationProgressBarValue() => DictationProgressBarValue++;
+        private void SetDictationProgressBarDefaultValue() => DictationProgressBarValue = 0;
         #endregion
 
+        #region Private UI methods (answer textBox)
+        private void FocusAnswerTextBox() => App.GetService<DictationPage>().answerTextBox.Focus();
+        private void SetDefaultAnswerValue() => AnswerValue = string.Empty;
         private void SetAnswerTextBoxAsWrong()
         {
-            TextBox answerTextBox = App.GetService<DictationPage>().dictationTextBox;
+            TextBox answerTextBox = App.GetService<DictationPage>().answerTextBox;
             BrushConverter brushConverter = new BrushConverter();
             SolidColorBrush background = brushConverter.ConvertFrom("#f6eeee") as SolidColorBrush ?? throw new Exception();
             SolidColorBrush border = brushConverter.ConvertFrom("#cf222e") as SolidColorBrush ?? throw new Exception();
@@ -339,7 +335,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void SetAnswerTextBoxAsCorrect()
         {
-            TextBox answerTextBox = App.GetService<DictationPage>().dictationTextBox;
+            TextBox answerTextBox = App.GetService<DictationPage>().answerTextBox;
             BrushConverter brushConverter = new BrushConverter();
             SolidColorBrush background = brushConverter.ConvertFrom("#eff5f1") as SolidColorBrush ?? throw new Exception();
             SolidColorBrush border = brushConverter.ConvertFrom("#2da44e") as SolidColorBrush ?? throw new Exception();
@@ -351,7 +347,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             if (answerTextBoxIsOnDefaultState)
                 return;
-            TextBox answerTextBox = App.GetService<DictationPage>().dictationTextBox;
+            TextBox answerTextBox = App.GetService<DictationPage>().answerTextBox;
             BrushConverter brushConverter = new BrushConverter();
             SolidColorBrush background = brushConverter.ConvertFrom("#f2f2f2") as SolidColorBrush ?? throw new Exception();
             SolidColorBrush border = brushConverter.ConvertFrom("#bfbfbf") as SolidColorBrush ?? throw new Exception();
@@ -359,9 +355,15 @@ namespace EasyLearn.VM.ViewModels.Pages
             answerTextBox.BorderBrush = border;
             answerTextBoxIsOnDefaultState = true;
         }
+        #endregion
+
+        #region Private UI methods (page background)
         private void SetDefaultPageBackground() => PageBackground = new BrushConverter().ConvertFrom("#ffffff") as SolidColorBrush ?? throw new Exception();
         private void SetCorrectPageBackground() => PageBackground = new BrushConverter().ConvertFrom("#eff5f1") as SolidColorBrush ?? throw new Exception();
         private void SetWrongPageBackground() => PageBackground = new BrushConverter().ConvertFrom("#f6eeee") as SolidColorBrush ?? throw new Exception();
+        #endregion
+
+        #region Private switch helpers
         private void ExecuteForCurrentDictionaryType(Action commonAction, Action verbPrepositionAction, Action irregularVerbAction)
         {
             switch (CurrentDictionaryType)
@@ -406,5 +408,6 @@ namespace EasyLearn.VM.ViewModels.Pages
                     break;
             }
         }
+        #endregion
     }
 }

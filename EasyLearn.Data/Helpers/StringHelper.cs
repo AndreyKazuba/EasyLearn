@@ -23,5 +23,6 @@ namespace EasyLearn.Data.Helpers
         public static string PrepareAndNormalize(this string @string) => @string.Prepare().NormalizeRegister();
         public static string? NullIfEmptyOrWhiteSpace(this string @string) => @string is null || IsEmptyOrWhiteSpace(@string) ? null : @string;
         public static string EmptyIfNull(this string? @string) => @string is null ? String.Empty : @string;
+        public static string ReplaceString(string value, char symbol) => new string(symbol, value.Length);
     }
 }
