@@ -1,4 +1,6 @@
-﻿using EasyLearn.Data.Models;
+﻿using EasyLearn.Data.DTO;
+using EasyLearn.Data.Models;
+using EasyLearn.Data.Repositories.Interfaces;
 using EasyLearn.Infrastructure.Enums;
 using EasyLearn.Infrastructure.Exceptions;
 using System;
@@ -17,6 +19,7 @@ namespace EasyLearn.Infrastructure.DictationManagers
         protected int maxCurrentRelationId;
         protected int answersCounter;
         protected int wrongAnswersCounter;
+        protected List<Answer> answers = new List<Answer>();
         protected List<CommonRelation> allRelations;
         protected List<CommonRelation> selectedRelations;
         protected List<CommonRelation> synonymRelations;
@@ -58,6 +61,7 @@ namespace EasyLearn.Infrastructure.DictationManagers
             }
         }
         public abstract bool IsAnswerCorrect(string answer);
+        public void SaveDictationResults() => App.GetService<ICommonRelationRepository>().SaveDictationResults(answers);
         #endregion
 
         #region Protected methods
@@ -83,8 +87,8 @@ namespace EasyLearn.Infrastructure.DictationManagers
                     return new DirectCommonDictationManager(commonRelations, dictationLength);
                 case DictationDirection.Opposite:
                     return new OppositeCommonDictationManager(commonRelations, dictationLength);
-                default: 
-                    throw new Exception(ExceptionMessagesHelper.ThereIdNoSuchDictationDirection);
+                default:
+                    throw new Exception(ExceptionMessagesHelper.ThereIsNoSuchDictationDirection);
             }
         }
         #endregion

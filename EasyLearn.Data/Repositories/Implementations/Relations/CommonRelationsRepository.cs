@@ -1,4 +1,5 @@
 ﻿using EasyLearn.Data.Constants;
+using EasyLearn.Data.DTO;
 using EasyLearn.Data.Enums;
 using EasyLearn.Data.Exceptions;
 using EasyLearn.Data.Helpers;
@@ -117,6 +118,28 @@ namespace EasyLearn.Data.Repositories.Implementations
             CommonRelation commonRelation = await context.CommonRelations.FirstAsync(commonRelation => commonRelation.Id == commonRelationId);
             context.CommonRelations.Remove(commonRelation);
             await context.SaveChangesAsync();
+        }
+        public void SaveDictationResults(List<Answer> answers)
+        {
+            foreach (Answer answer in answers)
+            {
+                CommonRelation commonRelation = context.CommonRelations.First(commonRelation => commonRelation.Id == answer.RelationId);
+                if (commonRelation.Studied)
+                    continue;
+                int updatedRating = NumberHelper.GetRangedValue(commonRelation.Rating + answer.Variation.GetAnswerSignificanceValue(), ModelConstants.RatingMinValue, ModelConstants.RatingMaxValue);
+                int correctAnswersStreak = commonRelation.CorrectAnswersStreak;
+                bool studied = false;
+                if (updatedRating == ModelConstants.RatingMaxValue)
+                    correctAnswersStreak++;
+                else
+                    correctAnswersStreak = 0;
+                if (correctAnswersStreak == ModelConstants.CorrectAnswersStreakMaxValue)
+                    studied = true;
+                commonRelation.Rating = updatedRating;
+                commonRelation.CorrectAnswersStreak = correctAnswersStreak;
+                commonRelation.Studied = studied;
+            }
+            context.SaveChanges();
         }
         #endregion
 

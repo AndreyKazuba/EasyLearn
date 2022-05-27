@@ -1,4 +1,6 @@
-﻿using EasyLearn.Data.Models;
+﻿using EasyLearn.Data.DTO;
+using EasyLearn.Data.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace EasyLearn.Data.Repositories.Interfaces
@@ -26,5 +28,6 @@ namespace EasyLearn.Data.Repositories.Interfaces
             string? secondExampleEnglishValue);
         Task DeleteAllDictionaryVerbPrepositions(int dictionaryId);
         Task DeleteVerbPreposition(int verbPrepositionId);
+        void SaveDictationResults(List<Answer> answers);
     }
 }

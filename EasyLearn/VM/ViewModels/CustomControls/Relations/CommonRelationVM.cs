@@ -4,6 +4,7 @@ using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
 using EasyLearn.VM.Core;
 using EasyLearn.VM.ViewModels.Pages;
+using EasyLearn.Infrastructure.Helpers;
 
 namespace EasyLearn.VM.ViewModels.CustomControls
 {
@@ -35,7 +36,9 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public bool HorisontalSeporatorIsVisible { get; set; }    
         public Brush RussianUnitTypeColor { get; set; }
         public Brush EnglishUnitTypeColor { get; set; }
+        public Brush RatingProgressBarColor { get; set; }
         public int Height { get; set; }
+        public int RatingValue { get; set; }
         public Thickness VerticalExpanderMargin { get; set; }
         #endregion
 
@@ -73,6 +76,8 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             FirstExampleEnglishValue = commonRelation.FirstExampleEnglishValue.TryNormalizeRegister().EmptyIfNull();
             SecondExampleRussianValue = commonRelation.SecondExampleRussianValue.TryNormalizeRegister().EmptyIfNull();
             SecondExampleEnglishValue = commonRelation.SecondExampleEnglishValue.TryNormalizeRegister().EmptyIfNull();
+            RatingProgressBarColor = commonRelation.Rating.GetColorForRating();
+            RatingValue = commonRelation.Rating;
             SetState(commonRelation);
             SetHeight();
             SetOrder();

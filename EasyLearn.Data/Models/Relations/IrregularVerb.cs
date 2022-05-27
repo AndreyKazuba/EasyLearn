@@ -36,5 +36,8 @@ namespace EasyLearn.Data.Models
 
         [MaxLength(ModelConstants.IrregularVerbCommentMaxLength)]
         public string? Comment { get; set; }
+
+        [Range(ModelConstants.RatingMinValue, ModelConstants.RatingMaxValue)]
+        public int Rating { get; set; }
     }
 }

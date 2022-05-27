@@ -56,5 +56,13 @@ namespace EasyLearn.Data.Models
         [MinLength(ModelConstants.ExampleValueMinLength)]
         [MaxLength(ModelConstants.ExampleValueMaxLength)]
         public string? SecondExampleEnglishValue { get; set; }
+
+        [Range(ModelConstants.RatingMinValue, ModelConstants.RatingMaxValue)]
+        public int Rating { get; set; }
+
+        [Range(ModelConstants.CorrectAnswersStreakMinValue, ModelConstants.CorrectAnswersStreakMaxValue)]
+        public int CorrectAnswersStreak { get; set; }
+
+        public bool Studied { get; set; }
     }
 }

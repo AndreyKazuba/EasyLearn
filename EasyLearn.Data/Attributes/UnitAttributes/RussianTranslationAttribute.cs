@@ -1,6 +1,6 @@
 ﻿namespace EasyLearn.Data.Attributes
 {
-    public class RussianTranslationAttribute : ValueAttribute
+    public class RussianTranslationAttribute : StringValueAttribute
     {
         public RussianTranslationAttribute(string value) : base(value) { }
     }

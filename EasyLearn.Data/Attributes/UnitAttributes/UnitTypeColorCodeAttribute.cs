@@ -1,6 +1,6 @@
 ﻿namespace EasyLearn.Data.Attributes
 {
-    public class UnitTypeColorCodeAttribute : ValueAttribute
+    public class UnitTypeColorCodeAttribute : StringValueAttribute
     {
         public UnitTypeColorCodeAttribute(string value) : base(value) { }
     }

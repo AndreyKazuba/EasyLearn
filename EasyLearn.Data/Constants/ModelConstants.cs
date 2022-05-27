@@ -23,5 +23,11 @@
         public const int ExampleValueMaxLength = 35;
         public const int ExampleValueMinLength = 1;
         public const int MaxExamplesCount = 2;
+
+        public const int RatingMinValue = 0;
+        public const int RatingMaxValue = 100;
+
+        public const int CorrectAnswersStreakMinValue = 0;
+        public const int CorrectAnswersStreakMaxValue = 3;
     }
 }

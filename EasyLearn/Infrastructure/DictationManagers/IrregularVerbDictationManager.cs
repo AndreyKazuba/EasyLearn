@@ -90,6 +90,10 @@ namespace EasyLearn.Infrastructure.DictationManagers
             }
             return answerIsCorrect;
         }
+        public void SaveDictationResults()
+        {
+
+        }
         #endregion
 
         #region Private throwers

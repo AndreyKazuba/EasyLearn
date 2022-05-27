@@ -119,9 +119,11 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             SetDefaultPageState();
             SetStopWindow();
+            SaveDictationResults();
             commonDictationManager = null;
             vpDictationManager = null;
             ivDictationManager = null;
+            LoadSelectedDictionary();
         }
         public void UpdatePageForNewUser()
         {
@@ -243,6 +245,25 @@ namespace EasyLearn.VM.ViewModels.Pages
             SetDefaultPageBackground();
             ClearStopWindow();
         }
+        private void SaveDictationResults() => ExecuteForCurrentDictionaryType(
+            () =>
+            {
+                if (commonDictationManager is null)
+                    throw new Exception(ExceptionMessagesHelper.DictationManagerIsNull);
+                commonDictationManager.SaveDictationResults();
+            },
+            () =>
+            {
+                if (vpDictationManager is null)
+                    throw new Exception(ExceptionMessagesHelper.DictationManagerIsNull);
+                vpDictationManager.SaveDictationResults();
+            },
+            () =>
+            {
+                if (ivDictationManager is null)
+                    throw new Exception(ExceptionMessagesHelper.DictationManagerIsNull);
+                ivDictationManager.SaveDictationResults();
+            });
         #endregion
 
         #region Private UI methods (page)
@@ -301,7 +322,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             DictationWrongAnswersCount = string.Empty;
         }
         private void SetStopWindow() => ExecuteForCurrentDictionaryType(CdSetStopWindow, VpSetStopWindow, IvSetStopWindow);
-        
+
         #endregion
 
         #region Private UI methods (comment)

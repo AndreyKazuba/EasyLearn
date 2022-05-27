@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyLearn.Data.Constants;
+using EasyLearn.Data.DTO;
 using EasyLearn.Data.Enums;
 using EasyLearn.Data.Exceptions;
 using EasyLearn.Data.Helpers;
@@ -106,6 +107,29 @@ namespace EasyLearn.Data.Repositories.Implementations
         {
             VerbPreposition verbPreposition = await context.VerbPrepositions.FirstAsync(verbPreposition => verbPreposition.Id == verbPrepositionId);
             context.VerbPrepositions.Remove(verbPreposition);
+            await context.SaveChangesAsync();
+        }
+        public async void SaveDictationResults(List<Answer> answers)
+        {
+            List<VerbPreposition> verbPrepositions = await context.VerbPrepositions.Where(verbPreposition => answers.Any(answer => answer.RelationId == verbPreposition.Id)).ToListAsync();
+            foreach (VerbPreposition verbPreposition in verbPrepositions)
+            {
+                if (verbPreposition.Studied)
+                    continue;
+                Answer answer = answers.First(answer => answer.RelationId == verbPreposition.Id);
+                int updatedRating = NumberHelper.GetRangedValue(verbPreposition.Rating + answer.Variation.GetAnswerSignificanceValue(), ModelConstants.RatingMinValue, ModelConstants.RatingMaxValue);
+                int correctAnswersStreak = verbPreposition.CorrectAnswersStreak;
+                bool studied = false;
+                if (updatedRating == ModelConstants.RatingMaxValue)
+                    correctAnswersStreak++;
+                else
+                    correctAnswersStreak = 0;
+                if (correctAnswersStreak == ModelConstants.CorrectAnswersStreakMaxValue)
+                    studied = true;
+                verbPreposition.Rating = updatedRating;
+                verbPreposition.CorrectAnswersStreak = correctAnswersStreak;
+                verbPreposition.Studied = studied;
+            }
             await context.SaveChangesAsync();
         }
         #endregion

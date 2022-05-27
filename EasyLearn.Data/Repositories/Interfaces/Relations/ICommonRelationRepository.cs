@@ -1,5 +1,7 @@
-﻿using EasyLearn.Data.Enums;
+﻿using EasyLearn.Data.DTO;
+using EasyLearn.Data.Enums;
 using EasyLearn.Data.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace EasyLearn.Data.Repositories.Interfaces
@@ -30,5 +32,6 @@ namespace EasyLearn.Data.Repositories.Interfaces
             string? secondExampleEnglishValue);
         Task DeleteAllDictionaryRelations(int dictionaryId);
         Task DeleteCommonRelation(int commonRelationId);
+        void SaveDictationResults(List<Answer> answers);
     }
 }

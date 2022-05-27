@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EasyLearn.Data.DTO;
+using EasyLearn.Data.Enums;
 using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
 using EasyLearn.Infrastructure.Helpers;
@@ -18,7 +20,7 @@ namespace EasyLearn.Infrastructure.DictationManagers
             if (dictationLength <= 0 || dictationLength > commonRelations.Count)
                 throw new ArgumentOutOfRangeException(nameof(dictationLength));
             allRelations = commonRelations;
-            selectedRelations = new List<CommonRelation>(UniversalHelper.Shuffle(allRelations).Take(dictationLength));
+            selectedRelations = new List<CommonRelation>(allRelations.OrderBy(commonRelation => commonRelation.Priotiry).Take(dictationLength).Shuffle());
             maxCurrentRelationId = dictationLength - 1;
         }
 
@@ -32,7 +34,19 @@ namespace EasyLearn.Infrastructure.DictationManagers
                 answersCounter++;
                 currentAnswerIsNew = false;
                 if (!answerIsCorrect)
+                {
                     wrongAnswersCounter++;
+                    answers.Add(new Answer { RelationId = selectedRelations[currentRelationId].Id, Variation = AnswerVariation.SecondTry });
+                }
+                else
+                {
+                    answers.Add(new Answer { RelationId = GetSynonymId(answer), Variation = AnswerVariation.FirstTry });
+                }
+            }
+            else if (!answerIsCorrect)
+            {
+                Answer lastAnswer = answers.Last();
+                lastAnswer.Variation = lastAnswer.Variation == AnswerVariation.SecondTry ? AnswerVariation.ThirdTry : AnswerVariation.FourthPlusTry;
             }
             return answerIsCorrect;
         }
@@ -46,6 +60,10 @@ namespace EasyLearn.Infrastructure.DictationManagers
                 .Where(relation => relation.RussianUnit.Id == currentRelationRussianUnitId)
                 .ToList();
         }
+        #endregion
+
+        #region Private methods
+        private int GetSynonymId(string answer) => SynonymRelations.First(relation => StringHelper.Equals(relation.EnglishUnit.Value, answer)).Id;
         #endregion
     }
 }
