@@ -37,12 +37,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         #endregion
 
         #region Private helpers
-        private void VpSetDictationManager()
-        {
-            int countOfVerbPrepositions = DictationLengthSliderValue;
-            List<VerbPreposition> verbPrepositions = UniversalHelper.Shuffle(vpLoadedDictionary.VerbPrepositions).Take(countOfVerbPrepositions).ToList();
-            vpDictationManager = new VerbPrepositionDictationManager(verbPrepositions);
-        }
+        private void VpSetDictationManager() => vpDictationManager = new VerbPrepositionDictationManager(vpLoadedDictionary.VerbPrepositions, DictationLengthSliderValue);
         #endregion
 
         #region Private UI methods (stop window)

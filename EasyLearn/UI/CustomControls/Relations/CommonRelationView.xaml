@@ -187,6 +187,12 @@
                 </i:Interaction.Triggers>
             </Button>
 
+            <materialDesign:PackIcon Kind="Star" 
+                                     Foreground="Gold" 
+                                     Margin="1 1 0 0"
+                                     Visibility="{Binding IsStudiedMarkVisible, Converter={converters:ReverseCollapseConverter}}"/>
+
+
         </Grid>
     </Border>
 </UserControl>

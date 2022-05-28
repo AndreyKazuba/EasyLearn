@@ -41,12 +41,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         #endregion
 
         #region Private helpers
-        private void IvSetDictationManager()
-        {
-            int countOfIrregularVerbs = this.DictationLengthSliderValue;
-            List<IrregularVerb> irregularVerbs = UniversalHelper.Shuffle(irregularVerbRepository.GetAllIrregularVerbs()).Take(countOfIrregularVerbs).ToList();
-            ivDictationManager = new IrregularVerbDictationManager(irregularVerbs);
-        }
+        private void IvSetDictationManager() => ivDictationManager = new IrregularVerbDictationManager(irregularVerbRepository.GetAllIrregularVerbs().ToList(), DictationLengthSliderValue);
         #endregion
 
         #region Private UI methods (stop window)

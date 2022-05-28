@@ -7,6 +7,7 @@ using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
 using EasyLearn.Data.Repositories.Interfaces;
 using EasyLearn.Infrastructure.Exceptions;
+using EasyLearn.Infrastructure.Helpers;
 
 namespace EasyLearn.Infrastructure.DictationManagers
 {
@@ -32,10 +33,15 @@ namespace EasyLearn.Infrastructure.DictationManagers
         public int WrongAnswersCount => wrongAnswersCounter;
         #endregion
 
-        public VerbPrepositionDictationManager(List<VerbPreposition> verbPrepositions)
+        public VerbPrepositionDictationManager(List<VerbPreposition> verbPrepositions, int dictationLength)
         {
-            this.verbPrepositions = verbPrepositions;
-            this.maxCurrentVerbPrepositionId = verbPrepositions.Count - 1;
+            if (dictationLength <= 0 || dictationLength > verbPrepositions.Count)
+                throw new ArgumentOutOfRangeException(nameof(dictationLength));
+            this.verbPrepositions = new List<VerbPreposition>(verbPrepositions
+                .OrderBy(verbPreposition => verbPreposition.Priority)
+                .Take(dictationLength)
+                .Shuffle());
+            maxCurrentVerbPrepositionId = dictationLength - 1;
         }
 
         #region Public dictation process methods

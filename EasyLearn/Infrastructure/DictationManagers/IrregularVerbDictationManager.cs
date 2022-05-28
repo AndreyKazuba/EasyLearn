@@ -1,6 +1,7 @@
 ﻿using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
 using EasyLearn.Infrastructure.Exceptions;
+using EasyLearn.Infrastructure.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,10 +30,12 @@ namespace EasyLearn.Infrastructure.DictationManagers
         public int WrongAnswersCount => wrongAnswersCounter;
         #endregion
 
-        public IrregularVerbDictationManager(List<IrregularVerb> irregularVerbs)
+        public IrregularVerbDictationManager(List<IrregularVerb> irregularVerbs, int dictationLength)
         {
-            this.irregularVerbs = irregularVerbs;
-            this.maxCurrentIrregularVerbId = irregularVerbs.Count - 1;
+            if (dictationLength <= 0 || dictationLength > irregularVerbs.Count)
+                throw new ArgumentOutOfRangeException(nameof(dictationLength));
+            this.irregularVerbs = new List<IrregularVerb>(irregularVerbs.OrderBy(irregularVerb => irregularVerb.Priority).Take(dictationLength).Shuffle());
+            maxCurrentIrregularVerbId = dictationLength - 1;
         }
 
         #region Public dictation process methods
@@ -92,7 +95,7 @@ namespace EasyLearn.Infrastructure.DictationManagers
         }
         public void SaveDictationResults()
         {
-
+            throw new NotImplementedException();
         }
         #endregion
 

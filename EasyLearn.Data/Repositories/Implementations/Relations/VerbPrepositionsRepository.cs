@@ -109,14 +109,13 @@ namespace EasyLearn.Data.Repositories.Implementations
             context.VerbPrepositions.Remove(verbPreposition);
             await context.SaveChangesAsync();
         }
-        public async void SaveDictationResults(List<Answer> answers)
+        public void SaveDictationResults(List<Answer> answers)
         {
-            List<VerbPreposition> verbPrepositions = await context.VerbPrepositions.Where(verbPreposition => answers.Any(answer => answer.RelationId == verbPreposition.Id)).ToListAsync();
-            foreach (VerbPreposition verbPreposition in verbPrepositions)
+            foreach (Answer answer in answers)
             {
+                VerbPreposition verbPreposition = context.VerbPrepositions.First(verbPreposition => verbPreposition.Id == answer.RelationId);
                 if (verbPreposition.Studied)
                     continue;
-                Answer answer = answers.First(answer => answer.RelationId == verbPreposition.Id);
                 int updatedRating = NumberHelper.GetRangedValue(verbPreposition.Rating + answer.Variation.GetAnswerSignificanceValue(), ModelConstants.RatingMinValue, ModelConstants.RatingMaxValue);
                 int correctAnswersStreak = verbPreposition.CorrectAnswersStreak;
                 bool studied = false;
@@ -130,7 +129,7 @@ namespace EasyLearn.Data.Repositories.Implementations
                 verbPreposition.CorrectAnswersStreak = correctAnswersStreak;
                 verbPreposition.Studied = studied;
             }
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
         #endregion
 

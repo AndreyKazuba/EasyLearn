@@ -39,5 +39,7 @@ namespace EasyLearn.Data.Models
 
         [Range(ModelConstants.RatingMinValue, ModelConstants.RatingMaxValue)]
         public int Rating { get; set; }
+
+        public int Priority => Rating / 10;
     }
 }

@@ -64,5 +64,7 @@ namespace EasyLearn.Data.Models
         public int CorrectAnswersStreak { get; set; }
 
         public bool Studied { get; set; }
+
+        public int Priority => Rating / 10;
     }
 }

@@ -1,4 +1,5 @@
-﻿using EasyLearn.VM.Core;
+﻿using EasyLearn.Data.Helpers;
+using EasyLearn.VM.Core;
 using EasyLearn.VM.ViewModels.Pages;
 
 namespace EasyLearn.VM.ViewModels.CustomControls
@@ -12,15 +13,15 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         #endregion
 
         #region Binding props
-        public string Content => $"{RussianValue} - {EnglishValue}";
+        public string Content => $"{RussianValue.NormalizeRegister()} - {EnglishValue.NormalizeRegister()}";
         #endregion
 
 #pragma warning disable CS8618
         public ExampleVM(string russianValue, string englishValue, int exampleId)
         {
-            this.Id = exampleId;
-            this.RussianValue = russianValue;
-            this.EnglishValue = englishValue;
+            Id = exampleId;
+            RussianValue = russianValue;
+            EnglishValue = englishValue;
         }
 #pragma warning restore CS8618
 

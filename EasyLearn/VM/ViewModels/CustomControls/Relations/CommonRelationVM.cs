@@ -23,17 +23,18 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public bool IsVisible { get; set; } = true;
         public string RussianValue { get; set; }
         public string EnglishValue { get; set; }
-        public string CommentValue { get; set; }            
-        public string RussianUnitTypeText { get; set; } 
+        public string CommentValue { get; set; }
+        public string RussianUnitTypeText { get; set; }
         public string EnglishUnitTypeText { get; set; }
-        public string FirstExampleRussianValue { get; set; }    
-        public string FirstExampleEnglishValue { get; set; }    
-        public string SecondExampleRussianValue { get; set; }   
-        public string SecondExampleEnglishValue { get; set; }   
-        public bool CommentIsVisible { get; set; }  
-        public bool FirstExampleIsVisible { get; set; } 
-        public bool SecondExampleIsVisible { get; set; }    
-        public bool HorisontalSeporatorIsVisible { get; set; }    
+        public string FirstExampleRussianValue { get; set; }
+        public string FirstExampleEnglishValue { get; set; }
+        public string SecondExampleRussianValue { get; set; }
+        public string SecondExampleEnglishValue { get; set; }
+        public bool CommentIsVisible { get; set; }
+        public bool FirstExampleIsVisible { get; set; }
+        public bool SecondExampleIsVisible { get; set; }
+        public bool HorisontalSeporatorIsVisible { get; set; }
+        public bool IsStudiedMarkVisible { get; set; }
         public Brush RussianUnitTypeColor { get; set; }
         public Brush EnglishUnitTypeColor { get; set; }
         public Brush RatingProgressBarColor { get; set; }
@@ -78,6 +79,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             SecondExampleEnglishValue = commonRelation.SecondExampleEnglishValue.TryNormalizeRegister().EmptyIfNull();
             RatingProgressBarColor = commonRelation.Rating.GetColorForRating();
             RatingValue = commonRelation.Rating;
+            IsStudiedMarkVisible = commonRelation.Studied;
             SetState(commonRelation);
             SetHeight();
             SetOrder();

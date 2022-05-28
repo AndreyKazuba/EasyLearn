@@ -1,7 +1,9 @@
 ﻿using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
+using EasyLearn.Infrastructure.Helpers;
 using EasyLearn.VM.Core;
 using EasyLearn.VM.ViewModels.Pages;
+using System.Windows.Media;
 
 namespace EasyLearn.VM.ViewModels.CustomControls
 {
@@ -27,7 +29,10 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public string SecondExampleEnglishValue { get; set; }
         public bool IsFirstExampleVisible { get; set; }
         public bool IsSecondExampleVisible { get; set; }
+        public bool IsStudiedMarkVisible { get; set; }
         public int Height { get; set; }
+        public int RatingValue { get; set; }
+        public Brush RatingProgressBarColor { get; set; }
         #endregion
 
 #pragma warning disable CS8618
@@ -59,6 +64,9 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             FirstExampleEnglishValue = verbPreposition.FirstExampleEnglishValue.TryNormalizeRegister().EmptyIfNull();
             SecondExampleRussianValue = verbPreposition.SecondExampleRussianValue.TryNormalizeRegister().EmptyIfNull();
             SecondExampleEnglishValue = verbPreposition.SecondExampleEnglishValue.TryNormalizeRegister().EmptyIfNull();
+            RatingValue = verbPreposition.Rating;
+            RatingProgressBarColor = verbPreposition.Rating.GetColorForRating();
+            IsStudiedMarkVisible = verbPreposition.Studied;
             SetState(verbPreposition);
             SetHeight();
             SetOrder();
