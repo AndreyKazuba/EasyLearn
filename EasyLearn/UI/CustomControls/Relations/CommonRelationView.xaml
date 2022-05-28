@@ -10,7 +10,7 @@
              Visibility="{Binding IsVisible, Converter={converters:ReverseCollapseConverter}}">
     <Border BorderThickness="0.6" 
             BorderBrush="{DynamicResource MainColorLight}" 
-            Background="GhostWhite" 
+            Background="{DynamicResource EasyGrayLight}" 
             Margin="12 12 0 0" 
             Height="{Binding Height}" 
             VerticalAlignment="Top">
@@ -66,7 +66,7 @@
                     Padding="5 3"
                     Background="{Binding RussianUnitTypeColor}">
                 <TextBlock FontSize="13"
-                           Foreground="#f2f2f2"
+                           Foreground="{DynamicResource EasyWhite}"
                            FontFamily="Arial"
                            FontWeight="Bold"
                            Text="{Binding RussianUnitTypeText}"/>
@@ -83,7 +83,7 @@
                     Background="{Binding EnglishUnitTypeColor}">
                 <TextBlock FontSize="13" 
                            FontFamily="Arial"
-                           Foreground="#f2f2f2"
+                           Foreground="{DynamicResource EasyWhite}"
                            FontWeight="Bold"
                            Text="{Binding EnglishUnitTypeText}"/>
             </Border>
@@ -95,7 +95,7 @@
                          Background="{DynamicResource EastGrayLight}"
                          Foreground="{Binding RatingProgressBarColor}"
                          Value="{Binding RatingValue}"
-                         BorderBrush="GhostWhite"
+                         BorderBrush="{DynamicResource EasyGrayLight}"
                          Maximum="100"/>
 
             <!--Горизонтальный разделитель-->
@@ -111,34 +111,34 @@
             <Grid Width="Auto" Margin="10 7 10 0" Grid.Row="4" VerticalAlignment="Center" 
                   HorizontalAlignment="Center" Grid.ColumnSpan="3"
                   Visibility="{Binding CommentIsVisible, Converter={converters:ReverseCollapseConverter}}">
-                <Border Grid.Row="1" Background="#e6e6e6" CornerRadius="15" Height="30"></Border>
+                <Border Grid.Row="1" Background="{DynamicResource EasyWhite}" CornerRadius="15" Height="30"></Border>
                 <Border Background="{DynamicResource MainColor}"  CornerRadius="15" Height="30" Width="110" HorizontalAlignment="Left">
                     <TextBlock Text="Комментарий" FontSize="13" 
                            FontFamily="Arial" FontWeight="Bold"
-                           Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                           Foreground="{DynamicResource EasyWhite}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Border>
                 <TextBlock Text="{Binding CommentValue}" FontSize="13" 
                            FontFamily="Arial" FontWeight="DemiBold"
-                           Foreground="#737373" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="118 0 16 0"/>
+                           Foreground="{DynamicResource EasyGrayDark}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="118 0 16 0"/>
             </Grid>
 
             <!--Отображение первого примера-->
             <Grid Width="Auto" Margin="10 7 10 0" Grid.Row="5" VerticalAlignment="Center" 
                   HorizontalAlignment="Center" Grid.ColumnSpan="3"
                   Visibility="{Binding FirstExampleIsVisible, Converter={converters:ReverseCollapseConverter}}">
-                <Border Grid.Row="1" Background="#e6e6e6" CornerRadius="15" Height="45"></Border>
+                <Border Grid.Row="1" Background="{DynamicResource EasyWhite}" CornerRadius="15" Height="45"></Border>
                 <Border Background="{DynamicResource MainColor}"  CornerRadius="15" Height="45" Width="80" HorizontalAlignment="Left">
                     <TextBlock Text="Пример" FontSize="13" 
                            FontFamily="Arial" FontWeight="Bold"
-                           Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                           Foreground="{DynamicResource EasyWhite}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Border>
                 <StackPanel Margin="88 0 16 0" VerticalAlignment="Center" HorizontalAlignment="Left">
                     <TextBlock Text="{Binding FirstExampleRussianValue}" FontSize="13" 
                            FontFamily="Arial" FontWeight="DemiBold"
-                           Foreground="#737373" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 4"/>
+                           Foreground="{DynamicResource EasyGrayDark}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 4"/>
                     <TextBlock Text="{Binding FirstExampleEnglishValue}" FontSize="13" 
                            FontFamily="Arial" FontWeight="DemiBold"
-                           Foreground="#737373" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                           Foreground="{DynamicResource EasyGrayDark}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                 </StackPanel>
 
             </Grid>
@@ -147,19 +147,19 @@
             <Grid Width="Auto" Margin="10 7 10 0" Grid.Row="6" VerticalAlignment="Center" 
                   HorizontalAlignment="Center" Grid.ColumnSpan="3"
                   Visibility="{Binding SecondExampleIsVisible, Converter={converters:ReverseCollapseConverter}}">
-                <Border Grid.Row="1" Background="#e6e6e6" CornerRadius="15" Height="45"></Border>
+                <Border Grid.Row="1" Background="{DynamicResource EasyWhite}" CornerRadius="15" Height="45"></Border>
                 <Border Background="{DynamicResource MainColor}"  CornerRadius="15" Height="45" Width="80" HorizontalAlignment="Left">
                     <TextBlock Text="Пример" FontSize="13" 
                            FontFamily="Arial" FontWeight="Bold"
-                           Foreground="#f2f2f2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                           Foreground="{DynamicResource EasyWhite}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </Border>
                 <StackPanel Margin="88 0 16 0" VerticalAlignment="Center" HorizontalAlignment="Left">
                     <TextBlock Text="{Binding SecondExampleRussianValue}" FontSize="13" 
                            FontFamily="Arial" FontWeight="DemiBold"
-                           Foreground="#737373" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 4"/>
+                           Foreground="{DynamicResource EasyGrayDark}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 0 0 4"/>
                     <TextBlock Text="{Binding SecondExampleEnglishValue}" FontSize="13" 
                            FontFamily="Arial" FontWeight="DemiBold"
-                           Foreground="#737373" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                           Foreground="{DynamicResource EasyGrayDark}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                 </StackPanel>
             </Grid>
 
@@ -167,7 +167,7 @@
             <Button Style="{DynamicResource MaterialDesignFlatButton}"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
-                    Foreground="DarkGray"                 
+                    Foreground="{DynamicResource EasyGray}"                 
                     Width="18"
                     Height="18"
                     Padding="1"
@@ -188,7 +188,7 @@
             </Button>
 
             <materialDesign:PackIcon Kind="Star" 
-                                     Foreground="Gold" 
+                                     Foreground="{DynamicResource EasyGold}" 
                                      Margin="1 1 0 0"
                                      Visibility="{Binding IsStudiedMarkVisible, Converter={converters:ReverseCollapseConverter}}"/>
 

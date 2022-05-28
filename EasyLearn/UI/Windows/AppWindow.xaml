@@ -18,13 +18,13 @@
     </WindowChrome.WindowChrome>
 
     <Grid>
-        <materialDesign:DrawerHost OpenMode="Standard" materialDesign:ShadowAssist.ShadowDepth="Depth0" BorderThickness="0" LeftDrawerBackground="GhostWhite"><!--#ebeef9-->
+        <materialDesign:DrawerHost OpenMode="Standard" materialDesign:ShadowAssist.ShadowDepth="Depth0" BorderThickness="0" LeftDrawerBackground="{DynamicResource EasyGrayLight}">
             <materialDesign:DrawerHost.LeftDrawerContent>
                 <StackPanel>
 
                     <Border Background="{DynamicResource MainColor}" Height="38" Margin="0 0 0 10" BorderBrush="{DynamicResource MainColor}">
                         <TextBlock Style="{DynamicResource MaterialDesignHeadline5TextBlock}"
-                               Text="Easy Learn" Margin="18 1 0 0" FontWeight="Bold" Foreground="White" />
+                               Text="Easy Learn" Margin="18 1 0 0" FontWeight="Bold" Foreground="{DynamicResource EasyWhite}" />
                     </Border>
                     
                     <Button Margin="4" HorizontalAlignment="Left"
@@ -127,7 +127,7 @@
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
                                                 <Border Background="{TemplateBinding Background}">
-                                                    <materialDesign:PackIcon Kind="Menu" Height="33" Width="33" Foreground="White"
+                                                    <materialDesign:PackIcon Kind="Menu" Height="33" Width="33" Foreground="{DynamicResource EasyWhite}"
                                                      VerticalAlignment="Center"
                                                      HorizontalAlignment="Center"/>
                                                 </Border>
@@ -163,7 +163,7 @@
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
                                                 <Border Background="{TemplateBinding Background}">
-                                                    <materialDesign:PackIcon Kind="Menu" Height="33" Width="33" Foreground="White"
+                                                    <materialDesign:PackIcon Kind="Menu" Height="33" Width="33" Foreground="{DynamicResource EasyWhite}"
                                                      VerticalAlignment="Center"
                                                      HorizontalAlignment="Center"/>
                                                 </Border>
@@ -195,7 +195,7 @@
                                     <Setter.Value>
                                         <ControlTemplate TargetType="Button">
                                             <Border Background="{TemplateBinding Background}">
-                                                    <materialDesign:PackIcon Kind="ArrowBottomLeftThin" Height="33" Width="33" Foreground="White"
+                                                    <materialDesign:PackIcon Kind="ArrowBottomLeftThin" Height="33" Width="33" Foreground="{DynamicResource EasyWhite}"
                                                      VerticalAlignment="Center"
                                                      HorizontalAlignment="Center"/>
                                             </Border>
@@ -227,7 +227,7 @@
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
                                                 <Border Background="{TemplateBinding Background}">
-                                                    <materialDesign:PackIcon Kind="DockBottom" Height="28" Width="28" Foreground="White"
+                                                    <materialDesign:PackIcon Kind="DockBottom" Height="28" Width="28" Foreground="{DynamicResource EasyWhite}"
                                                      VerticalAlignment="Center"
                                                      HorizontalAlignment="Center"/>
                                                 </Border>
@@ -258,7 +258,7 @@
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
                                                 <Border Background="{TemplateBinding Background}">
-                                                    <materialDesign:PackIcon Kind="WindowMinimize" Height="20" Width="20" Foreground="White"
+                                                    <materialDesign:PackIcon Kind="WindowMinimize" Height="20" Width="20" Foreground="{DynamicResource EasyWhite}"
                                                      VerticalAlignment="Center"
                                                      HorizontalAlignment="Center"/>
                                                 </Border>
@@ -288,7 +288,7 @@
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
                                                 <Border Background="{TemplateBinding Background}">
-                                                    <materialDesign:PackIcon Kind="CropSquare" Height="20" Width="20" Foreground="White"
+                                                    <materialDesign:PackIcon Kind="CropSquare" Height="20" Width="20" Foreground="{DynamicResource EasyWhite}"
                                                      VerticalAlignment="Center"
                                                      HorizontalAlignment="Center"/>
                                                 </Border>
@@ -318,7 +318,7 @@
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
                                                 <Border Background="{TemplateBinding Background}">
-                                                    <materialDesign:PackIcon Kind="Close" Height="20" Width="20" Foreground="White"
+                                                    <materialDesign:PackIcon Kind="Close" Height="20" Width="20" Foreground="{DynamicResource EasyWhite}"
                                                      VerticalAlignment="Center"
                                                      HorizontalAlignment="Center"/>
                                                 </Border>
@@ -327,7 +327,7 @@
                                     </Setter>
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#ff3333"/>
+                                            <Setter Property="Background" Value="{DynamicResource EasyRed}"/>
                                         </Trigger>
                                         <Trigger Property="IsMouseOver" Value="False">
                                             <Setter Property="Background" Value="{DynamicResource MainColor}"/>

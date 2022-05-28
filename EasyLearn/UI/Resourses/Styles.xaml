@@ -19,7 +19,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Button.Background" Value="{DynamicResource EastGrayLight}"/>
+        <Setter Property="Button.Background" Value="{DynamicResource ButtonBackgroundGray}"/>
         <Setter Property="Button.BorderBrush" Value="{DynamicResource EasyGray}"/>
         <Setter Property="Height" Value="32"/>
         <Setter Property="Button.BorderThickness" Value="0.75"/>
@@ -27,14 +27,16 @@
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Button.Foreground" Value="White"/>
+                <Setter Property="Button.Foreground" Value="{DynamicResource EasyWhite}"/>
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Button.Foreground" Value="White"/>
+                <Setter Property="Button.Foreground" Value="{DynamicResource EasyWhite}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Background" Value="#d9d9d9"/>
-                <Setter Property="BorderThickness" Value="1.5"/>
+                <Setter Property="Background" Value="{DynamicResource DisabledButtonBackgroundGray}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="True">
+                <Setter Property="Background" Value="{DynamicResource ButtonBackgroundGray}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -45,13 +47,13 @@
         <Setter Property="Margin" Value="0 0 7 0"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Button.Background" Value="{DynamicResource EastRedDark}"/>
+                <Setter Property="Button.Background" Value="{DynamicResource EasyRedDark}"/>
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
                 <Setter Property="Button.Background" Value="{DynamicResource EasyRedLight}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="#616b61"/>
+                <Setter Property="Foreground" Value="{DynamicResource EasyGrayDark}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -61,13 +63,13 @@
         <Setter Property="Margin" Value="7 0 0 0"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Button.Background" Value="{DynamicResource EastGreenDark}"/>
+                <Setter Property="Button.Background" Value="{DynamicResource EasyGreenDark}"/>
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
                 <Setter Property="Button.Background" Value="{DynamicResource EasyGreenLight}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="#616b61"/>
+                <Setter Property="Foreground" Value="#568f56"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -82,7 +84,7 @@
                 <Setter Property="Button.Background" Value="{DynamicResource MainColorLight}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="#616b61"/>
+                <Setter Property="Foreground" Value="{DynamicResource EasyGrayDark}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -90,7 +92,7 @@
 
     <Style x:Key="EasyTextBoxBase" TargetType="TextBox"  BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
         <Setter Property="BorderThickness" Value="0.6"/>
-        <Setter Property="Background" Value="{DynamicResource EastGrayLight}"/>
+        <Setter Property="Background" Value="#f2f2f2"/>
         <Setter Property="MaxHeight" Value="40"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="Margin" Value="0 0 0 14" />
@@ -130,7 +132,7 @@
     </Style>
 
     <Style x:Key="EasyComboBox" TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
-        <Setter Property="Background" Value="{DynamicResource EastGrayLight}"/>
+        <Setter Property="Background" Value="#f2f2f2"/>
         <Setter Property="BorderBrush" Value="{DynamicResource EasyGray}"/>
         <Style.Triggers>
             <Trigger Property="IsFocused" Value="True">
@@ -163,7 +165,7 @@
     <Style x:Key="EasyRadioButton" TargetType="RadioButton" BasedOn="{StaticResource MaterialDesignChoiceChipPrimaryOutlineRadioButton}">
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="False">
-                <Setter Property="Foreground" Value="#4d4d4d"/>
+                <Setter Property="Foreground" Value="{DynamicResource EasyGrayDark}"/>
             </Trigger>
         </Style.Triggers>
     </Style>

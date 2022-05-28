@@ -14,6 +14,7 @@ using EasyLearn.Data.Repositories.Interfaces;
 using System.Windows.Media;
 using System.Windows.Controls;
 using EasyLearn.Infrastructure.Helpers;
+using EasyLearn.Infrastructure.UIConstants;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -402,9 +403,9 @@ namespace EasyLearn.VM.ViewModels.Pages
         #endregion
 
         #region Private UI methods (page background)
-        private void SetDefaultPageBackground() => PageBackground = new BrushConverter().ConvertFrom("#ffffff") as SolidColorBrush ?? throw new Exception();
-        private void SetCorrectPageBackground() => PageBackground = new BrushConverter().ConvertFrom("#eff5f1") as SolidColorBrush ?? throw new Exception();
-        private void SetWrongPageBackground() => PageBackground = new BrushConverter().ConvertFrom("#f6eeee") as SolidColorBrush ?? throw new Exception();
+        private void SetDefaultPageBackground() => PageBackground = ColorCodes.EasyWhite.GetBrushByHex();
+        private void SetCorrectPageBackground() => PageBackground = ColorCodes.EasyGreenSuperLight.GetBrushByHex();
+        private void SetWrongPageBackground() => PageBackground = ColorCodes.EasyRedSuperLight.GetBrushByHex();
         #endregion
 
         #region Private switch helpers

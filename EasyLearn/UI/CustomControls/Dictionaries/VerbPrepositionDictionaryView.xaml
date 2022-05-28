@@ -21,7 +21,7 @@
 
         <materialDesign:Flipper.FrontContent>
 
-            <Border BorderThickness="0.6" BorderBrush="#99bbff" Background="GhostWhite">
+            <Border BorderThickness="0.6" BorderBrush="{DynamicResource MainColorLight}" Background="{DynamicResource EasyGrayLight}">
                 <Grid Height="256" Width="200">
 
                     <Grid.RowDefinitions>
@@ -44,7 +44,7 @@
                     <Button Style="{DynamicResource MaterialDesignFlatButton}"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
-                        Foreground="Black"
+                        Foreground="{DynamicResource EasyBlack}"
                         Width="30"
                         Height="30"
                         Padding="1"
@@ -94,7 +94,7 @@
                                         <Setter Property="Background" Value="{DynamicResource MainColorSuperLight}"/>
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="False">
-                                        <Setter Property="Background" Value="GhostWhite"/>
+                                        <Setter Property="Background" Value="{DynamicResource EasyGrayLight}"/>
 
                                     </Trigger>
                                 </Style.Triggers>
@@ -110,7 +110,7 @@
         <materialDesign:Flipper.BackContent>
 
 
-            <Border BorderThickness="0.6" BorderBrush="#99bbff" Background="GhostWhite">
+            <Border BorderThickness="0.6" BorderBrush="{DynamicResource MainColorLight}" Background="{DynamicResource EasyGrayLight}">
                 <Grid Height="256" Width="200">
 
                     <Grid.RowDefinitions>
@@ -150,14 +150,14 @@
 
                     <!--Редактировать название словаря-->
                     <TextBox materialDesign:HintAssist.Hint="Название" 
-                         materialDesign:HintAssist.IsFloating="True"
-                         Grid.Row="1"         
-                         Background="{DynamicResource MainColorSuperLight}"
+                             materialDesign:HintAssist.IsFloating="True"
+                             Grid.Row="1"         
+                             Background="{DynamicResource MainColorSuperLight}"
                              BorderBrush="{DynamicResource MainColor}"
-                         HorizontalAlignment="Stretch"
-                         VerticalAlignment="Stretch"
-                         Style="{DynamicResource MaterialDesignFilledTextBox}"
-                         Text="{Binding EditNameFieldValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"
+                             Style="{DynamicResource MaterialDesignFilledTextBox}"
+                             Text="{Binding EditNameFieldValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="TextChanged">
@@ -189,7 +189,7 @@
 
                     <!--Кнопка удаления словаря-->
                     <Button Command="{Binding RemoveVerbPrepositionDictionaryCommand}"
-                            Foreground="#ff3333"
+                            Foreground="{DynamicResource EasyRed}"
                             Height="40"
                                 Grid.Row="3"
                             Style="{DynamicResource MaterialDesignFlatButton}"

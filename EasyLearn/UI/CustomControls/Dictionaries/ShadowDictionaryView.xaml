@@ -31,10 +31,10 @@
                     </Setter>
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#ccddff"/>
+                            <Setter Property="Background" Value="{DynamicResource MainColorSuperLight}"/>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="False">
-                            <Setter Property="Background" Value="GhostWhite"/>
+                            <Setter Property="Background" Value="{DynamicResource EasyGrayLight}"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
@@ -45,7 +45,7 @@
             <DrawingBrush Viewport="0,0,10,10" ViewportUnits="Absolute" TileMode="Tile">
                 <DrawingBrush.Drawing>
                     <DrawingGroup>
-                        <GeometryDrawing Brush="#99bbff">
+                        <GeometryDrawing Brush="{DynamicResource MainColorLight}">
                             <GeometryDrawing.Geometry>
                                 <GeometryGroup>
                                     <RectangleGeometry Rect="0,0,50,50" />

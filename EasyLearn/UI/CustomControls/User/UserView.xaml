@@ -17,7 +17,10 @@
 
         <!--Лицевая сторона карточки-->
         <materialDesign:Flipper.FrontContent>
-            <Border BorderThickness="0.6" BorderBrush="{DynamicResource MainColorLight}" Background="GhostWhite">
+            <Border BorderThickness="0.6" 
+                    BorderBrush="{DynamicResource MainColorLight}" 
+                    Background="{DynamicResource EasyGrayLight}">
+                
                 <Grid Height="256" Width="200">
 
                     <Grid.RowDefinitions>
@@ -66,12 +69,13 @@
                     </Button>
 
                     <Button Padding="0"
-                                VerticalAlignment="Stretch"
-                                HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
                             d:Content="Test"
                             Grid.Row="1"
                             Command="{Binding SetUserAsCurrentCommand}"
-                                IsEnabled="{Binding IsCurrent, Converter={converters:ReverseConverter}}">
+                            IsEnabled="{Binding IsCurrent, Converter={converters:ReverseConverter}}">
+                        
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Template">
@@ -93,7 +97,7 @@
                                         <Setter Property="Background" Value="{DynamicResource MainColorSuperLight}"/>
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="False">
-                                        <Setter Property="Background" Value="GhostWhite"/>
+                                        <Setter Property="Background" Value="{DynamicResource EasyGrayLight}"/>
 
                                     </Trigger>
                                 </Style.Triggers>
@@ -109,7 +113,7 @@
 
         <!--Задняя сторона карточки-->
         <materialDesign:Flipper.BackContent>
-            <Border BorderThickness="0.6" BorderBrush="{DynamicResource MainColorLight}" Background="GhostWhite">
+            <Border BorderThickness="0.6" BorderBrush="{DynamicResource MainColorLight}" Background="{DynamicResource EasyGrayLight}">
                 <Grid Height="256" Width="200">
 
                     <Grid.RowDefinitions>
@@ -176,7 +180,7 @@
 
                     <!--Кнопка удаления словаря-->
                     <Button Command="{Binding RemoveUserCommand}"
-                            Foreground="#ff3333"
+                            Foreground="{DynamicResource EasyRed}"
                                 Grid.Row="4"
                             Height="40"
                             Style="{DynamicResource MaterialDesignFlatButton}"

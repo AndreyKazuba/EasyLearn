@@ -21,7 +21,7 @@ namespace EasyLearn.UI.Pages
 
         public EditCommonDictionaryPage(EditCommonDictionaryPageVM viewModel)
         {
-            this.DataContext = viewModel;
+            DataContext = viewModel;
             InitializeComponent();
         }
 

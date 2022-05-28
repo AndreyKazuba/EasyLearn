@@ -17,7 +17,7 @@
 
             <materialDesign:DrawerHost OpenMode="Standard" materialDesign:ShadowAssist.ShadowDepth="Depth0">
                 <materialDesign:DrawerHost.TopDrawerContent>
-                    <Border Background="GhostWhite" Height="58" BorderBrush="{DynamicResource MainColor}" BorderThickness="0.6 0 0 0.6">
+                    <Border Background="{DynamicResource EasyGrayLight}" Height="58" BorderBrush="{DynamicResource MainColor}" BorderThickness="0.6 0 0 0.6">
                         <Grid VerticalAlignment="Stretch">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -298,11 +298,11 @@
                         </Grid>
 
                         <ItemsControl ItemsSource="{Binding UwExampleViews}" 
-                                          Grid.Row="3"
-                                          Grid.Column="0"
-                                          Margin="0 0 0 14"
-                                          Width="450"
-                                          Grid.ColumnSpan="3">
+                                      Grid.Row="3"
+                                      Grid.Column="0"
+                                      Margin="0 0 0 14"
+                                      Width="450"
+                                      Grid.ColumnSpan="3">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel/>
@@ -508,15 +508,14 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBox Style="{DynamicResource EasyTextBox}"
-                                         Width="192"
-                                         Padding="14 11"
-                                         Margin="0 0 7 0"
-                                 materialDesign:HintAssist.IsFloating="False"
-                                     
-                                         KeyDown="OnAddingWindowExampleRussianValueTextBoxKeyDown"
-                                         InputLanguageManager.InputLanguage="ru-RU"
-                                         Name="awExampleRussianValueTextBox"
-                                         materialDesign:HintAssist.Hint="Пример на русском">
+                                     Width="192"
+                                     Padding="14 11"
+                                     Margin="0 0 7 0"
+                                     materialDesign:HintAssist.IsFloating="False"
+                                     KeyDown="OnAddingWindowExampleRussianValueTextBoxKeyDown"
+                                     InputLanguageManager.InputLanguage="ru-RU"
+                                     Name="awExampleRussianValueTextBox"
+                                     materialDesign:HintAssist.Hint="Пример на русском">
 
 
                                 <TextBox.Text>

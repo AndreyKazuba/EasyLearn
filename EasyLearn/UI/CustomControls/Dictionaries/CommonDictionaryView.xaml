@@ -19,7 +19,9 @@
         <!--Лицевая часть карточки-->
         <materialDesign:Flipper.FrontContent>
 
-            <Border BorderThickness="0.6" BorderBrush="#99bbff" Background="GhostWhite">
+            <Border BorderThickness="0.6" 
+                    BorderBrush="{DynamicResource MainColorLight}" 
+                    Background="{DynamicResource EasyGrayLight}">
                 <Grid Height="256" Width="200">
 
                     <Grid.RowDefinitions>
@@ -37,7 +39,7 @@
                     <!--Кнопка перехода на заднюю сторону карточки (настройки словаря)-->
                     <Button Style="{DynamicResource MaterialDesignFlatButton}"
                         HorizontalAlignment="Right" VerticalAlignment="Top"
-                        Foreground="Black"
+                        Foreground="{DynamicResource EasyBlack}"
                         Width="30" Height="30"
                         Padding="1"
                         Margin="0 6 6 0"
@@ -85,7 +87,7 @@
                                         <Setter Property="Background" Value="{DynamicResource MainColorSuperLight}"/>
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="False">
-                                        <Setter Property="Background" Value="GhostWhite"/>
+                                        <Setter Property="Background" Value="{DynamicResource EasyGrayLight}"/>
 
                                     </Trigger>
                                 </Style.Triggers>
@@ -102,7 +104,7 @@
         <!--Задняя сторона карточки-->
         <materialDesign:Flipper.BackContent>
 
-            <Border BorderThickness="0.6" BorderBrush="#99bbff" Background="GhostWhite">
+            <Border BorderThickness="0.6" BorderBrush="{DynamicResource MainColorLight}" Background="{DynamicResource EasyGrayLight}">
                 <Grid Height="256" Width="200">
 
                     <Grid.RowDefinitions>
@@ -123,7 +125,7 @@
                                 ToolTip="Подтвердить изменения и вернуться">
 
                                 <!--Изображение кнопки-->
-                                <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" Foreground="Black"/>
+                                <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" Foreground="{DynamicResource EasyBlack}"/>
 
                                 <!--Действия кнопки при её нажатии-->
                                 <i:Interaction.Triggers>
@@ -145,9 +147,9 @@
 
                     <!--Редактировать название словаря-->
                     <TextBox materialDesign:HintAssist.Hint="Название" 
-                         materialDesign:HintAssist.IsFloating="True"
-                         Grid.Row="1"         
-                         Background="{DynamicResource MainColorSuperLight}"
+                             materialDesign:HintAssist.IsFloating="True"
+                             Grid.Row="1"         
+                             Background="{DynamicResource MainColorSuperLight}"
                              BorderBrush="{DynamicResource MainColor}"
                              
                          HorizontalAlignment="Stretch"
@@ -185,7 +187,7 @@
 
                     <!--Кнопка удаления словаря-->
                     <Button Command="{Binding RemoveCommonDictionaryCommand}"
-                            Foreground="#ff3333"
+                            Foreground="{DynamicResource EasyRed}"
                                 Grid.Row="3"
                             Height="40"
                             Style="{DynamicResource MaterialDesignFlatButton}"

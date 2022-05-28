@@ -7,6 +7,7 @@ using EasyLearn.Data.Models;
 using EasyLearn.Infrastructure.DictationManagers;
 using EasyLearn.Infrastructure.Exceptions;
 using EasyLearn.Infrastructure.Helpers;
+using EasyLearn.Infrastructure.UIConstants;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -133,15 +134,15 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void VpSetDefaultSecondValue()
         {
             VpSecondDisplayValue = "...";
-            VpSecondDisplayColor = Brushes.Black;
+            VpSecondDisplayColor = ColorCodes.EasyBlack.GetBrushByHex();
         }
         private void VpSetSecondValue(string value)
         {
             VpSecondDisplayValue = value;
-            VpSecondDisplayColor = Brushes.ForestGreen;
+            VpSecondDisplayColor = ColorCodes.EasyGreen.GetBrushByHex();
         }
-        private void VpHideSecondDisplay() => this.VpSecondDisplayIsVisible = false;
-        private void VpShowSecondDisplay() => this.VpSecondDisplayIsVisible = true;
+        private void VpHideSecondDisplay() => VpSecondDisplayIsVisible = false;
+        private void VpShowSecondDisplay() => VpSecondDisplayIsVisible = true;
         #endregion
 
         #region Private UI methods (wrong and correct icons)

@@ -16,7 +16,7 @@
 
         <materialDesign:Flipper.FrontContent>
 
-            <Border BorderThickness="0.6" BorderBrush="#99bbff" Background="GhostWhite">
+            <Border BorderThickness="0.6" BorderBrush="{DynamicResource MainColorLight}" Background="{DynamicResource EasyGrayLight}">
                 <Grid Height="256" Width="200">
 
                     <Grid.RowDefinitions>
@@ -35,7 +35,7 @@
 
                     <materialDesign:PackIcon HorizontalAlignment="Right" VerticalAlignment="Top"
                                          Kind="Star" 
-                                         Foreground="Gold"
+                                         Foreground="{DynamicResource EasyGold}"
                                          Width="30" Height="30"
                                          Padding="1"
                                          Margin="0 6 6 0"/>
@@ -50,12 +50,12 @@
 
                         <!--Имя пользователя-->
                         <StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Center"
-                                Grid.Row="0">
+                                    HorizontalAlignment="Center"
+                                    Grid.Row="0">
                             <TextBlock Style="{DynamicResource MaterialDesignHeadline6TextBlock}" 
-                                   Text="Неправильные глаголы" 
+                                       Text="Неправильные глаголы" 
                                        FontFamily="Arial"
-                                   FontSize="15"/>
+                                       FontSize="15"/>
                         </StackPanel>
                     </Grid>
                 </Grid>
@@ -115,7 +115,7 @@
                         Margin="30 12 30 12" 
                         Command="{Binding RemoveUserCommand}"
                         CommandParameter="{Binding Id}"
-                        Foreground="Red"
+                        Foreground="{DynamicResource EasyRed}"
                         Style="{DynamicResource MaterialDesignFlatButton}"
                         ToolTip="Удалить аккаунт"
                         VerticalAlignment="Bottom">

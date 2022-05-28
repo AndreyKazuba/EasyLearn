@@ -60,7 +60,7 @@
                                     Background="{Binding CdUnitTypeColor}">
                                 <TextBlock FontSize="13" 
                                            FontFamily="Arial"
-                                           Foreground="#f2f2f2"
+                                           Foreground="{DynamicResource EasyWhite}"
                                            FontWeight="Bold"
                                            Text="{Binding CdUnitTypeValue}">
                                 </TextBlock>
@@ -76,7 +76,7 @@
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
                                d:Text="Comment"
-                               Foreground="Gray">
+                               Foreground="{DynamicResource EasyGray}">
                     </TextBlock>
 
                     <!--Отображение первого примера-->
@@ -118,7 +118,7 @@
                            MouseEnter="OnPromtMouseEnter"
                            MouseLeave="OnPromtMouseLeave"
                            Name="promtTextBox"
-                           Foreground="Gray"
+                           Foreground="{DynamicResource EasyGray}"
                            d:Text="(Легко)">
                 </TextBlock>
 
@@ -243,7 +243,7 @@
                            MouseEnter="OnPromtMouseEnter"
                            MouseLeave="OnPromtMouseLeave"
                            Name="vpPromtTextBox"
-                           Foreground="Gray"
+                           Foreground="{DynamicResource EasyGray}"
                            d:Text="(Легко)">
                 </TextBlock>
 
@@ -283,7 +283,7 @@
                            HorizontalAlignment="Center"
                            VerticalAlignment="Top"
                            d:Text="Куда-то"
-                           Foreground="Gray">
+                           Foreground="{DynamicResource EasyGray}">
                     </TextBlock>
 
                     <!--Отображение лога ответов по текущему неправильному глаголу-->
@@ -303,7 +303,7 @@
                         <materialDesign:PackIcon Kind="Check" 
                                              Height="40" 
                                              Width="40" 
-                                             Foreground="Gray"
+                                             Foreground="{DynamicResource EasyGray}"
                                              Grid.Row="0" Grid.Column="0"
                                              HorizontalAlignment="Center"
                                              Visibility="{Binding IvFirstFormGrayIconIsVisible, Converter={converters:ForwardVisibilityConverter}}">
@@ -313,7 +313,7 @@
                         <materialDesign:PackIcon Kind="Check" 
                                              Height="40" 
                                              Width="40" 
-                                             Foreground="Green"
+                                             Foreground="{DynamicResource EasyGreen}"
                                              Grid.Row="0" Grid.Column="0"
                                              HorizontalAlignment="Center"
                                              Visibility="{Binding IvFirstFormCorrectIconIsVisible, Converter={converters:ForwardVisibilityConverter}}">
@@ -323,7 +323,7 @@
                         <materialDesign:PackIcon Kind="Close" 
                                              Height="40" 
                                              Width="40" 
-                                             Foreground="Red"
+                                             Foreground="{DynamicResource EasyRed}"
                                              Grid.Row="0" Grid.Column="0"
                                              HorizontalAlignment="Center"
                                              Visibility="{Binding IvFirstFormWrongIconIsVisible, Converter={converters:ForwardVisibilityConverter}}">
@@ -333,7 +333,7 @@
                         <materialDesign:PackIcon Kind="Check" 
                                              Height="40" 
                                              Width="40" 
-                                             Foreground="Gray"
+                                             Foreground="{DynamicResource EasyGray}"
                                              Grid.Row="0" Grid.Column="1"
                                              HorizontalAlignment="Center"
                                              Visibility="{Binding IvSecondFormGrayIconIsVisible, Converter={converters:ForwardVisibilityConverter}}">
@@ -343,7 +343,7 @@
                         <materialDesign:PackIcon Kind="Check" 
                                              Height="40" 
                                              Width="40" 
-                                             Foreground="Green"
+                                             Foreground="{DynamicResource EasyGreen}"
                                              Grid.Row="0" Grid.Column="1"
                                              HorizontalAlignment="Center"
                                              Visibility="{Binding IvSecondFormCorrectIconIsVisible, Converter={converters:ForwardVisibilityConverter}}">
@@ -353,7 +353,7 @@
                         <materialDesign:PackIcon Kind="Close" 
                                              Height="40" 
                                              Width="40" 
-                                             Foreground="Red"
+                                             Foreground="{DynamicResource EasyRed}"
                                              Grid.Row="0" Grid.Column="1"
                                              HorizontalAlignment="Center"
                                              Visibility="{Binding IvSecondFormWrongIconIsVisible, Converter={converters:ForwardVisibilityConverter}}">
@@ -363,7 +363,7 @@
                         <materialDesign:PackIcon Kind="Check" 
                                              Height="40" 
                                              Width="40" 
-                                             Foreground="Gray"
+                                             Foreground="{DynamicResource EasyGray}"
                                              Grid.Row="0" Grid.Column="2"
                                              HorizontalAlignment="Center"
                                              Visibility="{Binding IvThirdFormGrayIconIsVisible, Converter={converters:ForwardVisibilityConverter}}">
@@ -373,7 +373,7 @@
                         <materialDesign:PackIcon Kind="Check" 
                                              Height="40" 
                                              Width="40" 
-                                             Foreground="Green"
+                                             Foreground="{DynamicResource EasyGreen}"
                                              Grid.Row="0" Grid.Column="2"
                                              HorizontalAlignment="Center"
                                              Visibility="{Binding IThirdFormCorrectIconIsVisible, Converter={converters:ForwardVisibilityConverter}}">
@@ -383,7 +383,7 @@
                         <materialDesign:PackIcon Kind="Close" 
                                              Height="40" 
                                              Width="40" 
-                                             Foreground="Red"
+                                             Foreground="{DynamicResource EasyRed}"
                                              Grid.Row="0" Grid.Column="2"
                                              HorizontalAlignment="Center"
                                              Visibility="{Binding IvThirdFormWrongIconIsVisible, Converter={converters:ForwardVisibilityConverter}}">
@@ -434,7 +434,7 @@
                            MouseEnter="OnPromtMouseEnter"
                            MouseLeave="OnPromtMouseLeave"
                            Name="ivPromtTextBox"
-                           Foreground="Gray"
+                           Foreground="{DynamicResource EasyGray}"
                            d:Text="(Легко)">
                 </TextBlock>
 

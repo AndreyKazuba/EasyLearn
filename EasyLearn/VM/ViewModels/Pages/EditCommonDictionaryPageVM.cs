@@ -20,6 +20,7 @@ using System.Windows.Media;
 using System.Windows;
 using System.Windows.Controls;
 using Page = EasyLearn.Infrastructure.Enums.Page;
+using EasyLearn.Infrastructure.UIConstants;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -54,7 +55,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Binding props
         public ObservableCollection<UserControl> CommonRelationViews { get; set; } = new ObservableCollection<UserControl>();
         public string SearchStringValue { get; set; }
-        public SolidColorBrush HorisontalSeporatorColor => AwCommonRelationHasExistLableIsVisible ? new BrushConverter().ConvertFrom("#FFA70404") as SolidColorBrush ?? Brushes.Red : Brushes.LightGray;
+        public SolidColorBrush HorisontalSeporatorColor => AwCommonRelationHasExistLableIsVisible ? ColorCodes.EasyRed.GetBrushByHex() : ColorCodes.EasyGray.GetBrushByHex();
 
         public ObservableCollection<ExampleView> AwExampleViews { get; set; } = new ObservableCollection<ExampleView>();
         public string AwEnglishValue { get; set; }
@@ -253,7 +254,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             if (awExampleInvalid || AwExampleViews.Count >= ModelConstants.MaxExamplesCount)
                 return;
-            AwExampleViews.Add(ExampleView.Create(AwExampleRussianValue, AwExampleEnglishValue, ++exampleIdCounter));
+            AwExampleViews.Add(ExampleView.Create(StringHelper.Prepare(AwExampleRussianValue), StringHelper.Prepare(AwExampleEnglishValue), ++exampleIdCounter));
         }
         private void AwCheckCommonRelationForExisting()
         {
@@ -473,7 +474,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             uwExampleRussianValueTextBox.MaxLength = ModelConstants.ExampleValueMaxLength;
             uwExampleEnglishValueTextBox.MaxLength = ModelConstants.ExampleValueMaxLength;
             uwExampleRussianValueTextBox.Margin = new Thickness(0, 0, 7, 7);
-            uwExampleEnglishValueTextBox.Margin = new Thickness(7, 0, 0, 7);
+            uwExampleEnglishValueTextBox.Margin = new Thickness(0, 0, 0, 7);
         }
         private void UwHideExampleTextBoxesMaxLength()
         {
@@ -482,7 +483,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             uwExampleRussianValueTextBox.MaxLength = 0;
             uwExampleEnglishValueTextBox.MaxLength = 0;
             uwExampleRussianValueTextBox.Margin = new Thickness(0, 0, 7, 0);
-            uwExampleEnglishValueTextBox.Margin = new Thickness(7, 0, 0, 0);
+            uwExampleEnglishValueTextBox.Margin = new Thickness(0, 0, 0, 0);
         }
         private void SetCommonRelationForUpdating(CommonRelation commonRelation)
         {
