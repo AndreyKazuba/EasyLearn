@@ -1,5 +1,4 @@
 ﻿using EasyLearn.Infrastructure.Helpers;
-using EasyLearn.Infrastructure.UIConstants;
 using System;
 using System.Globalization;
 
@@ -10,7 +9,7 @@ namespace EasyLearn.Infrastructure.ValueConverters
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             bool isCurrent = (bool)value;
-            return isCurrent ? ColorCodes.EasyGreen.GetBrushByHex() : ColorCodes.MainColorLight.GetBrushByHex();
+            return isCurrent ? ColorHelper.GetBrushByHex("#70db70") : ColorHelper.GetBrushByHex("#9999ff");
         }
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }

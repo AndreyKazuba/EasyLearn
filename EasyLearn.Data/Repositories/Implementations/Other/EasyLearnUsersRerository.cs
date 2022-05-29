@@ -15,6 +15,7 @@ namespace EasyLearn.Data.Repositories.Implementations
         public EasyLearnUsersRerository(EasyLearnContext context) : base(context) { }
 
         #region Public members
+        public bool IsAtLeastOneUserExist() => context.Users.Any();
         public bool IsUserCurrent(int userId) => context.Users.First(user => user.Id == userId).IsCurrent;
         public bool IsUserExist(int userId) => context.Users.Any(user => user.Id == userId);
         public bool IsUserExist(string userName) => context.Users.Any(user => user.Name == userName);
@@ -25,7 +26,11 @@ namespace EasyLearn.Data.Repositories.Implementations
         public EasyLearnUser? TryGetUser(int userId) => context.Users.AsNoTracking().FirstOrDefault(user => user.Id == userId);
         public EasyLearnUser? TryGetCurrentUser() => context.Users.AsNoTracking().FirstOrDefault(user => user.IsCurrent);
         public async Task<EasyLearnUser?> TryGetCurrentUserAsync() => await context.Users.AsNoTracking().FirstOrDefaultAsync(user => user.IsCurrent);
-        public IEnumerable<EasyLearnUser> GetAllUsers() => context.Users.AsNoTracking().AsEnumerable();
+        public IEnumerable<EasyLearnUser> GetAllUsers() => context.Users
+            .Include(user => user.CommonDictionaries).ThenInclude(commonDictionary => commonDictionary.Relations)
+            .Include(user => user.VerbPrepositionDictionaries).ThenInclude(verbPrepositionDictionary => verbPrepositionDictionary.VerbPrepositions)
+            .AsNoTracking()
+            .AsEnumerable();
         public async Task<EasyLearnUser> CreateUser(string userName)
         {
             ThrowIfUserNameIsInvalid(userName);

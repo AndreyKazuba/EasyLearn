@@ -33,6 +33,7 @@
                             Click="OnDrawerButtonClick"
                             Foreground="{DynamicResource MainColor}"
                             WindowChrome.IsHitTestVisibleInChrome="True"
+                            IsEnabled="{Binding OpenDictationPageButtonIsEnabled}"
                             HorizontalContentAlignment="Left">
 
                         <i:Interaction.Triggers>
@@ -52,6 +53,7 @@
                             Width="155"
                             Click="OnDrawerButtonClick"
                             Foreground="{DynamicResource MainColor}"
+                            IsEnabled="{Binding OpenDictionariesPageButtonIsEnabled}"
                             HorizontalContentAlignment="Left">
 
                         <i:Interaction.Triggers>
@@ -186,6 +188,7 @@
                                 WindowChrome.IsHitTestVisibleInChrome="True"
                                 Padding="0"
                                 Grid.Column="1"
+                                ToolTip="Назад"
                                 Click="OnGoBackButtonClick"
                                 Visibility="{Binding GoBackButtonIsVisible, Converter={converters:ReverseCollapseConverter}}">
 
@@ -218,6 +221,7 @@
                                 WindowChrome.IsHitTestVisibleInChrome="True"
                                 Padding="0"
                                 Grid.Column="2"
+                                ToolTip="Верхняя панель"
                                 Click="OnOpenMenuButtonClick"
                                 Visibility="{Binding GoBackButtonIsVisible, Converter={converters:ReverseCollapseConverter}}">
 

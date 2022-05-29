@@ -42,7 +42,7 @@ namespace EasyLearn.Data.Enums
         /// </summary>
         [RussianTranslation(UnitTypeRussianNames.Preposition)]
         [EnglishTranslation(UnitTypeEnglishNames.Preposition)]
-        [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
+        [UnitTypeColorCode(UnitTypeColorCodes.Preposition)]
         Preposition = 5,
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace EasyLearn.Data.Enums
         /// </summary>
         [RussianTranslation(UnitTypeRussianNames.Sentence)]
         [EnglishTranslation(UnitTypeEnglishNames.Sentence)]
-        [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
+        [UnitTypeColorCode(UnitTypeColorCodes.Sentence)]
         Sentence = 6,
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace EasyLearn.Data.Enums
         /// </summary>
         [RussianTranslation(UnitTypeRussianNames.Phrase)]
         [EnglishTranslation(UnitTypeEnglishNames.Phrase)]
-        [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
+        [UnitTypeColorCode(UnitTypeColorCodes.Phrase)]
         Phrase = 7,
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace EasyLearn.Data.Enums
         /// </summary>
         [RussianTranslation(UnitTypeRussianNames.CombinationOfWords)]
         [EnglishTranslation(UnitTypeEnglishNames.CombinationOfWords)]
-        [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
+        [UnitTypeColorCode(UnitTypeColorCodes.CombinationOfWords)]
         CombinationOfWords = 11,
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace EasyLearn.Data.Enums
         /// </summary>
         [RussianTranslation(UnitTypeRussianNames.Conjunction)]
         [EnglishTranslation(UnitTypeEnglishNames.Conjunction)]
-        [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
+        [UnitTypeColorCode(UnitTypeColorCodes.Conjunction)]
         Conjunction = 12,
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace EasyLearn.Data.Enums
         /// </summary>
         [RussianTranslation(UnitTypeRussianNames.Pronoun)]
         [EnglishTranslation(UnitTypeEnglishNames.Pronoun)]
-        [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
+        [UnitTypeColorCode(UnitTypeColorCodes.Pronoun)]
         Pronoun = 13,
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace EasyLearn.Data.Enums
         /// </summary>
         [RussianTranslation(UnitTypeRussianNames.Particle)]
         [EnglishTranslation(UnitTypeEnglishNames.Particle)]
-        [UnitTypeColorCode(UnitTypeColorCodes.SomeColor)]
+        [UnitTypeColorCode(UnitTypeColorCodes.Particle)]
         Particle = 15,
 
         /// <summary>

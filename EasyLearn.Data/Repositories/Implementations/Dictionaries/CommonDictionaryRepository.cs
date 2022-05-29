@@ -40,7 +40,10 @@ namespace EasyLearn.Data.Repositories.Implementations
                 .AsNoTracking()
                 .FirstAsync(dictionary => dictionary.Id == dictionaryId);
         }
-        public IEnumerable<CommonDictionary> GetUsersCommonDictionaries(int userId) => context.CommonDictionaries.Where(dictionary => dictionary.UserId == userId).AsNoTracking();
+        public IEnumerable<CommonDictionary> GetUsersCommonDictionaries(int userId) => context.CommonDictionaries
+            .Include(dictionary => dictionary.Relations)
+            .Where(dictionary => dictionary.UserId == userId)
+            .AsNoTracking();
         public async Task<CommonDictionary> CreateCommonDictionary(string name, int userId)
         {
             ThrowIfAddingAttemptIncorrect(name, userId);

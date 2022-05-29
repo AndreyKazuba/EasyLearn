@@ -90,6 +90,26 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="EasyFlipBackCardButton" TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border Background="Transparent" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" BorderThickness="0">
+                        <materialDesign:PackIcon Kind="ArrowLeft" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource EasyWhite}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource EasyBlack}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
 
     <Style x:Key="EasyTextBoxBase" TargetType="TextBox"  BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
         <Setter Property="BorderThickness" Value="0.6"/>

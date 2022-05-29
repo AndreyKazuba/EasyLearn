@@ -6,6 +6,7 @@ namespace EasyLearn.Data.Repositories.Interfaces
 {
     public interface IEasyLearnUserRepository
     {
+        bool IsAtLeastOneUserExist();
         bool IsUserCurrent(int userId);
         bool IsUserExist(int userId);
         bool IsUserExist(string userName);

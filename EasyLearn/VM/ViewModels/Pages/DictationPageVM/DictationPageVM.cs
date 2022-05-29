@@ -15,6 +15,8 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using EasyLearn.Infrastructure.Helpers;
 using EasyLearn.Infrastructure.UIConstants;
+using EasyLearn.VM.Windows;
+using EasyLearn.UI;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -89,7 +91,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.commonDictionaryRepository = commonDictionaryRepository;
             this.verbPrepositionDictionaryRepository = verbPrepositionDictionaryRepository;
             this.irregularVerbRepository = irregularVerbRepository;
-            UpdatePageForNewUser();
+            UpdatePage();
             SetDefaultPageState();
         }
 #pragma warning restore CS8618
@@ -106,7 +108,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             StartDictationCommand = new Command(StartDictation);
             TryGoNextCommand = new Command(TryGoNext);
             StopDictationCommand = new Command(StopDictation);
-            UpdatePageForNewUserCommand = new Command(UpdatePageForNewUser);
+            UpdatePageForNewUserCommand = new Command(UpdatePage);
         }
         private void UpdateDictationLengthSlider()
         {
@@ -124,9 +126,9 @@ namespace EasyLearn.VM.ViewModels.Pages
             commonDictationManager = null;
             vpDictationManager = null;
             ivDictationManager = null;
-            LoadSelectedDictionary();
+            UpdatePage();
         }
-        public void UpdatePageForNewUser()
+        public void UpdatePage()
         {
             SetCurrentUserId();
             UpdateDictionaryComboBoxItems();
@@ -145,6 +147,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             DictationPage.PromtMouseLeave += OnVpPromtMouseLeave;
             DictationPage.PromtMouseEnter += OnIvPromtMouseEnter;
             DictationPage.PromtMouseLeave += OnIvPromtMouseLeave;
+            //App.GetService<AppWindowVM>().CurrentPageChanged += OnCurrentPageChanged;
         }
         private void OnEnterClick()
         {
@@ -201,15 +204,20 @@ namespace EasyLearn.VM.ViewModels.Pages
                 () => IvSetMysteriousPromtValue(ivDictationManager.CurrentV2Value),
                 () => IvSetMysteriousPromtValue(ivDictationManager.CurrentV3Value));
         }
+        //private void OnCurrentPageChanged()
+        //{
+        //    if (App.GetService<AppWindowVM>().CurrentPage == Infrastructure.Enums.Page.Dictation)
+        //        UpdatePage();
+        //}
         #endregion
 
         #region Private page helpers
         private void LoadSelectedDictionary()
         {
-            int selectedDictionaryId = SelectedDictionaryComboBoxItem.DictionaryId;
+            int? selectedDictionaryId = SelectedDictionaryComboBoxItem?.DictionaryId;
             ExecuteForCurrentDictionaryType(
-                () => cdLoadedDictionary = commonDictionaryRepository.GetCommonDictionary(selectedDictionaryId),
-                () => vpLoadedDictionary = verbPrepositionDictionaryRepository.GetVerbPrepositionDictionary(selectedDictionaryId),
+                () => cdLoadedDictionary = commonDictionaryRepository.GetCommonDictionary(selectedDictionaryId ?? throw new NullReferenceException()),
+                () => vpLoadedDictionary = verbPrepositionDictionaryRepository.GetVerbPrepositionDictionary(selectedDictionaryId ?? throw new NullReferenceException()),
                 () => { });
         }
         private void SetCurrentUserId()

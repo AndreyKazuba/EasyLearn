@@ -22,6 +22,10 @@ namespace EasyLearn.VM.ViewModels.Pages
         private readonly IEasyLearnUserRepository userRerository;
         #endregion
 
+        #region Private fields
+        private int userIdForDelete;
+        #endregion
+
         #region Binding props
         public ObservableCollection<UserControl> UserViews { get; set; }
         public string AddingWindowUserNameValue { get; set; }
@@ -38,21 +42,23 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         #region Commands
         public Command CreateUserCommand { get; private set; }
-        public Command<int> DeleteUserCommand { get; private set; }
+        public Command DeleteUserCommand { get; private set; }
         public Command<int> SetUserAsCurrentCommand { get; private set; }
         public Command ClearAddingWindowCommand { get; private set; }
         public Command FlipBackAllCardsCommand { get; private set; }
         public Command UpdateConfirmUserAddingButtonAvailabilityCommand { get; private set; }
         public Command OpenAddingUserWindowCommand { get; private set; }
+        public Command<int> OpenDeleteUserWindowCommand { get; private set; }
         protected override void InitCommands()
         {
             CreateUserCommand = new Command(async () => await CreateUser());
-            DeleteUserCommand = new Command<int>(async userId => await DeleteUser(userId));
+            DeleteUserCommand = new Command(async () => await DeleteUser());
             SetUserAsCurrentCommand = new Command<int>(async userId => await SetUserAsCurrent(userId));
             ClearAddingWindowCommand = new Command(ClearAddingWindow);
             FlipBackAllCardsCommand = new Command(FlipBackAllCards);
             UpdateConfirmUserAddingButtonAvailabilityCommand = new Command(UpdateConfirmUserAddingButtonAvailability);
             OpenAddingUserWindowCommand = new Command(OpenAddingUserWindow);
+            OpenDeleteUserWindowCommand = new Command<int>(OpenDeleteUserWindow);
         }
         private async Task CreateUser()
         {
@@ -60,15 +66,17 @@ namespace EasyLearn.VM.ViewModels.Pages
             EasyLearnUser newUser = await userRerository.CreateUser(userName);
             AddUserToViewUI(newUser);
             await SetUserAsCurrent(newUser.Id);
+            CheckPageBarButtonsAvailability();
         }
-        private async Task DeleteUser(int userId)
+        private async Task DeleteUser()
         {
-            UserView userView = FindUserView(userId);
+            UserView userView = FindUserView(userIdForDelete);
             bool wasCurrent = userView.IsCurrent;
-            this.UserViews.Remove(userView);
-            if (wasCurrent && UserViews.Any())
-                await SetUserAsCurrent(((UserView)this.UserViews[0]).Id);
-            await userRerository.DeleteUser(userId);
+            UserViews.Remove(userView);
+            if (wasCurrent && UserViews.Any(userView => userView is UserView))
+                await SetUserAsCurrent(((UserView)UserViews[0]).Id);
+            await userRerository.DeleteUser(userIdForDelete);
+            CheckPageBarButtonsAvailability();
         }
         private async Task SetUserAsCurrent(int userId)
         {
@@ -95,6 +103,11 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void UpdateConfirmUserAddingButtonAvailability() => ConfirmUserAddingButtonIsEnabled = ValidationPool.IsValid(ValidationRulesGroup.AddNewUser);
         private void OpenAddingUserWindow() => OpenNewUserAddingWindowButtonSoftClick();
+        private void OpenDeleteUserWindow(int userId)
+        {
+            userIdForDelete = userId;
+            OpenDeleteUserWindowButtonSoftClick();
+        }
         #endregion
 
         #region Event handling
@@ -132,9 +145,10 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void UpdatePagesForNewUser()
         {
-            App.GetService<DictionariesPageVM>().UpdatePageForNewUserCommand.Execute();
+            App.GetService<DictionariesPageVM>().UpdatePageCommand.Execute();
             App.GetService<DictationPageVM>().UpdatePageForNewUserCommand.Execute();
         }
+        private void CheckPageBarButtonsAvailability() => App.GetService<AppWindowVM>().CheckPageBarButtonsAvailabilityCommand.Execute();
         #endregion
 
         #region Private UI methods
@@ -156,6 +170,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void ConfirmUserAddingButton() => App.GetService<UsersPage>().confirmUserAddingButton.SoftClick();
         private void OpenNewUserAddingWindowButtonSoftClick() => App.GetService<UsersPage>().openNewUserAddingWindowButton.SoftClick();
         private void ConfirmUserAddingButtonSoftClick() => App.GetService<UsersPage>().confirmUserAddingButton.SoftClick();
+        private void OpenDeleteUserWindowButtonSoftClick() => App.GetService<UsersPage>().openDeleteUserWindowButton.SoftClick();
         #endregion
     }
 }

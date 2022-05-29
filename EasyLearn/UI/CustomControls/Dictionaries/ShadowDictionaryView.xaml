@@ -12,7 +12,7 @@
             Padding="0"
             BorderThickness="1.4">
 
-        <Button Command="{Binding AddDictionaryCommand}">
+        <Button Command="{Binding AddDictionaryCommand}" ToolTip="Создать словарь">
             <Button.Style>
                 <Style TargetType="Button">
                     <Setter Property="Template">
@@ -35,6 +35,9 @@
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="False">
                             <Setter Property="Background" Value="{DynamicResource EasyGrayLight}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource MainColorLight}"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>

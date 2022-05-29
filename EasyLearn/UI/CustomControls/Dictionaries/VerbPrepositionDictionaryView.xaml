@@ -42,14 +42,13 @@
 
                     <!--Кнопка перехода на заднюю сторону карточки (настройки словаря)-->
                     <Button Style="{DynamicResource MaterialDesignFlatButton}"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top"
-                        Foreground="{DynamicResource EasyBlack}"
-                        Width="30"
-                        Height="30"
-                        Padding="0"
-                        Margin="0"
-                        ToolTip="Настройки словаря">
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Foreground="{DynamicResource EasyBlack}"
+                            Width="30"
+                            Height="30"
+                            Padding="0"
+                            Margin="0">
 
                         <materialDesign:PackIcon HorizontalAlignment="Center" 
                                                  VerticalAlignment="Center"
@@ -95,7 +94,9 @@
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="False">
                                         <Setter Property="Background" Value="{DynamicResource EasyGrayLight}"/>
-
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource MainColorLight}"/>
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
@@ -117,33 +118,33 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="0.8*" />
                         <RowDefinition Height="2*"/>
-                        <RowDefinition Height="Auto" MaxHeight="0.8"/>
+                        <RowDefinition Height="Auto" MaxHeight="3"/>
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <!--Шапка-->
-                    <materialDesign:ColorZone Background="{DynamicResource MainColorLight}" Padding="6">
+                    <materialDesign:ColorZone Background="{DynamicResource MainColorLight}">
 
                         <StackPanel Orientation="Horizontal">
 
                             <!--Кнопка возвращающая на лицевую сторону карточки-->
-                            <Button Style="{DynamicResource MaterialDesignToolForegroundButton}"
-                                HorizontalAlignment="Left"
-                                IsEnabled="{Binding BackButtonIsEnabled}">
-
-                                <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" />
-
+                            <Button Style="{DynamicResource EasyFlipBackCardButton}"
+                                    HorizontalAlignment="Left"
+                                    Height="42"
+                                    Width="30">
+                                
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:Flipper.FlipCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding EditVerbPrepositionDictionaryCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
 
-                            <TextBlock Margin="8 0 0 0" 
+                            <TextBlock Margin="0" 
                                        VerticalAlignment="Center"
                                        FontFamily="Arial"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource EasyBlack}"
                                        Text="Настройки словаря"/>
 
                         </StackPanel>
@@ -156,30 +157,111 @@
                              Background="{DynamicResource MainColorSuperLight}"
                              BorderBrush="{DynamicResource MainColor}"
                              HorizontalAlignment="Stretch"
+                             materialDesign:ValidationAssist.Suppress="True"
                              VerticalAlignment="Stretch"
-                             Style="{DynamicResource MaterialDesignFilledTextBox}"
-                             Text="{Binding EditNameFieldValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                             Style="{DynamicResource MaterialDesignFilledTextBox}">
+
+                        <TextBox.Text>
+                            <Binding Path="EditNameFieldValue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <valudationRules:InRange Max="{x:Static constants:ModelConstants.DictionaryNameMaxLength}"
+                                                             Min="{x:Static constants:ModelConstants.DictionaryNameMinLength}"
+                                                             ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
 
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="TextChanged">
-                                <i:InvokeCommandAction Command="{Binding UpdateGoBackButtonIsEnabledCommand}"/>
+                                <i:InvokeCommandAction Command="{Binding SaveLastValidDictionaryNameCommand}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="LostFocus">
+                                <i:InvokeCommandAction Command="{Binding EditVerbPrepositionDictionaryCommand}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </TextBox>
 
+                    <Grid Grid.Row="2" Margin="16 14 0 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
 
-                    <ProgressBar Grid.Row="2"
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Всего записей:"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+                        <TextBlock Text="Изучено:"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   Grid.Row="1"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+                        <TextBlock Text="Осталось:"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   Grid.Row="2"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+                        <TextBlock Text="{Binding TotalDictionaryVerbPrepositionsCount}"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   Grid.Column="1"
+                                   FontWeight="Bold"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+                        <TextBlock Text="{Binding DictionaryStudiedVerbPrepositionsCount}"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   Grid.Row="1"
+                                   FontWeight="Bold"
+                                   Grid.Column="1"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+                        <TextBlock Text="{Binding DictionaryLeftToLearnVerbPrepositionsCount}"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   Grid.Row="2"
+                                   FontWeight="Bold"
+                                   Grid.Column="1"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+
+                    </Grid>
+
+
+                    <ProgressBar Grid.Row="3"
                          Grid.ColumnSpan="3"
                          VerticalAlignment="Bottom" 
                          Height="3"
                          BorderThickness="0.3"
                          Background="{DynamicResource MainColorLight}"
                          Foreground="{DynamicResource MainColor}"
-                         Value="45"
+                         Value="{Binding TotalDictionaryProgress}"
                          BorderBrush="{DynamicResource MainColorLight}"
                          Maximum="100">
                     </ProgressBar>
-                    
+
                     <!--Кнопка удаления словаря-->
                     <Button Command="{Binding RemoveVerbPrepositionDictionaryCommand}"
                             Foreground="{DynamicResource EasyRed}"
@@ -194,11 +276,11 @@
                         </StackPanel>
                     </Button>
 
-                   
+
                 </Grid>
             </Border>
 
-            
+
         </materialDesign:Flipper.BackContent>
     </materialDesign:Flipper>
 </UserControl>

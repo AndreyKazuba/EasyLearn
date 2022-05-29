@@ -38,12 +38,10 @@
 
                     <!--Кнопка перехода на заднюю сторону карточки (настройки словаря)-->
                     <Button Style="{DynamicResource MaterialDesignFlatButton}"
-                        HorizontalAlignment="Right" VerticalAlignment="Top"
-                        Foreground="{DynamicResource EasyBlack}"
-                        Width="30" Height="30"
-                        Padding="0"
-                        Margin="0"
-                        ToolTip="Настройки словаря">
+                            HorizontalAlignment="Right" VerticalAlignment="Top"
+                            Foreground="{DynamicResource EasyBlack}"
+                            Width="30" Height="30"
+                            Panel.ZIndex="20">
 
                         <!--Изображение-->
                         <materialDesign:PackIcon HorizontalAlignment="Center" 
@@ -55,8 +53,8 @@
                         <!--Действия кнопки при нажатии-->
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
+                                <i:InvokeCommandAction Command="{Binding SetUpdateFieldsValueCommand}"/>
                                 <i:InvokeCommandAction Command="{Binding FlipBackAllAnotherCardsCommand}"/>
-                                <i:InvokeCommandAction Command="{Binding SetEditFieldsValueCommand}"/>
                                 <i:InvokeCommandAction Command="{x:Static materialDesign:Flipper.FlipCommand}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
@@ -90,7 +88,9 @@
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="False">
                                         <Setter Property="Background" Value="{DynamicResource EasyGrayLight}"/>
-
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource MainColorLight}"/>
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
@@ -118,31 +118,30 @@
                     </Grid.RowDefinitions>
 
                     <!--Шапка задней части карточки-->
-                    <materialDesign:ColorZone Background="{DynamicResource MainColorLight}" Padding="6">
+                    <materialDesign:ColorZone Background="{DynamicResource MainColorLight}">
                         <StackPanel Orientation="Horizontal">
 
                             <!--Кнопка возвращающая на лицевую сторону карточки-->
-                            <Button Style="{DynamicResource MaterialDesignToolForegroundButton}"
-                                HorizontalAlignment="Left"
-                                IsEnabled="{Binding BackButtonIsEnabled}"
-                                ToolTip="Подтвердить изменения и вернуться">
+                            <Button Style="{DynamicResource EasyFlipBackCardButton}"
+                                    HorizontalAlignment="Left"
+                                    Height="42"
+                                    Width="30">
 
-                                <!--Изображение кнопки-->
-                                <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" Foreground="{DynamicResource EasyBlack}"/>
 
                                 <!--Действия кнопки при её нажатии-->
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:Flipper.FlipCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding EditCommonDictionaryCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
 
                             <!--Надпись в шапке "настройки словаря"-->
-                            <TextBlock Margin="8 0 0 0" 
+                            <TextBlock Margin="0" 
                                        VerticalAlignment="Center"
                                        FontFamily="Arial"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource EasyBlack}"
                                        Text="Настройки словаря"/>
 
                         </StackPanel>
@@ -154,15 +153,28 @@
                              Grid.Row="1"         
                              Background="{DynamicResource MainColorSuperLight}"
                              BorderBrush="{DynamicResource MainColor}"
-                             
-                         HorizontalAlignment="Stretch"
-                         VerticalAlignment="Stretch"
-                         Style="{DynamicResource MaterialDesignFilledTextBox}"
-                         Text="{Binding EditNameFieldValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                             HorizontalAlignment="Stretch"
+                             materialDesign:ValidationAssist.Suppress="True"
+                             VerticalAlignment="Stretch"
+                             Style="{DynamicResource MaterialDesignFilledTextBox}">
+
+
+                        <TextBox.Text>
+                            <Binding Path="EditNameFieldValue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <valudationRules:InRange Max="{x:Static constants:ModelConstants.DictionaryNameMaxLength}"
+                                                             Min="{x:Static constants:ModelConstants.DictionaryNameMinLength}"
+                                                             ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
 
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="TextChanged">
-                                <i:InvokeCommandAction Command="{Binding UpdateGoBackButtonIsEnabledCommand}"/>
+                                <i:InvokeCommandAction Command="{Binding SaveLastValidDictionaryNameCommand}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="LostFocus">
+                                <i:InvokeCommandAction Command="{Binding UpdateCommonDictionaryCommand}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </TextBox>
@@ -204,7 +216,7 @@
 
                         </TextBlock>
 
-                        <TextBlock Text="64"
+                        <TextBlock Text="{Binding TotalDictionaryRelationsCount}"
                                    Foreground="{DynamicResource EasyBlack}"
                                    FontSize="13"
                                    Grid.Column="1"
@@ -213,7 +225,7 @@
 
                         </TextBlock>
 
-                        <TextBlock Text="21"
+                        <TextBlock Text="{Binding DictionaryStudiedRelationsCount}"
                                    Foreground="{DynamicResource EasyBlack}"
                                    FontSize="13"
                                    Grid.Row="1"
@@ -223,7 +235,7 @@
 
                         </TextBlock>
 
-                        <TextBlock Text="43"
+                        <TextBlock Text="{Binding DictionaryLeftToLearnRelationsCount}"
                                    Foreground="{DynamicResource EasyBlack}"
                                    FontSize="13"
                                    Grid.Row="2"
@@ -243,7 +255,7 @@
                          BorderThickness="0.3"
                          Background="{DynamicResource MainColorLight}"
                          Foreground="{DynamicResource MainColor}"
-                         Value="45"
+                         Value="{Binding TotalDictionaryProgress}"
                          BorderBrush="{DynamicResource MainColorLight}"
                          Maximum="100">
                     </ProgressBar>

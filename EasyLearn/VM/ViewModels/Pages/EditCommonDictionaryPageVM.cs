@@ -556,13 +556,16 @@ namespace EasyLearn.VM.ViewModels.Pages
                     new UnitTypeComboBoxItem(UnitTypeRussianNames.Noun, UnitType.Noun),
                     new UnitTypeComboBoxItem(UnitTypeRussianNames.Verb, UnitType.Verb),
                     new UnitTypeComboBoxItem(UnitTypeRussianNames.Adjective, UnitType.Adjective),
-                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Preposition, UnitType.Preposition),
-                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Sentence, UnitType.Sentence),
-                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Phrase, UnitType.Phrase),
-                    new UnitTypeComboBoxItem(UnitTypeRussianNames.CombinationOfWords, UnitType.CombinationOfWords),
-                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Pronoun, UnitType.Pronoun),
-                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Numeral, UnitType.Numeral),
                     new UnitTypeComboBoxItem(UnitTypeRussianNames.Adverb, UnitType.Adverb),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Preposition, UnitType.Preposition),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.CombinationOfWords, UnitType.CombinationOfWords),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Phrase, UnitType.Phrase),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Sentence, UnitType.Sentence),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Numeral, UnitType.Numeral),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Pronoun, UnitType.Pronoun),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Conjunction, UnitType.Conjunction),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Particle, UnitType.Particle),
+
                 });
             UnitTypeComboBoxItem selectedRussianUnitType = russianUnitTypes[0];
             AwRussianUnitTypes = russianUnitTypes;
@@ -573,17 +576,19 @@ namespace EasyLearn.VM.ViewModels.Pages
             ObservableCollection<UnitTypeComboBoxItem> englishUnitTypes = new ObservableCollection<UnitTypeComboBoxItem>(
                 new[]
                 {
-                    new UnitTypeComboBoxItem(UnitTypeEnglishNames.Noun, UnitType.Noun),
-                    new UnitTypeComboBoxItem(UnitTypeEnglishNames.Verb, UnitType.Verb),
-                    new UnitTypeComboBoxItem(UnitTypeEnglishNames.Adjective, UnitType.Adjective),
-                    new UnitTypeComboBoxItem(UnitTypeEnglishNames.ModalVerb, UnitType.ModalVerb),
-                    new UnitTypeComboBoxItem(UnitTypeEnglishNames.Preposition, UnitType.Preposition),
-                    new UnitTypeComboBoxItem(UnitTypeEnglishNames.Sentence, UnitType.Sentence),
-                    new UnitTypeComboBoxItem(UnitTypeEnglishNames.Phrase, UnitType.Phrase),
-                    new UnitTypeComboBoxItem(UnitTypeEnglishNames.CombinationOfWords, UnitType.CombinationOfWords),
-                    new UnitTypeComboBoxItem(UnitTypeEnglishNames.Pronoun, UnitType.Pronoun),
-                    new UnitTypeComboBoxItem(UnitTypeEnglishNames.Numeral, UnitType.Numeral),
-                    new UnitTypeComboBoxItem(UnitTypeEnglishNames.Adverb, UnitType.Adverb),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Noun, UnitType.Noun),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Verb, UnitType.Verb),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Adjective, UnitType.Adjective),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Adverb, UnitType.Adverb),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Preposition, UnitType.Preposition),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.CombinationOfWords, UnitType.CombinationOfWords),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Phrase, UnitType.Phrase),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Sentence, UnitType.Sentence),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Pronoun, UnitType.Pronoun),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Numeral, UnitType.Numeral),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Conjunction, UnitType.Conjunction),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.Particle, UnitType.Particle),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.ModalVerb, UnitType.ModalVerb),
                 });
             UnitTypeComboBoxItem selectedEnglishUnitType = englishUnitTypes[0];
             AwEnglishUnitTypes = englishUnitTypes;

@@ -17,6 +17,7 @@ using EasyLearn.Infrastructure.Validation;
 using EasyLearn.Infrastructure.Exceptions;
 using EasyLearn.UI.Pages;
 using EasyLearn.Infrastructure.Helpers;
+using EasyLearn.UI;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -30,6 +31,7 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         #region Private fields
         private int currentUserId;
+        private int dictionaryIdForDelete;
         #endregion
 
         #region Binding props
@@ -50,7 +52,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             this.userRepository = userRepository;
             this.commonDictionaryRepository = commonDictionaryRepository;
             this.verbPrepositionDictionaryRepository = verbPrepositionDictionaryRepository;
-            UpdatePageForNewUser();
+            UpdatePage();
             SetAddingWindowDictionaryTypes();
             ClearAddingWindow();
         }
@@ -59,22 +61,26 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Commands
         public Command ClearAddingWindowCommand { get; private set; }
         public Command CreateDictionaryCommand { get; private set; }
-        public Command<int> DeleteCommonDictionaryCommand { get; private set; }
-        public Command<int> DeleteVerbPrepositionDictionaryCommand { get; private set; }
+        public Command DeleteCommonDictionaryCommand { get; private set; }
+        public Command DeleteVerbPrepositionDictionaryCommand { get; private set; }
         public Command FlipBackAllCardsCommand { get; private set; }
-        public Command UpdatePageForNewUserCommand { get; private set; }
+        public Command UpdatePageCommand { get; private set; }
         public Command UpdateConfirmDictionaryAddingButtonAvailabilityCommand { get; private set; }
         public Command OpenAddingDictionaryWindowCommand { get; private set; }
+        public Command<int> OpenDeleteCommonDictionaryWindowCommand { get; private set; }
+        public Command<int> OpenDeleteVerbPrepositionDictionaryWindowCommand { get; private set; }
         protected override void InitCommands()
         {
             ClearAddingWindowCommand = new Command(ClearAddingWindow);
             CreateDictionaryCommand = new Command(async () => await CreateDictionary());
-            DeleteCommonDictionaryCommand = new Command<int>(async dictionaryId => await DeleteCommonDictionary(dictionaryId));
-            DeleteVerbPrepositionDictionaryCommand = new Command<int>(async dictionaryId => await DeleteVerbPrepositionDictionary(dictionaryId));
+            DeleteCommonDictionaryCommand = new Command(async () => await DeleteCommonDictionary());
+            DeleteVerbPrepositionDictionaryCommand = new Command(async () => await DeleteVerbPrepositionDictionary());
             FlipBackAllCardsCommand = new Command(FlipBackAllCards);
-            UpdatePageForNewUserCommand = new Command(UpdatePageForNewUser);
+            UpdatePageCommand = new Command(UpdatePage);
             UpdateConfirmDictionaryAddingButtonAvailabilityCommand = new Command(UpdateConfirmDictionaryAddingButtonAvailability);
             OpenAddingDictionaryWindowCommand = new Command(OpenAddingDictionaryWindow);
+            OpenDeleteCommonDictionaryWindowCommand = new Command<int>(OpenDeleteCommonDictionaryWindow);
+            OpenDeleteVerbPrepositionDictionaryWindowCommand = new Command<int>(OpenDeleteVerbPrepositionDictionaryWindow);
         }
         private void ClearAddingWindow()
         {
@@ -95,21 +101,21 @@ namespace EasyLearn.VM.ViewModels.Pages
                     break;
             }
         }
-        private async Task DeleteCommonDictionary(int commonDictionaryId)
+        private async Task DeleteCommonDictionary()
         {
-            CommonDictionaryView commonDictionaryView = FindCommonDictionaryView(commonDictionaryId);
+            CommonDictionaryView commonDictionaryView = FindCommonDictionaryView(dictionaryIdForDelete);
             DictionaryViews.Remove(commonDictionaryView);
-            await commonDictionaryRepository.DeleteCommonDictionary(commonDictionaryView.Id);
+            await commonDictionaryRepository.DeleteCommonDictionary(dictionaryIdForDelete);
         }
-        private async Task DeleteVerbPrepositionDictionary(int verbPrepositionDictionaryId)
+        private async Task DeleteVerbPrepositionDictionary()
         {
-            VerbPrepositionDictionaryView verbPrepositionDictionaryView = FindVerbPrepositionDictionaryView(verbPrepositionDictionaryId);
+            VerbPrepositionDictionaryView verbPrepositionDictionaryView = FindVerbPrepositionDictionaryView(dictionaryIdForDelete);
             DictionaryViews.Remove(verbPrepositionDictionaryView);
-            await verbPrepositionDictionaryRepository.DeleteVerbPrepositionDictionary(verbPrepositionDictionaryView.Id);
+            await verbPrepositionDictionaryRepository.DeleteVerbPrepositionDictionary(dictionaryIdForDelete);
         }
         private void FlipBackAllCards()
         {
-            foreach (UserControl dictionaryView in this.DictionaryViews)
+            foreach (UserControl dictionaryView in DictionaryViews)
             {
                 if (dictionaryView is VerbPrepositionDictionaryView)
                     ((VerbPrepositionDictionaryView)dictionaryView).IsCardFlipped = false;
@@ -117,19 +123,39 @@ namespace EasyLearn.VM.ViewModels.Pages
                     ((CommonDictionaryView)dictionaryView).IsCardFlipped = false;
             }
         }
-        private void UpdatePageForNewUser()
+        private void UpdatePage()
         {
             SetCurrentUserId();
             LoadDictionaries();
         }
-        private void UpdateConfirmDictionaryAddingButtonAvailability() => this.IsConfirmDictionaryAddingButtonEnabled = ValidationPool.IsValid(ValidationRulesGroup.AddNewDictionary);
+        private void UpdateConfirmDictionaryAddingButtonAvailability() => IsConfirmDictionaryAddingButtonEnabled = ValidationPool.IsValid(ValidationRulesGroup.AddNewDictionary);
         private void OpenAddingDictionaryWindow() => AddNewDictionaryButtonSoftClick();
+        private void OpenDeleteCommonDictionaryWindow(int commonDictionaryId)
+        {
+            dictionaryIdForDelete = commonDictionaryId;
+            OpenDeleteCommonDictionaryWindowButtonSoftClick();
+        }
+        private void OpenDeleteVerbPrepositionDictionaryWindow(int verbPrepositionDictionaryId)
+        {
+            dictionaryIdForDelete = verbPrepositionDictionaryId;
+            OpenDeleteVerbPrepositionDictionaryWindowButtonSoftClick();
+        }
         #endregion
 
         #region Event handling
         protected override void InitEvents()
         {
-            App.GetService<AppWindowVM>().CurrentPageChanged += FlipBackAllCards;
+            App.GetService<AppWindowVM>().CurrentPageChanged += OnCurrentPageChanged;
+            AppWindow.GoBackButtonClick += OnGoBackButtonClick;
+        }
+        private void OnCurrentPageChanged()
+        {
+            FlipBackAllCards();
+            UpdatePage();
+        }
+        private void OnGoBackButtonClick()
+        {
+            UpdatePage();
         }
         #endregion
 
@@ -168,14 +194,14 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             UserControl irregularVerbDictionaryView = IrregularVerbDictionaryView.Create();
             IEnumerable<UserControl> commonDictionaryViews = commonDictionaryRepository
-                .GetUsersCommonDictionaries(this.currentUserId)
+                .GetUsersCommonDictionaries(currentUserId)
                 .Select(commonDictionary => CommonDictionaryView.Create(commonDictionary));
             IEnumerable<UserControl> verbPrepositionDictionaryViews = verbPrepositionDictionaryRepository
-                .GetUsersVerbPreposotionDictionaries(this.currentUserId)
+                .GetUsersVerbPreposotionDictionaries(currentUserId)
                 .Select(verbPrepositionDictionary => VerbPrepositionDictionaryView.Create(verbPrepositionDictionary));
             List<UserControl> allCurrentUserDictionariesViews = commonDictionaryViews.Union(verbPrepositionDictionaryViews).ToList();
             allCurrentUserDictionariesViews.Add(irregularVerbDictionaryView);
-            this.DictionaryViews = new ObservableCollection<UserControl>(allCurrentUserDictionariesViews);
+            DictionaryViews = new ObservableCollection<UserControl>(allCurrentUserDictionariesViews);
             AddShadowDictionaryViewToUI();
         }
         #endregion
@@ -187,7 +213,12 @@ namespace EasyLearn.VM.ViewModels.Pages
             DictionaryViews.Add(CommonDictionaryView.Create(dictionary));
             AddShadowDictionaryViewToUI();
         }
-        private void AddVerbPrepositionDictionaryViewToUI(VerbPrepositionDictionnary dictionnary) => DictionaryViews.Add(VerbPrepositionDictionaryView.Create(dictionnary));
+        private void AddVerbPrepositionDictionaryViewToUI(VerbPrepositionDictionnary dictionnary)
+        {
+            RemoveShadowDictionaryViewFromUI();
+            DictionaryViews.Add(VerbPrepositionDictionaryView.Create(dictionnary));
+            AddShadowDictionaryViewToUI();
+        }
         private CommonDictionaryView FindCommonDictionaryView(int commonDictionaryId)
         {
             foreach (UserControl dictionary in DictionaryViews)
@@ -213,6 +244,8 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void AddShadowDictionaryViewToUI() => DictionaryViews.Add(ShadowDictionaryView.Create());
         private void RemoveShadowDictionaryViewFromUI() => DictionaryViews.RemoveAt(DictionaryViews.Count - 1);
         private void AddNewDictionaryButtonSoftClick() => App.GetService<DictionariesPage>().addNewDictionaryButton.SoftClick();
+        private void OpenDeleteVerbPrepositionDictionaryWindowButtonSoftClick() => App.GetService<DictionariesPage>().openDeleteVerbPrepositionDictionaryWindowButton.SoftClick();
+        private void OpenDeleteCommonDictionaryWindowButtonSoftClick() => App.GetService<DictionariesPage>().openDeleteCommonDictionaryWindowButton.SoftClick();
         #endregion
     }
 }

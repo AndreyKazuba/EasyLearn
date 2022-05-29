@@ -6,6 +6,8 @@
              xmlns:local="clr-namespace:EasyLearn.UI.CustomControls"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:valudationRules="clr-namespace:EasyLearn.Infrastructure.Validation"
+             xmlns:constants="clr-namespace:EasyLearn.Data.Constants;assembly=EasyLearn.Data"
              xmlns:converters="clr-namespace:EasyLearn.Infrastructure.ValueConverters"
              mc:Ignorable="d">
 
@@ -20,7 +22,7 @@
             <Border BorderThickness="0.6" 
                     BorderBrush="{DynamicResource MainColorLight}" 
                     Background="{DynamicResource EasyGrayLight}">
-                
+
                 <Grid Height="256" Width="200">
 
                     <Grid.RowDefinitions>
@@ -29,7 +31,9 @@
                     </Grid.RowDefinitions>
 
                     <!--Пространство с картинкой и закрашенным фоном-->
-                    <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Stretch" Background="{Binding IsCurrent, Converter={converters:UserViewColorConverter}}">
+                    <materialDesign:ColorZone Mode="PrimaryLight" 
+                                              VerticalAlignment="Stretch" 
+                                              Background="{Binding IsCurrent, Converter={converters:UserViewColorConverter}}">
 
                         <materialDesign:PackIcon Kind="AccountCircle" 
                                              Height="128" 
@@ -39,24 +43,21 @@
 
                     </materialDesign:ColorZone>
 
-                    
-
                     <!--Кнопка перехода на заднюю сторону карточки (настройки аккаунта)-->
                     <Button Style="{DynamicResource MaterialDesignFlatButton}"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top"
-                        Foreground="Black"
-                        Width="30"
-                        Height="30"
-                        Padding="1"
-                        Margin="0 6 6 0"
-                        ToolTip="Настройки аккаунта">
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Foreground="{DynamicResource EasyBlack}"
+                            Width="30"
+                            Height="30"
+                            Padding="0"
+                            Margin="0">
 
                         <materialDesign:PackIcon Kind="AccountDetails" 
-                                             Width="22" 
-                                             Height="22"
-                                             HorizontalAlignment="Center"
-                                             VerticalAlignment="Center"/>
+                                                 Width="22" 
+                                                 Height="22"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center"/>
 
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
@@ -75,7 +76,7 @@
                             Grid.Row="1"
                             Command="{Binding SetUserAsCurrentCommand}"
                             IsEnabled="{Binding IsCurrent, Converter={converters:ReverseConverter}}">
-                        
+
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Template">
@@ -98,90 +99,196 @@
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="False">
                                         <Setter Property="Background" Value="{DynamicResource EasyGrayLight}"/>
-
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource MainColorLight}"/>
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
                     </Button>
-
-
                 </Grid>
             </Border>
-            
+
         </materialDesign:Flipper.FrontContent>
 
         <!--Задняя сторона карточки-->
         <materialDesign:Flipper.BackContent>
             <Border BorderThickness="0.6" BorderBrush="{DynamicResource MainColorLight}" Background="{DynamicResource EasyGrayLight}">
-                <Grid Height="256" Width="200">
+                <Grid Height="256" Width="200" Background="Transparent">
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="0.8*" />
                         <RowDefinition Height="2*"/>
-                        <RowDefinition Height="Auto" MaxHeight="0.8"/>
+                        <RowDefinition Height="Auto" MaxHeight="3"/>
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <!--Шапка-->
-                    <materialDesign:ColorZone Background="{DynamicResource MainColorLight}" Padding="6">
+                    <materialDesign:ColorZone Background="{DynamicResource MainColorLight}">
 
                         <StackPanel Orientation="Horizontal">
 
                             <!--Кнопка возвращающая на лицевую сторону карточки-->
-                            <Button Style="{DynamicResource MaterialDesignToolForegroundButton}"
-                                HorizontalAlignment="Left"
-                                IsEnabled="{Binding BackButtonIsEnabled}">
+                            <Button Style="{DynamicResource EasyFlipBackCardButton}"
+                                    HorizontalAlignment="Left"
+                                    Height="42"
+                                    Width="30">
 
-                                <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" />
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:Flipper.FlipCommand}"/>
-                                        <i:InvokeCommandAction Command="{Binding EditUserCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
                             </Button>
 
-                            <TextBlock Margin="8 0 0 0" 
-                                   VerticalAlignment="Center"
+                            <TextBlock Margin="0" 
+                                       VerticalAlignment="Center"
                                        FontFamily="Arial"
-                                       
-                                   Text="Настройки аккаунта"/>
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource EasyBlack}"
+                                       Text="Настройки пользователя"/>
 
                         </StackPanel>
                     </materialDesign:ColorZone>
 
                     <!--Редактировать имя пользвателя-->
                     <TextBox materialDesign:HintAssist.Hint="Имя" 
-                         materialDesign:HintAssist.IsFloating="True"
-                         Grid.Row="1"         
-                         Background="{DynamicResource MainColorSuperLight}"
+                             materialDesign:HintAssist.IsFloating="True"
+                             Grid.Row="1"         
+                             Background="{DynamicResource MainColorSuperLight}"
                              BorderBrush="{DynamicResource MainColor}"
-                             
-                         HorizontalAlignment="Stretch"
-                         VerticalAlignment="Stretch"
-                         Style="{DynamicResource MaterialDesignFilledTextBox}"
-                         Text="{Binding EditNameFieldValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"
+                             materialDesign:ValidationAssist.Suppress="True"
+                             Style="{DynamicResource MaterialDesignFilledTextBox}">
+
+                        <TextBox.Text>
+                            <Binding Path="EditNameFieldValue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <valudationRules:InRange Max="{x:Static constants:ModelConstants.UserNameMaxLength}"
+                                                             Min="{x:Static constants:ModelConstants.UserNameMinLength}"
+                                                             ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
 
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="TextChanged">
-                                <i:InvokeCommandAction Command="{Binding UpdateGoBackButtonIsEnabledCommand}"/>
+                                <i:InvokeCommandAction Command="{Binding SaveLastValidDictionaryNameCommand}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="LostFocus">
+                                <i:InvokeCommandAction Command="{Binding UpdateUserCommand}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </TextBox>
 
-                    <Border BorderBrush="{DynamicResource MainColorLight}" 
-                            BorderThickness="0.55"
-                            Margin="{Binding AddingWidnowTopVerticalExpanderMargin}"
-                            Grid.Row="3"/>
+                    <Grid Grid.Row="2" Margin="16 14 0 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="130"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Словарей:"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+                        <TextBlock Text="Всего записей:"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   Grid.Row="1"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+                        <TextBlock Text="Изучено записей:"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   Grid.Row="2"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+                        <TextBlock Text="Осталось записей:"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   Grid.Row="3"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+                        <TextBlock Text="{Binding TotalDictionariesCount}"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   Grid.Column="1"
+                                   FontWeight="Bold"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+                        <TextBlock Text="{Binding TotalRelationsCount}"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   Grid.Row="1"
+                                   FontWeight="Bold"
+                                   Grid.Column="1"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+                        <TextBlock Text="{Binding TotalStudiedRelationsCount}"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   Grid.Row="2"
+                                   FontWeight="Bold"
+                                   Grid.Column="1"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+                        <TextBlock Text="{Binding TotalLeftToLearnRelationsCount}"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   Grid.Row="3"
+                                   FontWeight="Bold"
+                                   Grid.Column="1"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+
+                    </Grid>
+
+                    <ProgressBar Grid.Row="3"
+                         Grid.ColumnSpan="3"
+                         VerticalAlignment="Bottom" 
+                         Height="3"
+                         BorderThickness="0.3"
+                         Background="{DynamicResource MainColorLight}"
+                         Foreground="{DynamicResource MainColor}"
+                         Value="{Binding TotalUserProgress}"
+                         BorderBrush="{DynamicResource MainColorLight}"
+                         Maximum="100">
+                    </ProgressBar>
 
                     <!--Кнопка удаления словаря-->
                     <Button Command="{Binding RemoveUserCommand}"
                             Foreground="{DynamicResource EasyRed}"
-                                Grid.Row="4"
+                            Grid.Row="4"
                             Height="40"
                             Style="{DynamicResource MaterialDesignFlatButton}"
                             HorizontalAlignment="Stretch"
@@ -193,7 +300,7 @@
                     </Button>
                 </Grid>
             </Border>
-            
+
         </materialDesign:Flipper.BackContent>
     </materialDesign:Flipper>
 </UserControl>

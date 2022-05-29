@@ -19,7 +19,7 @@ namespace EasyLearn.UI
         public AppWindow(AppWindowVM viewModel)
         {
             InitializeComponent();
-            this.DataContext = viewModel;
+            DataContext = viewModel;
             new WindowResizer(this);
         }
 

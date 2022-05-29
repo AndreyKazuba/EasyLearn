@@ -2,6 +2,7 @@
 {
     public enum ValidationRulesGroup
     {
+        Dummy = 0,
         AddCommonRelation = 1,
         AddVerbPreposition = 2,
         AddNewUser = 3,

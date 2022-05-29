@@ -114,7 +114,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 IvShowFirstFormCorrectIcon();
                 IncreaseDictationProgressBarValue();
                 IvHidePromt();
-                IvFirstFormFixedAnswerValue = StringHelper.NormalizeRegister(AnswerValue);
+                IvFirstFormFixedAnswerValue = AnswerValue.Prepare().NormalizeRegister();
                 currentIrregularVerbForm = IrregularVerbForm.SecondForm;
                 SetDefaultAnswerValue();
                 wrongAnswers = 0;
@@ -136,7 +136,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 IvShowSecondFormCorrectIcon();
                 IncreaseDictationProgressBarValue();
                 IvHidePromt();
-                IvSecondFormFixedAnswerValue = StringHelper.NormalizeRegister(AnswerValue);
+                IvSecondFormFixedAnswerValue = AnswerValue.Prepare().NormalizeRegister();
                 currentIrregularVerbForm = IrregularVerbForm.ThirdForm;
                 SetDefaultAnswerValue();
                 wrongAnswers = 0;
@@ -159,7 +159,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 IncreaseDictationProgressBarValue();
                 currentAnswerIsCorrect = true;
                 IvHidePromt();
-                IvThirdFormFixedAnswerValue = StringHelper.NormalizeRegister(AnswerValue);
+                IvThirdFormFixedAnswerValue = AnswerValue.Prepare().NormalizeRegister();
                 SetDefaultAnswerValue();
                 currentIrregularVerbForm = IrregularVerbForm.FirstForm;
                 wrongAnswers = 0;

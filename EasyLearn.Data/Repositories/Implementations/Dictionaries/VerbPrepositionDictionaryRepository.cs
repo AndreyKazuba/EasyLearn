@@ -40,7 +40,10 @@ namespace EasyLearn.Data.Repositories.Implementations
                 .AsNoTracking()
                 .FirstAsync(dictionary => dictionary.Id == dictionaryId);
         }
-        public IEnumerable<VerbPrepositionDictionnary> GetUsersVerbPreposotionDictionaries(int dictionaryId) => context.VerbPrepositionDictionaries.Where(dictionary => dictionary.UserId == dictionaryId).AsNoTracking();
+        public IEnumerable<VerbPrepositionDictionnary> GetUsersVerbPreposotionDictionaries(int dictionaryId) => context.VerbPrepositionDictionaries
+            .Include(verbPreposition => verbPreposition.VerbPrepositions)
+            .Where(dictionary => dictionary.UserId == dictionaryId)
+            .AsNoTracking();
         public async Task<VerbPrepositionDictionnary> CreateVerbPrepositionDictionary(string name, int userId)
         {
             ThrowIfAddingAttemptIncorrect(name, userId);

@@ -314,13 +314,14 @@
                             </TextBox>
 
                             <Button Style="{DynamicResource EasyConfirmButton}"
-                                        Height="39"
-                                        Width="39"
-                                        Margin="14 0 0 0"
-                                        IsEnabled="{Binding UwAddExampleButtonIsEnabled}"
-                                        Name="uwAddExampleButton"
-                                        HorizontalAlignment="Center" VerticalAlignment="Top"
-                                        Grid.Column="2">
+                                    Height="39"
+                                    Width="39"
+                                    Margin="14 0 0 0"
+                                    IsEnabled="{Binding UwAddExampleButtonIsEnabled}"
+                                    Name="uwAddExampleButton"
+                                    ToolTip="Добавить пример"
+                                    HorizontalAlignment="Center" VerticalAlignment="Top"
+                                    Grid.Column="2">
 
                                 <materialDesign:PackIcon Kind="PlusThick" Height="20" Width="20" Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
 
@@ -620,13 +621,14 @@
                             </TextBox>
 
                             <Button Style="{DynamicResource EasyConfirmButton}"
-                                        Height="39"
-                                        Width="39"
-                                        Margin="14 0 0 0"
-                                        IsEnabled="{Binding AwAddExampleButtonIsEnabled}"
-                                        Name="awAddExampleButton"
-                                        HorizontalAlignment="Center" VerticalAlignment="Top"
-                                        Grid.Column="2">
+                                    Height="39"
+                                    Width="39"
+                                    Margin="14 0 0 0"
+                                    IsEnabled="{Binding AwAddExampleButtonIsEnabled}"
+                                    Name="awAddExampleButton"
+                                    HorizontalAlignment="Center" VerticalAlignment="Top"
+                                    Grid.Column="2"
+                                    ToolTip="Добавить пример">
                                 <materialDesign:PackIcon Kind="PlusThick" Height="20" Width="20" Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
 
                                 <i:Interaction.Triggers>

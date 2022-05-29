@@ -7,8 +7,11 @@ namespace EasyLearn.Infrastructure.Validation
 {
     class NotEmpty : ValidationRule
     {
+        #region Private fields
         private Guid currentRuleId;
         private ValidationRulesGroup group;
+        #endregion
+
         public ValidationRulesGroup Group
         {
             set

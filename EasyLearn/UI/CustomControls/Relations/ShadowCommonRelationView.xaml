@@ -13,7 +13,7 @@
             Padding="0"
             BorderThickness="1.4">
 
-        <Button Command="{Binding AddRelationCommand}">
+        <Button Command="{Binding AddRelationCommand}" ToolTip="Создать запись">
             <Button.Style>
                 <Style TargetType="Button">
                     <Setter Property="Template">

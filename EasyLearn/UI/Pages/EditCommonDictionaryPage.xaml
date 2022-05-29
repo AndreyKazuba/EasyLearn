@@ -692,8 +692,10 @@
                                     IsEnabled="{Binding AwAddExampleButtonIsEnabled}"
                                     Name="awAddExampleButton"
                                     HorizontalAlignment="Right" VerticalAlignment="Top"
-                                    Grid.Column="2">
-                                <materialDesign:PackIcon Kind="PlusThick" Height="20" Width="20" Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
+                                    Grid.Column="2"
+                                    ToolTip="Добавить пример">
+                                <materialDesign:PackIcon Kind="PlusThick" Height="20" Width="20" 
+                                                         Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
