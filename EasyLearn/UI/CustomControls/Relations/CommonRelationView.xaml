@@ -17,7 +17,7 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MinWidth="100" Width="Auto"/>
-                <ColumnDefinition Width="1" MaxWidth="1"/>
+                <ColumnDefinition Width="0.8" MaxWidth="0.8"/>
                 <ColumnDefinition MinWidth="100" Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -51,10 +51,9 @@
                        d:Text="Check"/>
 
             <!--Вертикальный разделитель-->
-            <Border BorderBrush="{DynamicResource EasyGray}" 
-                    BorderThickness="0.5" 
+            <Border BorderBrush="{DynamicResource MainColorLight}" 
+                    BorderThickness="0.4" 
                     Grid.RowSpan="2"
-                    Margin="{Binding VerticalExpanderMargin}"
                     Grid.Column="1"/>
 
             <!--Лейба с типом русского юнита-->
@@ -92,26 +91,18 @@
                          Grid.ColumnSpan="3"
                          VerticalAlignment="Bottom" 
                          Height="3"
-                         Background="{DynamicResource EastGrayLight}"
+                         BorderThickness="0.3"
+                         Background="{Binding RatingProgressBarBackgroundColor}"
                          Foreground="{Binding RatingProgressBarColor}"
                          Value="{Binding RatingValue}"
-                         BorderBrush="{DynamicResource EasyGrayLight}"
+                         BorderBrush="{Binding RatingProgressBarBackgroundColor}"
                          Maximum="100"/>
-
-            <!--Горизонтальный разделитель-->
-            <!--<Border BorderBrush="{DynamicResource EasyGray}" 
-                    BorderThickness="0.5" 
-                    Grid.ColumnSpan="3"
-                    Grid.Column="0"
-                    Grid.Row="3"
-            
-                    Visibility="{Binding HorisontalSeporatorIsVisible, Converter={converters:ReverseCollapseConverter}}"/>-->
 
             <!--Отображение комментария-->
             <Grid Width="Auto" Margin="10 7 10 0" Grid.Row="4" VerticalAlignment="Center" 
                   HorizontalAlignment="Center" Grid.ColumnSpan="3"
                   Visibility="{Binding CommentIsVisible, Converter={converters:ReverseCollapseConverter}}">
-                <Border Grid.Row="1" Background="{DynamicResource EasyWhite}" CornerRadius="15" Height="30"></Border>
+                <Border Grid.Row="1" Background="{DynamicResource RelationLabelBackground}" CornerRadius="15" Height="30"></Border>
                 <Border Background="{DynamicResource MainColor}"  CornerRadius="15" Height="30" Width="110" HorizontalAlignment="Left">
                     <TextBlock Text="Комментарий" FontSize="13" 
                            FontFamily="Arial" FontWeight="Bold"
@@ -126,7 +117,7 @@
             <Grid Width="Auto" Margin="10 7 10 0" Grid.Row="5" VerticalAlignment="Center" 
                   HorizontalAlignment="Center" Grid.ColumnSpan="3"
                   Visibility="{Binding FirstExampleIsVisible, Converter={converters:ReverseCollapseConverter}}">
-                <Border Grid.Row="1" Background="{DynamicResource EasyWhite}" CornerRadius="15" Height="45"></Border>
+                <Border Grid.Row="1" Background="{DynamicResource RelationLabelBackground}" CornerRadius="15" Height="45"></Border>
                 <Border Background="{DynamicResource MainColor}"  CornerRadius="15" Height="45" Width="80" HorizontalAlignment="Left">
                     <TextBlock Text="Пример" FontSize="13" 
                            FontFamily="Arial" FontWeight="Bold"
@@ -147,7 +138,7 @@
             <Grid Width="Auto" Margin="10 7 10 0" Grid.Row="6" VerticalAlignment="Center" 
                   HorizontalAlignment="Center" Grid.ColumnSpan="3"
                   Visibility="{Binding SecondExampleIsVisible, Converter={converters:ReverseCollapseConverter}}">
-                <Border Grid.Row="1" Background="{DynamicResource EasyWhite}" CornerRadius="15" Height="45"></Border>
+                <Border Grid.Row="1" Background="{DynamicResource RelationLabelBackground}" CornerRadius="15" Height="45"></Border>
                 <Border Background="{DynamicResource MainColor}"  CornerRadius="15" Height="45" Width="80" HorizontalAlignment="Left">
                     <TextBlock Text="Пример" FontSize="13" 
                            FontFamily="Arial" FontWeight="Bold"

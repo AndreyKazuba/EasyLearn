@@ -33,6 +33,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public int Height { get; set; }
         public int RatingValue { get; set; }
         public Brush RatingProgressBarColor { get; set; }
+        public Brush RatingProgressBarBackgroundColor { get; set; }
         #endregion
 
 #pragma warning disable CS8618
@@ -66,6 +67,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             SecondExampleEnglishValue = verbPreposition.SecondExampleEnglishValue.TryNormalizeRegister().EmptyIfNull();
             RatingValue = verbPreposition.Rating;
             RatingProgressBarColor = verbPreposition.Rating.GetColorForRating();
+            RatingProgressBarBackgroundColor = verbPreposition.Rating.GetBackgroundColorForRating();
             IsStudiedMarkVisible = verbPreposition.Studied;
             SetState(verbPreposition);
             SetHeight();
@@ -93,13 +95,13 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             switch (state)
             {
                 case CardState.Without:
-                    Height = 94;
+                    Height = 94 + 2;
                     break;
                 case CardState.WithOneExample:
-                    Height = 94 + 50;
+                    Height = 94 + 50 + 4;
                     break;
                 case CardState.WithTwoExamples:
-                    Height = 94 + 50 + 52;
+                    Height = 94 + 50 + 52 + 4;
                     break;
             }
         }

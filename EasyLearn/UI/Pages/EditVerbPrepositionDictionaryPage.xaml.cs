@@ -15,6 +15,8 @@ namespace EasyLearn.UI.Pages
         public static event Action? AddingWindowExampleEnglishValueTextBoxEnterDown;
         public static event Action? UpdateWindowExampleRussianValueTextBoxEnterDown;
         public static event Action? UpdateWindowExampleEnglishValueTextBoxEnterDown;
+        public static event Action? SearchTextBoxEnterDown;
+        public static event Action? SearchTextBoxEscapeDown;
         #endregion
 
         public EditVerbPrepositionDictionaryPage(EditVerbPrepositionDictionaryPageVM viewModel)
@@ -58,6 +60,13 @@ namespace EasyLearn.UI.Pages
         {
             if (e.Key == Key.Enter && UpdateWindowExampleEnglishValueTextBoxEnterDown is not null)
                 UpdateWindowExampleEnglishValueTextBoxEnterDown();
+        }
+        private void OnSearchTextBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && SearchTextBoxEnterDown is not null)
+                SearchTextBoxEnterDown();
+            if (e.Key == Key.Escape && SearchTextBoxEscapeDown is not null)
+                SearchTextBoxEscapeDown();
         }
         #endregion
     }

@@ -21,7 +21,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="245"/>
-                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="60"/>
                             </Grid.ColumnDefinitions>
@@ -34,6 +34,7 @@
                                      InputLanguageManager.InputLanguage="ru-RU"
                                      materialDesign:HintAssist.Hint="Искать"
                                      materialDesign:HintAssist.IsFloating="False"
+                                     KeyDown="OnSearchTextBoxKeyDown"
                                      Text="{Binding SearchStringValue, UpdateSourceTrigger=PropertyChanged}">
 
 
@@ -45,33 +46,58 @@
                                 </i:Interaction.Triggers>
 
                             </TextBox>
+                            
+                            
 
-                            <Button Style="{StaticResource EasyCommonButton}" Margin="10 0 0 0" Height="38" 
-                                   Grid.Column="2" Command="{Binding SearchCommonRelationsCommand}">
-                                <TextBlock Text="Искать" FontSize="14" FontFamily="Arial"/>
+                            <Button Grid.Column="1" 
+                                    Style="{DynamicResource LittleCircleButton}"
+                                    Visibility="{Binding SerchTextBoxClearButtonIsVisible, Converter={converters:ForwardVisibilityConverter}}">
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding ClearSearchStringValueCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding SearchCommonRelationsCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
+                            </Button>
+
+                            <Button Style="{StaticResource EasyCommonButton}"
+                                    Height="38" Width="38"
+                                    HorizontalAlignment="Left"
+                                    Margin="6 0 0 0"
+                                    Grid.Column="2" 
+                                    Command="{Binding SearchCommonRelationsCommand}">
+
+                                <materialDesign:PackIcon Kind="Magnify" 
+                                                         Height="28" Width="28"
+                                                         VerticalAlignment="Center" 
+                                                         Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                         HorizontalAlignment="Center"/>
 
                             </Button>
 
                             <Button Style="{StaticResource EasyCancelButton}" Margin="0 0 15 0" Height="38" Width="38"
                                     Grid.Column="4"
                                     Padding="0"
+                                    ToolTip="Очистить словарь"
                                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
+
                                 <materialDesign:PackIcon Kind="TrashCanOutline" Height="28" Width="28"
-                                                     VerticalAlignment="Center" Foreground="{DynamicResource EasyRed}"
-                                                     HorizontalAlignment="Center"/>
+                                                         VerticalAlignment="Center" Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                         HorizontalAlignment="Center"/>
                                 <Button.CommandParameter>
-                                    <Grid Margin="0 14">
+                                    <Grid Margin="0 10 0 12">
                                         <Grid.RowDefinitions>
                                             <RowDefinition/>
-                                            <RowDefinition Height="0.8" MaxHeight="0.8"/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
 
-                                        <TextBlock Margin="14 0 14 12" Style="{DynamicResource MaterialDesignBody1TextBlock}" Text="Удалить все записи?" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-
-                                        <Border BorderBrush="{DynamicResource EasyGray}" 
-                                                BorderThickness="0.5"
-                                                Grid.Row="1"/>
+                                        <TextBlock Margin="24 0 24 0" 
+                                                   Style="{DynamicResource MaterialDesignBody1TextBlock}" 
+                                                   Text="Очистить словарь?" 
+                                                   VerticalAlignment="Center" 
+                                                   HorizontalAlignment="Center"/>
 
                                         <Grid Grid.Row="2"
                                               Margin="14 12 14 0"
@@ -86,7 +112,7 @@
                                             <!--Кнопка отмены-->
                                             <Button Style="{DynamicResource EasyCancelButton}"
                                                     Name="dwCancelButton"
-                                                    Width="50"
+                                                    Width="75"
                                                     Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
 
                                                 <TextBlock Text="Нет" FontSize="14" FontFamily="Arial"/>
@@ -95,8 +121,7 @@
                                             <!--Кнопка подтверждения-->
                                             <Button Style="{DynamicResource EasyConfirmButton}"
                                                     Grid.Column="1"
-                                                    Width="50"
-                                                    
+                                                    Width="75"
                                                     Name="вwConfirmButton">
 
                                                 <TextBlock Text="Да" FontSize="14" FontFamily="Arial"/>
@@ -192,29 +217,35 @@
 
                             </TextBox>
 
-                            <Button Style="{StaticResource EasyCancelButton}" Height="39" Width="39"
+                            <Button Style="{StaticResource EasyCommonButton}" Height="39" Width="39"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     Margin="0 0 14 0"
-                                    Padding="0">
-                                <materialDesign:PackIcon Kind="Edit" Height="28" Width="28" Foreground="{DynamicResource EasyRed}"
-                                                     VerticalAlignment="Center"
-                                                     HorizontalAlignment="Center"/>
+                                    Padding="0"
+                                    ToolTip="Сбросить прогресс">
+                                <materialDesign:PackIcon Kind="ArrowDown" 
+                                                         Height="28" Width="28" 
+                                                         Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
-                                        <i:InvokeCommandAction Command="{Binding DeleteCommonRelationCommand}"/>
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwResetCommonRelationRatingCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
                             <Button Style="{StaticResource EasyCancelButton}" Height="39" Width="39"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
-                                    Margin="0 0"
-                                    Padding="0">
-                                <materialDesign:PackIcon Kind="TrashCanOutline" Height="28" Width="28" Foreground="{DynamicResource EasyRed}"
-                                                     VerticalAlignment="Center"
-                                                     HorizontalAlignment="Center"/>
+                                    Margin="0"
+                                    Padding="0"
+                                    ToolTip="Удалить">
+                                <materialDesign:PackIcon Kind="TrashCanOutline" 
+                                                         Height="28" Width="28" 
+                                                         Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{Binding DeleteCommonRelationCommand}"/>
@@ -239,16 +270,16 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBox Style="{DynamicResource EasyTextBox}"
-                                         Width="185"
-                                         Padding="14 11"
-                                         Margin="0 0 14 0"
+                                     Width="185"
+                                     Padding="14 11"
+                                     Margin="0 0 14 0"
                                      HorizontalAlignment="Left"
                                      materialDesign:ValidationAssist.Suppress="True"
-                                         materialDesign:HintAssist.IsFloating="False"
-                                         KeyDown="OnUpdateWindowExampleRussianValueTextBoxKeyDown"
-                                         InputLanguageManager.InputLanguage="ru-RU"
-                                         Name="uwExampleRussianValueTextBox"
-                                         materialDesign:HintAssist.Hint="Пример на русском">
+                                     materialDesign:HintAssist.IsFloating="False"
+                                     KeyDown="OnUpdateWindowExampleRussianValueTextBoxKeyDown"
+                                     InputLanguageManager.InputLanguage="ru-RU"
+                                     Name="uwExampleRussianValueTextBox"
+                                     materialDesign:HintAssist.Hint="Пример на русском">
 
                                 <TextBox.Text>
                                     <Binding Path="UwExampleRussianValue" UpdateSourceTrigger="PropertyChanged">
@@ -298,15 +329,15 @@
                             </TextBox>
 
                             <Button Style="{DynamicResource EasyConfirmButton}"
-                                        Foreground="{DynamicResource EasyGreen}"
-                                        Height="39"
-                                        Width="39"
-                                        Margin="0 0"
-                                        IsEnabled="{Binding UwAddExampleButtonIsEnabled}"
-                                        Name="uwAddExampleButton"
-                                        HorizontalAlignment="Right" VerticalAlignment="Top"
-                                        Grid.Column="2">
-                                <materialDesign:PackIcon Kind="Add" Foreground="{DynamicResource EasyGreen}"/>
+                                    Height="39"
+                                    Width="39"
+                                    Margin="0 0"
+                                    IsEnabled="{Binding UwAddExampleButtonIsEnabled}"
+                                    Name="uwAddExampleButton"
+                                    ToolTip="Добавить пример"
+                                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                                    Grid.Column="2">
+                                <materialDesign:PackIcon Kind="PlusThick" Height="20" Width="20" Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
@@ -655,15 +686,14 @@
                             </TextBox>
 
                             <Button Style="{DynamicResource EasyConfirmButton}"
-                                        Foreground="{DynamicResource EasyGreen}"
-                                        Height="39"
-                                        Width="39"
-                                        Margin="0 0 0 0"
-                                        IsEnabled="{Binding AwAddExampleButtonIsEnabled}"
-                                        Name="awAddExampleButton"
-                                        HorizontalAlignment="Right" VerticalAlignment="Top"
-                                        Grid.Column="2">
-                                <materialDesign:PackIcon Kind="Add" Foreground="{DynamicResource EasyGreen}" />
+                                    Height="39"
+                                    Width="39"
+                                    Margin="0 0 0 0"
+                                    IsEnabled="{Binding AwAddExampleButtonIsEnabled}"
+                                    Name="awAddExampleButton"
+                                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                                    Grid.Column="2">
+                                <materialDesign:PackIcon Kind="PlusThick" Height="20" Width="20" Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">

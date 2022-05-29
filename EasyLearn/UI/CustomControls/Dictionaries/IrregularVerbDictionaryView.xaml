@@ -25,20 +25,13 @@
                     </Grid.RowDefinitions>
 
                     <!--Пространство с картинкой и закрашенным фоном-->
-                    <materialDesign:ColorZone Background="#ff9999" VerticalAlignment="Stretch">
+                    <materialDesign:ColorZone Background="#79d2a6" VerticalAlignment="Stretch">
 
                         <materialDesign:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center" 
-                                             Height="128" Width="128"
-                                             Kind="Yahoo"/>
+                                                 Height="128" Width="128"
+                                                 Kind="BookInformationVariant"/>
 
                     </materialDesign:ColorZone>
-
-                    <materialDesign:PackIcon HorizontalAlignment="Right" VerticalAlignment="Top"
-                                         Kind="Star" 
-                                         Foreground="{DynamicResource EasyGold}"
-                                         Width="30" Height="30"
-                                         Padding="1"
-                                         Margin="0 6 6 0"/>
 
                     <!--Пространство под картинкой аккаунта-->
                     <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">

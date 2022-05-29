@@ -7,7 +7,6 @@
 
         public const int DictionaryNameMinLength = 1;
         public const int DictionaryNameMaxLength = 14;
-        public const int DictionaryDescriptionMaxLength = 85;
 
         public const int CommonRelationCommentMaxLength = 25;
 

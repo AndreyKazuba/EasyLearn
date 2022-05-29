@@ -16,18 +16,15 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 
         #region Binding props
         public string Name { get; set; }
-        public string Description { get; set; }
         public string EditNameFieldValue { get; set; }
-        public string EditDescriptionFieldValue { get; set; }
         public bool IsCardFlipped { get; set; }
         #endregion
 
 #pragma warning disable CS8618
         public VerbPrepositionDictionaryVM(VerbPrepositionDictionnary verbPrepositionDictionnary)
         {
-            this.Name = StringHelper.NormalizeRegister(verbPrepositionDictionnary.Name);
-            this.Description = verbPrepositionDictionnary.Description.TryNormalizeRegister().EmptyIfNull();
-            this.Id = verbPrepositionDictionnary.Id;
+            Name = StringHelper.NormalizeRegister(verbPrepositionDictionnary.Name);
+            Id = verbPrepositionDictionnary.Id;
         }
 #pragma warning disable CS8618
 
@@ -54,18 +51,15 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         private void RemoveVerbPrepositionDictionary() => App.GetService<DictionariesPageVM>().DeleteVerbPrepositionDictionaryCommand.Execute(Id);
         private void SetEditFieldsValue()
         {
-            EditDescriptionFieldValue = Description;
             EditNameFieldValue = Name;
         }
         private async Task EditVerbPrepositionDictionary()
         {
             string newDictionaryName = EditNameFieldValue;
-            string newDictionaryDescription = EditDescriptionFieldValue;
-            if (StringHelper.Equals(Name, newDictionaryName) && StringHelper.Equals(Description, newDictionaryDescription))
+            if (StringHelper.Equals(Name, newDictionaryName))
                 return;
             Name = newDictionaryName;
-            Description = newDictionaryDescription;
-            await App.GetService<IVerbPrepositionDictionaryRepository>().EditVerbPrepositionDictionary(Id, newDictionaryName, StringHelper.NullIfEmptyOrWhiteSpace(newDictionaryDescription));
+            await App.GetService<IVerbPrepositionDictionaryRepository>().EditVerbPrepositionDictionary(Id, newDictionaryName);
         }
         private void FlipBackAllAnotherCards() => App.GetService<DictionariesPageVM>().FlipBackAllCardsCommand.Execute();
         #endregion

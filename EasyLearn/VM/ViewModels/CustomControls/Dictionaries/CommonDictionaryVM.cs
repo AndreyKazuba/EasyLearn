@@ -16,9 +16,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 
         #region Binding props
         public string Name { get; set; }
-        public string Description { get; set; }
         public string EditNameFieldValue { get; set; }
-        public string EditDescriptionFieldValue { get; set; }
         public bool IsCardFlipped { get; set; }
         #endregion
 
@@ -26,7 +24,6 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public CommonDictionaryVM(CommonDictionary commonDictionary)
         {
             this.Name = StringHelper.NormalizeRegister(commonDictionary.Name);
-            this.Description = commonDictionary.Description.TryNormalizeRegister().EmptyIfNull();
             this.Id = commonDictionary.Id;
         }
 #pragma warning restore CS8618
@@ -55,16 +52,13 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         private async Task EditCommonDictionary()
         {
             string newDictionaryName = EditNameFieldValue;
-            string newDictionaryDescription = EditDescriptionFieldValue;
-            if (StringHelper.Equals(Name, newDictionaryName) && StringHelper.Equals(Description, newDictionaryDescription))
+            if (StringHelper.Equals(Name, newDictionaryName))
                 return;
             Name = newDictionaryName;
-            Description = newDictionaryDescription;
-            await App.GetService<ICommonDictionaryRepository>().EditCommonDictionary(Id, newDictionaryName, StringHelper.NullIfEmptyOrWhiteSpace(newDictionaryDescription));
+            await App.GetService<ICommonDictionaryRepository>().EditCommonDictionary(Id, newDictionaryName);
         }
         private void SetEditFieldsValue()
         {
-            EditDescriptionFieldValue = Description;
             EditNameFieldValue = Name;
         }
         private void FlipBackAllAnotherCards() => App.GetService<DictionariesPageVM>().FlipBackAllCardsCommand.Execute();

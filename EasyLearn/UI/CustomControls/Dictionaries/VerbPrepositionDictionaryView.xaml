@@ -30,9 +30,9 @@
                     </Grid.RowDefinitions>
 
                     <!--Пространство с картинкой и закрашенным фоном-->
-                    <materialDesign:ColorZone Background="#00e673" VerticalAlignment="Stretch">
+                    <materialDesign:ColorZone Background="#ffaa80" VerticalAlignment="Stretch">
 
-                        <materialDesign:PackIcon Kind="AboutCircle" 
+                        <materialDesign:PackIcon Kind="Book" 
                                              Height="128" 
                                              Width="128"
                                              VerticalAlignment="Center" 
@@ -47,15 +47,15 @@
                         Foreground="{DynamicResource EasyBlack}"
                         Width="30"
                         Height="30"
-                        Padding="1"
-                        Margin="0 6 6 0"
+                        Padding="0"
+                        Margin="0"
                         ToolTip="Настройки словаря">
 
-                        <materialDesign:PackIcon Kind="AccountDetails" 
-                                             Width="22" 
-                                             Height="22"
-                                             HorizontalAlignment="Center"
-                                             VerticalAlignment="Center"/>
+                        <materialDesign:PackIcon HorizontalAlignment="Center" 
+                                                 VerticalAlignment="Center"
+                                                 Kind="DotsGrid" 
+                                                 Margin="0"
+                                                 Width="22" Height="22"/>
 
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
@@ -117,6 +117,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="0.8*" />
                         <RowDefinition Height="2*"/>
+                        <RowDefinition Height="Auto" MaxHeight="0.8"/>
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
@@ -166,32 +167,24 @@
                         </i:Interaction.Triggers>
                     </TextBox>
 
-                    <!--Редактировать описание словаря-->
-                    <TextBox TextWrapping="Wrap"
-                         VerticalAlignment="Stretch"
-                         HorizontalAlignment="Stretch"
-                             Background="{DynamicResource MainColorSuperLight}"
-                             BorderBrush="{DynamicResource MainColor}"
-                         Style="{DynamicResource MaterialDesignFilledTextBox}"
-                         materialDesign:HintAssist.Hint="Описание"
-                         materialDesign:HintAssist.IsFloating="True"
-                         materialDesign:ValidationAssist.UsePopup="False"
-                         Grid.Row="2">
 
-                        <TextBox.Text>
-                            <Binding Path="EditDescriptionFieldValue" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <!--<valudationRules:InRange Max="{x:Static constants:ModelConstants.DictionaryDescriptionMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>-->
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
-
+                    <ProgressBar Grid.Row="2"
+                         Grid.ColumnSpan="3"
+                         VerticalAlignment="Bottom" 
+                         Height="3"
+                         BorderThickness="0.3"
+                         Background="{DynamicResource MainColorLight}"
+                         Foreground="{DynamicResource MainColor}"
+                         Value="45"
+                         BorderBrush="{DynamicResource MainColorLight}"
+                         Maximum="100">
+                    </ProgressBar>
+                    
                     <!--Кнопка удаления словаря-->
                     <Button Command="{Binding RemoveVerbPrepositionDictionaryCommand}"
                             Foreground="{DynamicResource EasyRed}"
                             Height="40"
-                                Grid.Row="3"
+                                Grid.Row="4"
                             Style="{DynamicResource MaterialDesignFlatButton}"
                             HorizontalAlignment="Stretch"
                             Grid.Column="0">

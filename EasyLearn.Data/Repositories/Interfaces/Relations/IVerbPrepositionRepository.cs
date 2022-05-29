@@ -29,5 +29,6 @@ namespace EasyLearn.Data.Repositories.Interfaces
         Task DeleteAllDictionaryVerbPrepositions(int dictionaryId);
         Task DeleteVerbPreposition(int verbPrepositionId);
         void SaveDictationResults(List<Answer> answers);
+        VerbPreposition ResetVerbPrepositionRating(int verbPrepositionId);
     }
 }

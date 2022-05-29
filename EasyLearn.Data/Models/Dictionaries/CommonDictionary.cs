@@ -17,9 +17,6 @@ namespace EasyLearn.Data.Models
         [MaxLength(ModelConstants.DictionaryNameMaxLength)]
         public string Name { get; set; }
 
-        [MaxLength(ModelConstants.DictionaryDescriptionMaxLength)]
-        public string? Description { get; set; }
-
         [Required]
         [ForeignKey(nameof(User))]
         public int UserId { get; set; }

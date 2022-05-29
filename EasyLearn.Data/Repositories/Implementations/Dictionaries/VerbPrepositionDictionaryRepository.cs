@@ -41,13 +41,12 @@ namespace EasyLearn.Data.Repositories.Implementations
                 .FirstAsync(dictionary => dictionary.Id == dictionaryId);
         }
         public IEnumerable<VerbPrepositionDictionnary> GetUsersVerbPreposotionDictionaries(int dictionaryId) => context.VerbPrepositionDictionaries.Where(dictionary => dictionary.UserId == dictionaryId).AsNoTracking();
-        public async Task<VerbPrepositionDictionnary> CreateVerbPrepositionDictionary(string name, string? description, int userId)
+        public async Task<VerbPrepositionDictionnary> CreateVerbPrepositionDictionary(string name, int userId)
         {
-            ThrowIfAddingAttemptIncorrect(name, description, userId);
+            ThrowIfAddingAttemptIncorrect(name, userId);
             VerbPrepositionDictionnary newVerbPrepositionDictionary = new VerbPrepositionDictionnary
             {
                 Name = StringHelper.Prepare(name),
-                Description = StringHelper.TryPrepare(description),
                 UserId = userId,
                 CreationDateUtc = DateTime.UtcNow,
             };
@@ -61,11 +60,10 @@ namespace EasyLearn.Data.Repositories.Implementations
             context.VerbPrepositionDictionaries.Remove(dictionnary);
             await context.SaveChangesAsync();
         }
-        public async Task EditVerbPrepositionDictionary(int dictionaryId, string name, string? description)
+        public async Task EditVerbPrepositionDictionary(int dictionaryId, string name)
         {
-            ThrowIfEditingAttemptIncorrect(name, description);
+            ThrowIfEditingAttemptIncorrect(name);
             VerbPrepositionDictionnary verbPrepositionDictionnary = await context.VerbPrepositionDictionaries.FirstAsync(dictionary => dictionary.Id == dictionaryId);
-            verbPrepositionDictionnary.Description = StringHelper.TryPrepare(description);
             verbPrepositionDictionnary.Name = StringHelper.Prepare(name);
             verbPrepositionDictionnary.ChangeDateUtc = DateTime.UtcNow;
             await context.SaveChangesAsync();
@@ -73,15 +71,13 @@ namespace EasyLearn.Data.Repositories.Implementations
         #endregion
 
         #region Private members
-        private void ThrowIfEditingAttemptIncorrect(string name, string? description)
+        private void ThrowIfEditingAttemptIncorrect(string name)
         {
             ThrowIfDictionaryNameInvalid(name);
-            ThrowIfDictionaryDescriptionInvalid(description);
         }
-        private void ThrowIfAddingAttemptIncorrect(string name, string? description, int userId)
+        private void ThrowIfAddingAttemptIncorrect(string name, int userId)
         {
             ThrowIfDictionaryNameInvalid(name);
-            ThrowIfDictionaryDescriptionInvalid(description);
             if (!userRepository.IsUserExist(userId))
                 throw new InvalidDbOperationException(DbExceptionMessagesHelper.AddingForNonExistingEntity(nameof(VerbPrepositionDictionnary), nameof(EasyLearnUser), userId.ToString()));
         }
@@ -89,13 +85,6 @@ namespace EasyLearn.Data.Repositories.Implementations
         {
             if (string.IsNullOrWhiteSpace(name) || name.Length < ModelConstants.DictionaryNameMinLength || name.Length > ModelConstants.DictionaryNameMaxLength)
                 throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(VerbPrepositionDictionnary.Name), nameof(VerbPrepositionDictionnary), name));
-        }
-        private void ThrowIfDictionaryDescriptionInvalid(string? description)
-        {
-            if (description is null)
-                return;
-            if (StringHelper.IsEmptyOrWhiteSpace(description) || description.Length > ModelConstants.DictionaryDescriptionMaxLength)
-                throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(VerbPrepositionDictionnary.Description), nameof(VerbPrepositionDictionnary), description));
         }
         #endregion
     }

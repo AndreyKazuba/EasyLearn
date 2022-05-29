@@ -41,13 +41,12 @@ namespace EasyLearn.Data.Repositories.Implementations
                 .FirstAsync(dictionary => dictionary.Id == dictionaryId);
         }
         public IEnumerable<CommonDictionary> GetUsersCommonDictionaries(int userId) => context.CommonDictionaries.Where(dictionary => dictionary.UserId == userId).AsNoTracking();
-        public async Task<CommonDictionary> CreateCommonDictionary(string name, string? description, int userId)
+        public async Task<CommonDictionary> CreateCommonDictionary(string name, int userId)
         {
-            ThrowIfAddingAttemptIncorrect(name, description, userId);
+            ThrowIfAddingAttemptIncorrect(name, userId);
             CommonDictionary newCommonDictionary = new CommonDictionary
             {
                 Name = StringHelper.Prepare(name),
-                Description = StringHelper.TryPrepare(description),
                 UserId = userId,
                 CreationDateUtc = DateTime.UtcNow,
             };
@@ -61,11 +60,10 @@ namespace EasyLearn.Data.Repositories.Implementations
             context.CommonDictionaries.Remove(commonDictionary);
             await context.SaveChangesAsync();
         }
-        public async Task EditCommonDictionary(int dictionaryId, string name, string? description)
+        public async Task EditCommonDictionary(int dictionaryId, string name)
         {
-            ThrowIfEditingAttemptIncorrect(name, description);
+            ThrowIfEditingAttemptIncorrect(name);
             CommonDictionary commonDictionary = await context.CommonDictionaries.FirstAsync(dictionary => dictionary.Id == dictionaryId);
-            commonDictionary.Description = StringHelper.TryPrepare(description);
             commonDictionary.Name = StringHelper.Prepare(name);
             commonDictionary.ChangeDateUtc = DateTime.UtcNow;
             await context.SaveChangesAsync();
@@ -73,15 +71,13 @@ namespace EasyLearn.Data.Repositories.Implementations
         #endregion
 
         #region Private members
-        private void ThrowIfEditingAttemptIncorrect(string name, string? description)
+        private void ThrowIfEditingAttemptIncorrect(string name)
         {
             ThrowIfDictionaryNameInvalid(name);
-            ThrowIfDictionaryDescriptionInvalid(description);
         }
-        private void ThrowIfAddingAttemptIncorrect(string name, string? description, int userId)
+        private void ThrowIfAddingAttemptIncorrect(string name, int userId)
         {
             ThrowIfDictionaryNameInvalid(name);
-            ThrowIfDictionaryDescriptionInvalid(description);
             if (!userRepository.IsUserExist(userId))
                 throw new InvalidDbOperationException(DbExceptionMessagesHelper.AddingForNonExistingEntity(nameof(CommonDictionary), nameof(EasyLearnUser), userId.ToString()));
         }
@@ -89,13 +85,6 @@ namespace EasyLearn.Data.Repositories.Implementations
         {
             if (string.IsNullOrWhiteSpace(name) || name.Length < ModelConstants.DictionaryNameMinLength || name.Length > ModelConstants.DictionaryNameMaxLength)
                 throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(CommonDictionary.Name), nameof(CommonDictionary), name));
-        }
-        private void ThrowIfDictionaryDescriptionInvalid(string? description)
-        {
-            if (description is null)
-                return;
-            if (StringHelper.IsEmptyOrWhiteSpace(description) || description.Length > ModelConstants.DictionaryDescriptionMaxLength)
-                throw new InvalidDbOperationException(DbExceptionMessagesHelper.PropertyInvalidValue(nameof(CommonDictionary.Description), nameof(CommonDictionary), description));
         }
         #endregion
     }

@@ -1,19 +1,28 @@
-﻿using System.Windows.Media;
-
-namespace EasyLearn.Infrastructure.UIConstants
+﻿namespace EasyLearn.Infrastructure.UIConstants
 {
     public static class ColorCodes
     {
-        public const string RelationViewRating_0_10_Color = "#f50707";
-        public const string RelationViewRating_10_20_Color = "#f53f07";
-        public const string RelationViewRating_20_30_Color = "#f55a07";
-        public const string RelationViewRating_30_40_Color = "#f57a07";
-        public const string RelationViewRating_40_50_Color = "#f5a207";
-        public const string RelationViewRating_50_60_Color = "#f5d507";
-        public const string RelationViewRating_60_70_Color = "#ddf507";
-        public const string RelationViewRating_70_80_Color = "#aaf507";
-        public const string RelationViewRating_80_90_Color = "#76f507";
-        public const string RelationViewRating_90_100_Color = "#3ff507";
+        public const string RelationViewRating_0_10_Color = "#ff0000";
+        public const string RelationViewRating_10_20_Color = "#ff3c00";
+        public const string RelationViewRating_20_30_Color = "#ff7300";
+        public const string RelationViewRating_30_40_Color = "#ffaa00";
+        public const string RelationViewRating_40_50_Color = "#ffd500";
+        public const string RelationViewRating_50_60_Color = "#ffff00";
+        public const string RelationViewRating_60_70_Color = "#c8ff00";
+        public const string RelationViewRating_70_80_Color = "#91ff00";
+        public const string RelationViewRating_80_90_Color = "#4dff00";
+        public const string RelationViewRating_90_100_Color = "#00ff08";
+
+        public const string RelationViewRating_0_10_BackgroundColor = "#ffbfbf";
+        public const string RelationViewRating_10_20_BackgroundColor = "#ffb7a1";
+        public const string RelationViewRating_20_30_BackgroundColor = "#ffca9e";
+        public const string RelationViewRating_30_40_BackgroundColor = "#ffe0a1";
+        public const string RelationViewRating_40_50_BackgroundColor = "#faea9b";
+        public const string RelationViewRating_50_60_BackgroundColor = "#ffff9e";
+        public const string RelationViewRating_60_70_BackgroundColor = "#ebffa1";
+        public const string RelationViewRating_70_80_BackgroundColor = "#d1fa9b";
+        public const string RelationViewRating_80_90_BackgroundColor = "#bdffa1";
+        public const string RelationViewRating_90_100_BackgroundColor = "#a1ffa4";
 
         public const string MainColorSuperDark = "#000d33";
         public const string MainColorDark = "#3366ff";

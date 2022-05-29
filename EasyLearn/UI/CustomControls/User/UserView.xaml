@@ -13,7 +13,7 @@
                             materialDesign:ShadowAssist.ShadowDepth="Depth0"
                             Margin="18 18 0 0"
                             IsFlipped="{Binding IsCardFlipped, Mode=TwoWay}"
-                            d:IsFlipped="False">
+                            d:IsFlipped="True">
 
         <!--Лицевая сторона карточки-->
         <materialDesign:Flipper.FrontContent>
@@ -173,10 +173,10 @@
                         </i:Interaction.Triggers>
                     </TextBox>
 
-                    <Border BorderBrush="{DynamicResource MainColorSuperLight}" 
-                                    BorderThickness="0.55"
-                                    Margin="{Binding AddingWidnowTopVerticalExpanderMargin}"
-                                    Grid.Row="3"/>
+                    <Border BorderBrush="{DynamicResource MainColorLight}" 
+                            BorderThickness="0.55"
+                            Margin="{Binding AddingWidnowTopVerticalExpanderMargin}"
+                            Grid.Row="3"/>
 
                     <!--Кнопка удаления словаря-->
                     <Button Command="{Binding RemoveUserCommand}"

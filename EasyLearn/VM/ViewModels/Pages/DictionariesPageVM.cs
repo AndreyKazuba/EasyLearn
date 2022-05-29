@@ -35,7 +35,6 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Binding props
         public ObservableCollection<UserControl> DictionaryViews { get; set; }
         public string AddingWindowDictionaryNameValue { get; set; }
-        public string AddingWindowDictionaryDescriptionValue { get; set; }
         public ObservableCollection<DictionaryTypeComboBoxItem> AddingWindowDictionaryTypes { get; set; }
         public DictionaryTypeComboBoxItem AddingWindowSelectedDictionaryType { get; set; }
         public bool IsConfirmDictionaryAddingButtonEnabled { get; set; }
@@ -80,7 +79,6 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void ClearAddingWindow()
         {
             AddingWindowDictionaryNameValue = string.Empty;
-            AddingWindowDictionaryDescriptionValue = string.Empty;
             AddingWindowSelectedDictionaryType = AddingWindowDictionaryTypes[0];
             IsConfirmDictionaryAddingButtonEnabled = false;
         }
@@ -139,15 +137,13 @@ namespace EasyLearn.VM.ViewModels.Pages
         private async Task CreateCommonDictionary()
         {
             string name = AddingWindowDictionaryNameValue;
-            string? description = StringHelper.NullIfEmptyOrWhiteSpace(AddingWindowDictionaryDescriptionValue);
-            CommonDictionary newCommonDictionary = await commonDictionaryRepository.CreateCommonDictionary(name, description, currentUserId);
+            CommonDictionary newCommonDictionary = await commonDictionaryRepository.CreateCommonDictionary(name, currentUserId);
             AddCommonDictionaryViewToUI(newCommonDictionary);
         }
         private async Task CreateVerbPrepositionDictionary()
         {
             string name = AddingWindowDictionaryNameValue;
-            string? description = StringHelper.NullIfEmptyOrWhiteSpace(AddingWindowDictionaryDescriptionValue);
-            VerbPrepositionDictionnary newVerbPrepositionDictionary = await verbPrepositionDictionaryRepository.CreateVerbPrepositionDictionary(name, description, currentUserId);
+            VerbPrepositionDictionnary newVerbPrepositionDictionary = await verbPrepositionDictionaryRepository.CreateVerbPrepositionDictionary(name, currentUserId);
             AddVerbPrepositionDictionaryViewToUI(newVerbPrepositionDictionary);
         }
         private void SetAddingWindowDictionaryTypes()

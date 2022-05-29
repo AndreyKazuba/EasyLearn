@@ -54,7 +54,8 @@ namespace EasyLearn.VM.ViewModels.Pages
 
         #region Binding props
         public ObservableCollection<UserControl> CommonRelationViews { get; set; } = new ObservableCollection<UserControl>();
-        public string SearchStringValue { get; set; }
+        public string SearchStringValue { get; set; } = string.Empty;
+        public bool SerchTextBoxClearButtonIsVisible => !string.IsNullOrEmpty(SearchStringValue);
         public SolidColorBrush HorisontalSeporatorColor => AwCommonRelationHasExistLableIsVisible ? ColorCodes.EasyRed.GetBrushByHex() : ColorCodes.EasyGray.GetBrushByHex();
 
         public ObservableCollection<ExampleView> AwExampleViews { get; set; } = new ObservableCollection<ExampleView>();
@@ -99,6 +100,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command<int> SetDictionaryCommand { get; private set; }
         public Command SearchCommonRelationsCommand { get; private set; }
         public Command<int> RemoveExampleViewCommand { get; private set; }
+        public Command ClearSearchStringValueCommand { get; private set; }
 
         public Command AwOpenWindowCommand { get; private set; }
         public Command AwClearCommand { get; private set; }
@@ -118,6 +120,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command UwValidateExampleSectionCommand { get; private set; }
         public Command UwCheckExampleTextBoxesMaxLengthVisibilityCommand { get; private set; }
         public Command UwFocusExampleRussianValueTextBoxCommand { get; private set; }
+        public Command UwResetCommonRelationRatingCommand { get; private set; }
         protected override void InitCommands()
         {
             GoBackCommand = new Command(GoBack);
@@ -128,6 +131,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             SetDictionaryCommand = new Command<int>(async commonDictionaryId => await SetDictionary(commonDictionaryId));
             SearchCommonRelationsCommand = new Command(SearchCommonRelations);
             RemoveExampleViewCommand = new Command<int>(RemoveExampleView);
+            ClearSearchStringValueCommand = new Command(ClearSearchStringValue);
 
             AwOpenWindowCommand = new Command(AwOpenWindow);
             AwClearCommand = new Command(AwClear);
@@ -147,6 +151,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             UwValidateExampleSectionCommand = new Command(UwValidateExampleSection);
             UwCheckExampleTextBoxesMaxLengthVisibilityCommand = new Command(UwCheckExampleTextBoxesMaxLengthVisibility);
             UwFocusExampleRussianValueTextBoxCommand = new Command(UwFocusExampleRussianValueTextBox);
+            UwResetCommonRelationRatingCommand = new Command(UwResetCommonRelationRating);
         }
         private void GoBack() => App.GetService<AppWindowVM>().OpenDictionariesPageCommand.Execute();
         private async Task CreateCommonRelation()
@@ -189,7 +194,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 firstExampleEnglishValue,
                 secondExampleRussianValue,
                 secondExampleEnglishValue);
-            UpdateCommonRelationOnUI(updatedCommonRelation);
+            UpdateCommonRelationViewOnUI(updatedCommonRelation);
         }
         private async Task DeleteCommonRelation()
         {
@@ -218,7 +223,8 @@ namespace EasyLearn.VM.ViewModels.Pages
                 CommonRelationView? commonRelationView = userControl as CommonRelationView;
                 if (commonRelationView is null)
                     continue;
-                bool isMatch = commonRelationView.RussianValue.Contains(SearchStringValue) || commonRelationView.EnglishValue.Contains(SearchStringValue);
+                bool isMatch = commonRelationView.RussianValue.Prepare().Contains(SearchStringValue.Prepare()) 
+                            || commonRelationView.EnglishValue.Prepare().Contains(SearchStringValue.Prepare());
                 if (isMatch)
                     commonRelationView.Show();
                 else
@@ -236,6 +242,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             AwValidateExampleSection();
             UwValidateExampleSection();
         }
+        private void ClearSearchStringValue() => SearchStringValue = string.Empty;
         private void AwOpenWindow() => AwOpenWindowButtonSoftClick();
         private void AwClear()
         {
@@ -260,7 +267,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             UnitType englishUnitType = AwSelectedEnglishUnitType.UnitType;
             UnitType russianUnitType = AwSelectedRussianUnitType.UnitType;
-            CommonRelationExist = commonRelationRepository.IsCommonRelationExist(AwRussianValue, russianUnitType, AwEnglishValue, englishUnitType, pageCurrentDictionaryId);
+            CommonRelationExist = commonRelationRepository.IsCommonRelationExist(AwRussianValue.Prepare(), russianUnitType, AwEnglishValue.Prepare(), englishUnitType, pageCurrentDictionaryId);
         }
         private void AwClearExampleSection()
         {
@@ -341,6 +348,11 @@ namespace EasyLearn.VM.ViewModels.Pages
             else
                 UwHideExampleTextBoxesMaxLength();
         }
+        private void UwResetCommonRelationRating()
+        {
+            CommonRelation updatedCommonRelation = commonRelationRepository.ResetCommonRelationRating(currentRelationForUpdate.Id);
+            UpdateCommonRelationViewOnUI(updatedCommonRelation);
+        }
         #endregion
 
         #region Event handling
@@ -355,6 +367,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             EditCommonDictionaryPage.AddingWindowExampleEnglishValueTextBoxEnterDown += OnAddingWindowExampleEnglishValueTextBoxEnterDown;
             EditCommonDictionaryPage.UpdateWindowExampleRussianValueTextBoxEnterDown += OnUpdateWindowExampleRussianValueTextBoxEnterDown;
             EditCommonDictionaryPage.UpdateWindowExampleEnglishValueTextBoxEnterDown += OnUpdateWindowExampleEnglishValueTextBoxEnterDown;
+            EditCommonDictionaryPage.SearchTextBoxEnterDown += OnSearchTextBoxEnterDown;
+            EditCommonDictionaryPage.SearchTextBoxEscapeDown += OnSearchTextBoxEscapeDown;
             AppWindow.WindowCtrlNDown += OnWindowCtrlNDown;
             AppWindow.WindowEscDown += OnWindowEscDown;
             AppWindow.GoBackButtonClick += OnGoBackButtonClick;
@@ -383,6 +397,12 @@ namespace EasyLearn.VM.ViewModels.Pages
             if (uwExampleInvalid)
                 return;
             UwAddExampleButtonSoftClick();
+        }
+        private void OnSearchTextBoxEnterDown() => SearchCommonRelations();
+        private void OnSearchTextBoxEscapeDown()
+        {
+            ClearSearchStringValue();
+            SearchCommonRelations();
         }
         private void OnWindowCtrlNDown()
         {
@@ -449,7 +469,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         }
         private void AddShadowRelationViewToUI() => CommonRelationViews.Add(ShadowCommonRelationView.Create());
         private void AddCommonRelationViewToUI(CommonRelation commonRelation) => CommonRelationViews.Add(CommonRelationView.Create(commonRelation));
-        private void UpdateCommonRelationOnUI(CommonRelation updatedCommonRelation)
+        private void UpdateCommonRelationViewOnUI(CommonRelation updatedCommonRelation)
         {
             CommonRelationView relationView = FindCommonRelationViewOnUI(updatedCommonRelation.Id);
             relationView.Update(updatedCommonRelation);
@@ -473,8 +493,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             TextBox uwExampleEnglishValueTextBox = App.GetService<EditCommonDictionaryPage>().uwExampleEnglishValueTextBox;
             uwExampleRussianValueTextBox.MaxLength = ModelConstants.ExampleValueMaxLength;
             uwExampleEnglishValueTextBox.MaxLength = ModelConstants.ExampleValueMaxLength;
-            uwExampleRussianValueTextBox.Margin = new Thickness(0, 0, 7, 7);
-            uwExampleEnglishValueTextBox.Margin = new Thickness(0, 0, 0, 7);
+            uwExampleRussianValueTextBox.Margin = new Thickness(0, 0, 7, 8);
+            uwExampleEnglishValueTextBox.Margin = new Thickness(0, 0, 0, 8);
         }
         private void UwHideExampleTextBoxesMaxLength()
         {
@@ -516,8 +536,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             TextBox exampleEnglishValueTextBox = App.GetService<EditCommonDictionaryPage>().awExampleEnglishValueTextBox;
             exampleRussianValueTextBox.MaxLength = ModelConstants.ExampleValueMaxLength;
             exampleEnglishValueTextBox.MaxLength = ModelConstants.ExampleValueMaxLength;
-            exampleRussianValueTextBox.Margin = new Thickness(0, 0, 7, 7);
-            exampleEnglishValueTextBox.Margin = new Thickness(7, 0, 0, 7);
+            exampleRussianValueTextBox.Margin = new Thickness(0, 0, 7, 8);
+            exampleEnglishValueTextBox.Margin = new Thickness(7, 0, 0, 8);
         }
         private void AwHideExampleTextBoxesMaxLength()
         {

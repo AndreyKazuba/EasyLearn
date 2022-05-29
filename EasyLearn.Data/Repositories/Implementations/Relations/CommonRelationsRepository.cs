@@ -141,6 +141,15 @@ namespace EasyLearn.Data.Repositories.Implementations
             }
             context.SaveChanges();
         }
+        public CommonRelation ResetCommonRelationRating(int commonRelationId)
+        {
+            CommonRelation commonRelation = GetCommonRelation(commonRelationId);
+            commonRelation.Rating = 0;
+            commonRelation.CorrectAnswersStreak = 0;
+            commonRelation.Studied = false;
+            context.SaveChanges();
+            return commonRelation;
+        }
         #endregion
 
         #region Private members

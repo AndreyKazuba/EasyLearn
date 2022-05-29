@@ -11,7 +11,7 @@
       Title="DictationPage"
       Background="{Binding PageBackground}">
 
-    <materialDesign:DialogHost>
+    <materialDesign:DialogHost OverlayBackground="{DynamicResource MainColorSuperDark}">
         <Grid>
 
             <Grid.RowDefinitions>

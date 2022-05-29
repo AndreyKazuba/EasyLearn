@@ -131,6 +131,15 @@ namespace EasyLearn.Data.Repositories.Implementations
             }
             context.SaveChanges();
         }
+        public VerbPreposition ResetVerbPrepositionRating(int verbPrepositionId)
+        {
+            VerbPreposition verbPreposition = GetVerbPreposition(verbPrepositionId);
+            verbPreposition.Rating = 0;
+            verbPreposition.CorrectAnswersStreak = 0;
+            verbPreposition.Studied = false;
+            context.SaveChanges();
+            return verbPreposition;
+        }
         #endregion
 
         #region Private members

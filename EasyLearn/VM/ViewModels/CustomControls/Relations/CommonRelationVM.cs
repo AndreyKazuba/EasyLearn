@@ -38,15 +38,15 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public Brush RussianUnitTypeColor { get; set; }
         public Brush EnglishUnitTypeColor { get; set; }
         public Brush RatingProgressBarColor { get; set; }
+        public Brush RatingProgressBarBackgroundColor { get; set; }
         public int Height { get; set; }
         public int RatingValue { get; set; }
-        public Thickness VerticalExpanderMargin { get; set; }
         #endregion
 
 #pragma warning disable CS8618
         public CommonRelationVM(CommonRelation commonRelation)
         {
-            this.Id = commonRelation.Id;
+            Id = commonRelation.Id;
             Set(commonRelation);
         }
 #pragma warning restore CS8618
@@ -78,12 +78,12 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             SecondExampleRussianValue = commonRelation.SecondExampleRussianValue.TryNormalizeRegister().EmptyIfNull();
             SecondExampleEnglishValue = commonRelation.SecondExampleEnglishValue.TryNormalizeRegister().EmptyIfNull();
             RatingProgressBarColor = commonRelation.Rating.GetColorForRating();
+            RatingProgressBarBackgroundColor = commonRelation.Rating.GetBackgroundColorForRating();
             RatingValue = commonRelation.Rating;
             IsStudiedMarkVisible = commonRelation.Studied;
             SetState(commonRelation);
             SetHeight();
             SetOrder();
-            SetVerticalExpanderMargin(commonRelation);
         }
         public void Collapse() => IsVisible = false;
         public void Show() => IsVisible = true;
@@ -113,32 +113,26 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             switch (state)
             {
                 case CardState.Without:
-                    Height = 75;
+                    Height = 75 + 4;
                     break;
                 case CardState.JustComment:
-                    Height = 75 + 48;
+                    Height = 75 + 48 + 1;
                     break;
                 case CardState.JustOneExample:
-                    Height = 75 + 63;
+                    Height = 75 + 63 + 1;
                     break;
                 case CardState.JustTwoExamples:
-                    Height = 75 + 63 + 52;
+                    Height = 75 + 63 + 52 + 1;
                     break;
                 case CardState.CommentAndOneExample:
-                    Height = 75 + 48 + 52;
+                    Height = 75 + 48 + 52 + 1;
                     break;
                 case CardState.CommentAndTwoExamples:
-                    Height = 75 + 48 + 52 + 52;
+                    Height = 75 + 48 + 52 + 52 + 1;
                     break;
             }
         }
         private void SetOrder() => OrderValue = (int)state;
-        private void SetVerticalExpanderMargin(CommonRelation commonRelation)
-        {
-            bool shouldBeExpanded = CommentIsVisible || commonRelation.IsFirstExampleExist || commonRelation.IsSecondExampleExist;
-            VerticalExpanderMargin = shouldBeExpanded ? new Thickness(0.3, 6, 0.3, 0) : new Thickness(0.3, 6, 0.3, 6);
-            HorisontalSeporatorIsVisible = shouldBeExpanded;
-        }
         #endregion
 
         #region Nested types

@@ -33,5 +33,6 @@ namespace EasyLearn.Data.Repositories.Interfaces
         Task DeleteAllDictionaryRelations(int dictionaryId);
         Task DeleteCommonRelation(int commonRelationId);
         void SaveDictationResults(List<Answer> answers);
+        CommonRelation ResetCommonRelationRating(int commonRelationId);
     }
 }

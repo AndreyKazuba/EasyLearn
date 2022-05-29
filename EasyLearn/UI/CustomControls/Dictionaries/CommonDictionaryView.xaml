@@ -33,7 +33,7 @@
                     <materialDesign:ColorZone Background="#bf80ff" VerticalAlignment="Stretch">
                         <materialDesign:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center"
                                              Height="128" Width="128"
-                                             Kind="Star"/>
+                                             Kind="Book"/>
                     </materialDesign:ColorZone>
 
                     <!--Кнопка перехода на заднюю сторону карточки (настройки словаря)-->
@@ -41,14 +41,16 @@
                         HorizontalAlignment="Right" VerticalAlignment="Top"
                         Foreground="{DynamicResource EasyBlack}"
                         Width="30" Height="30"
-                        Padding="1"
-                        Margin="0 6 6 0"
+                        Padding="0"
+                        Margin="0"
                         ToolTip="Настройки словаря">
 
                         <!--Изображение-->
-                        <materialDesign:PackIcon HorizontalAlignment="Center" VerticalAlignment="Center"
-                                             Kind="AccountDetails" 
-                                             Width="22" Height="22"/>
+                        <materialDesign:PackIcon HorizontalAlignment="Center" 
+                                                 VerticalAlignment="Center"
+                                                 Kind="DotsGrid" 
+                                                 Margin="0"
+                                                 Width="22" Height="22"/>
 
                         <!--Действия кнопки при нажатии-->
                         <i:Interaction.Triggers>
@@ -111,6 +113,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="0.8*" />
                         <RowDefinition Height="2*"/>
+                        <RowDefinition Height="Auto" MaxHeight="3"/>
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
@@ -164,31 +167,92 @@
                         </i:Interaction.Triggers>
                     </TextBox>
 
-                    <!--Редактировать описание словаря-->
-                    <TextBox TextWrapping="Wrap"
-                         VerticalAlignment="Stretch"
-                         HorizontalAlignment="Stretch"
-                             BorderBrush="{DynamicResource MainColor}"
-                             Background="{DynamicResource MainColorSuperLight}"
-                         Style="{DynamicResource MaterialDesignFilledTextBox}"
-                         materialDesign:HintAssist.Hint="Описание"
-                         materialDesign:HintAssist.IsFloating="True"
-                         materialDesign:ValidationAssist.UsePopup="False"
-                         Grid.Row="2">
 
-                        <TextBox.Text>
-                            <Binding Path="EditDescriptionFieldValue" UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <!--<valudationRules:InRange Max="{x:Static constants:ModelConstants.DictionaryDescriptionMaxLength}" Group="AddCommonRelation" ValidatesOnTargetUpdated="True"/>-->
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
-                    </TextBox>
+                    <Grid Grid.Row="2" Margin="16 14 0 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Всего записей:"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   FontFamily="Arial">
+                            
+                        </TextBlock>
+
+                        <TextBlock Text="Изучено:"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   Grid.Row="1"
+                                   FontFamily="Arial">
+                            
+                        </TextBlock>
+
+                        <TextBlock Text="Осталось:"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   Grid.Row="2"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+                        <TextBlock Text="64"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   Grid.Column="1"
+                                   FontWeight="Bold"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+                        <TextBlock Text="21"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   Grid.Row="1"
+                                   FontWeight="Bold"
+                                   Grid.Column="1"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+                        <TextBlock Text="43"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="13"
+                                   Grid.Row="2"
+                                   FontWeight="Bold"
+                                   Grid.Column="1"
+                                   FontFamily="Arial">
+
+                        </TextBlock>
+
+
+                    </Grid>
+
+                    <ProgressBar Grid.Row="3"
+                         Grid.ColumnSpan="3"
+                         VerticalAlignment="Bottom" 
+                         Height="3"
+                         BorderThickness="0.3"
+                         Background="{DynamicResource MainColorLight}"
+                         Foreground="{DynamicResource MainColor}"
+                         Value="45"
+                         BorderBrush="{DynamicResource MainColorLight}"
+                         Maximum="100">
+                    </ProgressBar>
+
 
                     <!--Кнопка удаления словаря-->
                     <Button Command="{Binding RemoveCommonDictionaryCommand}"
                             Foreground="{DynamicResource EasyRed}"
-                                Grid.Row="3"
+                                Grid.Row="4"
                             Height="40"
                             Style="{DynamicResource MaterialDesignFlatButton}"
                             HorizontalAlignment="Stretch"
@@ -203,6 +267,6 @@
             </Border>
 
         </materialDesign:Flipper.BackContent>
-        
+
     </materialDesign:Flipper>
 </UserControl>

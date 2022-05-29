@@ -22,7 +22,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="245"/>
-                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="60"/>
                             </Grid.ColumnDefinitions>
@@ -35,6 +35,7 @@
                                      materialDesign:HintAssist.Hint="Искать"
                                      Margin="0"
                                      materialDesign:HintAssist.IsFloating="False"
+                                     KeyDown="OnSearchTextBoxKeyDown"
                                      Text="{Binding SearchStringValue, UpdateSourceTrigger=PropertyChanged}">
 
                                 <i:Interaction.Triggers>
@@ -46,31 +47,48 @@
 
                             </TextBox>
 
-                            <Button Style="{StaticResource EasyCommonButton}" Margin="10 0 0 0" Height="38" Grid.Column="2"
+                            <Button Grid.Column="1" 
+                                    Style="{DynamicResource LittleCircleButton}"
+                                    Visibility="{Binding SerchTextBoxClearButtonIsVisible, Converter={converters:ForwardVisibilityConverter}}">
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding ClearSearchStringValueCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding SearchVerbPrepositionsCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
+                            </Button>
+
+                            <Button Style="{StaticResource EasyCommonButton}" Margin="6 0 0 0" Height="38" Width="38" Grid.Column="2"
                                     Command="{Binding SearchVerbPrepositionsCommand}">
-                                <TextBlock Text="Искать" FontSize="14" FontFamily="Arial"/>
+                                <materialDesign:PackIcon Kind="Magnify" 
+                                                         Height="28" Width="28"
+                                                         VerticalAlignment="Center" 
+                                                         Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                         HorizontalAlignment="Center"/>
+
                             </Button>
 
                             <Button Style="{StaticResource EasyCancelButton}" Margin="0 0 15 0" Height="38" Width="38"
                                     Grid.Column="4"
                                     Padding="0"
                                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
-                                <materialDesign:PackIcon Kind="TrashCanOutline" Height="28" Width="28" Foreground="{DynamicResource EasyRed}"
-                                                     VerticalAlignment="Center"
-                                                     HorizontalAlignment="Center"/>
+                                <materialDesign:PackIcon Kind="TrashCanOutline" Height="28" Width="28"
+                                                         VerticalAlignment="Center" Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                         HorizontalAlignment="Center"/>
                                 <Button.CommandParameter>
-                                    <Grid Margin="0 14">
+                                    <Grid Margin="0 10 0 12">
                                         <Grid.RowDefinitions>
                                             <RowDefinition/>
-                                            <RowDefinition Height="0.8" MaxHeight="0.8"/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
 
-                                        <TextBlock Margin="14 0 14 12" Style="{DynamicResource MaterialDesignBody1TextBlock}" Text="Удалить все записи?" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-
-                                        <Border BorderBrush="{DynamicResource EasyGray}" 
-                                                BorderThickness="0.5"
-                                                Grid.Row="1"/>
+                                        <TextBlock Margin="24 0 24 0" 
+                                                   Style="{DynamicResource MaterialDesignBody1TextBlock}" 
+                                                   Text="Очистить словарь?" 
+                                                   VerticalAlignment="Center" 
+                                                   HorizontalAlignment="Center"/>
 
                                         <Grid Grid.Row="2"
                                               Margin="14 12 14 0"
@@ -85,7 +103,7 @@
                                             <!--Кнопка отмены-->
                                             <Button Style="{DynamicResource EasyCancelButton}"
                                                     Name="dwCancelButton"
-                                                    Width="50"
+                                                    Width="75"
                                                     Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
 
                                                 <TextBlock Text="Нет" FontSize="14" FontFamily="Arial"/>
@@ -94,8 +112,7 @@
                                             <!--Кнопка подтверждения-->
                                             <Button Style="{DynamicResource EasyConfirmButton}"
                                                     Grid.Column="1"
-                                                    Width="50"
-                                                    
+                                                    Width="75"
                                                     Name="вwConfirmButton">
 
                                                 <TextBlock Text="Да" FontSize="14" FontFamily="Arial"/>
@@ -146,7 +163,7 @@
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
 
                 <Button.CommandParameter>
-                    <Grid Margin="0 14">
+                    <Grid Margin="0 0 0 10">
 
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -157,18 +174,18 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
 
-                        <Grid Margin="14 0">
+                        <StackPanel Orientation="Horizontal" Margin="14">
                             <!--Текстбокс для введения комментария к новому CommonRelation-->
                             <TextBox Style="{DynamicResource EasyValidationTextBox}"
-                                     Width="260" 
+                                     Width="345" 
                                      Grid.Row="7"
                                      HorizontalAlignment="Left"
                                      materialDesign:HintAssist.IsFloating="False"
                                      materialDesign:ValidationAssist.Suppress="True"
                                      Padding="14 11"
+                                     Margin="0 0 14 0"
                                      Grid.ColumnSpan="3"
                                      InputLanguageManager.InputLanguage="ru-RU"
-                                     
                                      materialDesign:HintAssist.Hint="Перевод">
 
                                 <TextBox.Text>
@@ -189,14 +206,36 @@
 
                             </TextBox>
 
+                            <Button Style="{StaticResource EasyCommonButton}" Height="39" Width="39"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    ToolTip="Сбросить прогресс"
+                                    Margin="0 0 14 0"
+                                    Padding="0">
+                                <materialDesign:PackIcon Kind="ArrowDown" 
+                                                         Height="28" Width="28" 
+                                                         Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding UwResetVerbPrepositionRatingCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
                             <Button Style="{StaticResource EasyCancelButton}" Height="38" Width="38"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
-                                    Margin="0 0 0 14"
+                                    ToolTip="Удалить"
+                                    
+                                    Margin="0"
                                     Padding="0">
-                                <materialDesign:PackIcon Kind="TrashCanOutline" Height="28" Width="28" Foreground="{DynamicResource EasyRed}"
-                                                     VerticalAlignment="Center"
-                                                     HorizontalAlignment="Center"/>
+                                <materialDesign:PackIcon Kind="TrashCanOutline" 
+                                                         Height="28" Width="28" 
+                                                         Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Center"/>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{Binding DeleteVerbPrepositionCommand}"/>
@@ -204,14 +243,14 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
-                        </Grid>
+                        </StackPanel>
 
                         <Border BorderBrush="{DynamicResource EasyGray}" 
                                     BorderThickness="0.5"
                                     Grid.Row="1"/>
 
                         <Grid Grid.Row="2"
-                              Margin="14 12 14 0"
+                              Margin="14 10 14 0"
                                   Grid.Column="0"
                                   Grid.ColumnSpan="3">
                             <Grid.ColumnDefinitions>
@@ -282,7 +321,8 @@
                                         Name="uwAddExampleButton"
                                         HorizontalAlignment="Center" VerticalAlignment="Top"
                                         Grid.Column="2">
-                                <materialDesign:PackIcon Kind="Add" Foreground="{DynamicResource EasyGreen}"/>
+
+                                <materialDesign:PackIcon Kind="PlusThick" Height="20" Width="20" Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
@@ -300,7 +340,7 @@
                         <ItemsControl ItemsSource="{Binding UwExampleViews}" 
                                       Grid.Row="3"
                                       Grid.Column="0"
-                                      Margin="0 0 0 14"
+                                      Margin="0 0 0 10"
                                       Width="450"
                                       Grid.ColumnSpan="3">
                             <ItemsControl.ItemsPanel>
@@ -317,7 +357,7 @@
                         <!--Кнопки отмены и подтверждения добавления нового CommonRelation-->
                         <Grid Grid.Row="5"
                               Width="230"
-                              Margin="14 12 14 0"
+                              Margin="14 10 14 0"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center">
 
@@ -383,9 +423,10 @@
 
                 <!--Диалоговое окно добавления нового VerbPreposition-->
                 <Button.CommandParameter>
-                    <Grid Margin="0 14">
+                    <Grid Margin="0 14 0 10">
 
                         <Grid.RowDefinitions>
+                            <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition MaxHeight="0.8"/>
                             <RowDefinition/>
@@ -493,14 +534,30 @@
                             </TextBox>
                         </Grid>
 
-                        <Border BorderBrush="{DynamicResource EasyGray}" 
-                                    BorderThickness="0.55"
-                                    Grid.Row="1"/>
+                        <!--Надпись о том, что запись уже существует-->
+                        <StackPanel VerticalAlignment="Center"
+                                    Margin="0 -6 0 0"
+                                    HorizontalAlignment="Center" 
+                                    Grid.Row="1" Grid.ColumnSpan="3" 
+                                    Orientation="Horizontal" 
+                                    Visibility="{Binding AwVerbPrepositionHasExistLableIsVisible, Converter={converters:ReverseCollapseConverter}}">
+                            <materialDesign:PackIcon Kind="AlertCircleOutline" Foreground="{DynamicResource EasyRed}" Margin="2 0 2 0"/>
+                            <TextBlock VerticalAlignment="Center"
+                                           Margin="2 0 0 2"
+                                           Text="Такая запись уже есть" 
+                                           Foreground="{DynamicResource EasyRed}"
+                                           Style="{DynamicResource MaterialDesignSubtitle2TextBlock}"/>
+                            <TextBlock/>
+                        </StackPanel>
 
-                        <Grid Grid.Row="2"
-                                  Grid.Column="0"
-                              Margin="13 12 14 0"
-                                  Grid.ColumnSpan="3">
+                        <Border BorderBrush="{Binding HorisontalSeporatorColor}" 
+                                BorderThickness="0.5"
+                                Grid.Row="2"/>
+
+                        <Grid Grid.Row="3"
+                              Grid.Column="0"
+                              Margin="13 10 14 0"
+                              Grid.ColumnSpan="3">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
@@ -570,7 +627,7 @@
                                         Name="awAddExampleButton"
                                         HorizontalAlignment="Center" VerticalAlignment="Top"
                                         Grid.Column="2">
-                                <materialDesign:PackIcon Kind="Add" Foreground="{DynamicResource EasyGreen}"/>
+                                <materialDesign:PackIcon Kind="PlusThick" Height="20" Width="20" Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
@@ -581,16 +638,14 @@
                                 </i:Interaction.Triggers>
                             </Button>
 
-
-
                         </Grid>
 
                         <ItemsControl ItemsSource="{Binding AwExampleViews}" 
-                                          Grid.Row="3"
-                                          Grid.Column="0"
-                                          Width="450"
-                                      Margin="14 0 14 12"
-                                          Grid.ColumnSpan="3">
+                                      Grid.Row="4"
+                                      Grid.Column="0"
+                                      Width="450"
+                                      Margin="14 0 14 10"
+                                      Grid.ColumnSpan="3">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel/>
@@ -600,14 +655,14 @@
 
                         <Border BorderBrush="{DynamicResource EasyGray}" 
                                     BorderThickness="0.5"
-                                    Grid.Row="4"/>
+                                    Grid.Row="5"/>
 
 
-                        <Grid Grid.Row="5"
-                                  Width="230"
-                              Margin="14 12 14 0"
-                                  HorizontalAlignment="Center"
-                                  VerticalAlignment="Center">
+                        <Grid Grid.Row="6"
+                              Width="230"
+                              Margin="14 10 14 0"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>

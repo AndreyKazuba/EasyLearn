@@ -227,7 +227,7 @@
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
                                                 <Border Background="{TemplateBinding Background}">
-                                                    <materialDesign:PackIcon Kind="DockBottom" Height="28" Width="28" Foreground="{DynamicResource EasyWhite}"
+                                                    <materialDesign:PackIcon Kind="DockTop" Height="28" Width="28" Foreground="{DynamicResource EasyWhite}"
                                                      VerticalAlignment="Center"
                                                      HorizontalAlignment="Center"/>
                                                 </Border>

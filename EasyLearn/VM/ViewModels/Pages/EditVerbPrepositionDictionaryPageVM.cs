@@ -17,6 +17,8 @@ using Page = EasyLearn.Infrastructure.Enums.Page;
 using EasyLearn.Data.Constants;
 using System.Windows;
 using EasyLearn.Data.Helpers;
+using System.Windows.Media;
+using EasyLearn.Infrastructure.UIConstants;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -40,7 +42,11 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Private helper props
         private bool VerbPrepositionExist
         {
-            set => ValidationPool.Set(ValidationRulesGroup.AddVerbPreposition, verbPrepositionExistValidationRuleId, !value);
+            set
+            {
+                ValidationPool.Set(ValidationRulesGroup.AddVerbPreposition, verbPrepositionExistValidationRuleId, !value);
+                AwVerbPrepositionHasExistLableIsVisible = value;
+            }
         }
         #endregion
 
@@ -48,7 +54,8 @@ namespace EasyLearn.VM.ViewModels.Pages
         public ObservableCollection<UserControl> VerbPrepositionViews { get; set; } = new ObservableCollection<UserControl>();
         public ObservableCollection<ExampleView> AwExampleViews { get; set; } = new ObservableCollection<ExampleView>();
         public ObservableCollection<ExampleView> UwExampleViews { get; set; } = new ObservableCollection<ExampleView>();
-        public string SearchStringValue { get; set; }
+        public SolidColorBrush HorisontalSeporatorColor => AwVerbPrepositionHasExistLableIsVisible ? ColorCodes.EasyRed.GetBrushByHex() : ColorCodes.EasyGray.GetBrushByHex();
+        public string SearchStringValue { get; set; } = string.Empty;
         public string AwVerbValue { get; set; }
         public string AwPrepositionValue { get; set; }
         public string AwTranslationValue { get; set; }
@@ -56,11 +63,13 @@ namespace EasyLearn.VM.ViewModels.Pages
         public string AwExampleEnglishValue { get; set; }
         public bool AwConfirmButtonIsEnabled { get; set; }
         public bool AwAddExampleButtonIsEnabled { get; set; }
+        public bool AwVerbPrepositionHasExistLableIsVisible { get; set; }
         public string UwTranslationValue { get; set; }
         public string UwExampleRussianValue { get; set; }
         public string UwExampleEnglishValue { get; set; }
         public bool UwConfirmButtonIsEnabled { get; set; } = true;
         public bool UwAddExampleButtonIsEnabled { get; set; }
+        public bool SerchTextBoxClearButtonIsVisible => !string.IsNullOrEmpty(SearchStringValue);
         #endregion
 
 #pragma warning disable CS8618
@@ -81,6 +90,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command DeleteAllVerbPrepositionsCommand { get; private set; }
         public Command<int> RemoveExampleViewCommand { get; private set; }
         public Command SearchVerbPrepositionsCommand { get; private set; }
+        public Command ClearSearchStringValueCommand { get; private set; }
 
         public Command AwOpenWindowCommand { get; private set; }
         public Command AwClearCommand { get; private set; }
@@ -100,6 +110,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command UwValidateExampleSectionCommand { get; private set; }
         public Command UwFocusExampleRussianValueTextBoxCommand { get; private set; }
         public Command UwCheckExampleTextBoxesMaxLengthVisibilityCommand { get; private set; }
+        public Command UwResetVerbPrepositionRatingCommand { get; private set; }
 
         protected override void InitCommands()
         {
@@ -111,6 +122,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             DeleteAllVerbPrepositionsCommand = new Command(async () => await DeleteAllVerbPrepositions());
             RemoveExampleViewCommand = new Command<int>(RemoveExampleView);
             SearchVerbPrepositionsCommand = new Command(SearchVerbPrepositions);
+            ClearSearchStringValueCommand = new Command(ClearSearchStringValue);
 
             AwOpenWindowCommand = new Command(AwOpenWindow);
             AwClearCommand = new Command(AwClear);
@@ -130,6 +142,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             UwValidateExampleSectionCommand = new Command(UwValidateExampleSection);
             UwCheckExampleTextBoxesMaxLengthVisibilityCommand = new Command(UwCheckExampleTextBoxesMaxLengthVisibility);
             UwFocusExampleRussianValueTextBoxCommand = new Command(UwFocusExampleRussianValueTextBox);
+            UwResetVerbPrepositionRatingCommand = new Command(UwResetVerbPrepositionRating);
         }
         private void GoBack() => App.GetService<AppWindowVM>().OpenDictionariesPageCommand.Execute();
         private async Task SetDictionary(int verbPrepositionDictionaryId)
@@ -208,13 +221,15 @@ namespace EasyLearn.VM.ViewModels.Pages
                 VerbPrepositionView? verbPrepositionView = userControl as VerbPrepositionView;
                 if (verbPrepositionView is null)
                     continue;
-                bool isMatch = verbPrepositionView.VerbValue.Contains(SearchStringValue) || verbPrepositionView.PrepositionValue.Contains(SearchStringValue);
+                bool isMatch = verbPrepositionView.VerbValue.Prepare().Contains(SearchStringValue.Prepare()) 
+                            || verbPrepositionView.PrepositionValue.Prepare().Contains(SearchStringValue.Prepare());
                 if (isMatch)
                     verbPrepositionView.Show();
                 else
                     verbPrepositionView.Collapse();
             }
         }
+        private void ClearSearchStringValue() => SearchStringValue = string.Empty;
         private void AwOpenWindow() => AwOpenWindowButtonSoftClick();
         private void AwClear()
         {
@@ -229,7 +244,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             string verbValue = AwVerbValue;
             string prepositionValue = AwPrepositionValue;
-            VerbPrepositionExist = verbPrepositionRepository.IsVerbPrepositionExist(verbValue, prepositionValue, pageCurrentDictionaryId);
+            VerbPrepositionExist = verbPrepositionRepository.IsVerbPrepositionExist(verbValue.Prepare(), prepositionValue.Prepare(), pageCurrentDictionaryId);
         }
         private void AwAddExampleView()
         {
@@ -315,6 +330,11 @@ namespace EasyLearn.VM.ViewModels.Pages
             else
                 UwHideExampleTextBoxesMaxLength();
         }
+        private void UwResetVerbPrepositionRating()
+        {
+            VerbPreposition updatedVerbPreposition = verbPrepositionRepository.ResetVerbPrepositionRating(currentVerbPrepositionForUpdate.Id);
+            UpdateVerbPrepositionViewOnUI(updatedVerbPreposition);
+        }
         #endregion
 
         #region Event handling
@@ -327,6 +347,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             EditVerbPrepositionDictionaryPage.AddingWindowExampleEnglishValueTextBoxEnterDown += OnAddingWindowExampleEnglishValueTextBoxEnterDown;
             EditVerbPrepositionDictionaryPage.UpdateWindowExampleRussianValueTextBoxEnterDown += OnUpdateWindowExampleRussianValueTextBoxEnterDown;
             EditVerbPrepositionDictionaryPage.UpdateWindowExampleEnglishValueTextBoxEnterDown += OnUpdateWindowExampleEnglishValueTextBoxEnterDown;
+            EditVerbPrepositionDictionaryPage.SearchTextBoxEnterDown += OnSearchTextBoxEnterDown;
+            EditVerbPrepositionDictionaryPage.SearchTextBoxEscapeDown += OnSearchTextBoxEscapeDown;
             AppWindow.WindowCtrlNDown += OnWindowCtrlNDown;
             AppWindow.WindowEscDown += OnWindowEscDown;
             AppWindow.GoBackButtonClick += OnGoBackButtonClick;
@@ -353,6 +375,12 @@ namespace EasyLearn.VM.ViewModels.Pages
             if (uwExampleIsInvalid)
                 return;
             UwAddExampleButtonSoftClick();
+        }
+        private void OnSearchTextBoxEnterDown() => SearchVerbPrepositions();
+        private void OnSearchTextBoxEscapeDown()
+        {
+            ClearSearchStringValue();
+            SearchVerbPrepositions();
         }
         private void OnWindowCtrlNDown()
         {
@@ -452,8 +480,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             TextBox awExampleEnglishValueTextBox = App.GetService<EditVerbPrepositionDictionaryPage>().awExampleEnglishValueTextBox;
             awExampleRussianValueTextBox.MaxLength = ModelConstants.ExampleValueMaxLength;
             awExampleEnglishValueTextBox.MaxLength = ModelConstants.ExampleValueMaxLength;
-            awExampleRussianValueTextBox.Margin = new Thickness(0, 0, 7, 7);
-            awExampleEnglishValueTextBox.Margin = new Thickness(7, 0, 0, 7);
+            awExampleRussianValueTextBox.Margin = new Thickness(0, 0, 7, 8);
+            awExampleEnglishValueTextBox.Margin = new Thickness(7, 0, 0, 8);
         }
         private void AwHideExampleTextBoxesMaxLength()
         {
@@ -478,8 +506,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             TextBox awExampleEnglishValueTextBox = App.GetService<EditVerbPrepositionDictionaryPage>().uwExampleEnglishValueTextBox;
             awExampleRussianValueTextBox.MaxLength = ModelConstants.ExampleValueMaxLength;
             awExampleEnglishValueTextBox.MaxLength = ModelConstants.ExampleValueMaxLength;
-            awExampleRussianValueTextBox.Margin = new Thickness(0, 0, 7, 7);
-            awExampleEnglishValueTextBox.Margin = new Thickness(7, 0, 0, 7);
+            awExampleRussianValueTextBox.Margin = new Thickness(0, 0, 7, 8);
+            awExampleEnglishValueTextBox.Margin = new Thickness(7, 0, 0, 8);
         }
         private void UwHideExampleTextBoxesMaxLength()
         {
