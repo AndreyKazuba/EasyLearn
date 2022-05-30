@@ -52,7 +52,10 @@ namespace EasyLearn.VM.ViewModels.Pages
             DictationWordsCount = ivDictationManager.TotalIrregularVerbsCount.ToString();
             DictationAnswersCount = ivDictationManager.AnswersCount.ToString();
             DictationWrongAnswersCount = ivDictationManager.WrongAnswersCount.ToString();
-            Grade = ((int)((ivDictationManager.AnswersCount - ivDictationManager.WrongAnswersCount) * (100d / ivDictationManager.AnswersCount))).ToString();
+            Grade = ivDictationManager.AnswersCount != 0
+                ? ((int)((ivDictationManager.AnswersCount - ivDictationManager.WrongAnswersCount) * (100d / ivDictationManager.AnswersCount))).ToString() :
+                "0";
+            GradeForeground = Convert.ToInt32(Grade).GetColorForGrade();
         }
         #endregion
 
@@ -84,14 +87,22 @@ namespace EasyLearn.VM.ViewModels.Pages
             IvSecondFormFixedAnswerValue = mysteriousString;
             IvThirdFormFixedAnswerValue = mysteriousString;
         }
+        private void IvClearFixedAnswerValues()
+        {
+            IvFirstFormFixedAnswerValue = string.Empty;
+            IvSecondFormFixedAnswerValue = string.Empty;
+            IvThirdFormFixedAnswerValue = string.Empty;
+        }
         #endregion
 
         #region Private UI methods (dictation process)
         private void IvStart()
         {
             SetDefaultPageState();
+            IvShowGrayIcons();
             dictationIsStarted = true;
             IvSetDictationManager();
+            IvSetDefaultFixedAnswerValues();
             IrregularVerb firstIrregularVerb = ivDictationManager?.Start() ?? throw new Exception(ExceptionMessagesHelper.DictationManagerIsNull);
             IvSetIrregularVerb(firstIrregularVerb);
             SwitchStartAndStopButtons();

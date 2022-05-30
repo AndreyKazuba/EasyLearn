@@ -16,7 +16,7 @@
 
                 <!--Верхнее выплывающее меню-->
                 <materialDesign:DrawerHost.TopDrawerContent>
-                    <Border Background="{DynamicResource EasyGrayLight}" Height="58" BorderBrush="{DynamicResource MainColor}" BorderThickness="0.4 0 0 0.6">
+                    <Border Background="{DynamicResource EasyGrayLight}" Height="62" BorderBrush="{DynamicResource MainColor}" BorderThickness="0.4 0 0 0.6">
                         <Grid VerticalAlignment="Stretch">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -29,7 +29,7 @@
                                      Width="245"
                                      Margin="0"
                                      Grid.Column="1"
-                                     Padding="14 11"
+                                     Padding="14 14 14 0"
                                      VerticalAlignment="Center"
                                      InputLanguageManager.InputLanguage="ru-RU"
                                      materialDesign:HintAssist.Hint="Искать"
@@ -46,8 +46,8 @@
                                 </i:Interaction.Triggers>
 
                             </TextBox>
-                            
-                            
+
+
 
                             <Button Grid.Column="1" 
                                     Style="{DynamicResource LittleCircleButton}"
@@ -63,7 +63,7 @@
                             </Button>
 
                             <Button Style="{StaticResource EasyCommonButton}"
-                                    Height="38" Width="38"
+                                    Height="44" Width="44"
                                     HorizontalAlignment="Left"
                                     Margin="6 0 0 0"
                                     Grid.Column="2" 
@@ -77,7 +77,7 @@
 
                             </Button>
 
-                            <Button Style="{StaticResource EasyCancelButton}" Margin="0 0 15 0" Height="38" Width="38"
+                            <Button Style="{StaticResource EasyCancelButton}" Margin="0 0 15 0" Height="44" Width="44"
                                     Grid.Column="4"
                                     Padding="0"
                                     ToolTip="Очистить словарь"
@@ -166,7 +166,7 @@
                     <Button Visibility="Collapsed" Name="closeTopMenuButton" Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"/>
 
                     <!--Контейнер для содержания всех CommonRelations-->
-                    <ScrollViewer Grid.Row="1" ScrollViewer.CanContentScroll="False">
+                    <ScrollViewer Grid.Row="1" materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True">
                         <ItemsControl ItemsSource="{Binding CommonRelationViews}" 
                                   VerticalContentAlignment="Top"
                                   ScrollViewer.CanContentScroll="False"
@@ -186,7 +186,7 @@
             <Button Name="uwOpenWindowButton"
                     Visibility="Collapsed"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
-                
+
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <i:InvokeCommandAction Command="{Binding DisableAppWindowNavigationBarCommand}"/>
@@ -213,7 +213,7 @@
                                      HorizontalAlignment="Left"
                                      materialDesign:HintAssist.IsFloating="False"
                                      materialDesign:ValidationAssist.Suppress="True"
-                                     Padding="14 11"
+                                     Padding="14 14 14 0"
                                      Margin="0 0 14 0"
                                      Grid.ColumnSpan="3"
                                      InputLanguageManager.InputLanguage="ru-RU"
@@ -236,7 +236,7 @@
 
                             </TextBox>
 
-                            <Button Style="{StaticResource EasyCommonButton}" Height="39" Width="39"
+                            <Button Style="{StaticResource EasyCommonButton}" Height="44" Width="44"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     Margin="0 0 14 0"
@@ -251,10 +251,11 @@
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding UwResetCommonRelationRatingCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
-                            <Button Style="{StaticResource EasyCancelButton}" Height="39" Width="39"
+                            <Button Style="{StaticResource EasyCancelButton}" Height="44" Width="44"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     Margin="0"
@@ -269,6 +270,7 @@
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{Binding DeleteCommonRelationCommand}"/>
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
@@ -283,14 +285,14 @@
                               Grid.Column="0"
                               Grid.ColumnSpan="3">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="199"/>
-                                <ColumnDefinition Width="199"/>
+                                <ColumnDefinition Width="202"/>
+                                <ColumnDefinition Width="202"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
                             <TextBox Style="{DynamicResource EasyTextBox}"
-                                     Width="185"
-                                     Padding="14 11"
+                                     Width="188"
+                                     Padding="14 14 14 0"
                                      Margin="0 0 14 0"
                                      HorizontalAlignment="Left"
                                      materialDesign:ValidationAssist.Suppress="True"
@@ -317,10 +319,10 @@
                             </TextBox>
 
                             <TextBox Style="{DynamicResource EasyTextBox}"
-                                         Width="185"
+                                         Width="188"
                                          Grid.Column="1"
                                          Margin="0 0 14 0"
-                                         Padding="14 11"
+                                         Padding="14 14 14 0"
                                      materialDesign:ValidationAssist.Suppress="True"
                                      
                                      HorizontalAlignment="Left"
@@ -348,8 +350,8 @@
                             </TextBox>
 
                             <Button Style="{DynamicResource EasyConfirmButton}"
-                                    Height="39"
-                                    Width="39"
+                                    Height="44"
+                                    Width="44"
                                     Margin="0 0"
                                     IsEnabled="{Binding UwAddExampleButtonIsEnabled}"
                                     Name="uwAddExampleButton"
@@ -482,7 +484,7 @@
                         <!--Текстбокс для введения русского значения в новом CommonRelation-->
                         <TextBox Style="{DynamicResource EasyValidationTextBox}"
                                  Width="214"
-                                 Padding="14 11"
+                                 Padding="14 14 14 0"
                                  Margin="14 0 7 14"
                                  InputLanguageManager.InputLanguage="ru-RU"
                                  materialDesign:ValidationAssist.Suppress="True"
@@ -514,7 +516,7 @@
                                   Grid.Row="1"
                                   Margin="14 0 7 14"
                                   Width="214"
-                                  Padding="14 11"
+                                  Padding="14 14 14 12"
                                   Grid.Column="0"
                                   KeyDown="OnRussianUnitTypeComboBoxKeyDown"
                                   Name="awRussianUnitTypeComboBox"
@@ -541,7 +543,7 @@
                         <TextBox Style="{DynamicResource EasyValidationTextBox}"
                                  Width="214"
                                  Margin="7 0 14 14"
-                                 Padding="14 11"
+                                 Padding="14 14 14 0"
                                  materialDesign:ValidationAssist.Suppress="True"
                                  Grid.Column="2"
                                  InputLanguageManager.InputLanguage="en-US"
@@ -575,7 +577,7 @@
                                   Grid.Column="2"
                                   Margin="7 0 14 14"
                                   Width="214"
-                                  Padding="14 11"
+                                  Padding="14 14 14 12"
                                   KeyDown="OnEnglishUnitTypeComboBoxKeyDown"
                                   Name="awEnglishUnitTypeComboBox"
                                   ItemsSource="{Binding AwEnglishUnitTypes}"
@@ -598,7 +600,7 @@
                                  Margin="0 0 0 14"
                                  materialDesign:HintAssist.IsFloating="False"
                                  materialDesign:ValidationAssist.Suppress="True"
-                                 Padding="14 11"
+                                 Padding="14 14 14 0"
                                  Grid.ColumnSpan="3"
                                  InputLanguageManager.InputLanguage="ru-RU"
                                  Name="awCommentValueTextBox"
@@ -655,8 +657,8 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBox Style="{DynamicResource EasyTextBox}"
-                                     Width="188"
-                                     Padding="14 11"
+                                     Width="185"
+                                     Padding="14 14 14 0"
                                      Margin="0 0 14 0"
                                      materialDesign:HintAssist.IsFloating="False"
                                      KeyDown="OnAddingWindowExampleRussianValueTextBoxKeyDown"
@@ -682,10 +684,10 @@
 
                             <TextBox Style="{DynamicResource EasyTextBox}"
                                      HorizontalAlignment="Stretch"
-                                     Width="188"
+                                     Width="185"
                                      Grid.Column="1"
                                      Margin="0 0 14 0"
-                                     Padding="14 11"
+                                     Padding="14 14 14 0"
                                      materialDesign:HintAssist.IsFloating="False"
                                      KeyDown="OnAddingWindowExampleEnglishValueTextBoxKeyDown"
                                      Name="awExampleEnglishValueTextBox"
@@ -709,8 +711,8 @@
                             </TextBox>
 
                             <Button Style="{DynamicResource EasyConfirmButton}"
-                                    Height="39"
-                                    Width="39"
+                                    Height="44"
+                                    Width="44"
                                     Margin="0 0 0 0"
                                     IsEnabled="{Binding AwAddExampleButtonIsEnabled}"
                                     Name="awAddExampleButton"

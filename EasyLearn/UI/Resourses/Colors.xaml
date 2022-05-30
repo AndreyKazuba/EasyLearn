@@ -23,7 +23,7 @@
 
     <SolidColorBrush x:Key="EasyWhite" Color="#ffffff"/>
 
-    <SolidColorBrush x:Key="EasyBlack" Color="#262626"/>
+    <SolidColorBrush x:Key="EasyBlack" Color="#404040"/>
 
     <SolidColorBrush x:Key="EasyGold" Color="Gold"/>
 

@@ -87,6 +87,7 @@
                                                            HorizontalAlignment="Center"
                                                            Text="{Binding Name}" 
                                                            d:Text="Test"
+                                                           Foreground="{DynamicResource EasyBlack}"
                                                            FontFamily="Arial"
                                                            FontSize="15"/>
                                             </Border>
@@ -119,7 +120,7 @@
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="0.8*" />
+                        <RowDefinition Height="0.6*" />
                         <RowDefinition Height="2*"/>
                         <RowDefinition Height="Auto" MaxHeight="3"/>
                         <RowDefinition Height="Auto" />
@@ -156,15 +157,19 @@
                     </materialDesign:ColorZone>
 
                     <!--Редактировать имя пользвателя-->
-                    <TextBox materialDesign:HintAssist.Hint="Имя" 
-                             materialDesign:HintAssist.IsFloating="True"
-                             Grid.Row="1"         
+                    <TextBox Grid.Row="1"
+                             Padding="15 15 14 0"
+                             FontFamily="Arial"
+                             Foreground="{DynamicResource EasyBlack}"
                              Background="{DynamicResource MainColorSuperLight}"
                              BorderBrush="{DynamicResource MainColor}"
+                             Style="{DynamicResource MaterialDesignFilledTextBox}"
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Stretch"
                              materialDesign:ValidationAssist.Suppress="True"
-                             Style="{DynamicResource MaterialDesignFilledTextBox}">
+                             materialDesign:HintAssist.FontFamily="Arial"
+                             materialDesign:HintAssist.IsFloating="False"
+                             materialDesign:HintAssist.Hint="Имя">
 
                         <TextBox.Text>
                             <Binding Path="EditNameFieldValue" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">

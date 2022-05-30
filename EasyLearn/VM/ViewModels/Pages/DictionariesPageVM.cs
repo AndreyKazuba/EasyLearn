@@ -18,6 +18,7 @@ using EasyLearn.Infrastructure.Exceptions;
 using EasyLearn.UI.Pages;
 using EasyLearn.Infrastructure.Helpers;
 using EasyLearn.UI;
+using EasyLearn.Infrastructure.UIInterfaces;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -226,7 +227,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 .Select(verbPrepositionDictionary => VerbPrepositionDictionaryView.Create(verbPrepositionDictionary));
             List<UserControl> allCurrentUserDictionariesViews = commonDictionaryViews.Union(verbPrepositionDictionaryViews).ToList();
             allCurrentUserDictionariesViews.Add(irregularVerbDictionaryView);
-            DictionaryViews = new ObservableCollection<UserControl>(allCurrentUserDictionariesViews);
+            DictionaryViews = new ObservableCollection<UserControl>(allCurrentUserDictionariesViews.OrderByDescending(dictionaryView => ((IHavingOrder)dictionaryView).Order));
             AddShadowDictionaryViewToUI();
         }
         #endregion

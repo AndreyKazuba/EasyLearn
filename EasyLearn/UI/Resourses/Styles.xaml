@@ -114,7 +114,10 @@
     <Style x:Key="EasyTextBoxBase" TargetType="TextBox"  BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
         <Setter Property="BorderThickness" Value="0.6"/>
         <Setter Property="Background" Value="#f2f2f2"/>
-        <Setter Property="MaxHeight" Value="40"/>
+        <Setter Property="MaxHeight" Value="45"/>
+        <Setter Property="Height" Value="45"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontFamily" Value="Arial"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="Margin" Value="0 0 0 14" />
         <Style.Triggers>
@@ -177,6 +180,11 @@
 
     <Style x:Key="EasyComboBox" TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
         <Setter Property="Background" Value="#f2f2f2"/>
+        <Setter Property="FontFamily" Value="Arial"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Height" Value="45"/>
+        <Setter Property="MaxHeight" Value="45"/>
+        <Setter Property="Foreground" Value="{StaticResource EasyBlack}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource EasyGray}"/>
         <Style.Triggers>
             <Trigger Property="IsFocused" Value="True">

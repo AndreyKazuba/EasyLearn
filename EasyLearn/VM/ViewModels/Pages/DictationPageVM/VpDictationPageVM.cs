@@ -49,7 +49,10 @@ namespace EasyLearn.VM.ViewModels.Pages
             DictationWordsCount = vpDictationManager.TotalVerbPrepositionsCount.ToString();
             DictationAnswersCount = vpDictationManager.AnswersCount.ToString();
             DictationWrongAnswersCount = vpDictationManager.WrongAnswersCount.ToString();
-            Grade = ((int)((vpDictationManager.AnswersCount - vpDictationManager.WrongAnswersCount) * (100d / vpDictationManager.AnswersCount))).ToString();
+            Grade = vpDictationManager.AnswersCount != 0
+                ? ((int)((vpDictationManager.AnswersCount - vpDictationManager.WrongAnswersCount) * (100d / vpDictationManager.AnswersCount))).ToString()
+                : "0";
+            GradeForeground = Convert.ToInt32(Grade).GetColorForGrade();
         }
         #endregion
 

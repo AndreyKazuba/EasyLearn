@@ -35,26 +35,35 @@
                 </Grid.RowDefinitions>
 
                 <!--Основное содержимое секции-->
-                <StackPanel Grid.Row="1">
+                <Grid Grid.Row="1" Height="238">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="132"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
                     <!--Отображение основного слова-->
-                    <Border Padding="50 0 50 0">
+                    <Border Grid.Row="0" Padding="50 0">
                         <Grid>
 
                             <!--Основное слово-->
-                            <TextBlock FontSize="100"
-                                   Text="{Binding CdMainDisplayValue}"
-                                   Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   d:Text="EasyLearn">
+                            <TextBlock FontSize="95"
+                                       Text="{Binding CdMainDisplayValue}"
+                                       Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
+                                       HorizontalAlignment="Center"
+                                       Foreground="{DynamicResource EasyBlack}"
+                                       VerticalAlignment="Center"
+                                       d:Text="EasyLearn">
                             </TextBlock>
 
                             <!--Тип сновного слова-->
                             <Border HorizontalAlignment="Right" 
                                     VerticalAlignment="Center" 
                                     CornerRadius="4"
-                                    Margin="0 0 -25 70"
+                                    Margin="0 0 -25 110"
                                     Visibility="{Binding CdUnitTypeIsVisible, Converter={converters:ReverseCollapseConverter}}" 
                                     Padding="5 3"
                                     Background="{Binding CdUnitTypeColor}">
@@ -70,41 +79,48 @@
                     </Border>
 
                     <!--Отображение комментария-->
-                    <TextBlock FontSize="40"
+                    <TextBlock FontSize="36"
+                               Grid.Row="1"
+                               FontFamily="Arial"
+                               Margin="0 0 0 3"
                                Text="{Binding CdCommentValue}"
                                Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
                                HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
+                               Visibility="{Binding CdCommentIsVisile, Converter={converters:ReverseCollapseConverter}}"
+                               VerticalAlignment="Top"
                                d:Text="Comment"
-                               Foreground="{DynamicResource EasyGray}">
+                               Foreground="#8c8c8c">
                     </TextBlock>
 
                     <!--Отображение первого примера-->
-                    <TextBlock FontSize="20"
-                               Margin="0 20 0 0"
+                    <TextBlock FontSize="21"
+                               Grid.Row="2"
+                               Margin="0 3 0 0"
                                Text="{Binding CdFirstExampleValue}"
                                Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
                                HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
+                               VerticalAlignment="Top"
                                FontFamily="Arial"
                                FontStyle="Italic"
                                d:Text="Comment"
-                               Foreground="{DynamicResource MainColorLight}">
+                               Foreground="#8c8c8c">
                     </TextBlock>
 
                     <!--Отображение второго примера-->
-                    <TextBlock FontSize="20"
+                    <TextBlock FontSize="21"
+                               Grid.Row="3"
+                               Margin="0 5 0 0"
                                Text="{Binding CdSecondExampleValue}"
                                Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
                                HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
+                               VerticalAlignment="Top"
                                FontFamily="Arial"
                                FontStyle="Italic"
                                d:Text="Comment"
-                               Foreground="{DynamicResource MainColorLight}">
+                               Foreground="#8c8c8c">
                     </TextBlock>
 
-                </StackPanel>
+                </Grid>
 
                 <!--Отображение подсказки (сверху от текстбокса введения ответа)-->
                 <TextBlock FontSize="20"
@@ -127,13 +143,14 @@
                             Orientation="Horizontal" Height="40"
                             HorizontalAlignment="Center"
                             Grid.Row="2"
-                            Margin="0 0 0 7"
+                            Margin="0 0 0 6"
                             VerticalAlignment="Bottom">
                     <TextBlock Style="{DynamicResource MaterialDesignHeadline1TextBlock}" 
                                Text="Также верно:" 
+                               FontFamily="Arial"
                                VerticalAlignment="Center"
-                               Margin="0 -4 0 0"
-                               FontSize="18">
+                               Margin="0 -2 0 0"
+                               FontSize="16">
                     </TextBlock>
                     <ItemsControl ItemsSource="{Binding CdAnotherAnswerViews}" 
                                   VerticalContentAlignment="Center"
@@ -174,6 +191,7 @@
                                    Text="{Binding VpMainDisplayValue}"
                                    Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
                                    HorizontalAlignment="Center"
+                                   Foreground="{DynamicResource EasyBlack}"
                                    VerticalAlignment="Center"
                                    d:Text="Depends">
                         </TextBlock>
@@ -194,19 +212,19 @@
                     </StackPanel>
 
                     <!--Отображение перевода-->
-                    <TextBlock FontSize="50"
-                                   Text="{Binding VpTranslationValue}"
-                                   Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   d:Text="Зависеть от"
-                                   FontStyle="Italic"
-                                   Foreground="{DynamicResource EasyGray}">
+                    <TextBlock FontSize="36"
+                               FontFamily="Arial"
+                               Text="{Binding VpTranslationValue}"
+                               Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               d:Text="Зависеть от"
+                               Foreground="#8c8c8c">
                     </TextBlock>
 
                     <!--Отображение первого примера-->
-                    <TextBlock FontSize="20"
-                               Margin="0 20 0 0"
+                    <TextBlock FontSize="21"
+                               Margin="0 20 0 5"
                                Text="{Binding VdFirstExampleValue}"
                                Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
                                HorizontalAlignment="Center"
@@ -214,11 +232,11 @@
                                FontFamily="Arial"
                                FontStyle="Italic"
                                d:Text="Comment"
-                               Foreground="{DynamicResource MainColorLight}">
+                               Foreground="#8c8c8c">
                     </TextBlock>
 
                     <!--Отображение второго примера-->
-                    <TextBlock FontSize="20"
+                    <TextBlock FontSize="21"
                                Text="{Binding VdSecondExampleValue}"
                                Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
                                HorizontalAlignment="Center"
@@ -226,7 +244,7 @@
                                FontFamily="Arial"
                                FontStyle="Italic"
                                d:Text="Comment"
-                               Foreground="{DynamicResource MainColorLight}">
+                               Foreground="#8c8c8c">
                     </TextBlock>
                     
                 </StackPanel>
@@ -269,11 +287,12 @@
 
                     <!--Отображение основного слова-->
                     <TextBlock FontSize="90"
-                           Text="{Binding IvMainDisplayValue}"
-                           Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Bottom"
-                           d:Text="Идти">
+                               Text="{Binding IvMainDisplayValue}"
+                               Style="{DynamicResource MaterialDesignHeadline1TextBlock}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Bottom"
+                               Foreground="{DynamicResource EasyBlack}"
+                               d:Text="Идти">
                     </TextBlock>
 
                     <!--Отображение комментария-->
@@ -283,7 +302,7 @@
                            HorizontalAlignment="Center"
                            VerticalAlignment="Top"
                            d:Text="Куда-то"
-                           Foreground="{DynamicResource EasyGray}">
+                           Foreground="#8c8c8c">
                     </TextBlock>
 
                     <!--Отображение лога ответов по текущему неправильному глаголу-->
@@ -391,31 +410,34 @@
 
                         <!--Отображение первой формы глагола (изначально скрыто)-->
                         <TextBlock FontSize="30" 
-                               Margin="10 0" 
-                               HorizontalAlignment="Center" 
-                               Style="{DynamicResource MaterialDesignHeadline1TextBlock}" 
-                               Grid.Column="0" Grid.Row="1" 
-                               Text="{Binding IvFirstFormFixedAnswerValue}"
-                               d:Text="????">
+                                   Margin="10 0" 
+                                   HorizontalAlignment="Center" 
+                                   Style="{DynamicResource MaterialDesignHeadline1TextBlock}" 
+                                   Grid.Column="0" Grid.Row="1" 
+                                   Text="{Binding IvFirstFormFixedAnswerValue}"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   d:Text="????">
                         </TextBlock>
 
                         <!--Отображение второй формы глагола (изначально скрыто)-->
                         <TextBlock FontSize="30" 
-                               Margin="10 0" 
-                               HorizontalAlignment="Center" 
-                               Style="{DynamicResource MaterialDesignHeadline1TextBlock}" 
-                               Grid.Column="1" Grid.Row="1" 
-                               Text="{Binding IvSecondFormFixedAnswerValue}"
-                               d:Text="????">
+                                   Margin="10 0" 
+                                   HorizontalAlignment="Center" 
+                                   Style="{DynamicResource MaterialDesignHeadline1TextBlock}" 
+                                   Grid.Column="1" Grid.Row="1" 
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   Text="{Binding IvSecondFormFixedAnswerValue}"
+                                   d:Text="????">
                         </TextBlock>
 
                         <!--Отображение третей формы глагола (изначально скрыто)-->
                         <TextBlock FontSize="30" 
-                               Margin="10 0" 
-                               HorizontalAlignment="Center" 
-                               Style="{DynamicResource MaterialDesignHeadline1TextBlock}" 
-                               Grid.Column="2" Grid.Row="1" Text="{Binding IvThirdFormFixedAnswerValue}"
-                               d:Text="????">
+                                   Margin="10 0" 
+                                   HorizontalAlignment="Center" 
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   Style="{DynamicResource MaterialDesignHeadline1TextBlock}" 
+                                   Grid.Column="2" Grid.Row="1" Text="{Binding IvThirdFormFixedAnswerValue}"
+                                   d:Text="????">
                         </TextBlock>
 
                     </Grid>
@@ -445,13 +467,15 @@
                      Name="answerTextBox"
                      HorizontalAlignment="Center"
                      VerticalAlignment="Top"
-                     Height="54"
+                     Height="50"
                      MaxHeight="54"
                      Padding="14 15 14 0"
                      KeyDown="OnKeyDown"
                      materialDesign:HintAssist.IsFloating="False"
                      Text="{Binding AnswerValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Width="300"
+                     FontFamily="Arial"
+                     Foreground="{DynamicResource EasyBlack}"
                      Style="{DynamicResource EasyTextBox}"
                      materialDesign:HintAssist.Hint="Перевод"                
                      FontSize="16">
@@ -462,13 +486,13 @@
                     Height="40" 
                     Width="130" 
                     Margin="0 45 0 0"
-                    FontSize="18"
+                    FontSize="19"
                     Style="{DynamicResource EasyCommonButton}"  
                     IsEnabled="{Binding StartButtonIsEnabled}"
                     Visibility="{Binding StartButtonIsVisible, Converter={converters:ForwardVisibilityConverter}}"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
 
-                <TextBlock Text="Начать" FontSize="15" FontFamily="Arial"/>
+                <TextBlock Text="Начать" FontSize="17" FontFamily="Arial"/>
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
@@ -492,7 +516,10 @@
                         <ComboBox Style="{DynamicResource EasyComboBox}"
                                   materialDesign:HintAssist.Hint="Словарь"
                                   Margin="14 14 14 0"
+                                  Padding="14 14 14 12"
                                   MaxDropDownHeight="200"
+                                  Foreground="{DynamicResource EasyBlack}"
+                                  FontFamily="Arial"
                                   materialDesign:HintAssist.IsFloating="False"
                                   ItemsSource="{Binding DictionaryComboBoxItems}"
                                   SelectedItem="{Binding SelectedDictionaryComboBoxItem}">
@@ -521,14 +548,15 @@
                             <RadioButton Style="{DynamicResource EasyRadioButton}"
                                          GroupName="DictationDirectionGroup"
                                          IsChecked="True"
-                                         FontFamily="Arial"
-                                         Content="С английского на русский">
+                                         Margin="0 0 14 0"
+                                         FontFamily="Arial">
+                                <TextBlock FontFamily="Arial" FontSize="14" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" Text="С английского на русский"/>
                             </RadioButton>
                             <RadioButton Style="{DynamicResource EasyRadioButton}"
                                          GroupName="DictationDirectionGroup"
-                                         Content="С русского на английский" 
                                          FontFamily="Arial"
                                          IsChecked="{Binding SelectedDictationDirection, Converter={converters:DictationDirectionConverter}}">
+                                <TextBlock FontFamily="Arial" FontSize="14" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" Text="С русского на английский"/>
                             </RadioButton>
                         </StackPanel>
 
@@ -600,21 +628,100 @@
 
                 <!--Окно результата диктанта-->
                 <Button.CommandParameter>
-                    <StackPanel Margin="10">
-                        <TextBlock Style="{DynamicResource MaterialDesignBody2TextBlock}" Text="Оценка:"/>
-                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}" Text="{Binding Grade}"/>
-                        <TextBlock Style="{DynamicResource MaterialDesignBody2TextBlock}" Text="Слов в диктанте:"/>
-                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}" Text="{Binding DictationWordsCount}"/>
-                        <TextBlock Style="{DynamicResource MaterialDesignBody2TextBlock}" Text="Всего ответов:"/>
-                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}" Text="{Binding DictationAnswersCount}"/>
-                        <TextBlock Style="{DynamicResource MaterialDesignBody2TextBlock}" Text="Неверных ответов:"/>
-                        <TextBlock Style="{DynamicResource MaterialDesignBody1TextBlock}" Text="{Binding DictationWrongAnswersCount }"/>
-                        <Button Style="{DynamicResource MaterialDesignFlatButton}"  
-                                HorizontalAlignment="Center"
-                                Content="Понятно"
-                                Margin="0 6 0 10"
+                    <Grid Margin="14">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" Margin="0 0 0 10">
+                            <TextBlock Text="{Binding Grade}"
+                                       Foreground="{Binding GradeForeground}"
+                                       FontSize="25"
+                                       Grid.Row="1"
+                                       FontFamily="Arial">
+                            </TextBlock>
+                            <TextBlock Text="/"
+                                       Foreground="#8c8c8c"
+                                       FontSize="25"
+                                       Grid.Row="1"
+                                       FontFamily="Arial">
+                            </TextBlock>
+                            <TextBlock Text="100"
+                                       Foreground="#8c8c8c"
+                                       FontSize="25"
+                                       Grid.Row="1"
+                                       FontFamily="Arial">
+                            </TextBlock>
+                        </StackPanel>
+
+                        <TextBlock Text="Слов в диктанте:"
+                                   Foreground="{DynamicResource EasyGrayDark}"
+                                   FontSize="17"
+                                   Grid.Row="1"
+                                   FontFamily="Arial"
+                                   Margin="0 0 0 7">
+                        </TextBlock>
+
+                        <TextBlock Text="Дано ответов:"
+                                   Foreground="{DynamicResource EasyGrayDark}"
+                                   FontSize="17"
+                                   Grid.Row="2"
+                                   FontFamily="Arial"
+                                   Margin="0 0 0 7">
+                        </TextBlock>
+
+                        <TextBlock Text="Неверных ответов:"
+                                   Foreground="{DynamicResource EasyGrayDark}"
+                                   FontSize="17"
+                                   Grid.Row="3"
+                                   FontFamily="Arial"
+                                   Margin="0 0 0 7">
+                        </TextBlock>
+
+                        <TextBlock Text="{Binding DictationWordsCount}"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="17"
+                                   Grid.Row="1"
+                                   Grid.Column="1"
+                                   FontFamily="Arial"
+                                   Margin="0 0 0 -2">
+                        </TextBlock>
+
+                        <TextBlock Text="{Binding DictationAnswersCount}"
+                                   Foreground="{DynamicResource EasyBlack}"
+                                   FontSize="17"
+                                   Grid.Row="2"
+                                   Grid.Column="1"
+                                   FontFamily="Arial"
+                                   Margin="0 0 0 -2">
+                        </TextBlock>
+
+                        <TextBlock Text="{Binding DictationWrongAnswersCount}"
+                                   Foreground="{DynamicResource EasyRed}"
+                                   FontSize="17"
+                                   Grid.Row="3"
+                                   Grid.Column="1"
+                                   FontFamily="Arial"
+                                   Margin="0 0 0 -2">
+                        </TextBlock>
+
+                        <Button Style="{DynamicResource EasyCommonButton}"  
+                                HorizontalAlignment="Stretch"
+                                Margin="0 10 0 0"
+                                Grid.Row="4"
+                                Grid.ColumnSpan="2"
                                 Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
                                 FocusVisualStyle="{x:Null}">
+
+                            <TextBlock Text="Понятно" FontFamily="Arial" FontSize="15"/>
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
@@ -622,7 +729,9 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Button>
-                    </StackPanel>
+
+                    </Grid>
+
                 </Button.CommandParameter>
 
                 <i:Interaction.Triggers>

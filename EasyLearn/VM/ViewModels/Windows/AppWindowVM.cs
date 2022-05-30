@@ -34,6 +34,7 @@ namespace EasyLearn.VM.Windows
         public bool OpenDictationPageButtonIsEnabled { get; set; }
         public bool OpenDictionariesPageButtonIsEnabled { get; set; }
         public bool OpenUsersPageButtonIsEnabled { get; set; }
+        public bool GoBackButtonIsEnabled { get; set; }
         #endregion
 
 #pragma warning disable CS8618
@@ -127,12 +128,14 @@ namespace EasyLearn.VM.Windows
             OpenUsersPageButtonIsEnabled = false;
             OpenDictionariesPageButtonIsEnabled = false;
             OpenDictationPageButtonIsEnabled = false;
+            GoBackButtonIsEnabled = false;
         }
         private void EnableNavigationBar()
         {
             OpenUsersPageButtonIsEnabled = true;
             OpenDictionariesPageButtonIsEnabled = true;
             OpenDictationPageButtonIsEnabled = true;
+            GoBackButtonIsEnabled = true;
         }
         #endregion
 

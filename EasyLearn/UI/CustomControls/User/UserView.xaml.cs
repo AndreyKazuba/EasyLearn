@@ -26,7 +26,7 @@ namespace EasyLearn.UI.CustomControls
 
         public UserView(UserVM viewModel)
         {
-            this.DataContext = viewModel;
+            DataContext = viewModel;
             this.viewModel = viewModel;
             InitializeComponent();
         }

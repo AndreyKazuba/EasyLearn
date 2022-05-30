@@ -43,12 +43,13 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             int totalRelationsCount = user.CommonDictionaries.Sum(commonDictionary => commonDictionary.Relations.Count)
                                     + user.VerbPrepositionDictionaries.Sum(verbPrepositionDictionary => verbPrepositionDictionary.VerbPrepositions.Count);
             int totalStudiedRelationsCount = user.CommonDictionaries.Sum(commonDictionary => commonDictionary.Relations.Count(commonRelation => commonRelation.Studied))
-                                        + user.VerbPrepositionDictionaries.Sum(verbPrepositionDictionary => verbPrepositionDictionary.VerbPrepositions.Count(verbPreposition => verbPreposition.Studied));
+                                           + user.VerbPrepositionDictionaries.Sum(verbPrepositionDictionary => verbPrepositionDictionary.VerbPrepositions.Count(verbPreposition => verbPreposition.Studied));
             int totalLeftToLearnRelationsCount = totalRelationsCount - totalStudiedRelationsCount;
             TotalDictionariesCount = totalDictionariesCount.ToString();
             TotalRelationsCount = totalRelationsCount.ToString();
             TotalStudiedRelationsCount = totalStudiedRelationsCount.ToString();
             TotalLeftToLearnRelationsCount = totalLeftToLearnRelationsCount.ToString();
+            lastValidDictionaryName = Name;
             SetTotalUserProgress(user);
         }
 #pragma warning restore CS8618

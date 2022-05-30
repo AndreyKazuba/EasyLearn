@@ -18,6 +18,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 
         #region Public props
         public int Id { get; private set; }
+        public int Order { get; private set; }
         #endregion
 
         #region Binding props
@@ -41,6 +42,8 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             TotalDictionaryRelationsCount = totalDictionaryRelationsCount.ToString();
             DictionaryStudiedRelationsCount = dictionaryStudiedRelationsCount.ToString();
             DictionaryLeftToLearnRelationsCount = dictionaryLeftToLearnRelationsCount.ToString();
+            Order = commonDictionary.Relations.Count;
+            lastValidDictionaryName = Name;
             SetTotalDictionaryProgress(commonDictionary);
         }
 #pragma warning restore CS8618

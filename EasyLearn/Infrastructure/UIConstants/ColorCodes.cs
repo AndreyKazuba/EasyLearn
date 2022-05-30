@@ -24,6 +24,17 @@
         public const string RelationViewRating_80_90_BackgroundColor = "#bdffa1";
         public const string RelationViewRating_90_100_BackgroundColor = "#a1ffa4";
 
+        public const string Grade_0_10_Color = "#d60b0b";
+        public const string Grade_10_20_Color = "#d64f0b";
+        public const string Grade_20_30_Color = "#d6710b";
+        public const string Grade_30_40_Color = "#d6990b";
+        public const string Grade_40_50_Color = "#d6b40b";
+        public const string Grade_50_60_Color = "#d6d60b";
+        public const string Grade_60_70_Color = "#bbe014";
+        public const string Grade_70_80_Color = "#7fb53e";
+        public const string Grade_80_90_Color = "#65b53e";
+        public const string Grade_90_100_Color = "#36a33a";
+
         public const string MainColorSuperDark = "#000d33";
         public const string MainColorDark = "#3366ff";
         public const string MainColor = "#4d79ff";

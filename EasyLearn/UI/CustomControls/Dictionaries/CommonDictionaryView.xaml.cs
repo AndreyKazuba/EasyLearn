@@ -1,10 +1,11 @@
 ﻿using System.Windows.Controls;
 using EasyLearn.Data.Models;
+using EasyLearn.Infrastructure.UIInterfaces;
 using EasyLearn.VM.ViewModels.CustomControls;
 
 namespace EasyLearn.UI.CustomControls
 {
-    public partial class CommonDictionaryView : UserControl
+    public partial class CommonDictionaryView : UserControl, IHavingOrder
     {
         #region Private fields
         private CommonDictionaryVM viewModel;
@@ -17,12 +18,13 @@ namespace EasyLearn.UI.CustomControls
             get => viewModel.IsCardFlipped;
             set => viewModel.IsCardFlipped = value;
         }
+        public int Order => viewModel.Order;
         #endregion
 
         public CommonDictionaryView(CommonDictionaryVM viewModel)
         {
             this.viewModel = viewModel;
-            this.DataContext = viewModel;
+            DataContext = viewModel;
             InitializeComponent();
         }
 

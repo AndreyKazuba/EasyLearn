@@ -45,8 +45,8 @@
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Center"
                                     Grid.Row="0">
-                            <TextBlock Style="{DynamicResource MaterialDesignHeadline6TextBlock}" 
-                                       Text="Неправильные глаголы" 
+                            <TextBlock Text="Неправильные глаголы" 
+                                       Foreground="{DynamicResource EasyBlack}"
                                        FontFamily="Arial"
                                        FontSize="15"/>
                         </StackPanel>

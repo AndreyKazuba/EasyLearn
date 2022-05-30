@@ -41,6 +41,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         public Brush RatingProgressBarBackgroundColor { get; set; }
         public int Height { get; set; }
         public int RatingValue { get; set; }
+        public Thickness CardBorderThickness { get; set; }
         #endregion
 
 #pragma warning disable CS8618
@@ -77,13 +78,15 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             FirstExampleEnglishValue = commonRelation.FirstExampleEnglishValue.TryNormalizeRegister().EmptyIfNull();
             SecondExampleRussianValue = commonRelation.SecondExampleRussianValue.TryNormalizeRegister().EmptyIfNull();
             SecondExampleEnglishValue = commonRelation.SecondExampleEnglishValue.TryNormalizeRegister().EmptyIfNull();
-            RatingProgressBarColor = commonRelation.Rating.GetColorForRating();
+            RatingProgressBarColor = commonRelation.Rating.GetForegroundColorForRating();
             RatingProgressBarBackgroundColor = commonRelation.Rating.GetBackgroundColorForRating();
             RatingValue = commonRelation.Rating;
             IsStudiedMarkVisible = commonRelation.Studied;
+            
             SetState(commonRelation);
             SetHeight();
             SetOrder();
+            CardBorderThickness = state == CardState.Without ? new Thickness(0.6, 0.6, 0.6, 0) : new Thickness(0.6);
         }
         public void Collapse() => IsVisible = false;
         public void Show() => IsVisible = true;

@@ -18,6 +18,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
 
         #region Public props
         public int Id { get; private set; }
+        public int Order { get; private set; }
         #endregion
 
         #region Binding props
@@ -41,6 +42,8 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             TotalDictionaryVerbPrepositionsCount = totalDictionaryVerbPrepositionsCount.ToString();
             DictionaryStudiedVerbPrepositionsCount = dictionaryStudiedVerbPrepositionsCount.ToString();
             DictionaryLeftToLearnVerbPrepositionsCount = dictionaryLeftToLearnVerbPrepositionsCount.ToString();
+            Order = verbPrepositionDictionnary.VerbPrepositions.Count;
+            lastValidDictionaryName = Name;
             SetTotalDictionaryProgress(verbPrepositionDictionnary);
         }
 #pragma warning disable CS8618

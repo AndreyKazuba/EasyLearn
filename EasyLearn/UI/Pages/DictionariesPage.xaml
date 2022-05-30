@@ -14,15 +14,17 @@
 
     <materialDesign:DialogHost OverlayBackground="{DynamicResource MainColorSuperDark}">
         <Grid>
-            <ItemsControl ItemsSource="{Binding DictionaryViews}" 
-                  VerticalContentAlignment="Top"
-                  HorizontalContentAlignment="Left">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+
+            <ScrollViewer VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Style="{DynamicResource MaterialDesignScrollViewer}"
+                          materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True">
+                <ItemsControl ItemsSource="{Binding DictionaryViews}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
 
             <Button Visibility="Collapsed"
                     Name="openDeleteCommonDictionaryWindowButton"
@@ -185,7 +187,12 @@
                         <TextBox Style="{DynamicResource EasyValidationTextBox}"
                                  materialDesign:HintAssist.Hint="Название*"
                                  materialDesign:HintAssist.IsFloating="False"
-                                 Padding="14 11"
+                                 Padding="14 14 14 0"
+                                 FontFamily="Arial"
+                                 FontSize="14"
+                                 Height="45"
+                                 MaxHeight="45"
+                                 Foreground="{DynamicResource EasyBlack}"
                                  KeyDown="OnDictionaryNameTextBoxKeyDown"
                                  Name="dictionaryNameTextBox"
                                  materialDesign:ValidationAssist.Suppress="True"
@@ -212,8 +219,13 @@
                         <ComboBox materialDesign:HintAssist.Hint="Тип словаря" 
                                   materialDesign:HintAssist.IsFloating="False"
                                   MaxDropDownHeight="200"
+                                  Foreground="{DynamicResource EasyBlack}"
                                   Margin="0 0 0 14"
-                                  Padding="14 11"
+                                  Padding="14 14 14 12"
+                                  FontFamily="Arial"
+                                  FontSize="14"
+                                  Height="45"
+                                  MaxHeight="45"
                                   Name="dictioraryTypeComboBox"
                                   KeyDown="OnDictionaryTypeComboBoxKeyDown"
                                   Style="{DynamicResource EasyComboBox}"

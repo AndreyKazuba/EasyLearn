@@ -1,13 +1,18 @@
-﻿using EasyLearn.VM.ViewModels.CustomControls;
+﻿using EasyLearn.Infrastructure.UIInterfaces;
+using EasyLearn.VM.ViewModels.CustomControls;
 using System.Windows.Controls;
 
 namespace EasyLearn.UI.CustomControls
 {
-    public partial class IrregularVerbDictionaryView : UserControl
+    public partial class IrregularVerbDictionaryView : UserControl, IHavingOrder
     {
+        #region Public props
+        public int Order => 120;
+        #endregion
+
         public IrregularVerbDictionaryView(IrregularVerbDictionaryVM viewModel)
         {
-            this.DataContext = viewModel;
+            DataContext = viewModel;
             InitializeComponent();
         }
 

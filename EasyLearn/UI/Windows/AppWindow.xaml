@@ -190,6 +190,7 @@
                                 Padding="0"
                                 Grid.Column="1"
                                 ToolTip="Назад"
+                                IsEnabled="{Binding GoBackButtonIsEnabled}"
                                 Click="OnGoBackButtonClick"
                                 Visibility="{Binding GoBackButtonIsVisible, Converter={converters:ReverseCollapseConverter}}">
 
@@ -213,7 +214,10 @@
                                     <Trigger Property="IsMouseOver" Value="False">
                                         <Setter Property="Background" Value="{DynamicResource MainColor}"/>
                                     </Trigger>
-                                </Style.Triggers>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Background" Value="#6c89e0"/>
+                                        </Trigger>
+                                    </Style.Triggers>
                             </Style>
                         </Button.Style>
                         </Button>

@@ -7,6 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <materialdesign:Chip Margin="10 0 0 0" Content="{Binding Value}"/>
+    <materialdesign:Chip Margin="10 0 0 0">
+        <TextBlock FontFamily="Arial" FontSize="14" Foreground="{DynamicResource EasyBlack}" Text="{Binding Value}"/>
+    </materialdesign:Chip>
 
 </UserControl>

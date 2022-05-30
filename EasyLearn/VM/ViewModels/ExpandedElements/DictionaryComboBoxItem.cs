@@ -13,11 +13,12 @@ namespace EasyLearn.VM.ViewModels.ExpandedElements
             DictionaryIdProperty = DependencyProperty.Register(nameof(DictionaryId), typeof(int), typeof(DictionaryComboBoxItem));
             DictionaryTypeProperty = DependencyProperty.Register(nameof(DictionaryType), typeof(DictionaryType), typeof(DictionaryComboBoxItem));
         }
-        public DictionaryComboBoxItem(string content, int dictionaryId, DictionaryType dictionaryType)
+        public DictionaryComboBoxItem(string content, int dictionaryId, DictionaryType dictionaryType, bool disabled = false)
         {
-            this.Content = content;
-            this.DictionaryId = dictionaryId;
-            this.DictionaryType = dictionaryType;
+            Content = content;
+            DictionaryId = dictionaryId;
+            DictionaryType = dictionaryType;
+            IsEnabled = !disabled;
         }
         public int DictionaryId
         {

@@ -9,6 +9,8 @@ using EasyLearn.Infrastructure.DictationManagers;
 using EasyLearn.Infrastructure.Enums;
 using EasyLearn.UI.CustomControls;
 using EasyLearn.Infrastructure.Exceptions;
+using EasyLearn.Infrastructure.Helpers;
+using System.Windows;
 
 namespace EasyLearn.VM.ViewModels.Pages
 {
@@ -36,6 +38,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public bool CdCorrectIconIsVisible { get; set; }
         public bool CdWrongIconIsVisible { get; set; }
         public bool CdAnotherAnswersIsVisible { get; set; }
+        public bool CdCommentIsVisile { get; set; }
         public string? CdFirstExampleValue { get; set; }
         public string? CdSecondExampleValue { get; set; }
         #endregion
@@ -57,7 +60,10 @@ namespace EasyLearn.VM.ViewModels.Pages
             DictationWordsCount = commonDictationManager.TotalRelationsCount.ToString();
             DictationAnswersCount = commonDictationManager.AnswersCount.ToString();
             DictationWrongAnswersCount = commonDictationManager.WrongAnswersCount.ToString();
-            Grade = ((int)((commonDictationManager.AnswersCount - commonDictationManager.WrongAnswersCount) * (100d / commonDictationManager.AnswersCount))).ToString();
+            Grade = commonDictationManager.AnswersCount != 0
+                ? ((int)((commonDictationManager.AnswersCount - commonDictationManager.WrongAnswersCount) * (100d / commonDictationManager.AnswersCount))).ToString()
+                : "0";
+            GradeForeground = Convert.ToInt32(Grade).GetColorForGrade();
         }
         #endregion
 
@@ -75,6 +81,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             CdUnitTypeValue = relation.RussianUnit.Type.GetRussianValue();
             CdUnitTypeColor = relation.RussianUnit.Type.GetColor();
             CdCommentValue = relation.Comment.TryNormalizeRegister();
+            CdCommentIsVisile = !string.IsNullOrEmpty(relation.Comment);
             if (relation.IsFirstExampleExist)
             {
                 CdFirstExampleValue = relation.FirstExampleRussianValue.TryNormalizeRegister();
@@ -83,14 +90,15 @@ namespace EasyLearn.VM.ViewModels.Pages
             else
             {
                 CdFirstExampleValue = relation.SecondExampleRussianValue.TryNormalizeRegister();
+                CdSecondExampleValue = string.Empty;
             }
         }
         private void CdSetRelationWithOpposteDirection(CommonRelation relation)
         {
-            CdMainDisplayValue = relation.EnglishUnit.Value.NormalizeRegister(); ;
+            CdMainDisplayValue = relation.EnglishUnit.Value.NormalizeRegister();
             CdUnitTypeValue = relation.EnglishUnit.Type.GetRussianValue();
             CdUnitTypeColor = relation.EnglishUnit.Type.GetColor();
-            CdCommentValue = relation.Comment.TryNormalizeRegister();
+            CdCommentIsVisile = false;
             if (relation.IsFirstExampleExist)
             {
                 CdFirstExampleValue = relation.FirstExampleEnglishValue.TryNormalizeRegister();
@@ -99,6 +107,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             else
             {
                 CdFirstExampleValue = relation.SecondExampleEnglishValue.TryNormalizeRegister();
+                CdSecondExampleValue = string.Empty;
             }
         }
         private void CdShowSection()
@@ -131,7 +140,6 @@ namespace EasyLearn.VM.ViewModels.Pages
             {
                 if (commonDictationManager.CurrentRelationHasSynonyms)
                     CdShowSynonyms(commonDictationManager.SynonymRelations, AnswerValue);
-                SetCorrectPageBackground();
                 SetAnswerTextBoxAsCorrect();
                 IncreaseDictationProgressBarValue();
                 CdHidePromt();
@@ -140,7 +148,6 @@ namespace EasyLearn.VM.ViewModels.Pages
             }
             else
             {
-                SetWrongPageBackground();
                 SetAnswerTextBoxAsWrong();
                 currentAnswerIsCorrect = false;
                 if (++wrongAnswers > 2)
@@ -156,7 +163,6 @@ namespace EasyLearn.VM.ViewModels.Pages
                 CdSetRelation(commonDictationManager.CurrentRelation);
                 SetDefaultAnswerValue();
                 CdHideSynonyms();
-                SetDefaultPageBackground();
                 currentAnswerIsCorrect = false;
                 SetAnswerTextBoxAsDefault();
                 CdHidePromt();

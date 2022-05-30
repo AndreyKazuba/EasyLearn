@@ -27,6 +27,7 @@
                 <TextBlock Style="{DynamicResource MaterialDesignHeadline5TextBlock}" 
                            FontSize="19" 
                            Text="{Binding VerbValue}" 
+                           Foreground="{DynamicResource EasyBlack}"
                            VerticalAlignment="Center"
                            d:Text="Depends"/>
                 <TextBlock Style="{DynamicResource MaterialDesignHeadline5TextBlock}" 
@@ -105,7 +106,7 @@
             <Button Style="{DynamicResource MaterialDesignFlatButton}"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
-                    Foreground="{DynamicResource EasyGray}"
+                    Foreground="{DynamicResource EasyBlack}"
                     Width="18"
                     Height="18"
                     Padding="1"

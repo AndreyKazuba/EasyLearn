@@ -14,15 +14,15 @@
     <materialDesign:DialogHost OverlayBackground="{DynamicResource MainColorSuperDark}">
         <Grid>
 
-            <ItemsControl ItemsSource="{Binding UserViews}" 
-                  VerticalContentAlignment="Top"
-                  HorizontalContentAlignment="Left">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+            <ScrollViewer VerticalContentAlignment="Top" HorizontalContentAlignment="Left" materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True" materialDesign:ScrollViewerAssist.ShowSeparators="False">
+                <ItemsControl ItemsSource="{Binding UserViews}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
 
             <Button Visibility="Collapsed"
                     Name="openDeleteUserWindowButton"
@@ -42,7 +42,7 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
 
-                        <TextBlock Margin="24 0 24 0" 
+                        <TextBlock Margin="14 0 14 0" 
                                    Style="{DynamicResource MaterialDesignBody1TextBlock}" 
                                    Text="Удалить пользователя?" 
                                    VerticalAlignment="Center" 
@@ -60,7 +60,7 @@
 
                             <!--Кнопка отмены-->
                             <Button Style="{DynamicResource EasyCancelButton}"
-                                    Width="75"
+                                    Width="77"
                                     Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
 
                                 <i:Interaction.Triggers>
@@ -75,7 +75,7 @@
                             <!--Кнопка подтверждения-->
                             <Button Style="{DynamicResource EasyConfirmButton}"
                                     Grid.Column="1"
-                                    Width="75">
+                                    Width="77">
 
                                 <TextBlock Text="Да" FontSize="14" FontFamily="Arial"/>
 
@@ -113,9 +113,14 @@
                         <!--Имя пользователя-->
                         <TextBox Style="{DynamicResource EasyValidationTextBox}"
                                  Width="200"
-                                 Padding="14 11"
+                                 Padding="14 14 14 0"
+                                 FontSize="14"
+                                 Height="45"
+                                 MaxHeight="45"
+                                 FontFamily="Arial"
+                                 Foreground="{DynamicResource EasyBlack}"
                                  materialDesign:HintAssist.IsFloating="False" 
-                                  materialDesign:ValidationAssist.Suppress="True"
+                                 materialDesign:ValidationAssist.Suppress="True"
                                  materialDesign:HintAssist.Hint="Имя пользователя*"
                                  KeyDown="OnUserNameValueTextBoxKeyDown">
 

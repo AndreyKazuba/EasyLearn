@@ -80,6 +80,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public string DictationAnswersCount { get; set; }
         public string DictationWrongAnswersCount { get; set; }
         public SolidColorBrush PageBackground { get; set; }
+        public SolidColorBrush GradeForeground { get; set; }
         #endregion
 
 #pragma warning disable CS8618
@@ -257,10 +258,11 @@ namespace EasyLearn.VM.ViewModels.Pages
             SetDictationProgressBarDefaultValue();
             ResetAllIcons();
             SetAnswerTextBoxAsDefault();
+            IvHideAllIcons();
             IvSetDefaultFixedAnswerValues();
             IvHidePromt();
-            SetDefaultPageBackground();
             ClearStopWindow();
+            IvClearFixedAnswerValues();
         }
         private void SaveDictationResults() => ExecuteForCurrentDictionaryType(
             () =>
@@ -318,14 +320,14 @@ namespace EasyLearn.VM.ViewModels.Pages
             IEnumerable<CommonDictionary> commonDictionaries = commonDictionaryRepository.GetUsersCommonDictionaries(currentUserId);
             IEnumerable<VerbPrepositionDictionnary> verbPrepositionDictionnaries = verbPrepositionDictionaryRepository.GetUsersVerbPreposotionDictionaries(currentUserId);
             IEnumerable<DictionaryComboBoxItem> commonDictionaryComboBoxItems = commonDictionaries
-                .Select(dictionary => new DictionaryComboBoxItem(StringHelper.NormalizeRegister(dictionary.Name), dictionary.Id, DictionaryType.CommonDictionary));
+                .Select(dictionary => new DictionaryComboBoxItem(StringHelper.NormalizeRegister(dictionary.Name), dictionary.Id, DictionaryType.CommonDictionary, !dictionary.Relations.Any()));
             IEnumerable<DictionaryComboBoxItem> verbPrepositionDictionnaryComboBoxItems = verbPrepositionDictionnaries
-                .Select(dictionary => new DictionaryComboBoxItem(StringHelper.NormalizeRegister(dictionary.Name), dictionary.Id, DictionaryType.VerbPrepositionDictionary));
+                .Select(dictionary => new DictionaryComboBoxItem(StringHelper.NormalizeRegister(dictionary.Name), dictionary.Id, DictionaryType.VerbPrepositionDictionary, !dictionary.VerbPrepositions.Any()));
             DictionaryComboBoxItem irregularVerbDictionaryComboBoxItem = new DictionaryComboBoxItem(DictionaryTypeRussianNames.IrregularVerbDictionary, int.MinValue, DictionaryType.IrregularVerbDictionary);
             List<DictionaryComboBoxItem> dictionaryComboBoxItems = commonDictionaryComboBoxItems.Union(verbPrepositionDictionnaryComboBoxItems).ToList();
             dictionaryComboBoxItems.Add(irregularVerbDictionaryComboBoxItem);
             DictionaryComboBoxItems = new ObservableCollection<DictionaryComboBoxItem>(dictionaryComboBoxItems);
-            SelectedDictionaryComboBoxItem = DictionaryComboBoxItems[0];
+            SelectedDictionaryComboBoxItem = DictionaryComboBoxItems.First(сomboBoxItem => сomboBoxItem.IsEnabled);
         }
         #endregion
 
@@ -419,9 +421,9 @@ namespace EasyLearn.VM.ViewModels.Pages
         #endregion
 
         #region Private UI methods (page background)
-        private void SetDefaultPageBackground() => PageBackground = ColorCodes.EasyWhite.GetBrushByHex();
-        private void SetCorrectPageBackground() => PageBackground = ColorCodes.EasyGreenSuperLight.GetBrushByHex();
-        private void SetWrongPageBackground() => PageBackground = ColorCodes.EasyRedSuperLight.GetBrushByHex();
+        //private void SetDefaultPageBackground() => PageBackground = ColorCodes.EasyWhite.GetBrushByHex();
+        //private void SetCorrectPageBackground() => PageBackground = ColorCodes.EasyGreenSuperLight.GetBrushByHex();
+        //private void SetWrongPageBackground() => PageBackground = ColorCodes.EasyRedSuperLight.GetBrushByHex();
         #endregion
 
         #region Private switch helpers

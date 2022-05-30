@@ -30,7 +30,7 @@ namespace EasyLearn.Infrastructure.DictationManagers
         public abstract string CurrentAnswerValue { get; }
         public List<CommonRelation> SynonymRelations => synonymRelations;
         public bool CurrentRelationHasSynonyms => synonymRelations.Count > 1;
-        public int TotalRelationsCount => allRelations.Count;
+        public int TotalRelationsCount => selectedRelations.Count;
         public int AnswersCount => answersCounter;
         public int WrongAnswersCount => wrongAnswersCounter;
         #endregion

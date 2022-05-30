@@ -66,7 +66,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             SecondExampleRussianValue = verbPreposition.SecondExampleRussianValue.TryNormalizeRegister().EmptyIfNull();
             SecondExampleEnglishValue = verbPreposition.SecondExampleEnglishValue.TryNormalizeRegister().EmptyIfNull();
             RatingValue = verbPreposition.Rating;
-            RatingProgressBarColor = verbPreposition.Rating.GetColorForRating();
+            RatingProgressBarColor = verbPreposition.Rating.GetForegroundColorForRating();
             RatingProgressBarBackgroundColor = verbPreposition.Rating.GetBackgroundColorForRating();
             IsStudiedMarkVisible = verbPreposition.Studied;
             SetState(verbPreposition);
