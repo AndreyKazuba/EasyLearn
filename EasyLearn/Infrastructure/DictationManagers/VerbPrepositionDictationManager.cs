@@ -75,7 +75,9 @@ namespace EasyLearn.Infrastructure.DictationManagers
             else if (!answerIsCorrect)
             {
                 Answer lastAnswer = answers.Last();
-                lastAnswer.Variation = lastAnswer.Variation == AnswerVariation.SecondTry ? AnswerVariation.ThirdTry : AnswerVariation.FourthPlusTry;
+                lastAnswer.Variation = lastAnswer.Variation == AnswerVariation.SecondTry 
+                    ? AnswerVariation.ThirdTry 
+                    : AnswerVariation.FourthPlusTry;
             }
             return answerIsCorrect;
         }

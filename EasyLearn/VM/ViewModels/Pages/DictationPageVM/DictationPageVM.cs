@@ -50,13 +50,15 @@ namespace EasyLearn.VM.ViewModels.Pages
         #endregion
 
         #region Binding props
-        public ObservableCollection<DictionaryComboBoxItem> DictionaryComboBoxItems { get; set; }
+        public ObservableCollection<DictionaryComboBoxItem> DictionaryComboBoxItems { get; set; } = new ObservableCollection<DictionaryComboBoxItem>();
         public DictionaryComboBoxItem SelectedDictionaryComboBoxItem
         {
             get { return selectedDictionaryComboBoxItem; }
             set
             {
                 selectedDictionaryComboBoxItem = value;
+                if (value is null)
+                    return;
                 LoadSelectedDictionary();
                 UpdateDictationLengthSlider();
                 SetCurrentDictationSection();
@@ -101,14 +103,18 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command StartDictationCommand { get; private set; }
         public Command TryGoNextCommand { get; private set; }
         public Command StopDictationCommand { get; private set; }
-        public Command UpdatePageForNewUserCommand { get; private set; }
+        public Command UpdatePageCommand { get; private set; }
+        public Command DisableAppWindowNavigationBarCommand { get; private set; }
+        public Command EnableAppWindowNavigationBarCommand { get; private set; }
         protected override void InitCommands()
         {
             UpdateDictationLengthSliderCommand = new Command(UpdateDictationLengthSlider);
             StartDictationCommand = new Command(StartDictation);
             TryGoNextCommand = new Command(TryGoNext);
             StopDictationCommand = new Command(StopDictation);
-            UpdatePageForNewUserCommand = new Command(UpdatePage);
+            UpdatePageCommand = new Command(UpdatePage);
+            DisableAppWindowNavigationBarCommand = new Command(DisableAppWindowNavigationBar);
+            EnableAppWindowNavigationBarCommand = new Command(EnableAppWindowNavigationBar);
         }
         private void UpdateDictationLengthSlider()
         {
@@ -135,6 +141,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             LoadSelectedDictionary();
             UpdateDictationLengthSlider();
         }
+        private void DisableAppWindowNavigationBar() => App.GetService<AppWindowVM>().DisableNavigationBarCommand.Execute();
+        private void EnableAppWindowNavigationBar() => App.GetService<AppWindowVM>().EnableNavigationBarCommand.Execute();
         #endregion
 
         #region Event handling
@@ -147,7 +155,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             DictationPage.PromtMouseLeave += OnVpPromtMouseLeave;
             DictationPage.PromtMouseEnter += OnIvPromtMouseEnter;
             DictationPage.PromtMouseLeave += OnIvPromtMouseLeave;
-            //App.GetService<AppWindowVM>().CurrentPageChanged += OnCurrentPageChanged;
+            App.GetService<AppWindowVM>().CurrentPageChanged += OnCurrentPageChanged;
         }
         private void OnEnterClick()
         {
@@ -204,11 +212,11 @@ namespace EasyLearn.VM.ViewModels.Pages
                 () => IvSetMysteriousPromtValue(ivDictationManager.CurrentV2Value),
                 () => IvSetMysteriousPromtValue(ivDictationManager.CurrentV3Value));
         }
-        //private void OnCurrentPageChanged()
-        //{
-        //    if (App.GetService<AppWindowVM>().CurrentPage == Infrastructure.Enums.Page.Dictation)
-        //        UpdatePage();
-        //}
+        private void OnCurrentPageChanged()
+        {
+            if (App.GetService<AppWindowVM>().CurrentPage == Infrastructure.Enums.Page.Dictation)
+                UpdatePage();
+        }
         #endregion
 
         #region Private page helpers

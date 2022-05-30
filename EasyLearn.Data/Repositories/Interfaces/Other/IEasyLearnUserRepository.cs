@@ -10,13 +10,13 @@ namespace EasyLearn.Data.Repositories.Interfaces
         bool IsUserCurrent(int userId);
         bool IsUserExist(int userId);
         bool IsUserExist(string userName);
-        Task<bool> IsUserExistAsync(int userId);
-        Task<bool> IsUserExistAsync(string userName);
+        //Task<bool> IsUserExistAsync(int userId);
+        //Task<bool> IsUserExistAsync(string userName);
         EasyLearnUser GetUser(int userId);
-        Task<EasyLearnUser> GetUserAsync(int userId);
+        //Task<EasyLearnUser> GetUserAsync(int userId);
         EasyLearnUser? TryGetUser(int userId);
         EasyLearnUser? TryGetCurrentUser();
-        Task<EasyLearnUser?> TryGetCurrentUserAsync();
+        //Task<EasyLearnUser?> TryGetCurrentUserAsync();
         IEnumerable<EasyLearnUser> GetAllUsers();
         Task<EasyLearnUser> CreateUser(string userName);
         Task DeleteUser(int userId);

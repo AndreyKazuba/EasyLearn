@@ -17,7 +17,7 @@
 
             <materialDesign:DrawerHost OpenMode="Standard" materialDesign:ShadowAssist.ShadowDepth="Depth0">
                 <materialDesign:DrawerHost.TopDrawerContent>
-                    <Border Background="{DynamicResource EasyGrayLight}" Height="58" BorderBrush="{DynamicResource MainColor}" BorderThickness="0.6 0 0 0.6">
+                    <Border Background="{DynamicResource EasyGrayLight}" Height="58" BorderBrush="{DynamicResource MainColor}" BorderThickness="0.4 0 0 0.6">
                         <Grid VerticalAlignment="Stretch">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -74,6 +74,13 @@
                                     Grid.Column="4"
                                     Padding="0"
                                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding DisableAppWindowNavigationBarCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
                                 <materialDesign:PackIcon Kind="TrashCanOutline" Height="28" Width="28"
                                                          VerticalAlignment="Center" Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
                                                          HorizontalAlignment="Center"/>
@@ -106,6 +113,12 @@
                                                     Width="75"
                                                     Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
 
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+
                                                 <TextBlock Text="Нет" FontSize="14" FontFamily="Arial"/>
                                             </Button>
 
@@ -122,6 +135,7 @@
                                                     <i:EventTrigger EventName="Click">
                                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                                         <i:InvokeCommandAction Command="{Binding DeleteAllVerbPrepositionsCommand}"/>
+                                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
 
@@ -161,6 +175,13 @@
             <Button Name="uwOpenWindowButton"
                     Visibility="Collapsed"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding DisableAppWindowNavigationBarCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
 
                 <Button.CommandParameter>
                     <Grid Margin="0 0 0 10">
@@ -309,6 +330,7 @@
                                     <i:EventTrigger EventName="TextChanged">
                                         <i:InvokeCommandAction Command="{Binding UwValidateExampleSectionCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding UwCheckExampleTextBoxesMaxLengthVisibilityCommand}"/>
+                                        
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBox>
@@ -378,6 +400,7 @@
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding UwClearExampleSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -397,6 +420,7 @@
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding UpdateVerbPrepositionCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding UwClearExampleSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -419,6 +443,7 @@
                     <i:EventTrigger EventName="Click">
                         <i:InvokeCommandAction Command="{Binding AwClearCommand}"/>
                         <i:InvokeCommandAction Command="{Binding AwClearExampleSectionCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding DisableAppWindowNavigationBarCommand}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
 
@@ -682,6 +707,7 @@
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding AwClearCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding AwClearExampleSectionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -700,6 +726,7 @@
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding CreateVerbPrepositionCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 

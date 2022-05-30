@@ -13,7 +13,7 @@ namespace EasyLearn.UI.Pages
 
         public UsersPage(UsersPageVM viewModel)
         {
-            this.DataContext = viewModel;
+            DataContext = viewModel;
             InitializeComponent();
         }
 

@@ -27,6 +27,13 @@
             <Button Visibility="Collapsed"
                     Name="openDeleteCommonDictionaryWindowButton"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding DisableAppWindowNavigationBarCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
                 <Button.CommandParameter>
 
                     <Grid Margin="0 10 0 12">
@@ -55,6 +62,12 @@
                             <Button Style="{DynamicResource EasyCancelButton}"
                                     Width="75"
                                     Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
 
                                 <TextBlock Text="Нет" FontSize="14" FontFamily="Arial"/>
                             </Button>
@@ -71,6 +84,7 @@
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding DeleteCommonDictionaryCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -86,6 +100,13 @@
             <Button Visibility="Collapsed"
                     Name="openDeleteVerbPrepositionDictionaryWindowButton"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding DisableAppWindowNavigationBarCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
                 <Button.CommandParameter>
 
                     <Grid Margin="0 10 0 12">
@@ -115,6 +136,12 @@
                                     Width="75"
                                     Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
 
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
                                 <TextBlock Text="Нет" FontSize="14" FontFamily="Arial"/>
                             </Button>
 
@@ -130,6 +157,7 @@
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding DeleteVerbPrepositionDictionaryCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -144,6 +172,12 @@
 
             <Button Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}" Visibility="Collapsed" Name="addNewDictionaryButton">
 
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding DisableAppWindowNavigationBarCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
                 <Button.CommandParameter>
                     <StackPanel Margin="14">
 
@@ -152,7 +186,9 @@
                                  materialDesign:HintAssist.Hint="Название*"
                                  materialDesign:HintAssist.IsFloating="False"
                                  Padding="14 11"
-                                  materialDesign:ValidationAssist.Suppress="True"
+                                 KeyDown="OnDictionaryNameTextBoxKeyDown"
+                                 Name="dictionaryNameTextBox"
+                                 materialDesign:ValidationAssist.Suppress="True"
                                  Width="202">
 
                             <TextBox.Text>
@@ -178,6 +214,8 @@
                                   MaxDropDownHeight="200"
                                   Margin="0 0 0 14"
                                   Padding="14 11"
+                                  Name="dictioraryTypeComboBox"
+                                  KeyDown="OnDictionaryTypeComboBoxKeyDown"
                                   Style="{DynamicResource EasyComboBox}"
                                   ItemsSource="{Binding AddingWindowDictionaryTypes}"
                                   SelectedItem="{Binding AddingWindowSelectedDictionaryType}">
@@ -191,8 +229,9 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <!--Кнопка отмены добавления нового списка-->
-                            <Button Style="{DynamicResource EasyCancelButton}">
+                            <!--Кнопка отмены добавления нового словаря-->
+                            <Button Style="{DynamicResource EasyCancelButton}"
+                                    Name="cancelDictionaryAddingButton">
 
                                 <TextBlock Text="Отмена" FontSize="14" FontFamily="Arial"/>
 
@@ -200,6 +239,7 @@
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -208,6 +248,7 @@
                             <!--Кнопка подтверждения добавления нового аккаунта-->
                             <Button Style="{DynamicResource EasyConfirmButton}"
                                     Grid.Column="1"
+                                    Name="confirmDictionaryAddingButton"
                                     IsEnabled="{Binding IsConfirmDictionaryAddingButtonEnabled}">
 
                                 <TextBlock Text="Добавить" FontSize="14" FontFamily="Arial"/>
@@ -217,6 +258,7 @@
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding CreateDictionaryCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>

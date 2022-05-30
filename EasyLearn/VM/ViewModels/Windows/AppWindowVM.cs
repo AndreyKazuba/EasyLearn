@@ -33,6 +33,7 @@ namespace EasyLearn.VM.Windows
         public bool GoBackButtonIsVisible { get; set; }
         public bool OpenDictationPageButtonIsEnabled { get; set; }
         public bool OpenDictionariesPageButtonIsEnabled { get; set; }
+        public bool OpenUsersPageButtonIsEnabled { get; set; }
         #endregion
 
 #pragma warning disable CS8618
@@ -53,6 +54,8 @@ namespace EasyLearn.VM.Windows
         public Command SetGoBackButtonCommand { get; private set; }
         public Command HideGoBackButtonCommand { get; private set; }
         public Command CheckPageBarButtonsAvailabilityCommand { get; private set; }
+        public Command DisableNavigationBarCommand { get; private set; }
+        public Command EnableNavigationBarCommand { get; private set; }
         protected override void InitCommands()
         {
             OpenDictationPageCommand = new Command(OpenDictationPage);
@@ -68,6 +71,8 @@ namespace EasyLearn.VM.Windows
             SetGoBackButtonCommand = new Command(SetGoBackButton);
             HideGoBackButtonCommand = new Command(HideGoBackButton);
             CheckPageBarButtonsAvailabilityCommand = new Command(CheckPageBarButtonsAvailability);
+            DisableNavigationBarCommand = new Command(DisableNavigationBar);
+            EnableNavigationBarCommand = new Command(EnableNavigationBar);
         }
         private void OpenDictationPage() => CurrentPage = Page.Dictation;
         private void OpenUsersPage() => CurrentPage = Page.Users;
@@ -106,14 +111,28 @@ namespace EasyLearn.VM.Windows
             bool atLeastOneUserExist = App.GetService<IEasyLearnUserRepository>().IsAtLeastOneUserExist();
             if (atLeastOneUserExist)
             {
+                OpenUsersPageButtonIsEnabled = true;
                 OpenDictionariesPageButtonIsEnabled = true;
                 OpenDictationPageButtonIsEnabled = true;
             }
             else
             {
+                OpenUsersPageButtonIsEnabled = true;
                 OpenDictionariesPageButtonIsEnabled = false;
                 OpenDictationPageButtonIsEnabled = false;
             }
+        }
+        private void DisableNavigationBar()
+        {
+            OpenUsersPageButtonIsEnabled = false;
+            OpenDictionariesPageButtonIsEnabled = false;
+            OpenDictationPageButtonIsEnabled = false;
+        }
+        private void EnableNavigationBar()
+        {
+            OpenUsersPageButtonIsEnabled = true;
+            OpenDictionariesPageButtonIsEnabled = true;
+            OpenDictationPageButtonIsEnabled = true;
         }
         #endregion
 
@@ -131,12 +150,14 @@ namespace EasyLearn.VM.Windows
             bool atLeastOneUserExist = App.GetService<IEasyLearnUserRepository>().IsAtLeastOneUserExist();
             if (atLeastOneUserExist)
             {
+                OpenUsersPageButtonIsEnabled = true;
                 OpenDictionariesPageButtonIsEnabled = true;
                 OpenDictationPageButtonIsEnabled = true;
                 CurrentPage = Page.Dictation;
             }
             else
             {
+                OpenUsersPageButtonIsEnabled = true;
                 OpenDictionariesPageButtonIsEnabled = false;
                 OpenDictationPageButtonIsEnabled = false;
                 CurrentPage = Page.Users;

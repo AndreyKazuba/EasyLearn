@@ -27,6 +27,13 @@
             <Button Visibility="Collapsed"
                     Name="openDeleteUserWindowButton"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
+                
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding DisableAppWindowNavigationBarCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                
                 <Button.CommandParameter>
 
                     <Grid Margin="0 10 0 12">
@@ -56,6 +63,12 @@
                                     Width="75"
                                     Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
 
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
                                 <TextBlock Text="Нет" FontSize="14" FontFamily="Arial"/>
                             </Button>
 
@@ -71,6 +84,7 @@
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding DeleteUserCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -86,6 +100,13 @@
             <Button Name="openNewUserAddingWindowButton"
                     Visibility="Collapsed"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding DisableAppWindowNavigationBarCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
                 <Button.CommandParameter>
                     <StackPanel Margin="14">
 
@@ -133,6 +154,7 @@
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
@@ -150,6 +172,7 @@
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding CreateUserCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding ClearAddingWindowCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>

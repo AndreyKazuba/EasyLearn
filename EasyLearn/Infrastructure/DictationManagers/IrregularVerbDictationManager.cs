@@ -1,5 +1,8 @@
-﻿using EasyLearn.Data.Helpers;
+﻿using EasyLearn.Data.DTO;
+using EasyLearn.Data.Enums;
+using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
+using EasyLearn.Data.Repositories.Interfaces;
 using EasyLearn.Infrastructure.Exceptions;
 using EasyLearn.Infrastructure.Helpers;
 using System;
@@ -12,12 +15,36 @@ namespace EasyLearn.Infrastructure.DictationManagers
     {
         #region Private fields
         private bool isStarted;
-        private bool currentAnswerIsNew;
+        private bool currentV1AnswerIsNew;
+        private bool currentV2AnswerIsNew;
+        private bool currentV3AnswerIsNew;
+        private bool v1WasIncorrect;
+        private bool v2WasIncorrect;
+        private bool v3WasIncorrect;
+        private bool wrongAnswersCounterWasIncresed;
         private int answersCounter;
         private int wrongAnswersCounter;
         private int currentIrregularVerbId;
         private int maxCurrentIrregularVerbId;
+        private List<Answer> answers = new List<Answer>();
         private List<IrregularVerb> irregularVerbs;
+        #endregion
+
+        #region Private helper props
+        private bool CurrentAnswerIsIncorrect => v1WasIncorrect || v2WasIncorrect || v3WasIncorrect;
+        private int IncorrectAnswers
+        {
+            get
+            {
+                if ((v1WasIncorrect && !v2WasIncorrect && !v3WasIncorrect)
+                || (!v1WasIncorrect && v2WasIncorrect && !v3WasIncorrect)
+                || (!v1WasIncorrect && !v2WasIncorrect && v3WasIncorrect))
+                    return 1;
+                else if (v1WasIncorrect && v2WasIncorrect && v3WasIncorrect)
+                    return 3;
+                else return 2;
+            }
+        }
         #endregion
 
         #region Public props
@@ -43,7 +70,13 @@ namespace EasyLearn.Infrastructure.DictationManagers
         {
             ThrowIfItImpossibleToStart();
             isStarted = true;
-            currentAnswerIsNew = true;
+            wrongAnswersCounterWasIncresed = false;
+            currentV1AnswerIsNew = true;
+            currentV2AnswerIsNew = true;
+            currentV3AnswerIsNew = true;
+            v1WasIncorrect = false;
+            v2WasIncorrect = false;
+            v3WasIncorrect = false;
             answersCounter = 0;
             wrongAnswersCounter = 0;
             return irregularVerbs[currentIrregularVerbId];
@@ -51,19 +84,26 @@ namespace EasyLearn.Infrastructure.DictationManagers
         public bool GoNext()
         {
             ThrowIfDictationIsNotStarted();
-            currentAnswerIsNew = true;
+            currentV1AnswerIsNew = true;
+            currentV2AnswerIsNew = true;
+            currentV3AnswerIsNew = true;
+            wrongAnswersCounterWasIncresed = false;
+            v1WasIncorrect = false;
+            v2WasIncorrect = false;
+            v3WasIncorrect = false;
             return ++currentIrregularVerbId <= maxCurrentIrregularVerbId;
         }
         public bool IsV1AnswerCorrect(string answer)
         {
             ThrowIfDictationIsNotStarted();
             bool answerIsCorrect = StringHelper.Equals(irregularVerbs[currentIrregularVerbId].FirstForm.Value, answer);
-            if (currentAnswerIsNew)
+            if (currentV1AnswerIsNew)
             {
                 answersCounter++;
-                currentAnswerIsNew = false;
+                currentV1AnswerIsNew = false;
                 if (!answerIsCorrect)
-                    wrongAnswersCounter++;
+                    v1WasIncorrect = true;
+                CheckWrongAnswersCounter();
             }
             return answerIsCorrect;
         }
@@ -71,12 +111,12 @@ namespace EasyLearn.Infrastructure.DictationManagers
         {
             ThrowIfDictationIsNotStarted();
             bool answerIsCorrect = StringHelper.Equals(irregularVerbs[currentIrregularVerbId].SecondForm.Value, answer);
-            if (currentAnswerIsNew)
+            if (currentV2AnswerIsNew)
             {
-                answersCounter++;
-                currentAnswerIsNew = false;
+                currentV2AnswerIsNew = false;
                 if (!answerIsCorrect)
-                    wrongAnswersCounter++;
+                    v2WasIncorrect = true;
+                CheckWrongAnswersCounter();
             }
             return answerIsCorrect;
         }
@@ -84,18 +124,37 @@ namespace EasyLearn.Infrastructure.DictationManagers
         {
             ThrowIfDictationIsNotStarted();
             bool answerIsCorrect = StringHelper.Equals(irregularVerbs[currentIrregularVerbId].ThirdForm.Value, answer);
-            if (currentAnswerIsNew)
+            if (currentV3AnswerIsNew)
             {
-                answersCounter++;
-                currentAnswerIsNew = false;
+                currentV3AnswerIsNew = false;
                 if (!answerIsCorrect)
-                    wrongAnswersCounter++;
+                    v3WasIncorrect = true;
+                CheckWrongAnswersCounter();
+                answers.Add(new Answer
+                {
+                    RelationId = irregularVerbs[currentIrregularVerbId].Id,
+                    Variation = !CurrentAnswerIsIncorrect
+                    ? AnswerVariation.FirstTry
+                    : IncorrectAnswers == 1
+                        ? AnswerVariation.SecondTry
+                        : IncorrectAnswers == 2
+                            ? AnswerVariation.ThirdTry
+                            : AnswerVariation.FourthPlusTry
+                });
             }
             return answerIsCorrect;
         }
-        public void SaveDictationResults()
+        public void SaveDictationResults() => App.GetService<IIrregularVerbRepository>().SaveDictationResults(answers);
+        #endregion
+
+        #region Private helpers
+        private void CheckWrongAnswersCounter()
         {
-            throw new NotImplementedException();
+            if (wrongAnswersCounterWasIncresed)
+                return;
+            if (CurrentAnswerIsIncorrect)
+                wrongAnswersCounter++;
+            wrongAnswersCounterWasIncresed = true;
         }
         #endregion
 

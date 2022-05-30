@@ -101,6 +101,8 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command SearchCommonRelationsCommand { get; private set; }
         public Command<int> RemoveExampleViewCommand { get; private set; }
         public Command ClearSearchStringValueCommand { get; private set; }
+        public Command DisableAppWindowNavigationBarCommand { get; private set; }
+        public Command EnableAppWindowNavigationBarCommand { get; private set; }
 
         public Command AwOpenWindowCommand { get; private set; }
         public Command AwClearCommand { get; private set; }
@@ -132,6 +134,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             SearchCommonRelationsCommand = new Command(SearchCommonRelations);
             RemoveExampleViewCommand = new Command<int>(RemoveExampleView);
             ClearSearchStringValueCommand = new Command(ClearSearchStringValue);
+            DisableAppWindowNavigationBarCommand = new Command(DisableAppWindowNavigationBar);
+            EnableAppWindowNavigationBarCommand = new Command(EnableAppWindowNavigationBar);
 
             AwOpenWindowCommand = new Command(AwOpenWindow);
             AwClearCommand = new Command(AwClear);
@@ -243,6 +247,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             UwValidateExampleSection();
         }
         private void ClearSearchStringValue() => SearchStringValue = string.Empty;
+        private void DisableAppWindowNavigationBar() => App.GetService<AppWindowVM>().DisableNavigationBarCommand.Execute();
+        private void EnableAppWindowNavigationBar() => App.GetService<AppWindowVM>().EnableNavigationBarCommand.Execute();
         private void AwOpenWindow() => AwOpenWindowButtonSoftClick();
         private void AwClear()
         {

@@ -69,6 +69,8 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command OpenAddingDictionaryWindowCommand { get; private set; }
         public Command<int> OpenDeleteCommonDictionaryWindowCommand { get; private set; }
         public Command<int> OpenDeleteVerbPrepositionDictionaryWindowCommand { get; private set; }
+        public Command DisableAppWindowNavigationBarCommand { get; private set; }
+        public Command EnableAppWindowNavigationBarCommand { get; private set; }
         protected override void InitCommands()
         {
             ClearAddingWindowCommand = new Command(ClearAddingWindow);
@@ -81,6 +83,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             OpenAddingDictionaryWindowCommand = new Command(OpenAddingDictionaryWindow);
             OpenDeleteCommonDictionaryWindowCommand = new Command<int>(OpenDeleteCommonDictionaryWindow);
             OpenDeleteVerbPrepositionDictionaryWindowCommand = new Command<int>(OpenDeleteVerbPrepositionDictionaryWindow);
+            DisableAppWindowNavigationBarCommand = new Command(DisableAppWindowNavigationBar);
+            EnableAppWindowNavigationBarCommand = new Command(EnableAppWindowNavigationBar);
         }
         private void ClearAddingWindow()
         {
@@ -140,22 +144,43 @@ namespace EasyLearn.VM.ViewModels.Pages
             dictionaryIdForDelete = verbPrepositionDictionaryId;
             OpenDeleteVerbPrepositionDictionaryWindowButtonSoftClick();
         }
+        private void DisableAppWindowNavigationBar() => App.GetService<AppWindowVM>().DisableNavigationBarCommand.Execute();
+        private void EnableAppWindowNavigationBar() => App.GetService<AppWindowVM>().EnableNavigationBarCommand.Execute();
         #endregion
 
         #region Event handling
         protected override void InitEvents()
         {
             App.GetService<AppWindowVM>().CurrentPageChanged += OnCurrentPageChanged;
-            AppWindow.GoBackButtonClick += OnGoBackButtonClick;
+            AppWindow.WindowCtrlNDown += OnWindowCtrlNDown;
+            AppWindow.WindowEscDown += OnWindowEscDown;
+            DictionariesPage.DictionaryNameTextBoxEnterDown += OnDictionaryNameTextBoxEnterDown;
+            DictionariesPage.DictionaryTypeComboBoxEnterDown += OnDictioraryTypeComboBoxEnterDown;
         }
         private void OnCurrentPageChanged()
         {
-            FlipBackAllCards();
-            UpdatePage();
+            if (App.GetService<AppWindowVM>().CurrentPage == Infrastructure.Enums.Page.Dictionaries)
+            {
+                FlipBackAllCards();
+                UpdatePage();
+            }
         }
-        private void OnGoBackButtonClick()
+        private void OnWindowCtrlNDown()
         {
-            UpdatePage();
+            if (App.GetService<AppWindowVM>().CurrentPage == Infrastructure.Enums.Page.Dictionaries)
+                AddNewDictionaryButtonSoftClick();
+        }
+        private void OnWindowEscDown()
+        {
+            if (App.GetService<AppWindowVM>().CurrentPage == Infrastructure.Enums.Page.Dictionaries)
+                CancelDictionaryAddingButtonSoftClick();
+        }
+        private void OnDictionaryNameTextBoxEnterDown() => FocusDictionaryTypeComboBox();
+        private void OnDictioraryTypeComboBoxEnterDown()
+        {
+            if (!IsConfirmDictionaryAddingButtonEnabled)
+                return;
+            ConfirmDictionaryAddingButtonSoftClick();
         }
         #endregion
 
@@ -246,6 +271,9 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void AddNewDictionaryButtonSoftClick() => App.GetService<DictionariesPage>().addNewDictionaryButton.SoftClick();
         private void OpenDeleteVerbPrepositionDictionaryWindowButtonSoftClick() => App.GetService<DictionariesPage>().openDeleteVerbPrepositionDictionaryWindowButton.SoftClick();
         private void OpenDeleteCommonDictionaryWindowButtonSoftClick() => App.GetService<DictionariesPage>().openDeleteCommonDictionaryWindowButton.SoftClick();
+        private void CancelDictionaryAddingButtonSoftClick() => App.GetService<DictionariesPage>().cancelDictionaryAddingButton.SoftClick();
+        private void ConfirmDictionaryAddingButtonSoftClick() => App.GetService<DictionariesPage>().confirmDictionaryAddingButton.SoftClick();
+        private void FocusDictionaryTypeComboBox() => App.GetService<DictionariesPage>().dictioraryTypeComboBox.Focus();
         #endregion
     }
 }

@@ -73,6 +73,7 @@
                             Width="155"
                             Click="OnDrawerButtonClick"
                             Foreground="{DynamicResource MainColor}"
+                            IsEnabled="{Binding OpenUsersPageButtonIsEnabled}"
                             HorizontalContentAlignment="Left">
 
                         <i:Interaction.Triggers>
@@ -344,7 +345,7 @@
                     </Grid>
 
                 </materialDesign:ColorZone>
-                <Border Grid.Row="1" BorderBrush="{DynamicResource MainColor}" BorderThickness="0.6 0 0.6 0.6">
+                <Border Grid.Row="1" BorderBrush="{DynamicResource MainColor}" BorderThickness="0.6 0 0.6 0">
                     <Frame JournalOwnership="UsesParentJournal"  Content="{Binding CurrentPage, Converter={converters:AppPageConverter}}"/>
                 </Border>
             </Grid>

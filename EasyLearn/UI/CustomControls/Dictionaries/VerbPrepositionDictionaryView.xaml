@@ -21,7 +21,9 @@
 
         <materialDesign:Flipper.FrontContent>
 
-            <Border BorderThickness="0.6" BorderBrush="{DynamicResource MainColorLight}" Background="{DynamicResource EasyGrayLight}">
+            <Border BorderThickness="0.6" 
+                    BorderBrush="{DynamicResource MainColorLight}" 
+                    Background="{DynamicResource EasyGrayLight}">
                 <Grid Height="256" Width="200">
 
                     <Grid.RowDefinitions>
@@ -33,10 +35,10 @@
                     <materialDesign:ColorZone Background="#ffaa80" VerticalAlignment="Stretch">
 
                         <materialDesign:PackIcon Kind="Book" 
-                                             Height="128" 
-                                             Width="128"
-                                             VerticalAlignment="Center" 
-                                             HorizontalAlignment="Center" />
+                                                 Height="128" 
+                                                 Width="128"
+                                                 VerticalAlignment="Center" 
+                                                 HorizontalAlignment="Center" />
 
                     </materialDesign:ColorZone>
 

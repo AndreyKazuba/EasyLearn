@@ -93,8 +93,11 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         private void SetTotalDictionaryProgress(VerbPrepositionDictionnary verbPrepositionDictionnary)
         {
             int hundredPercentValue = verbPrepositionDictionnary.VerbPrepositions.Count * 100;
-            int currentValue = verbPrepositionDictionnary.VerbPrepositions.Sum(commonRelation => commonRelation.Rating);
-            TotalDictionaryProgress = (int)(currentValue * (100d / hundredPercentValue));
+            int ratingCurrentValue = verbPrepositionDictionnary.VerbPrepositions.Sum(verbPreposition => verbPreposition.Rating);
+            int ratingTotalValue = (int)(ratingCurrentValue * (100d / hundredPercentValue) * 0.8);
+            int studiedCurrentValue = verbPrepositionDictionnary.VerbPrepositions.Count(verbPreposition => verbPreposition.Studied) * 100;
+            int studiedTotalValue = (int)(studiedCurrentValue * (100d / hundredPercentValue) * 0.2);
+            TotalDictionaryProgress = ratingTotalValue + studiedTotalValue;
         }
         #endregion
     }

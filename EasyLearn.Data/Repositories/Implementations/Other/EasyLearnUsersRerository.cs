@@ -19,13 +19,13 @@ namespace EasyLearn.Data.Repositories.Implementations
         public bool IsUserCurrent(int userId) => context.Users.First(user => user.Id == userId).IsCurrent;
         public bool IsUserExist(int userId) => context.Users.Any(user => user.Id == userId);
         public bool IsUserExist(string userName) => context.Users.Any(user => user.Name == userName);
-        public async Task<bool> IsUserExistAsync(int userId) => await context.Users.AnyAsync(user => user.Id == userId);
-        public async Task<bool> IsUserExistAsync(string userName) => await context.Users.AnyAsync(user => user.Name == userName);
+        //public async Task<bool> IsUserExistAsync(int userId) => await context.Users.AnyAsync(user => user.Id == userId);
+        //public async Task<bool> IsUserExistAsync(string userName) => await context.Users.AnyAsync(user => user.Name == userName);
         public EasyLearnUser GetUser(int userId) => context.Users.AsNoTracking().First(user => user.Id == userId);
-        public async Task<EasyLearnUser> GetUserAsync(int userId) => await context.Users.AsNoTracking().FirstAsync(user => user.Id == userId);
+        //public async Task<EasyLearnUser> GetUserAsync(int userId) => await context.Users.AsNoTracking().FirstAsync(user => user.Id == userId);
         public EasyLearnUser? TryGetUser(int userId) => context.Users.AsNoTracking().FirstOrDefault(user => user.Id == userId);
         public EasyLearnUser? TryGetCurrentUser() => context.Users.AsNoTracking().FirstOrDefault(user => user.IsCurrent);
-        public async Task<EasyLearnUser?> TryGetCurrentUserAsync() => await context.Users.AsNoTracking().FirstOrDefaultAsync(user => user.IsCurrent);
+        //public async Task<EasyLearnUser?> TryGetCurrentUserAsync() => await context.Users.AsNoTracking().FirstOrDefaultAsync(user => user.IsCurrent);
         public IEnumerable<EasyLearnUser> GetAllUsers() => context.Users
             .Include(user => user.CommonDictionaries).ThenInclude(commonDictionary => commonDictionary.Relations)
             .Include(user => user.VerbPrepositionDictionaries).ThenInclude(verbPrepositionDictionary => verbPrepositionDictionary.VerbPrepositions)

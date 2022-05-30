@@ -26,22 +26,27 @@
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="160"/>
-                        <RowDefinition/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
                     <!--Пространство с картинкой и закрашенным фоном-->
                     <materialDesign:ColorZone Background="#bf80ff" VerticalAlignment="Stretch">
-                        <materialDesign:PackIcon VerticalAlignment="Center" HorizontalAlignment="Center"
-                                             Height="128" Width="128"
-                                             Kind="Book"/>
+                        
+                        <materialDesign:PackIcon VerticalAlignment="Center" 
+                                                 HorizontalAlignment="Center"
+                                                 Height="128" Width="128"
+                                                 Kind="Book"/>
                     </materialDesign:ColorZone>
 
                     <!--Кнопка перехода на заднюю сторону карточки (настройки словаря)-->
                     <Button Style="{DynamicResource MaterialDesignFlatButton}"
-                            HorizontalAlignment="Right" VerticalAlignment="Top"
+                            HorizontalAlignment="Right" 
+                            VerticalAlignment="Top"
                             Foreground="{DynamicResource EasyBlack}"
-                            Width="30" Height="30"
-                            Panel.ZIndex="20">
+                            Width="30" 
+                            Height="30"
+                            Padding="0"
+                            Margin="0">
 
                         <!--Изображение-->
                         <materialDesign:PackIcon HorizontalAlignment="Center" 

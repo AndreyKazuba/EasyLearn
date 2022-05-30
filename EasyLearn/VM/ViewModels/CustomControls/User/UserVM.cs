@@ -94,9 +94,14 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             int hundredPercentValue = (user.CommonDictionaries.Sum(commonDictionary => commonDictionary.Relations.Count)
                                      + user.VerbPrepositionDictionaries.Sum(verbPrepositionDictionary => verbPrepositionDictionary.VerbPrepositions.Count))
                                      * 100;
-            int currentValue = user.CommonDictionaries.Sum(commonDictionary => commonDictionary.Relations.Sum(commonRelation => commonRelation.Rating))
+            int ratingCurrentValue = user.CommonDictionaries.Sum(commonDictionary => commonDictionary.Relations.Sum(commonRelation => commonRelation.Rating))
                 + user.VerbPrepositionDictionaries.Sum(verbPrepositionDictionary => verbPrepositionDictionary.VerbPrepositions.Sum(verbPreposition => verbPreposition.Rating));
-            TotalUserProgress = (int)(currentValue * (100d / hundredPercentValue));
+            int ratingTotalValue = (int)(ratingCurrentValue * (100d / hundredPercentValue) * 0.8);
+            int studiedCurrentValue = (user.CommonDictionaries.Sum(commonDictionary => commonDictionary.Relations.Count(commonRelation => commonRelation.Studied))
+                + user.VerbPrepositionDictionaries.Sum(verbPrepositionDictionary => verbPrepositionDictionary.VerbPrepositions.Count(verbPreposition => verbPreposition.Studied)))
+                * 100;
+            int studiedTotalValue = (int)(studiedCurrentValue * (100d / hundredPercentValue) * 0.2);
+            TotalUserProgress = ratingTotalValue + studiedTotalValue;
         }
         #endregion
     }

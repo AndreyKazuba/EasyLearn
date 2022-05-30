@@ -470,6 +470,12 @@
 
                 <TextBlock Text="Начать" FontSize="15" FontFamily="Arial"/>
 
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding DisableAppWindowNavigationBarCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
                 <!--Диалоговое окно начала диктанта-->
                 <Button.CommandParameter>
                     <Grid>
@@ -551,6 +557,7 @@
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -566,6 +573,7 @@
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding StartDictationCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -607,6 +615,12 @@
                                 Margin="0 6 0 10"
                                 Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
                                 FocusVisualStyle="{x:Null}">
+
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                         </Button>
                     </StackPanel>
                 </Button.CommandParameter>
@@ -614,6 +628,7 @@
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <i:InvokeCommandAction Command="{Binding StopDictationCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding DisableAppWindowNavigationBarCommand}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
 

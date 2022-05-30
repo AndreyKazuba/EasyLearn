@@ -36,7 +36,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public UsersPageVM(IEasyLearnUserRepository userRerository)
         {
             this.userRerository = userRerository;
-            LoadUserViews();
+            UpdatePage();
         }
 #pragma warning restore CS8618
 
@@ -49,6 +49,8 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command UpdateConfirmUserAddingButtonAvailabilityCommand { get; private set; }
         public Command OpenAddingUserWindowCommand { get; private set; }
         public Command<int> OpenDeleteUserWindowCommand { get; private set; }
+        public Command DisableAppWindowNavigationBarCommand { get; private set; }
+        public Command EnableAppWindowNavigationBarCommand { get; private set; }
         protected override void InitCommands()
         {
             CreateUserCommand = new Command(async () => await CreateUser());
@@ -59,6 +61,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             UpdateConfirmUserAddingButtonAvailabilityCommand = new Command(UpdateConfirmUserAddingButtonAvailability);
             OpenAddingUserWindowCommand = new Command(OpenAddingUserWindow);
             OpenDeleteUserWindowCommand = new Command<int>(OpenDeleteUserWindow);
+            DisableAppWindowNavigationBarCommand = new Command(DisableAppWindowNavigationBar);
+            EnableAppWindowNavigationBarCommand = new Command(EnableAppWindowNavigationBar);
         }
         private async Task CreateUser()
         {
@@ -108,15 +112,23 @@ namespace EasyLearn.VM.ViewModels.Pages
             userIdForDelete = userId;
             OpenDeleteUserWindowButtonSoftClick();
         }
+        private void DisableAppWindowNavigationBar() => App.GetService<AppWindowVM>().DisableNavigationBarCommand.Execute();
+        private void EnableAppWindowNavigationBar() => App.GetService<AppWindowVM>().EnableNavigationBarCommand.Execute();
         #endregion
 
         #region Event handling
         protected override void InitEvents()
         {
-            App.GetService<AppWindowVM>().CurrentPageChanged += () => FlipBackAllCards();
+            App.GetService<AppWindowVM>().CurrentPageChanged += OnCurrentPageChanged;
             UsersPage.UserNameValueTextBoxEnterDown += OnUserNameValueTextBoxEnterDown;
             AppWindow.WindowCtrlNDown += OnWindowCtrlNDown;
             AppWindow.WindowEscDown += OnWindowEscDown;
+        }
+        private void OnCurrentPageChanged()
+        {
+            if (App.GetService<AppWindowVM>().CurrentPage == Page.Users)
+                UpdatePage();
+            FlipBackAllCards();
         }
         private void OnUserNameValueTextBoxEnterDown()
         {
@@ -136,7 +148,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         #endregion
 
         #region Private helpers
-        private void LoadUserViews()
+        private void UpdatePage()
         {
             IEnumerable<EasyLearnUser> easyLearnUsers = userRerository.GetAllUsers();
             IEnumerable<UserView> userViews = easyLearnUsers.Select(easyLearnUser => UserView.Create(easyLearnUser));
@@ -146,7 +158,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void UpdatePagesForNewUser()
         {
             App.GetService<DictionariesPageVM>().UpdatePageCommand.Execute();
-            App.GetService<DictationPageVM>().UpdatePageForNewUserCommand.Execute();
+            App.GetService<DictationPageVM>().UpdatePageCommand.Execute();
         }
         private void CheckPageBarButtonsAvailability() => App.GetService<AppWindowVM>().CheckPageBarButtonsAvailabilityCommand.Execute();
         #endregion

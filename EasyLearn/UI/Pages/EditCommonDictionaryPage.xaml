@@ -16,7 +16,7 @@
 
                 <!--Верхнее выплывающее меню-->
                 <materialDesign:DrawerHost.TopDrawerContent>
-                    <Border Background="{DynamicResource EasyGrayLight}" Height="58" BorderBrush="{DynamicResource MainColor}" BorderThickness="0.6 0 0 0.6">
+                    <Border Background="{DynamicResource EasyGrayLight}" Height="58" BorderBrush="{DynamicResource MainColor}" BorderThickness="0.4 0 0 0.6">
                         <Grid VerticalAlignment="Stretch">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -83,6 +83,12 @@
                                     ToolTip="Очистить словарь"
                                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
 
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding DisableAppWindowNavigationBarCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
                                 <materialDesign:PackIcon Kind="TrashCanOutline" Height="28" Width="28"
                                                          VerticalAlignment="Center" Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
                                                          HorizontalAlignment="Center"/>
@@ -115,6 +121,12 @@
                                                     Width="75"
                                                     Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
 
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+
                                                 <TextBlock Text="Нет" FontSize="14" FontFamily="Arial"/>
                                             </Button>
 
@@ -131,6 +143,7 @@
                                                     <i:EventTrigger EventName="Click">
                                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                                         <i:InvokeCommandAction Command="{Binding DeleteAllCommonRelationsCommand}"/>
+                                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
 
@@ -173,6 +186,12 @@
             <Button Name="uwOpenWindowButton"
                     Visibility="Collapsed"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
+                
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding DisableAppWindowNavigationBarCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
 
                 <Button.CommandParameter>
                     <Grid Margin="0">
@@ -392,6 +411,7 @@
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding UwClearExampleSectionCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding UwClearCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -412,6 +432,7 @@
                                         <i:InvokeCommandAction Command="{Binding UpdateCommonRelationCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding UwClearExampleSectionCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding UwClearCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -429,9 +450,11 @@
                     Name="awOpenWindowButton"
                     Visibility="Collapsed">
 
+
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <i:InvokeCommandAction Command="{Binding AwClearCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding DisableAppWindowNavigationBarCommand}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
 
@@ -755,6 +778,7 @@
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding AwClearCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
@@ -773,6 +797,7 @@
                                     <i:EventTrigger EventName="Click">
                                         <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                                         <i:InvokeCommandAction Command="{Binding CreateCommonRelationCommand}"/>
+                                        <i:InvokeCommandAction Command="{Binding EnableAppWindowNavigationBarCommand}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 

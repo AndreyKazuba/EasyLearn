@@ -93,8 +93,11 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         private void SetTotalDictionaryProgress(CommonDictionary commonDictionary)
         {
             int hundredPercentValue = commonDictionary.Relations.Count * 100;
-            int currentValue = commonDictionary.Relations.Sum(commonRelation => commonRelation.Rating);
-            TotalDictionaryProgress = (int)(currentValue * (100d / hundredPercentValue));
+            int ratingCurrentValue = commonDictionary.Relations.Sum(commonRelation => commonRelation.Rating);
+            int ratingTotalValue = (int)(ratingCurrentValue * (100d / hundredPercentValue) * 0.8);
+            int studiedCurrentValue = commonDictionary.Relations.Count(commonRelation => commonRelation.Studied) * 100;
+            int studiedTotalValue = (int)(studiedCurrentValue * (100d / hundredPercentValue) * 0.2);
+            TotalDictionaryProgress = ratingTotalValue + studiedTotalValue;
         }
         #endregion
     }
