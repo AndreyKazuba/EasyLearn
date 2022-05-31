@@ -16,7 +16,7 @@
 
                 <!--Верхнее выплывающее меню-->
                 <materialDesign:DrawerHost.TopDrawerContent>
-                    <Border Background="{DynamicResource EasyGrayLight}" Height="62" BorderBrush="{DynamicResource MainColor}" BorderThickness="0.4 0 0 0.6">
+                    <Border Background="{DynamicResource EasyGrayLight}" Height="58" BorderBrush="{DynamicResource MainColor}" BorderThickness="0.4 0 0 0.6">
                         <Grid VerticalAlignment="Stretch">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -29,7 +29,7 @@
                                      Width="245"
                                      Margin="0"
                                      Grid.Column="1"
-                                     Padding="14 14 14 0"
+                                     Padding="14 12 14 0"
                                      VerticalAlignment="Center"
                                      InputLanguageManager.InputLanguage="ru-RU"
                                      materialDesign:HintAssist.Hint="Искать"
@@ -63,21 +63,21 @@
                             </Button>
 
                             <Button Style="{StaticResource EasyCommonButton}"
-                                    Height="44" Width="44"
+                                    Height="39" Width="39"
                                     HorizontalAlignment="Left"
                                     Margin="6 0 0 0"
                                     Grid.Column="2" 
                                     Command="{Binding SearchCommonRelationsCommand}">
 
                                 <materialDesign:PackIcon Kind="Magnify" 
-                                                         Height="28" Width="28"
+                                                         Height="24" Width="24"
                                                          VerticalAlignment="Center" 
                                                          Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
                                                          HorizontalAlignment="Center"/>
 
                             </Button>
 
-                            <Button Style="{StaticResource EasyCancelButton}" Margin="0 0 15 0" Height="44" Width="44"
+                            <Button Style="{StaticResource EasyCancelButton}" Margin="0 0 15 0" Height="39" Width="39"
                                     Grid.Column="4"
                                     Padding="0"
                                     ToolTip="Очистить словарь"
@@ -89,7 +89,7 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
 
-                                <materialDesign:PackIcon Kind="TrashCanOutline" Height="28" Width="28"
+                                <materialDesign:PackIcon Kind="TrashCanOutline" Height="24" Width="24"
                                                          VerticalAlignment="Center" Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
                                                          HorizontalAlignment="Center"/>
                                 <Button.CommandParameter>
@@ -208,12 +208,12 @@
                         <StackPanel Orientation="Horizontal" Margin="14">
                             <!--Текстбокс для введения комментария к новому CommonRelation-->
                             <TextBox Style="{DynamicResource EasyValidationTextBox}"
-                                     Width="332" 
+                                     Width="336" 
                                      Grid.Row="7"
                                      HorizontalAlignment="Left"
                                      materialDesign:HintAssist.IsFloating="False"
                                      materialDesign:ValidationAssist.Suppress="True"
-                                     Padding="14 14 14 0"
+                                     Padding="14 13 14 0"
                                      Margin="0 0 14 0"
                                      Grid.ColumnSpan="3"
                                      InputLanguageManager.InputLanguage="ru-RU"
@@ -236,14 +236,14 @@
 
                             </TextBox>
 
-                            <Button Style="{StaticResource EasyCommonButton}" Height="44" Width="44"
+                            <Button Style="{StaticResource EasyCancelButton}" Height="39" Width="39"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     Margin="0 0 14 0"
                                     Padding="0"
                                     ToolTip="Сбросить прогресс">
                                 <materialDesign:PackIcon Kind="ArrowDown" 
-                                                         Height="28" Width="28" 
+                                                         Height="24" Width="24" 
                                                          Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
                                                          VerticalAlignment="Center"
                                                          HorizontalAlignment="Center"/>
@@ -255,14 +255,14 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </Button>
-                            <Button Style="{StaticResource EasyCancelButton}" Height="44" Width="44"
+                            <Button Style="{StaticResource EasyCancelButton}" Height="39" Width="39"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     Margin="0"
                                     Padding="0"
                                     ToolTip="Удалить">
                                 <materialDesign:PackIcon Kind="TrashCanOutline" 
-                                                         Height="28" Width="28" 
+                                                         Height="24" Width="24" 
                                                          Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
                                                          VerticalAlignment="Center"
                                                          HorizontalAlignment="Center"/>
@@ -292,7 +292,7 @@
 
                             <TextBox Style="{DynamicResource EasyTextBox}"
                                      Width="188"
-                                     Padding="14 14 14 0"
+                                     Padding="14 13 14 0"
                                      Margin="0 0 14 0"
                                      HorizontalAlignment="Left"
                                      materialDesign:ValidationAssist.Suppress="True"
@@ -322,7 +322,7 @@
                                          Width="188"
                                          Grid.Column="1"
                                          Margin="0 0 14 0"
-                                         Padding="14 14 14 0"
+                                         Padding="14 13 14 0"
                                      materialDesign:ValidationAssist.Suppress="True"
                                      
                                      HorizontalAlignment="Left"
@@ -350,15 +350,15 @@
                             </TextBox>
 
                             <Button Style="{DynamicResource EasyConfirmButton}"
-                                    Height="44"
-                                    Width="44"
+                                    Height="39"
+                                    Width="39"
                                     Margin="0 0"
                                     IsEnabled="{Binding UwAddExampleButtonIsEnabled}"
                                     Name="uwAddExampleButton"
                                     ToolTip="Добавить пример"
                                     HorizontalAlignment="Right" VerticalAlignment="Top"
                                     Grid.Column="2">
-                                <materialDesign:PackIcon Kind="PlusThick" Height="20" Width="20" Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
+                                <materialDesign:PackIcon Kind="Plus" Height="20" Width="20" Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
@@ -484,7 +484,7 @@
                         <!--Текстбокс для введения русского значения в новом CommonRelation-->
                         <TextBox Style="{DynamicResource EasyValidationTextBox}"
                                  Width="214"
-                                 Padding="14 14 14 0"
+                                 Padding="14 13 14 0"
                                  Margin="14 0 7 14"
                                  InputLanguageManager.InputLanguage="ru-RU"
                                  materialDesign:ValidationAssist.Suppress="True"
@@ -516,7 +516,7 @@
                                   Grid.Row="1"
                                   Margin="14 0 7 14"
                                   Width="214"
-                                  Padding="14 14 14 12"
+                                  Padding="14 12 14 9"
                                   Grid.Column="0"
                                   KeyDown="OnRussianUnitTypeComboBoxKeyDown"
                                   Name="awRussianUnitTypeComboBox"
@@ -543,7 +543,7 @@
                         <TextBox Style="{DynamicResource EasyValidationTextBox}"
                                  Width="214"
                                  Margin="7 0 14 14"
-                                 Padding="14 14 14 0"
+                                 Padding="14 13 14 0"
                                  materialDesign:ValidationAssist.Suppress="True"
                                  Grid.Column="2"
                                  InputLanguageManager.InputLanguage="en-US"
@@ -577,7 +577,7 @@
                                   Grid.Column="2"
                                   Margin="7 0 14 14"
                                   Width="214"
-                                  Padding="14 14 14 12"
+                                  Padding="14 12 14 9"
                                   KeyDown="OnEnglishUnitTypeComboBoxKeyDown"
                                   Name="awEnglishUnitTypeComboBox"
                                   ItemsSource="{Binding AwEnglishUnitTypes}"
@@ -595,12 +595,12 @@
 
                         <!--Текстбокс для введения комментария к новому CommonRelation-->
                         <TextBox Style="{DynamicResource EasyValidationTextBox}"
-                                 Width="230" 
+                                 Width="444" 
                                  Grid.Row="2"
                                  Margin="0 0 0 14"
                                  materialDesign:HintAssist.IsFloating="False"
                                  materialDesign:ValidationAssist.Suppress="True"
-                                 Padding="14 14 14 0"
+                                 Padding="14 13 14 0"
                                  Grid.ColumnSpan="3"
                                  InputLanguageManager.InputLanguage="ru-RU"
                                  Name="awCommentValueTextBox"
@@ -657,8 +657,8 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBox Style="{DynamicResource EasyTextBox}"
-                                     Width="185"
-                                     Padding="14 14 14 0"
+                                     Width="188"
+                                     Padding="14 13 14 0"
                                      Margin="0 0 14 0"
                                      materialDesign:HintAssist.IsFloating="False"
                                      KeyDown="OnAddingWindowExampleRussianValueTextBoxKeyDown"
@@ -684,10 +684,10 @@
 
                             <TextBox Style="{DynamicResource EasyTextBox}"
                                      HorizontalAlignment="Stretch"
-                                     Width="185"
+                                     Width="188"
                                      Grid.Column="1"
                                      Margin="0 0 14 0"
-                                     Padding="14 14 14 0"
+                                     Padding="14 13 14 0"
                                      materialDesign:HintAssist.IsFloating="False"
                                      KeyDown="OnAddingWindowExampleEnglishValueTextBoxKeyDown"
                                      Name="awExampleEnglishValueTextBox"
@@ -711,15 +711,15 @@
                             </TextBox>
 
                             <Button Style="{DynamicResource EasyConfirmButton}"
-                                    Height="44"
-                                    Width="44"
+                                    Height="39"
+                                    Width="39"
                                     Margin="0 0 0 0"
                                     IsEnabled="{Binding AwAddExampleButtonIsEnabled}"
                                     Name="awAddExampleButton"
-                                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                                    HorizontalAlignment="Right" VerticalAlignment="Center"
                                     Grid.Column="2"
                                     ToolTip="Добавить пример">
-                                <materialDesign:PackIcon Kind="PlusThick" Height="20" Width="20" 
+                                <materialDesign:PackIcon Kind="Plus" Height="20" Width="20" 
                                                          Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"/>
 
                                 <i:Interaction.Triggers>

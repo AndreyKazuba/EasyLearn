@@ -487,7 +487,7 @@
                     Width="130" 
                     Margin="0 45 0 0"
                     FontSize="19"
-                    Style="{DynamicResource EasyCommonButton}"  
+                    Style="{DynamicResource EasyConfirmButton}"  
                     IsEnabled="{Binding StartButtonIsEnabled}"
                     Visibility="{Binding StartButtonIsVisible, Converter={converters:ForwardVisibilityConverter}}"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
@@ -513,10 +513,10 @@
                         </Grid.RowDefinitions>
 
                         <!--Комбобокс выбора словаря для проведения диктанта-->
-                        <ComboBox Style="{DynamicResource EasyComboBox}"
+                        <ComboBox Style="{DynamicResource EasyMainComboBox}"
                                   materialDesign:HintAssist.Hint="Словарь"
                                   Margin="14 14 14 0"
-                                  Padding="14 14 14 12"
+                                  Padding="14 13 14 12"
                                   MaxDropDownHeight="200"
                                   Foreground="{DynamicResource EasyBlack}"
                                   FontFamily="Arial"
@@ -550,13 +550,13 @@
                                          IsChecked="True"
                                          Margin="0 0 14 0"
                                          FontFamily="Arial">
-                                <TextBlock FontFamily="Arial" FontSize="14" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" Text="С английского на русский"/>
+                                <TextBlock FontFamily="Arial" FontSize="13" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" Text="С английского на русский"/>
                             </RadioButton>
                             <RadioButton Style="{DynamicResource EasyRadioButton}"
                                          GroupName="DictationDirectionGroup"
                                          FontFamily="Arial"
                                          IsChecked="{Binding SelectedDictationDirection, Converter={converters:DictationDirectionConverter}}">
-                                <TextBlock FontFamily="Arial" FontSize="14" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" Text="С русского на английский"/>
+                                <TextBlock FontFamily="Arial" FontSize="13" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" Text="С русского на английский"/>
                             </RadioButton>
                         </StackPanel>
 
@@ -641,7 +641,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" Margin="0 0 0 10">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" Margin="0 0 0 14">
                             <TextBlock Text="{Binding Grade}"
                                        Foreground="{Binding GradeForeground}"
                                        FontSize="25"
@@ -663,7 +663,7 @@
                         </StackPanel>
 
                         <TextBlock Text="Слов в диктанте:"
-                                   Foreground="{DynamicResource EasyGrayDark}"
+                                   Foreground="{DynamicResource EasyBlack}"
                                    FontSize="17"
                                    Grid.Row="1"
                                    FontFamily="Arial"
@@ -671,7 +671,7 @@
                         </TextBlock>
 
                         <TextBlock Text="Дано ответов:"
-                                   Foreground="{DynamicResource EasyGrayDark}"
+                                   Foreground="{DynamicResource EasyBlack}"
                                    FontSize="17"
                                    Grid.Row="2"
                                    FontFamily="Arial"
@@ -679,7 +679,7 @@
                         </TextBlock>
 
                         <TextBlock Text="Неверных ответов:"
-                                   Foreground="{DynamicResource EasyGrayDark}"
+                                   Foreground="{DynamicResource EasyBlack}"
                                    FontSize="17"
                                    Grid.Row="3"
                                    FontFamily="Arial"
@@ -690,6 +690,7 @@
                                    Foreground="{DynamicResource EasyBlack}"
                                    FontSize="17"
                                    Grid.Row="1"
+                                   HorizontalAlignment="Center"
                                    Grid.Column="1"
                                    FontFamily="Arial"
                                    Margin="0 0 0 -2">
@@ -699,6 +700,7 @@
                                    Foreground="{DynamicResource EasyBlack}"
                                    FontSize="17"
                                    Grid.Row="2"
+                                   HorizontalAlignment="Center"
                                    Grid.Column="1"
                                    FontFamily="Arial"
                                    Margin="0 0 0 -2">
@@ -706,6 +708,7 @@
 
                         <TextBlock Text="{Binding DictationWrongAnswersCount}"
                                    Foreground="{DynamicResource EasyRed}"
+                                   HorizontalAlignment="Center"
                                    FontSize="17"
                                    Grid.Row="3"
                                    Grid.Column="1"
@@ -714,8 +717,8 @@
                         </TextBlock>
 
                         <Button Style="{DynamicResource EasyCommonButton}"  
-                                HorizontalAlignment="Stretch"
-                                Margin="0 10 0 0"
+                                Width="140"
+                                Margin="0 14 0 0"
                                 Grid.Row="4"
                                 Grid.ColumnSpan="2"
                                 Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"

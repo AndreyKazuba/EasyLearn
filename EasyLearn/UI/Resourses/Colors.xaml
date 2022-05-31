@@ -23,20 +23,12 @@
 
     <SolidColorBrush x:Key="EasyWhite" Color="#ffffff"/>
 
-    <SolidColorBrush x:Key="EasyBlack" Color="#404040"/>
+    <SolidColorBrush x:Key="EasyBlack" Color="#4d4d4d"/>
 
     <SolidColorBrush x:Key="EasyGold" Color="Gold"/>
 
-    <LinearGradientBrush x:Key="ButtonBackgroundGray" StartPoint="0.5,1" EndPoint="0.5,0">
-        <GradientStop Color="#f4f4f4" Offset="1" />
-        <GradientStop Color="#e6e6e6" Offset="0" />
-    </LinearGradientBrush>
-
-    <LinearGradientBrush x:Key="DisabledButtonBackgroundGray" StartPoint="0.5,1" EndPoint="0.5,0">
-        <GradientStop Color="#d9d9d9" Offset="1" />
-        <GradientStop Color="#e9e9e9" Offset="0.5" />
-        <GradientStop Color="#e9e9e9" Offset="0" />
-    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ButtonBackgroundGray" Color="#f2f2f2"/>
+    <SolidColorBrush x:Key="DisabledButtonBackgroundGray" Color="#e9e9e9"/>
 
     <SolidColorBrush x:Key="RelationLabelBackground" Color="#e7e7e7"/>
 

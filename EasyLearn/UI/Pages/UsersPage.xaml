@@ -113,12 +113,7 @@
                         <!--Имя пользователя-->
                         <TextBox Style="{DynamicResource EasyValidationTextBox}"
                                  Width="200"
-                                 Padding="14 14 14 0"
-                                 FontSize="14"
-                                 Height="45"
-                                 MaxHeight="45"
-                                 FontFamily="Arial"
-                                 Foreground="{DynamicResource EasyBlack}"
+                                 Padding="14 13 14 0"
                                  materialDesign:HintAssist.IsFloating="False" 
                                  materialDesign:ValidationAssist.Suppress="True"
                                  materialDesign:HintAssist.Hint="Имя пользователя*"

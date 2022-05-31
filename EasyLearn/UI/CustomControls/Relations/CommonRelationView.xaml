@@ -21,8 +21,8 @@
                 <ColumnDefinition MinWidth="100" Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="35"/>
+                <RowDefinition Height="42"/>
+                <RowDefinition Height="33"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto" MaxHeight="0.8"/>
                 <RowDefinition Height="Auto"/>

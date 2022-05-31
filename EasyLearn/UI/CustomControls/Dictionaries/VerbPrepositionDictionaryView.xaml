@@ -192,6 +192,7 @@
                     <Grid Grid.Row="2" Margin="16 14 0 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="20"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
@@ -229,6 +230,7 @@
                                    Foreground="{DynamicResource EasyBlack}"
                                    FontSize="13"
                                    Grid.Column="1"
+                                   HorizontalAlignment="Center"
                                    FontWeight="Bold"
                                    FontFamily="Arial">
 
@@ -239,6 +241,7 @@
                                    FontSize="13"
                                    Grid.Row="1"
                                    FontWeight="Bold"
+                                   HorizontalAlignment="Center"
                                    Grid.Column="1"
                                    FontFamily="Arial">
 
@@ -249,6 +252,7 @@
                                    FontSize="13"
                                    Grid.Row="2"
                                    FontWeight="Bold"
+                                   HorizontalAlignment="Center"
                                    Grid.Column="1"
                                    FontFamily="Arial">
 

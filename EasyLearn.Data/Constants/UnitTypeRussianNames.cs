@@ -15,5 +15,6 @@
         public const string Conjunction = "Союз";
         public const string Particle = "Частица";
         public const string ModalVerb = "Модальный глагол";
+        public const string PhraseVerb = "Фразовый глагол";
     }
 }

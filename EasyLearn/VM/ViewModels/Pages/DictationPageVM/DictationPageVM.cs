@@ -302,7 +302,6 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Private UI methods (wrong and correct icons)
         private void ResetAllIcons()
         {
-            VpHideIcons();
             IvShowGrayIcons();
         }
         #endregion
@@ -389,9 +388,8 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void SetAnswerTextBoxAsWrong()
         {
             TextBox answerTextBox = App.GetService<DictationPage>().answerTextBox;
-            BrushConverter brushConverter = new BrushConverter();
-            SolidColorBrush background = brushConverter.ConvertFrom("#f6eeee") as SolidColorBrush ?? throw new Exception();
-            SolidColorBrush border = brushConverter.ConvertFrom("#cf222e") as SolidColorBrush ?? throw new Exception();
+            SolidColorBrush background = ColorCodes.EasyRedSuperLight.GetBrushByHex();
+            SolidColorBrush border = ColorCodes.EasyRed.GetBrushByHex();
             answerTextBox.Background = background;
             answerTextBox.BorderBrush = border;
             answerTextBoxIsOnDefaultState = false;
@@ -399,9 +397,8 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void SetAnswerTextBoxAsCorrect()
         {
             TextBox answerTextBox = App.GetService<DictationPage>().answerTextBox;
-            BrushConverter brushConverter = new BrushConverter();
-            SolidColorBrush background = brushConverter.ConvertFrom("#eff5f1") as SolidColorBrush ?? throw new Exception();
-            SolidColorBrush border = brushConverter.ConvertFrom("#2da44e") as SolidColorBrush ?? throw new Exception();
+            SolidColorBrush background = ColorCodes.EasyGreenSuperLight.GetBrushByHex();
+            SolidColorBrush border = ColorCodes.EasyGreen.GetBrushByHex();
             answerTextBox.Background = background;
             answerTextBox.BorderBrush = border;
             answerTextBoxIsOnDefaultState = false;
@@ -411,19 +408,12 @@ namespace EasyLearn.VM.ViewModels.Pages
             if (answerTextBoxIsOnDefaultState)
                 return;
             TextBox answerTextBox = App.GetService<DictationPage>().answerTextBox;
-            BrushConverter brushConverter = new BrushConverter();
-            SolidColorBrush background = brushConverter.ConvertFrom("#f2f2f2") as SolidColorBrush ?? throw new Exception();
-            SolidColorBrush border = brushConverter.ConvertFrom("#bfbfbf") as SolidColorBrush ?? throw new Exception();
+            SolidColorBrush background = ColorCodes.EasyGrayLight.GetBrushByHex();
+            SolidColorBrush border = ColorCodes.MainColor.GetBrushByHex();
             answerTextBox.Background = background;
             answerTextBox.BorderBrush = border;
             answerTextBoxIsOnDefaultState = true;
         }
-        #endregion
-
-        #region Private UI methods (page background)
-        //private void SetDefaultPageBackground() => PageBackground = ColorCodes.EasyWhite.GetBrushByHex();
-        //private void SetCorrectPageBackground() => PageBackground = ColorCodes.EasyGreenSuperLight.GetBrushByHex();
-        //private void SetWrongPageBackground() => PageBackground = ColorCodes.EasyRedSuperLight.GetBrushByHex();
         #endregion
 
         #region Private switch helpers

@@ -126,5 +126,12 @@ namespace EasyLearn.Data.Enums
         [EnglishTranslation(UnitTypeEnglishNames.Adverb)]
         [UnitTypeColorCode(UnitTypeColorCodes.Adverb)]
         Adverb = 16,
+
+        /// <summary>
+        /// Фразовый глагол
+        /// </summary>
+        [RussianTranslation(UnitTypeRussianNames.PhraseVerb)]
+        [UnitTypeColorCode (UnitTypeColorCodes.PhraseVerb)]
+        PhraseVerb = 17,
     }
 }

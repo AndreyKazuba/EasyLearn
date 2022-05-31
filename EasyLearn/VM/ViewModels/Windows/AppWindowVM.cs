@@ -34,7 +34,7 @@ namespace EasyLearn.VM.Windows
         public bool OpenDictationPageButtonIsEnabled { get; set; }
         public bool OpenDictionariesPageButtonIsEnabled { get; set; }
         public bool OpenUsersPageButtonIsEnabled { get; set; }
-        public bool GoBackButtonIsEnabled { get; set; }
+        public bool GoBackButtonIsEnabled { get; set; } = true;
         #endregion
 
 #pragma warning disable CS8618

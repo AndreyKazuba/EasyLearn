@@ -585,6 +585,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                     new UnitTypeComboBoxItem(UnitTypeRussianNames.Noun, UnitType.Noun),
                     new UnitTypeComboBoxItem(UnitTypeRussianNames.Verb, UnitType.Verb),
                     new UnitTypeComboBoxItem(UnitTypeRussianNames.Adjective, UnitType.Adjective),
+                    new UnitTypeComboBoxItem(UnitTypeRussianNames.PhraseVerb, UnitType.PhraseVerb),
                     new UnitTypeComboBoxItem(UnitTypeRussianNames.Adverb, UnitType.Adverb),
                     new UnitTypeComboBoxItem(UnitTypeRussianNames.Preposition, UnitType.Preposition),
                     new UnitTypeComboBoxItem(UnitTypeRussianNames.CombinationOfWords, UnitType.CombinationOfWords),

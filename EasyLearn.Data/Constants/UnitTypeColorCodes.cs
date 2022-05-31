@@ -17,5 +17,6 @@
         public const string Particle = "#c3c388";
         public const string Adverb = "#bf80ff";
         public const string Numeral = "#d279a6";
+        public const string PhraseVerb = "#9999ff";
     }
 }

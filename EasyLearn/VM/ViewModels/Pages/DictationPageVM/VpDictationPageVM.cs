@@ -28,8 +28,6 @@ namespace EasyLearn.VM.ViewModels.Pages
         public string VpTranslationValue { get; set; }
         public string VpCommentValue { get; set; }
         public string VpPromtValue { get; set; }
-        public bool VpCorrectIconIsVisible { get; set; }
-        public bool VpWrongIconIsVisible { get; set; }
         public bool VpSectionIsVisible { get; set; }
         public bool VpPromtIsVisible { get; set; }
         public bool VpSecondDisplayIsVisible { get; set; }
@@ -101,9 +99,9 @@ namespace EasyLearn.VM.ViewModels.Pages
             if (answerIsCorrect)
             {
                 VpSetSecondValue(vpDictationManager.CurrentVerbPreposition.Preposition.Value);
-                VpShowCorrectIcon();
                 currentAnswerIsCorrect = true;
                 IncreaseDictationProgressBarValue();
+                SetAnswerTextBoxAsCorrect();
                 SetDefaultAnswerValue();
                 VpHidePromt();
                 wrongAnswers = 0;
@@ -111,7 +109,8 @@ namespace EasyLearn.VM.ViewModels.Pages
             else
             {
                 currentAnswerIsCorrect = false;
-                VpShowWrongIcon();
+                VpShowWrongAsnwerInfo();
+                SetAnswerTextBoxAsWrong();
                 if (++wrongAnswers > 2)
                     VpShowPromt();
             }
@@ -125,7 +124,7 @@ namespace EasyLearn.VM.ViewModels.Pages
                 currentAnswerIsCorrect = false;
                 VpSetVerbPreposition(vpDictationManager.CurrentVerbPreposition);
                 SetDefaultAnswerValue();
-                VpHideIcons();
+                SetAnswerTextBoxAsDefault();
                 VpHidePromt();
             }
             else
@@ -148,21 +147,11 @@ namespace EasyLearn.VM.ViewModels.Pages
         private void VpShowSecondDisplay() => VpSecondDisplayIsVisible = true;
         #endregion
 
-        #region Private UI methods (wrong and correct icons)
-        private void VpShowWrongIcon()
+        #region Private UI methods (wrong and correct answers)
+        private void VpShowWrongAsnwerInfo()
         {
-            VpWrongIconIsVisible = true;
-            VpCorrectIconIsVisible = false;
-        }
-        private void VpShowCorrectIcon()
-        {
-            VpCorrectIconIsVisible = true;
-            VpWrongIconIsVisible = false;
-        }
-        private void VpHideIcons()
-        {
-            VpCorrectIconIsVisible = false;
-            VpWrongIconIsVisible = false;
+            VpSecondDisplayColor = ColorCodes.EasyRed.GetBrushByHex();
+            SetAnswerTextBoxAsWrong();
         }
         #endregion
 

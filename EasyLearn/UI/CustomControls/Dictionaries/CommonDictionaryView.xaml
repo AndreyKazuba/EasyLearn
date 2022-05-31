@@ -192,6 +192,7 @@
                     <Grid Grid.Row="2" Margin="16 14 0 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="20"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
@@ -228,6 +229,7 @@
                         <TextBlock Text="{Binding TotalDictionaryRelationsCount}"
                                    Foreground="{DynamicResource EasyBlack}"
                                    FontSize="13"
+                                   HorizontalAlignment="Center"
                                    Grid.Column="1"
                                    FontWeight="Bold"
                                    FontFamily="Arial">
@@ -238,6 +240,7 @@
                                    Foreground="{DynamicResource EasyBlack}"
                                    FontSize="13"
                                    Grid.Row="1"
+                                   HorizontalAlignment="Center"
                                    FontWeight="Bold"
                                    Grid.Column="1"
                                    FontFamily="Arial">
@@ -248,6 +251,7 @@
                                    Foreground="{DynamicResource EasyBlack}"
                                    FontSize="13"
                                    Grid.Row="2"
+                                   HorizontalAlignment="Center"
                                    FontWeight="Bold"
                                    Grid.Column="1"
                                    FontFamily="Arial">
