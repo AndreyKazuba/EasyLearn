@@ -20,12 +20,12 @@ namespace EasyLearn.Data.Migrations
             migrationBuilder.InsertData(
             table: "RussianUnits",
             columns: new[] { "Id", "Value", "Type", "CreationDateUtc" },
-            values: new object[] { id++, "подниматься", (int)UnitType.Verb, DateTime.UtcNow });
+            values: new object[] { id++, "возникать", (int)UnitType.Verb, DateTime.UtcNow });
 
             migrationBuilder.InsertData(
             table: "RussianUnits",
             columns: new[] { "Id", "Value", "Type", "CreationDateUtc" },
-            values: new object[] { id++, "пробуждать", (int)UnitType.Verb, DateTime.UtcNow });
+            values: new object[] { id++, "проснуться", (int)UnitType.Verb, DateTime.UtcNow });
 
             migrationBuilder.InsertData(
             table: "RussianUnits",
@@ -50,7 +50,7 @@ namespace EasyLearn.Data.Migrations
             migrationBuilder.InsertData(
             table: "RussianUnits",
             columns: new[] { "Id", "Value", "Type", "CreationDateUtc" },
-            values: new object[] { id++, "наклонять", (int)UnitType.Verb, DateTime.UtcNow });
+            values: new object[] { id++, "гнуть", (int)UnitType.Verb, DateTime.UtcNow });
 
             migrationBuilder.InsertData(
             table: "RussianUnits",
@@ -140,7 +140,7 @@ namespace EasyLearn.Data.Migrations
             migrationBuilder.InsertData(
             table: "RussianUnits",
             columns: new[] { "Id", "Value", "Type", "CreationDateUtc" },
-            values: new object[] { id++, "вести дела", (int)UnitType.Verb, DateTime.UtcNow });
+            values: new object[] { id++, "вести дело", (int)UnitType.Verb, DateTime.UtcNow });
 
             migrationBuilder.InsertData(
             table: "RussianUnits",
@@ -200,7 +200,7 @@ namespace EasyLearn.Data.Migrations
             migrationBuilder.InsertData(
             table: "RussianUnits",
             columns: new[] { "Id", "Value", "Type", "CreationDateUtc" },
-            values: new object[] { id++, "бороться", (int)UnitType.Verb, DateTime.UtcNow });
+            values: new object[] { id++, "сражаться", (int)UnitType.Verb, DateTime.UtcNow });
 
             migrationBuilder.InsertData(
             table: "RussianUnits",
@@ -210,7 +210,7 @@ namespace EasyLearn.Data.Migrations
             migrationBuilder.InsertData(
             table: "RussianUnits",
             columns: new[] { "Id", "Value", "Type", "CreationDateUtc" },
-            values: new object[] { id++, "сбегать", (int)UnitType.Verb, DateTime.UtcNow });
+            values: new object[] { id++, "бежать", (int)UnitType.Verb, DateTime.UtcNow });
 
             migrationBuilder.InsertData(
             table: "RussianUnits",
@@ -290,7 +290,7 @@ namespace EasyLearn.Data.Migrations
             migrationBuilder.InsertData(
             table: "RussianUnits",
             columns: new[] { "Id", "Value", "Type", "CreationDateUtc" },
-            values: new object[] { id++, "держать", (int)UnitType.Verb, DateTime.UtcNow });
+            values: new object[] { id++, "удерживать", (int)UnitType.Verb, DateTime.UtcNow });
 
             migrationBuilder.InsertData(
             table: "RussianUnits",
@@ -300,7 +300,7 @@ namespace EasyLearn.Data.Migrations
             migrationBuilder.InsertData(
             table: "RussianUnits",
             columns: new[] { "Id", "Value", "Type", "CreationDateUtc" },
-            values: new object[] { id++, "сохранять", (int)UnitType.Verb, DateTime.UtcNow });
+            values: new object[] { id++, "хранить", (int)UnitType.Verb, DateTime.UtcNow });
 
             migrationBuilder.InsertData(
             table: "RussianUnits",

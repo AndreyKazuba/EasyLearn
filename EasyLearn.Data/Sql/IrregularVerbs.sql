@@ -208,7 +208,7 @@ VALUES
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'drive' AND [eng].[Type] = 8), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'drove' AND [eng].[Type] = 9), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'driven' AND [eng].[Type] = 10), 
-	"или что-то другое"
+	'или что-то другое'
 ),
 (
 	(SELECT TOP 1 [rus].[Id] FROM [RussianUnits] AS [rus] WHERE [rus].[Value] = 'кушать'), 
@@ -257,7 +257,7 @@ VALUES
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'flee' AND [eng].[Type] = 8), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'fled' AND [eng].[Type] = 9), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'fled' AND [eng].[Type] = 10), 
-	"спасаться бегством\бежать от чего-то"
+	'спасаться бегством'
 ),
 (
 	(SELECT TOP 1 [rus].[Id] FROM [RussianUnits] AS [rus] WHERE [rus].[Value] = 'летать'), 
@@ -355,7 +355,7 @@ VALUES
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'hit' AND [eng].[Type] = 8), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'hit' AND [eng].[Type] = 9), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'hit' AND [eng].[Type] = 10), 
-	"короткое"
+	'короткое'
 ),
 (
 	(SELECT TOP 1 [rus].[Id] FROM [RussianUnits] AS [rus] WHERE [rus].[Value] = 'удерживать'), 
@@ -390,7 +390,7 @@ VALUES
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'lay' AND [eng].[Type] = 8), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'laid' AND [eng].[Type] = 9), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'laid' AND [eng].[Type] = 10), 
-	"положить что-то"
+	'положить что-то'
 ),
 (
 	(SELECT TOP 1 [rus].[Id] FROM [RussianUnits] AS [rus] WHERE [rus].[Value] = 'лидировать'), 
@@ -411,7 +411,7 @@ VALUES
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'leave' AND [eng].[Type] = 8), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'left' AND [eng].[Type] = 9), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'left' AND [eng].[Type] = 10), 
-	"оставлять что-то"
+	'оставлять что-то'
 ),
 (
 	(SELECT TOP 1 [rus].[Id] FROM [RussianUnits] AS [rus] WHERE [rus].[Value] = 'давать взаймы'), 
@@ -454,14 +454,14 @@ VALUES
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'make' AND [eng].[Type] = 8), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'made' AND [eng].[Type] = 9), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'made' AND [eng].[Type] = 10), 
-	"изготавливать/делать что-то, что имеет результат"
+	'изготавливать'
 ),
 (
 	(SELECT TOP 1 [rus].[Id] FROM [RussianUnits] AS [rus] WHERE [rus].[Value] = 'значить'), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'mean' AND [eng].[Type] = 8), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'meant' AND [eng].[Type] = 9), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'meant' AND [eng].[Type] = 10), 
-	"'Что это значит?'"
+	'"Что это значит?"'
 ),
 (
 	(SELECT TOP 1 [rus].[Id] FROM [RussianUnits] AS [rus] WHERE [rus].[Value] = 'встречать'), 
@@ -559,7 +559,7 @@ VALUES
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'set' AND [eng].[Type] = 8), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'set' AND [eng].[Type] = 9), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'set' AND [eng].[Type] = 10), 
-	"настройки, например"
+	'настройки, например'
 ),
 (
 	(SELECT TOP 1 [rus].[Id] FROM [RussianUnits] AS [rus] WHERE [rus].[Value] = 'трясти'), 
@@ -601,7 +601,7 @@ VALUES
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'shut' AND [eng].[Type] = 8), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'shut' AND [eng].[Type] = 9), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'shut' AND [eng].[Type] = 10), 
-	"рот, например"
+	'рот, например'
 ),
 (
 	(SELECT TOP 1 [rus].[Id] FROM [RussianUnits] AS [rus] WHERE [rus].[Value] = 'петь'), 
@@ -643,7 +643,7 @@ VALUES
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'speak' AND [eng].[Type] = 8), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'spoke' AND [eng].[Type] = 9), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'spoken' AND [eng].[Type] = 10), 
-	"вести диалог"
+	'вести диалог'
 ),
 (
 	(SELECT TOP 1 [rus].[Id] FROM [RussianUnits] AS [rus] WHERE [rus].[Value] = 'произносить или писать по буквам'), 
@@ -728,7 +728,7 @@ VALUES
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'strike' AND [eng].[Type] = 8), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'struck' AND [eng].[Type] = 9), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'struck' AND [eng].[Type] = 10), 
-	"длинное"
+	'длинное'
 ),
 (
 	(SELECT TOP 1 [rus].[Id] FROM [RussianUnits] AS [rus] WHERE [rus].[Value] = 'клясться'), 
@@ -812,7 +812,7 @@ VALUES
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'wake' AND [eng].[Type] = 8), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'woke' AND [eng].[Type] = 9), 
 	(SELECT TOP 1 [eng].[Id] FROM [EnglishUnits] AS [eng] WHERE [eng].[Value] = 'woken' AND [eng].[Type] = 10), 
-	"без предлога 'up'"
+	'без предлога "up"'
 ),
 (
 	(SELECT TOP 1 [rus].[Id] FROM [RussianUnits] AS [rus] WHERE [rus].[Value] = 'носить'), 
