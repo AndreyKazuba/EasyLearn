@@ -34,6 +34,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Private fields
         private bool awExampleInvalid = true;
         private bool uwExampleInvalid = true;
+        private bool studiedRelationAreDisplayed = true;
         private int exampleIdCounter;
         private int pageCurrentDictionaryId;
         private bool topMenuIsOpened = false;
@@ -99,6 +100,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         public Command DeleteAllCommonRelationsCommand { get; private set; }
         public Command<int> SetDictionaryCommand { get; private set; }
         public Command SearchCommonRelationsCommand { get; private set; }
+        public Command ToggleStudiedRelationDisplayCommand { get; private set; }
         public Command<int> RemoveExampleViewCommand { get; private set; }
         public Command ClearSearchStringValueCommand { get; private set; }
         public Command DisableAppWindowNavigationBarCommand { get; private set; }
@@ -132,6 +134,7 @@ namespace EasyLearn.VM.ViewModels.Pages
             DeleteAllCommonRelationsCommand = new Command(async () => await DeleteAllCommonRelations());
             SetDictionaryCommand = new Command<int>(async commonDictionaryId => await SetDictionary(commonDictionaryId));
             SearchCommonRelationsCommand = new Command(SearchCommonRelations);
+            ToggleStudiedRelationDisplayCommand = new Command(ToggleStudiedRelationDisplay);
             RemoveExampleViewCommand = new Command<int>(RemoveExampleView);
             ClearSearchStringValueCommand = new Command(ClearSearchStringValue);
             DisableAppWindowNavigationBarCommand = new Command(DisableAppWindowNavigationBar);
@@ -227,12 +230,38 @@ namespace EasyLearn.VM.ViewModels.Pages
                 CommonRelationView? commonRelationView = userControl as CommonRelationView;
                 if (commonRelationView is null)
                     continue;
-                bool isMatch = commonRelationView.RussianValue.Prepare().Contains(SearchStringValue.Prepare()) 
+                bool isMatch = commonRelationView.RussianValue.Prepare().Contains(SearchStringValue.Prepare())
                             || commonRelationView.EnglishValue.Prepare().Contains(SearchStringValue.Prepare());
                 if (isMatch)
                     commonRelationView.Show();
                 else
                     commonRelationView.Collapse();
+            }
+        }
+        private void ToggleStudiedRelationDisplay()
+        {
+            if (studiedRelationAreDisplayed)
+            {
+                foreach (UserControl userControl in CommonRelationViews)
+                {
+                    CommonRelationView? commonRelationView = userControl as CommonRelationView;
+                    if (commonRelationView is null)
+                        continue;
+                    if (commonRelationView.IsStudied)
+                        commonRelationView.Collapse();
+                }
+                studiedRelationAreDisplayed = false;
+            }
+            else
+            {
+                foreach (UserControl userControl in CommonRelationViews)
+                {
+                    CommonRelationView? commonRelationView = userControl as CommonRelationView;
+                    if (commonRelationView is null)
+                        continue;
+                    commonRelationView.Show();
+                }
+                studiedRelationAreDisplayed = true;
             }
         }
         private void RemoveExampleView(int exampleId)

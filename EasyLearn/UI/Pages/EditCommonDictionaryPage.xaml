@@ -24,6 +24,7 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="60"/>
                             </Grid.ColumnDefinitions>
                             <TextBox Style="{DynamicResource EasyTextBox}"
                                      Width="245"
@@ -77,8 +78,23 @@
 
                             </Button>
 
+                            <Button Style="{StaticResource EasyCommonButton}"
+                                    Height="39" Width="39"
+                                    HorizontalAlignment="Left"
+                                    Margin="6 0 0 0"
+                                    Grid.Column="4" 
+                                    Command="{Binding ToggleStudiedRelationDisplayCommand}">
+
+                                <materialDesign:PackIcon Kind="StarRemove" 
+                                                         Height="24" Width="24"
+                                                         VerticalAlignment="Center" 
+                                                         Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                         HorizontalAlignment="Center"/>
+
+                            </Button>
+
                             <Button Style="{StaticResource EasyCancelButton}" Margin="0 0 15 0" Height="39" Width="39"
-                                    Grid.Column="4"
+                                    Grid.Column="5"
                                     Padding="0"
                                     ToolTip="Очистить словарь"
                                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">

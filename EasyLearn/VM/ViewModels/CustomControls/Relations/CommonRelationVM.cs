@@ -17,6 +17,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
         #region Public props
         public int Id { get; private set; }
         public int OrderValue { get; private set; }
+        public bool IsStudied { get; private set; }
         #endregion
 
         #region Binding props
@@ -82,6 +83,7 @@ namespace EasyLearn.VM.ViewModels.CustomControls
             RatingProgressBarBackgroundColor = commonRelation.Rating.GetBackgroundColorForRating();
             RatingValue = commonRelation.Rating;
             IsStudiedMarkVisible = commonRelation.Studied;
+            IsStudied = commonRelation.Studied;
             
             SetState(commonRelation);
             SetHeight();

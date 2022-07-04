@@ -63,6 +63,6 @@ namespace EasyLearn.Data.Models
 
         public bool Studied { get; set; }
 
-        public int Priotiry => Rating / 10;
+        public int Priotiry => Rating / 10 + (Studied ? 1 : 0);
     }
 }

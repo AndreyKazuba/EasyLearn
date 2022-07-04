@@ -13,6 +13,7 @@ namespace EasyLearn.UI.CustomControls
         #region Public props
         public int Id => viewModel.Id;
         public int Order => viewModel.OrderValue;
+        public bool IsStudied => viewModel.IsStudied;
         public string RussianValue => viewModel.RussianValue;
         public string EnglishValue => viewModel.EnglishValue;
         #endregion
