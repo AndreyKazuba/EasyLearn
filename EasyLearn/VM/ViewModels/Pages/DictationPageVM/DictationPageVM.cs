@@ -46,6 +46,13 @@ namespace EasyLearn.VM.ViewModels.Pages
                     () => vpLoadedDictionary.VerbPrepositions.Count,
                     () => ModelConstants.IrregularVerbsCount);
         }
+        private int ItemsInSelectedLoadedDictionaryLeftToLearn
+        {
+            get => ExecuteForCurrentDictionaryType(
+                    () => cdLoadedDictionary.Relations.Where(commonRelation => !commonRelation.Studied).Count(),
+                    () => vpLoadedDictionary.VerbPrepositions.Where(verbPreposition => !verbPreposition.Studied).Count(),
+                    () => irregularVerbRepository.GetAllIrregularVerbs().Where(irregularVerb => irregularVerb.Rating != 100).Count());
+        }
         private DictionaryType CurrentDictionaryType => selectedDictionaryComboBoxItem.DictionaryType;
         #endregion
 
@@ -121,7 +128,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             DictationLengthSliderMinValue = ItemsInSelectedLoadedDictionary > 0 ? 1 : 0;
             DictationLengthSliderMaxValue = ItemsInSelectedLoadedDictionary;
-            DictationLengthSliderValue = DictationLengthSliderMaxValue;
+            DictationLengthSliderValue = ItemsInSelectedLoadedDictionaryLeftToLearn;
         }
         private void StartDictation() => ExecuteForCurrentDictionaryType(CdStart, VpStart, IvStart);
         private void TryGoNext() => ExecuteForCurrentDictionaryType(CdTryGoNext, VpTryGoNext, IvTryGoNext);
