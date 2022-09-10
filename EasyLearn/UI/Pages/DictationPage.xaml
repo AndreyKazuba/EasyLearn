@@ -487,7 +487,7 @@
                     Width="130" 
                     Margin="0 45 0 0"
                     FontSize="19"
-                    Style="{DynamicResource EasyConfirmButton}"  
+                    Style="{DynamicResource EasyCommonButton}"  
                     IsEnabled="{Binding StartButtonIsEnabled}"
                     Visibility="{Binding StartButtonIsVisible, Converter={converters:ForwardVisibilityConverter}}"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}">
@@ -620,7 +620,7 @@
                     Width="130"                   
                     Margin="0 45 0 0"
                     FontSize="18"
-                    Style="{DynamicResource EasyCancelButton}"
+                    Style="{DynamicResource EasyCommonButton}"
                     Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
                     Visibility="{Binding StopButtonIsVisible, Converter={converters:ForwardVisibilityConverter}}">
 
@@ -717,7 +717,7 @@
                         </TextBlock>
 
                         <Button Style="{DynamicResource EasyCommonButton}"  
-                                Width="140"
+                                Width="170"
                                 Margin="0 14 0 0"
                                 Grid.Row="4"
                                 Grid.ColumnSpan="2"
