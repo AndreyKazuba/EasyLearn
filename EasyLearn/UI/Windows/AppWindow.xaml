@@ -11,6 +11,7 @@
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         KeyDown="OnWindowKeyDown"
+        WindowState="Maximized"
         Title="EasyLearn" Height="605" Width="890">
 
     <WindowChrome.WindowChrome>

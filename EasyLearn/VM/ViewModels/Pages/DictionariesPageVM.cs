@@ -12,7 +12,6 @@ using EasyLearn.UI.CustomControls;
 using EasyLearn.VM.ViewModels.ExpandedElements;
 using EasyLearn.Data.Constants;
 using EasyLearn.VM.Windows;
-using EasyLearn.Data.Helpers;
 using EasyLearn.Infrastructure.Validation;
 using EasyLearn.Infrastructure.Exceptions;
 using EasyLearn.UI.Pages;
