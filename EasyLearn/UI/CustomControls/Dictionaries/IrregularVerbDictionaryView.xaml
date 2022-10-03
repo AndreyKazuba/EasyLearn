@@ -10,7 +10,7 @@
 
     <materialDesign:Flipper Style="{DynamicResource MaterialDesignCardFlipper}" 
                             materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                            Margin="18 18 0 0"
+                            Margin="15 18 0 0"
                             Height="256"
                             Width="200">
 
