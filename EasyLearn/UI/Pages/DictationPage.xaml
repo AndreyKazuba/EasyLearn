@@ -534,7 +534,7 @@
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Center"
                                 TickFrequency="1"
-                                TickPlacement="Both"
+                                TickPlacement="None"
                                 Value="{Binding DictationLengthSliderValue, Mode=TwoWay}"
                                 Width="400">
                         </Slider>

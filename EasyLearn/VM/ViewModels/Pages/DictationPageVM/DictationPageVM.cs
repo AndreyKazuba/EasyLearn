@@ -169,14 +169,11 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             if (!dictationIsStarted)
                 return;
+
             if (currentAnswerIsCorrect)
-            {
                 TryGoNext();
-            }
             else
-            {
                 CheckAnswer();
-            }
         }
         private void OnCdPromtMouseEnter()
         {
