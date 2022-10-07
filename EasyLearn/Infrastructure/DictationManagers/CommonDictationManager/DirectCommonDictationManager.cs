@@ -20,7 +20,7 @@ namespace EasyLearn.Infrastructure.DictationManagers
             if (dictationLength <= 0 || dictationLength > commonRelations.Count)
                 throw new ArgumentOutOfRangeException(nameof(dictationLength));
             allRelations = commonRelations;
-            selectedRelations = new List<CommonRelation>(allRelations.OrderBy(commonRelation => commonRelation.Priotiry).Take(dictationLength).Shuffle());
+            selectedRelations = SelectRelations(commonRelations, dictationLength);
             maxCurrentRelationId = dictationLength - 1;
         }
 

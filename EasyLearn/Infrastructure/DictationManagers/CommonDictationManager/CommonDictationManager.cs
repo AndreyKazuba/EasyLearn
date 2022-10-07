@@ -3,6 +3,7 @@ using EasyLearn.Data.Models;
 using EasyLearn.Data.Repositories.Interfaces;
 using EasyLearn.Infrastructure.Enums;
 using EasyLearn.Infrastructure.Exceptions;
+using EasyLearn.Infrastructure.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,6 +76,21 @@ namespace EasyLearn.Infrastructure.DictationManagers
         {
             if (!isStarted)
                 throw new Exception(ExceptionMessagesHelper.NeedsToStarDictationFirst);
+        }
+        protected List<CommonRelation> SelectRelations(List<CommonRelation> commonRelations, int dictationLength)
+        {
+            int unstudiedRelationsCount = commonRelations.Count(commonRelation => !commonRelation.Studied);
+            if (dictationLength <= unstudiedRelationsCount)
+            {
+                return new List<CommonRelation>(allRelations.OrderBy(commonRelation => commonRelation.Priority).Take(dictationLength).Shuffle());
+            }
+            else
+            {
+                int additionalRelationsCount = dictationLength - unstudiedRelationsCount;
+                List<CommonRelation> unstudiedRelations = new List<CommonRelation>(allRelations.Where(commonRelation => !commonRelation.Studied));
+                List<CommonRelation> additionalRelations = new List<CommonRelation>(allRelations.Where(commonRelation => commonRelation.Studied).Shuffle().Take(additionalRelationsCount));
+                return unstudiedRelations.Union(additionalRelations).Shuffle().ToList();
+            }
         }
         #endregion
 

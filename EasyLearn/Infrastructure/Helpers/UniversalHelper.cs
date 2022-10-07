@@ -8,7 +8,7 @@ namespace EasyLearn.Infrastructure.Helpers
     {
         public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> items)
         {
-            Random random = new Random();
+            Random random = RandomFactory.GetRandom(items.Count());
             return items.OrderBy(relation => random.Next());
         }
     }

@@ -5,7 +5,6 @@ using EasyLearn.Data.DTO;
 using EasyLearn.Data.Enums;
 using EasyLearn.Data.Helpers;
 using EasyLearn.Data.Models;
-using EasyLearn.Infrastructure.Helpers;
 
 namespace EasyLearn.Infrastructure.DictationManagers
 {
@@ -20,7 +19,7 @@ namespace EasyLearn.Infrastructure.DictationManagers
             if (dictationLength <= 0 || dictationLength > commonRelations.Count)
                 throw new ArgumentOutOfRangeException(nameof(dictationLength));
             allRelations = commonRelations;
-            selectedRelations = new List<CommonRelation>(allRelations.OrderBy(commonRelation => commonRelation.Priotiry).Take(dictationLength).Shuffle());
+            selectedRelations = SelectRelations(commonRelations, dictationLength);
             maxCurrentRelationId = dictationLength - 1;
         }
 

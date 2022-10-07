@@ -37,10 +37,7 @@ namespace EasyLearn.Infrastructure.DictationManagers
         {
             if (dictationLength <= 0 || dictationLength > verbPrepositions.Count)
                 throw new ArgumentOutOfRangeException(nameof(dictationLength));
-            this.verbPrepositions = new List<VerbPreposition>(verbPrepositions
-                .OrderBy(verbPreposition => verbPreposition.Priority)
-                .Take(dictationLength)
-                .Shuffle());
+            this.verbPrepositions = SelectVerbPrepositions(verbPrepositions, dictationLength);
             maxCurrentVerbPrepositionId = dictationLength - 1;
         }
 
@@ -82,6 +79,24 @@ namespace EasyLearn.Infrastructure.DictationManagers
             return answerIsCorrect;
         }
         public void SaveDictationResults() => App.GetService<IVerbPrepositionRepository>().SaveDictationResults(answers);
+        #endregion
+
+        #region Private methods
+        private List<VerbPreposition> SelectVerbPrepositions(List<VerbPreposition> verbPrepositions, int dictationLength)
+        {
+            int unstudiedVerbPrepositionsCount = verbPrepositions.Count(verbPreposition => !verbPreposition.Studied);
+            if (dictationLength <= unstudiedVerbPrepositionsCount)
+            {
+                return new List<VerbPreposition>(verbPrepositions.OrderBy(verbPreposition => verbPreposition.Priority).Take(dictationLength).Shuffle());
+            }
+            else
+            {
+                int additionanVerbPrepositionsCount = dictationLength - unstudiedVerbPrepositionsCount;
+                List<VerbPreposition> unstudiedVerbPrepositions = new List<VerbPreposition>(verbPrepositions.Where(verbPreposition => !verbPreposition.Studied));
+                List<VerbPreposition> additionalVerbPrepositions = new List<VerbPreposition>(verbPrepositions.Where(verbPreposition => verbPreposition.Studied).Shuffle().Take(additionanVerbPrepositionsCount));
+                return unstudiedVerbPrepositions.Union(additionalVerbPrepositions).Shuffle().ToList();
+            }
+        }
         #endregion
 
         #region Private throwers
