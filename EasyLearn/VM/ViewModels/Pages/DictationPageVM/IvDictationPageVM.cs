@@ -41,7 +41,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         #endregion
 
         #region Private helpers
-        private void IvSetDictationManager() => ivDictationManager = new IrregularVerbDictationManager(irregularVerbRepository.GetAllIrregularVerbs().ToList(), DictationLengthSliderValue);
+        private void IvSetDictationManager() => ivDictationManager = new IrregularVerbDictationManager(irregularVerbRepository.GetAllIrregularVerbs().ToList(), DictationLengthSliderValue.OneIfZero());
         #endregion
 
         #region Private UI methods (stop window)

@@ -11,5 +11,7 @@ namespace EasyLearn.Infrastructure.Helpers
             Random random = RandomFactory.GetRandom(items.Count());
             return items.OrderBy(relation => random.Next());
         }
+
+        public static int OneIfZero(this int value) => value == 0 ? 1 : value;
     }
 }

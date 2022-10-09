@@ -393,18 +393,22 @@ namespace EasyLearn.VM.ViewModels.Pages
         {
             TextBox answerTextBox = App.GetService<DictationPage>().answerTextBox;
             SolidColorBrush background = ColorCodes.EasyRedSuperLight.GetBrushByHex();
+            SolidColorBrush foreground = ColorCodes.EasyRed.GetBrushByHex();
             SolidColorBrush border = ColorCodes.EasyRed.GetBrushByHex();
             answerTextBox.Background = background;
             answerTextBox.BorderBrush = border;
+            answerTextBox.Foreground = foreground;
             answerTextBoxIsOnDefaultState = false;
         }
         private void SetAnswerTextBoxAsCorrect()
         {
             TextBox answerTextBox = App.GetService<DictationPage>().answerTextBox;
             SolidColorBrush background = ColorCodes.EasyGreenSuperLight.GetBrushByHex();
+            SolidColorBrush foreground = ColorCodes.EasyGreen.GetBrushByHex();
             SolidColorBrush border = ColorCodes.EasyGreen.GetBrushByHex();
             answerTextBox.Background = background;
             answerTextBox.BorderBrush = border;
+            answerTextBox.Foreground = foreground;
             answerTextBoxIsOnDefaultState = false;
         }
         private void SetAnswerTextBoxAsDefault()
@@ -413,9 +417,11 @@ namespace EasyLearn.VM.ViewModels.Pages
                 return;
             TextBox answerTextBox = App.GetService<DictationPage>().answerTextBox;
             SolidColorBrush background = ColorCodes.EasyGrayLight.GetBrushByHex();
+            SolidColorBrush foreground = ColorCodes.EasyBlack.GetBrushByHex();
             SolidColorBrush border = ColorCodes.MainColor.GetBrushByHex();
             answerTextBox.Background = background;
             answerTextBox.BorderBrush = border;
+            answerTextBox.Foreground = foreground;
             answerTextBoxIsOnDefaultState = true;
         }
         #endregion

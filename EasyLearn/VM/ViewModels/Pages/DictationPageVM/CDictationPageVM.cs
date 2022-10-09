@@ -46,7 +46,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         #region Private helpers
         private void CdSetDictationManager()
         {
-            int countOfRelations = DictationLengthSliderValue;
+            int countOfRelations = DictationLengthSliderValue.OneIfZero();
             List<CommonRelation> commonRelations = cdLoadedDictionary.Relations;
             commonDictationManager = CommonDictationManager.CreateManager(commonRelations, countOfRelations, SelectedDictationDirection);
         }

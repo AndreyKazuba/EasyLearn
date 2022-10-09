@@ -19,7 +19,7 @@
 
     <SolidColorBrush x:Key="EasyGrayDark" Color="#616b61"/>
     <SolidColorBrush x:Key="EasyGray" Color="#bfbfbf"/>
-    <SolidColorBrush x:Key="EasyGrayLight" Color="GhostWhite"/>
+    <SolidColorBrush x:Key="EasyGrayLight" Color="#fff8f8ff"/>
 
     <SolidColorBrush x:Key="EasyWhite" Color="#ffffff"/>
 

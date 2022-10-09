@@ -36,7 +36,7 @@ namespace EasyLearn.VM.ViewModels.Pages
         #endregion
 
         #region Private helpers
-        private void VpSetDictationManager() => vpDictationManager = new VerbPrepositionDictationManager(vpLoadedDictionary.VerbPrepositions, DictationLengthSliderValue);
+        private void VpSetDictationManager() => vpDictationManager = new VerbPrepositionDictationManager(vpLoadedDictionary.VerbPrepositions, DictationLengthSliderValue.OneIfZero());
         #endregion
 
         #region Private UI methods (stop window)

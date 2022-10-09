@@ -57,7 +57,7 @@
 
         public const string EasyWhite = "#ffffff";
 
-        public const string EasyBlack = "#000000";
+        public const string EasyBlack = "#4d4d4d";
 
         public const string EasyGold = "#ffffd700";
     }
