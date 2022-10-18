@@ -124,6 +124,7 @@ namespace EasyLearn.Data.Repositories.Implementations
             foreach (Answer answer in answers)
             {
                 CommonRelation commonRelation = context.CommonRelations.First(commonRelation => commonRelation.Id == answer.RelationId);
+                commonRelation.LastRepetitionDateUtc = DateTime.UtcNow;
                 if (commonRelation.Studied)
                     continue;
                 int updatedRating = NumberHelper.GetRangedValue(commonRelation.Rating + answer.Variation.GetAnswerSignificanceValue(), ModelConstants.RatingMinValue, ModelConstants.RatingMaxValue);

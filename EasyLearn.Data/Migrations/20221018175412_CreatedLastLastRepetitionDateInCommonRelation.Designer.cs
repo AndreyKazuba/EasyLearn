@@ -4,6 +4,7 @@ using EasyLearn.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EasyLearn.Data.Migrations
 {
     [DbContext(typeof(EasyLearnContext))]
-    partial class EasyLearnContextModelSnapshot : ModelSnapshot
+    [Migration("20221018175412_CreatedLastLastRepetitionDateInCommonRelation")]
+    partial class CreatedLastLastRepetitionDateInCommonRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
