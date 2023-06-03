@@ -47,7 +47,7 @@ namespace EasyLearn.Autofiller
                 text = reader.ReadToEnd();
             }
 
-            IEnumerable<Record> records = GetRecords(text.Split('\n'));
+            IEnumerable<Record> records = GetRecords(text.Substring(0, text.IndexOf("#end")) .Split('\n'));
             IEnumerable<ConfirmationRecord> confirmationRecords = GetConfirmationRecords(records);
 
             RequestConfirmation(confirmationRecords);
